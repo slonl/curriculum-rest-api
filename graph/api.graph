@@ -1,0 +1,417 @@
+query DoelNiveau {
+  allDoelniveau {
+    id
+  }
+}
+query DoelNiveauById($id:ID) {
+  Doelniveau(id:$id) {
+    id
+    Doel {
+      title
+    }
+    Niveau {
+      id
+      title
+    }
+  }
+}
+
+query Doel {
+  allDoel {
+    id
+    title
+    description
+  }
+}
+
+query DoelById($id:ID) {
+  Doel(id:$id) {
+    id
+    title
+    description
+  }
+}
+
+query Kerndoel {
+  allKerndoel {
+    id
+    title
+  }
+}
+
+query KerndoelById($id:ID) {
+  Kerndoel(id:$id) {
+    id
+    title
+  }
+}
+
+query Niveau {
+  allNiveau {
+    id
+    title
+    description
+  }
+}
+query NiveauById($id:ID) {
+  Niveau(id:$id) {
+    id
+    title
+    description
+  }
+}
+query Vak {
+  allVak {
+    id
+    title
+  }
+}
+query VakById($id:ID) {
+  Vak(id:$id) {
+    id
+    title
+    Vakkern {
+      id
+    }
+  }
+}
+query Vakkern {
+  allVakkern {
+    id
+    title
+    description
+  }
+}
+query VakkernById($id:ID) {
+  Vakkern(id:$id) {
+    id
+    title
+    description
+    Vaksubkern {
+      id
+    }
+  }
+}
+query Vaksubkern {
+  allVaksubkern {
+    id
+    title
+    description
+  }
+}
+query VaksubkernById($id:ID) {
+  Vaksubkern(id:$id) {
+    id
+    title
+    description
+    Doelniveau {
+      Doel {
+        title
+      }
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+}
+query Vakinhoud {
+  allVakinhoud {
+    id
+    title
+    description
+  }
+}
+query VakinhoudById($id:ID) {
+  Vakinhoud(id:$id) {
+    id
+    title
+    description
+    Doelniveau {
+      Doel {
+        title
+      }
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+}
+
+query Id($id:ID) {
+  allVak(filter:{id:$id}) {
+    id
+    title
+    description
+    Vakkern {
+      id
+    }
+    Doelniveau {
+      Doel {
+        id
+        title
+        description
+      }
+      Niveau {
+        id
+        title
+        description
+      }
+    }
+  }
+  allVakkern(filter:{id:$id}) {
+    id
+    title
+    description
+    replaces
+    Vaksubkern {
+      id
+    }
+    Doelniveau {
+      Doel {
+        id
+        title
+        description
+      }
+      Niveau {
+        id
+        title
+        description
+      }
+    }
+  }
+  allVaksubkern(filter:{id:$id}) {
+    id
+    title
+    description
+    replaces
+    Vakinhoud {
+      id
+    }
+    Doelniveau {
+      Doel {
+        id
+        title
+        description
+      }
+      Niveau {
+        id
+        title
+        description
+      }
+    }
+  }
+  allVakinhoud(filter:{id:$id}) {
+    id
+    title
+    description
+    replaces
+    Doelniveau {
+      Doel {
+        id
+        title
+        description
+      }
+      Niveau {
+        id
+        title
+        description
+      }
+    }
+  }
+  allDoel(filter:{id:$id}) {
+    id
+    title
+    description
+  }
+  allNiveau(filter:{id:$id}) {
+    id
+    title
+    description
+  }
+  allDoelniveau(filter:{id:$id}) {
+    id
+    Doel {
+      id
+      title
+      description
+    }
+    Niveau {
+      id
+      title
+      description
+    }
+  }
+  allKerndoel(filter:{id:$id}) {
+    id
+    title
+    type
+    Doelniveau {
+      Doel {
+        id
+        title
+        description
+      }
+      Niveau {
+        id
+        title
+        description
+      }
+    }
+  }
+  allDeprecated(filter:{id:$id}) {
+    id
+    title
+    description
+    replacedBy
+  }
+}
+
+# Queries voor alles op specific niveau
+query VakOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vak {
+      id
+      title
+    }
+  }
+} 
+
+query VakByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vak(filter:{id:$id}) {
+      id
+      title
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        Doel {
+          id
+          title
+          description
+        }
+      } 
+    }
+    Vakkern(filter:{vak_id:[$id]}) {
+      id
+      title
+    }
+  }
+} 
+
+query VakkernOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vakkern {
+      id
+      title
+    }
+  }
+} 
+
+query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vakkern(filter:{id:$id}) {
+      id
+      title
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        Doel {
+          id
+          title
+          description
+        }
+      } 
+    }
+    Vaksubkern(filter:{vakkern_id:[$id]}) {
+      id
+      title
+    }
+  }
+} 
+
+query VaksubkernOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vaksubkern {
+      id
+      title
+    }
+  }
+} 
+
+query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vaksubkern(filter:{id:$id}) {
+      id
+      title
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        Doel {
+          id
+          title
+          description
+        }
+      } 
+    }
+    Vakinhoud(filter:{vaksubkern_id:[$id]}) {
+      id
+      title
+    }
+  }
+} 
+query VakinhoudOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vakinhoud {
+      id
+      title
+    }
+  }
+} 
+query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vakinhoud(filter:{id:$id}) {
+      id
+      title
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        Doel {
+          id
+          title
+          description
+        }
+      }
+    }
+  }
+}
+
+query Deprecated {
+  allDeprecated {
+    id
+    title
+    replacedBy
+  }
+}
+
+query DeprecatedById($id:ID) {
+  Deprecated(id:$id) {
+    id
+    title
+    types
+    replacedBy
+    vakkern_id
+    vaksubkern_id
+    vakinhoud_id
+    doelniveau_id
+  }
+}    
+
+#query DoelOpNiveau($niveau:ID) {
+#  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+#    Doel {
+#      title
+#    }
+#  }
+#} 
+#query KerndoelOpNiveau($niveau:ID) {
+#  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+#    Kerndoel {
+#      id
+#      title
+#    }
+#  }
+#}
