@@ -11,7 +11,7 @@ const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonl
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const baseIdURL       = "https://opendata.slo.nl/curriculum/api/v1/uuid/";
 
-var graphQueries = fs.readFileSync("../graph/api.graph", "utf8");
+var graphQueries = fs.readFileSync("graph/api.graph", "utf8");
 
 function graphQuery(operationName, variables) {
 	var postData = {
@@ -290,102 +290,201 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 	});
 });
 
-
-/*
-app.route("/api/legacy/vak/:vak/").get((req, res) => {
-});
-app.route("/api/legacy/vak/:vak/vakkern/:vakkern/").get((req, res) => {
-});
-*/
-app.route("/api/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern").get((req, res) => {
-
-	function getById(id) {
-		return graphQuery("Id", {id: id}).then(function(result) {
-			for (i in result.data) {
-				if (result.data[i].length) {
-					result = result.data[i][0];
-					result["entitytype"] = i.replace(/^all/, '');
-					return result;
-				}
+function getById(id) {
+	return graphQuery("Id", {id: id}).then(function(result) {
+		for (i in result.data) {
+			if (result.data[i].length) {
+				result = result.data[i][0];
+				result["entitytype"] = i.replace(/^all/, '');
+				return result;
 			}
-			return null;
-		});
-	}
+		}
+		return null;
+	});
+}
 
+function getAllVersions(ids, entities) {
+	if (!entities) {
+		entities = [];
+	}
+	return Promise.all(ids.map(function(id) {
+		return getById(id);
+	}))
+	.then(function(results) {
+		var replaced = [];
+		var all = [];
+		results.forEach(function(entity) {
+			if (entity.replacedBy) {
+				replaced = replaced.concat(entity.replacedBy);
+			}
+			all.push(entity);
+		});
+		if (replaced.length) {
+			return getAllVersions(replaced, entities.concat(all));
+		} else {
+			return entities.concat(all);
+		}
+	});
+}
+
+function getLatestVersions(ids) {
+	return getAllVersions(ids)
+	.then(function(results) {
+		return results.filter(function(entity) {
+			return !entity.replacedBy;
+		});
+	});
+}
+
+function hasId(list, id) {
+	for (var i=0; i<list.length; i++) {
+		if (list[i].id == id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function walkReplacedBy(idIndex, ids) {
+	var results = ids.map(function(id) {
+		if (!idIndex[id]) {
+			return null;
+		}
+		if (!idIndex[id].replacedBy) {
+			return idIndex[id];
+		}
+		return walkReplacedBy(idIndex, idIndex[id].replacedBy);
+	});
+	return flatten(results).filter(x => x);
+}
+
+const flatten = function(arr, result = []) {
+  for (let i = 0, length = arr.length; i < length; i++) {
+    const value = arr[i];
+    if (Array.isArray(value)) {
+      flatten(value, result);
+    } else {
+      result.push(value);
+    }
+  }
+  return result;
+};
+
+app.route(apiBase+"legacy/vak/:vak/").get((req, res) => {
+	var vak = req.params.vak;
+	getLatestVersions([vak])
+	.then(function(results) {
+		res.send(results);	
+	});
+});
+
+app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/").get((req, res) => {
+	var vak = req.params.vak;
+	var vakkern = req.params.vakkern;
+	var idIndex = {};
+
+	getAllVersions([vak,vakkern])
+	.then(function(results) {
+		results.forEach(function(entity) {
+			idIndex[entity.id] = entity;
+		});
+		return idIndex;
+	})		
+	.then(function(idIndex) {
+		var vakken = walkReplacedBy(idIndex, [vak]);
+		var vakkernen = walkReplacedBy(idIndex, [vakkern]);
+		vakkernen = vakkernen.filter(function(entry) {
+			var matchingVakken = vakken.filter(function(vakEntry) {
+				return hasId(vakEntry.Vakkern, entry.id);
+			});
+			return matchingVakken.length>0;
+		});
+		res.send(vakkernen);		
+	});
+});
+
+app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern").get((req, res) => {
 	var vak = req.params.vak;
 	var vakkern = req.params.vakkern;
 	var vaksubkern = req.params.vaksubkern;
 	var idIndex = {};
 
-	Promise.all([
-	        getById(vak),
-	        getById(vakkern),
-	        getById(vaksubkern),
-        ])
+	getAllVersions([vak, vakkern, vaksubkern])
 	.then(function(results) {
-		var vakOb = results[0];
-		var vakkernOb = results[1];
-		var vaksubkernOb = results[2];
-		idIndex[vak] = vakOb;
-		idIndex[vakkern] = vakkernOb;
-		idIndex[vaksubkern] = vaksubkernOb;
-
-		subQueries = [];
-		results.forEach(function(entry) {
-			if (entry.replacedBy) { // fixme: checks of ze bestaan;
-				entry.replacedBy.forEach(function(id) {
-					subQueries.push(getById(id));
-				});
-			}
-		});
-
-		return Promise.all(subQueries);
-	}).then(function(results) {
-		//FIXME: subquery results may in the future also be deprecated, so this should be done recursively
 		results.forEach(function(entry) {
 			idIndex[entry.id] = entry;
 		});
 
 		return idIndex;
 	}).then(function(idIndex) {
-		function hasId(list, id) {
-			for (var i=0; i<list.length; i++) {
-				if (list[i].id == id) {
-					return true;
-				}
-			}
-			return false;
-		}
 
-		var vaksubkernPotentials = idIndex[vaksubkern].replacedBy; //TODO: early exit if replacedBy doesn't exist
-		var vakkernPotentials = idIndex[vakkern].replacedBy;
-		var vakPotentials = idIndex[vak].replacedBy;
-		// FIXME: could be more than one
-		var matchingVak = idIndex[vakPotentials[0]];
-		vakkernPotentials = vakkernPotentials.filter(function(entryId) {
-			if (hasId(matchingVak.Vakkern, entryId)) {
-				return true;
-			} else {
-				return false;
-			}
+		var vaksubkernen = walkReplacedBy(idIndex, [vaksubkern]);
+		var vakkernen    = walkReplacedBy(idIndex, [vakkern]);
+		var vakken       = walkReplacedBy(idIndex, [vak]);
+
+		vakkernen = vakkernen.filter(function(entry) {
+			var matchingVakken = vakken.filter(function(vakEntry) {
+				return hasId(vakEntry.Vakkern, entry.id);
+			});
+			return matchingVakken.length>0;
 		});
-		//FIXME: could be more than one
-		var matchingVakkern = idIndex[vakkernPotentials[0]];
-		vaksubkernPotentials = vaksubkernPotentials.filter(function(entryId) {
-			if (hasId(matchingVakkern.Vaksubkern, entryId)) {
-				return true;
-			} else {
-				return false;
-			}
+		
+		vaksubkernen = vaksubkernen.filter(function(entry) {
+			var matchingVakkernen = vakkernen.filter(function(vakkernEntry) {
+				return hasId(vakkernEntry.Vaksubkern, entry.id);
+			});
+			return matchingVakkernen.length>0;
 		});
-		var matchingVaksubkern = idIndex[vaksubkernPotentials[0]];
-		res.send(matchingVaksubkern);
+		res.send(vaksubkernen);
 	});
 
+});
+
+app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud").get((req, res) => {
+	var vak = req.params.vak;
+	var vakkern = req.params.vakkern;
+	var vaksubkern = req.params.vaksubkern;
+	var vakinhoud = req.params.vakinhoud;
+	var idIndex = {};
+
+	getAllVersions([vak, vakkern, vaksubkern, vakinhoud])
+	.then(function(results) {
+		results.forEach(function(entry) {
+			idIndex[entry.id] = entry;
+		});
+
+		return idIndex;
+	}).then(function(idIndex) {
+
+		var vakinhouden  = walkReplacedBy(idIndex, [vakinhoud]);
+		var vaksubkernen = walkReplacedBy(idIndex, [vaksubkern]);
+		var vakkernen    = walkReplacedBy(idIndex, [vakkern]);
+		var vakken       = walkReplacedBy(idIndex, [vak]);
+
+		vakkernen = vakkernen.filter(function(entry) {
+			var matchingVakken = vakken.filter(function(vakEntry) {
+				return hasId(vakEntry.Vakkern, entry.id);
+			});
+			return matchingVakken.length>0;
+		});
+		
+		vaksubkernen = vaksubkernen.filter(function(entry) {
+			var matchingVakkernen = vakkernen.filter(function(vakkernEntry) {
+				return hasId(vakkernEntry.Vaksubkern, entry.id);
+			});
+			return matchingVakkernen.length>0;
+		});
+		
+		vakinhouden = vakinhouden.filter(function(entry) {
+			var matchingVaksubkernen = vaksubkernen.filter(function(vaksubkernEntry) {
+				return hasId(vaksubkernEntry.Vakinhoud, entry.id);
+			});
+			return matchingVaksubkernen.length>0;
+		});
+		
+		res.send(vakinhouden);
+	});
 
 });
-/*
-app.route("/api/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud").get((req, res) => {
-});
-*/
+
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
