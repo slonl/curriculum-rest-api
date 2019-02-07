@@ -104,6 +104,9 @@ query VaksubkernById($id:ID) {
     id
     title
     description
+    Vakinhoud {
+      id
+    }
     Doelniveau {
       Doel {
         title
