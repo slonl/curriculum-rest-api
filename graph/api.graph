@@ -37,6 +37,16 @@ query DoelById($id:ID) {
     title
     description
     volgnr
+    Doelniveau {
+      id
+      Niveau {
+        id
+        title
+        description
+        prefix
+        type
+      }
+    }
   }
 }
 
@@ -83,6 +93,7 @@ query VakById($id:ID) {
   Vak(id:$id) {
     id
     title
+    description
     unreleased
     replaces
     Vakkern {
@@ -90,6 +101,12 @@ query VakById($id:ID) {
     }
     Doelniveau {
       ...DoelNiveau
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
 }
@@ -109,6 +126,20 @@ query VakkernById($id:ID) {
     replaces
     Vaksubkern {
       id
+      title
+    }
+    Doelniveau {
+      ...DoelNiveau
+    }
+    Vak {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
 }
@@ -125,12 +156,23 @@ query VaksubkernById($id:ID) {
     description
     Vakinhoud {
       id
+      title
     }
     volgnr
     unreleased
     replaces
     Doelniveau {
       ...DoelNiveau
+    }
+    Vakkern {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
 }
@@ -151,6 +193,16 @@ query VakinhoudById($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
+    Vaksubkern {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
   }
 }
 
@@ -163,9 +215,16 @@ query Id($id:ID) {
     unreleased
     Vakkern {
       id
+      title
     }
     Doelniveau {
       ...DoelNiveau
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allVakkern(filter:{id:$id}) {
@@ -176,9 +235,20 @@ query Id($id:ID) {
     unreleased
     Vaksubkern {
       id
+      title
     }
     Doelniveau {
       ...DoelNiveau
+    }
+    Vak {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allVaksubkern(filter:{id:$id}) {
@@ -189,9 +259,20 @@ query Id($id:ID) {
     unreleased
     Vakinhoud {
       id
+      title
     }
     Doelniveau {
       ...DoelNiveau
+    }
+    Vakkern {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allVakinhoud(filter:{id:$id}) {
@@ -203,11 +284,32 @@ query Id($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
+    Vaksubkern {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
   }
   allDoel(filter:{id:$id}) {
     id
     title
     description
+    volgnr
+    Doelniveau {
+      id
+      Niveau {
+        id
+        title
+        description
+        prefix
+        type
+      }
+    }
   }
   allNiveau(filter:{id:$id}) {
     id
@@ -233,12 +335,15 @@ query Id($id:ID) {
     replacedBy
     Vakkern {
       id
+      title
     }
     Vaksubkern {
       id
+      title
     }
     Vakinhoud {
       id
+      title
     }
     Doelniveau {
       ...DoelNiveau
@@ -269,6 +374,10 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
       id
       title
     }
+    Niveau {
+      id
+      title
+    }
   }
 } 
 
@@ -291,6 +400,10 @@ query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
       } 
     }
     Vaksubkern(filter:{vakkern_id:[$id]}) {
+      id
+      title
+    }
+    Niveau {
       id
       title
     }
@@ -319,6 +432,10 @@ query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
       id
       title
     }
+    Niveau {
+      id
+      title
+    }
   }
 } 
 query VakinhoudOpNiveau($niveau:ID) {
@@ -337,6 +454,10 @@ query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
       }
+    }
+    Niveau {
+      id
+      title
     }
   }
 }
