@@ -1,0 +1,232 @@
+<title>SLO Curriculum Browser</title>
+<base href="/curriculum/api/v1/">
+<body data-simply-path="/curriculum/">
+
+<nav>
+    <ul>
+        <li><a href="vak/">Vakken</a></li>
+        <li><a href="vakkern/">Vakkernen</a></li>
+        <li><a href="vaksubkern/">Vaksubkernen</a></li>
+        <li><a href="vakinhoud/">Vakinhouden</a></li>
+        <li><a href="niveau/">Niveau's</a></li>
+        <li><a href="doelniveau/">Doelen op Niveau</a></li>
+        <li><a href="doel/">Doelen</a></li>
+        <li><a href="kerndoel/">Kerndoelen</a></li>
+    </ul>
+</nav>
+
+<main data-simply-field="view" data-simply-content="template">
+    <template data-simply-template="list">
+        <ul data-simply-list="list" xdata-simply-data="list">
+            <template rel="links"></template>
+        </ul>
+    </template>
+    <template data-simply-template="item">
+        <article>
+            <a href="#" data-simply-field="item.@id" data-simply-content="fixed">
+                <h1 data-simply-field="item.uuid"></h1>
+            </a>
+            <h2 data-simply-field="item.title"></h2>
+            <div>
+                <label>Type: </label><span data-simply-field="item.@type"></span>
+            </div>
+            <div data-simply-field="item.unreleased" data-simply-content="template" data-simply-default-template="false">
+                <template data-simply-template="true">
+                    <label>Unreleased</label>
+                </template>
+                <template data-simply-template="false">
+                </template>
+            </div>
+            <div data-simply-field="item.@type" data-simply-content="template">
+                <template data-simply-template="Deprecated">
+                    <label>Deprecated</label>
+                    <h3>Vervangen door</h3>
+                    <ul data-simply-list="item.replacedBy">
+                        <template rel="doelniveau"></template>
+                    </ul>
+                </template>
+            </div>
+            <div>
+                <label>Vervangt</label>
+                <ul data-simply-list="item.replaces">
+                    <template>
+                        <li><a href="#" data-simply-field="@id" data-simply-content="fixed">
+                            <span data-simply-field="uuid"></span>
+                        </a></li>
+                    </template>
+                </ul>
+            </div>
+            
+            <div data-simply-field="item.description"></div>
+            <div data-simply-field="item.@type" data-simply-content="template">
+                <template data-simply-template="Vak">
+                    <h3>Vakkernen</h3>
+                    <ul data-simply-list="item.Vakkern">
+                        <template rel="links"></template>
+                    </ul>
+                </template>
+                <template data-simply-template="Vakkern">
+                    <h3>Vaksubkernen</h3>
+                    <ul data-simply-list="item.Vaksubkern">
+                        <template rel="links"></template>
+                    </ul>
+                </template>
+                <template data-simply-template="Vaksubkern">
+                    <h3>Vakinhouden</h3>
+                    <ul data-simply-list="item.Vakinhoud">
+                        <template rel="links"></template>
+                    </ul>
+                </template>
+                <template data-simply-template="Vakinhoud">
+                    <h3>Doelen op niveau</h3>
+                    <ul data-simply-list="item.Doelniveau">
+                        <template rel="doelniveau"></template>
+                    </ul>
+                </template>
+            </div>            
+            <div>
+                <label>Niveau's</label>
+                <ul data-simply-list="item.Niveau">
+                    <template rel="refs"></template>
+                </ul>
+            </div>
+        </article>
+    </template>
+</main>
+<template id="links">
+    <li><a href="#" data-simply-field="@id" data-simply-content="fixed">
+         <span data-simply-field="title">titel</span>
+    </a></li>
+</template>
+<template id="doelniveau">
+    <li><a href="#" data-simply-field="@id" data-simply-content="fixed">
+         <span data-simply-field="uuid">titel</span>
+    </a></li>
+</template>
+<template id="refs">
+    <li><a href="#" data-simply-field="$ref" data-simply-content="fixed">
+         <span data-simply-field="title">titel</span>
+    </a></li>
+</template>
+<script src="//cdn.simplyedit.io/1/simply-edit.js"></script>
+<script src="/assets/simplyview/dist/simply.everything.js"></script>
+<script>
+    simply.bind = false;
+    
+    var browser = simply.app({
+        container: document.body,
+        routes: {
+            '/curriculum/api/v1/niveau/:niveau/vak/:vakid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakkern/:vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'vakkern/', params.vakkernid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'vaksubkern/', params.vaksubkernid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'vakinhoud/', params.vakinhoudid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/vak/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vak/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vakkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vaksubkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
+            },
+            '/curriculum/api/v1/niveau/:niveau': function(params) {
+                browser.actions.item(params.niveau);
+            },
+            '/curriculum/api/v1/vak/': function(params) {
+                browser.actions.list('vak/')
+            },
+            '/curriculum/api/v1/vakkern/': function(params) {
+                browser.actions.list('vakkern/')
+            },
+            '/curriculum/api/v1/vaksubkern/': function(params) {
+                browser.actions.list('vaksubkern/')
+            },
+            '/curriculum/api/v1/vakinhoud/': function(params) {
+                browser.actions.list('vakinhoud/')
+            },
+            '/curriculum/api/v1/niveau/': function(params) {
+                browser.actions.list('niveau/')
+            },
+            '/curriculum/api/v1/doelniveau/': function(params) {
+                browser.actions.list('doelniveau/')
+            },
+            '/curriculum/api/v1/doel/': function(params) {
+                browser.actions.list('doel/')
+            },
+            '/curriculum/api/v1/kerndoel/': function(params) {
+                browser.actions.list('kerndoel/')
+            },
+            '/curriculum/uuid/:id': function(params) {
+                browser.actions.item(params.id);
+            }
+        },
+        actions: {
+            list: function(type) {
+                return slo.api.get('/curriculum/api/v1/'+type)
+                .then(function(json) {
+                    browser.view.view = 'list';
+                    browser.view.list = json;
+//                    editor.addDataSource('list', {
+//                        load: json
+//                    });
+                })
+                .catch(function(error) {
+                });
+            },
+            item: function(id) {
+                return slo.api.get('/curriculum/api/v1/uuid/'+id+'/')
+                .then(function(json) {
+                    browser.view.view = 'item';
+                    browser.view.item = json;
+                });
+            },
+            listOpNiveau: function(niveau, type) {
+                return slo.api.get('/curriculum/api/v1/niveau/'+niveau+'/'+type)
+                .then(function(json) {
+                    browser.view.view = 'list';
+                    browser.view.list = json;
+                });
+            },
+            itemOpNiveau: function(niveau, type, id) {
+                return slo.api.get('/curriculum/api/v1/niveau/'+niveau+'/'+type+id)
+                .then(function(json) {
+                    browser.view.view = 'item';
+                    browser.view.item = json;
+                });
+            }
+        }
+    });
+
+    const baseURL = 'https://opendata.slo.nl';
+    var slo = {
+        api: {
+            get: function(path) {
+                return fetch(baseURL + path, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(function(response) {
+                    var json = response.json();
+                    if (response.ok) {
+                        return json;
+                    }
+                    return json.then(Promise.reject.bind(Promise));
+                });
+            }
+        }
+    }
+
+</script>
+</body>
