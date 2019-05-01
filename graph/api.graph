@@ -492,6 +492,132 @@ query Id($id:ID) {
       ...DoelNiveau
     }
   }
+  allLdkVak(filter:{id:$id}) {
+    id
+    title
+    LdkVakkern {
+      id
+      title
+    }
+    Doelniveau {
+      ...DoelNiveau
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+  allLdkVakkern(filter:{id:$id}) {
+    id
+    title
+    LdkVaksubkern {
+      id
+      title
+    }
+    Doelniveau {
+      ...DoelNiveau
+    }
+    LdkVak {
+      id
+      title
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+  allLdkVaksubkern(filter:{id:$id}) {
+    id
+    title
+    LdkVakinhoud {
+      id
+      title
+    }
+    Doelniveau {
+      ...DoelNiveau
+    }
+    LdkVakkern {
+      id
+      title
+      LdkVak {
+        id
+        title
+      }
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+  allLdkVakinhoud(filter:{id:$id}) {
+    id
+    title
+    Doelniveau {
+      ...DoelNiveau
+    }
+    LdkVaksubkern {
+      id
+      title
+      LdkVakkern {
+        id
+        title
+        LdkVak {
+          id
+          title
+        }
+      }
+    }
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
+  }
+  allKerndoelDomein(filter:{id:$id}) {
+    id
+    title
+    Kerndoel {
+      id
+      title
+      prefix
+    }
+    KerndoelVakleergebied {
+      id
+      title
+    }
+  }
+  allKerndoelVakleergebied(filter:{id:$id}) {
+    id
+    title
+    KerndoelDomein {
+      id
+      title
+    }
+    KerndoelUitstroomprofiel {
+      id
+      title
+    }
+    Kerndoel {
+      id
+      title
+      prefix
+    }
+  }
+  allKerndoelUitstroomprofiel(filter:{id:$id}) {
+    id
+    title
+    KerndoelVakleergebied {
+      id
+      title
+    }
+  }
 }
 
 # Queries voor alles op specific niveau
