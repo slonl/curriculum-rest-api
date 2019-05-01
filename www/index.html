@@ -57,6 +57,13 @@
                 <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
                 <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
                 <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
+                <li><a href="kerndoeldomein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
+                <li><a href="kerndoeluitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
+                <li><a href="kerndoelvakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
+                <li><a href="ldkvak/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakken</a></li>
+                <li><a href="ldkvakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
+                <li><a href="ldkvaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
+                <li><a href="ldkvakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
             </ul>
         </li>
     </ul>
@@ -312,6 +319,13 @@
         'doel/': 'Doelen',
         'doelniveau/': 'Doelen op Niveau',
         'kerndoel/': 'Kerndoelen',
+        'kerndoeldomein/': 'Kerndoel Domeinen',
+        'kerndoeluitstroomprofiel/': 'Kerndoel Uitstroomprofiel',
+        'kerndoelvakleergebied/': 'Kerndoel Vakleergebied',
+        'ldkvak/': 'Leerdoelkaart Vakken',
+        'ldkvakkern/': 'Leerdoelkaart Vakkernen',
+        'ldkvaksubkern/': 'Leerdoelkaart Vaksubkernen',
+        'ldkvakinhoud/': 'Leerdoelkaart Vakinhouden',
         'legacy': 'Vervangen door:'
     };
         
@@ -366,8 +380,29 @@
             '/curriculum/api/v1/doel/': function(params) {
                 browser.actions.list('doel/')
             },
+            '/curriculum/api/v1/ldkvak/': function(params) {
+                browser.actions.list('ldkvak/')
+            },
+            '/curriculum/api/v1/ldkvakkern/': function(params) {
+                browser.actions.list('ldkvakkern/')
+            },
+            '/curriculum/api/v1/ldkvaksubkern/': function(params) {
+                browser.actions.list('ldkvaksubkern/')
+            },
+            '/curriculum/api/v1/ldkvakinhoud/': function(params) {
+                browser.actions.list('ldkvakinhoud/')
+            },
             '/curriculum/api/v1/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
+            },
+            '/curriculum/api/v1/kerndoeldomein/': function(params) {
+                browser.actions.list('kerndoeldomein/')
+            },
+            '/curriculum/api/v1/kerndoeluitstroomprofiel/': function(params) {
+                browser.actions.list('kerndoeluitstroomprofiel/')
+            },
+            '/curriculum/api/v1/kerndoelvakleergebied/': function(params) {
+                browser.actions.list('kerndoelvakleergebied/')
             },
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
