@@ -1,8 +1,3 @@
-query DoelNiveau {
-  allDoelniveau {
-    id
-  }
-}
 fragment DoelNiveau on Doelniveau {
     id
     Doel {
@@ -17,6 +12,20 @@ fragment DoelNiveau on Doelniveau {
       prefix
       type
     }
+    Kerndoel {
+      id
+      title
+      description
+      prefix
+    }
+}
+query DoelNiveau($page:Int,$perPage:Int) {
+  allDoelniveau(page:$page,perPage:$perPage) {
+    ...DoelNiveau
+  }
+  _allDoelniveauMeta {
+    count
+  }
 }
 query DoelNiveauById($id:ID) {
   Doelniveau(id:$id) {
@@ -24,10 +33,13 @@ query DoelNiveauById($id:ID) {
   }
 }
 
-query Doel {
-  allDoel {
+query Doel($page:Int,$perPage:Int) {
+  allDoel(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allDoelMeta {
+    count
   }
 }
 
@@ -50,10 +62,13 @@ query DoelById($id:ID) {
   }
 }
 
-query Kerndoel {
-  allKerndoel {
+query Kerndoel($page:Int,$perPage:Int) {
+  allKerndoel(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allKerndoelMeta {
+    count
   }
 }
 
@@ -61,17 +76,19 @@ query KerndoelById($id:ID) {
   Kerndoel(id:$id) {
     id
     title
-    type
     Doelniveau {
       ...DoelNiveau
     }
   }
 }
 
-query Niveau {
-  allNiveau {
+query Niveau($page:Int,$perPage:Int) {
+  allNiveau(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allNiveauMeta {
+    count
   }
 }
 query NiveauById($id:ID) {
@@ -83,10 +100,13 @@ query NiveauById($id:ID) {
     type
   }
 }
-query Vak {
-  allVak {
+query Vak($page:Int,$perPage:Int) {
+  allVak(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allVakMeta {
+    count
   }
 }
 query VakById($id:ID) {
@@ -110,10 +130,13 @@ query VakById($id:ID) {
     }
   }
 }
-query Vakkern {
-  allVakkern {
+query Vakkern($page:Int,$perPage:Int) {
+  allVakkern(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allVakkernMeta {
+    count
   }
 }
 query VakkernById($id:ID) {
@@ -143,10 +166,13 @@ query VakkernById($id:ID) {
     }
   }
 }
-query Vaksubkern {
-  allVaksubkern {
+query Vaksubkern($page:Int,$perPage:Int) {
+  allVaksubkern(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allVaksubkernMeta {
+    count
   }
 }
 query VaksubkernById($id:ID) {
@@ -176,10 +202,13 @@ query VaksubkernById($id:ID) {
     }
   }
 }
-query Vakinhoud {
-  allVakinhoud {
+query Vakinhoud($page:Int,$perPage:Int) {
+  allVakinhoud(page:$page,perPage:$perPage) {
     id
     title
+  }
+  _allVakinhoudMeta {
+    count
   }
 }
 query VakinhoudById($id:ID) {
@@ -267,6 +296,10 @@ query Id($id:ID) {
     Vakkern {
       id
       title
+      Vak {
+        id
+        title
+      }
     }
     NiveauIndex {
       Niveau {
@@ -287,6 +320,14 @@ query Id($id:ID) {
     Vaksubkern {
       id
       title
+      Vakkern {
+        id
+        title
+        Vak {
+          id
+          title
+        }
+      }
     }
     NiveauIndex {
       Niveau {
@@ -301,13 +342,46 @@ query Id($id:ID) {
     description
     volgnr
     Doelniveau {
-      id
-      Niveau {
+      ...DoelNiveau
+      Vak {
         id
         title
-        description
-        prefix
-        type
+      }
+      Vakkern {
+        id
+        title
+        Vak {
+          id
+          title
+        }
+      }
+      Vaksubkern {
+        id
+        title
+        Vakkern {
+          id
+          title
+          Vak {
+            id
+            title
+          }
+        }
+      }
+      Vakinhoud {
+        id
+        title
+        Vaksubkern {
+          id
+          title
+          Vakkern {
+            id
+            title
+            Vak {
+              id
+              title
+            }
+          }
+        }
       }
     }
   }
@@ -315,14 +389,59 @@ query Id($id:ID) {
     id
     title
     description
+    NiveauIndex {
+      Vak {
+        id
+        title
+      }
+    }
   }
   allDoelniveau(filter:{id:$id}) {
     ...DoelNiveau
+    Vak {
+      id
+      title
+    }
+    Vakkern {
+      id
+      title
+      Vak {
+        id
+        title
+      }
+    }
+    Vaksubkern {
+      id
+      title
+      Vakkern {
+        id
+        title
+        Vak {
+          id
+          title
+        }
+      }
+    }
+    Vakinhoud {
+      id
+      title
+      Vaksubkern {
+        id
+        title
+        Vakkern {
+          id
+          title
+          Vak {
+            id
+            title
+          }
+        }
+      }
+    }
   }
   allKerndoel(filter:{id:$id}) {
     id
     title
-    type
     Doelniveau {
       ...DoelNiveau
     }
@@ -336,14 +455,38 @@ query Id($id:ID) {
     Vakkern {
       id
       title
+      Vak {
+        id
+        title
+      }
     }
     Vaksubkern {
       id
       title
+      Vakkern {
+        id
+        title
+        Vak {
+          id
+          title
+        }
+      }
     }
     Vakinhoud {
       id
       title
+      Vaksubkern {
+        id
+        title
+        Vakkern {
+          id
+          title
+          Vak {
+            id
+            title
+          }
+        }
+      }
     }
     Doelniveau {
       ...DoelNiveau
@@ -388,6 +531,7 @@ query VakkernOpNiveau($niveau:ID) {
       title
     }
   }
+
 } 
 
 query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
@@ -395,6 +539,10 @@ query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
     Vakkern(filter:{id:$id}) {
       id
       title
+      Vak {
+        id
+        title
+      }
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
       } 
@@ -424,6 +572,10 @@ query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
     Vaksubkern(filter:{id:$id}) {
       id
       title
+      Vakkern {
+        id
+        title
+      }
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
       } 
@@ -451,6 +603,10 @@ query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
     Vakinhoud(filter:{id:$id}) {
       id
       title
+      Vaksubkern {
+        id
+        title
+      }
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
       }
@@ -499,3 +655,67 @@ query DeprecatedById($id:ID) {
 #    }
 #  }
 #}
+
+query LdkVak($page:Int,$perPage:Int) {
+  allLdkVak(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allLdkVakMeta {
+    count
+  }
+}
+query LdkVakkern($page:Int,$perPage:Int) {
+  allLdkVakkern(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allLdkVakkernMeta {
+    count
+  }
+}
+query LdkVaksubkern($page:Int,$perPage:Int) {
+  allLdkVaksubkern(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allLdkVaksubkernMeta {
+    count
+  }
+}
+query LdkVakinhoud($page:Int,$perPage:Int) {
+  allLdkVakinhoud(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allLdkVakinhoudMeta {
+    count
+  }
+}
+query KerndoelDomein($page:Int,$perPage:Int) {
+  allKerndoelDomein(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allKerndoelDomeinMeta {
+    count
+  }
+}
+query KerndoelUitstroomprofiel($page:Int,$perPage:Int) {
+  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allKerndoelUitstroomprofielMeta {
+    count
+  }
+}
+query KerndoelVakleergebied($page:Int,$perPage:Int) {
+  allKerndoelVakleergebied(page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allKerndoelVakleergebiedMeta {
+    count
+  }
+}

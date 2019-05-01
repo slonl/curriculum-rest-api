@@ -15,6 +15,7 @@ const niveauURL       = "https://opendata.slo.nl/curriculum/api/v1/niveau/";
 
 
 app.use(function(req, res, next) {
+	res.header('Access-Control-Allow-Origin','*');
 	if (req.accepts('html')) {
 		res.set('Content-Type', 'text/html');
 		res.sendFile(path.join(__dirname, '../www/', 'index.html'));
@@ -26,7 +27,16 @@ app.use(function(req, res, next) {
 
 var graphQueries = fs.readFileSync("graph/api.graph", "utf8");
 
-function graphQuery(operationName, variables) {
+function graphQuery(operationName, variables, query) {
+	if (!variables) {
+		variables = {};
+	}
+	if (!query) {
+		query = {};
+	}
+	variables.page = query.page ? query.page : 0;
+	variables.perPage = query.perPage ? query.perPage : 100;
+
 	var postData = {
 		query : graphQueries,
 		operationName : operationName,
@@ -48,6 +58,9 @@ function graphQuery(operationName, variables) {
 }
 
 function jsonLD(entry, schema, type) {
+	if (!entry || !entry.id) {
+		return entry;
+	}
 	var result = {
 		'@id': baseIdURL + entry.id,
 		'@context': schema,
@@ -55,23 +68,41 @@ function jsonLD(entry, schema, type) {
 		'uuid': entry.id
 	};
 	delete entry.id;
-	['Vak','Vakkern','Vaksubkern','Vakinhoud','Doelniveau', 'Doel', 'Niveau'].forEach(function(listName) {
+	['Vak','Vakkern','Vaksubkern','Vakinhoud','Doelniveau', 'Doel', 'Niveau','replaces','replacedBy'].forEach(function(listName) {
 		if (entry[listName]) {
 			result[listName] = jsonLDList(entry[listName]);
+			if (listName=='Niveau') {
+				result[listName] = result[listName].map(function(entry) {
+					entry['$ref'] = niveauURL + entry.uuid;
+					return entry;
+				});
+			}
 			delete entry[listName];
 		}
 	});
 	if (entry['NiveauIndex']) {
-		result['Niveau'] = entry['NiveauIndex'].map(function(ni) {
-			return {
-				'@id': baseIdURL + ni.Niveau[0].id,
-				'title': ni.Niveau[0].title,
-				'$ref': niveauURL + ni.Niveau[0].id + '/' + type.toLowerCase() + '/' + result['uuid']
+		if (type=='Niveau') {
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['Vak']) {
+				result['Vak'] = entry['NiveauIndex'][0]['Vak'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/vak/' + link.id
+					}
+				});
 			}
-		});
+		} else {
+			result['Niveau'] = entry['NiveauIndex'].map(function(ni) {
+				return {
+					'@id': baseIdURL + ni.Niveau[0].id,
+					'title': ni.Niveau[0].title,
+					'$ref': niveauURL + ni.Niveau[0].id + '/' + type.toLowerCase() + '/' + result['uuid']
+				}
+			});
+		}
 		delete entry['NiveauIndex'];
 	}
-	['replaces','replacedBy'].forEach(function(listName) {
+/*	['replaces','replacedBy'].forEach(function(listName) {
 		if (!entry[listName]) {
 			return;
 		}
@@ -83,13 +114,14 @@ function jsonLD(entry, schema, type) {
 		});
 		delete entry[listName];
 	});
+*/
 	Object.keys(entry).forEach(function(key) {
 		result[key] = entry[key];
 	});
 	return result;
 }
 
-function jsonLDList(list, schema) {
+function jsonLDList(list, schema, niveau, meta) {
 	if (schema) {
 		list['@context'] = schema;
 	}
@@ -99,48 +131,109 @@ function jsonLDList(list, schema) {
 			'uuid': link.id
 		};
 		delete link.id;
-		['Doel','Niveau'].forEach(function(listName) {
-			if (link[listName]) {
-				result[listName] = jsonLDList(link[listName]);
-				delete link[listName];
-			}
-		});
 		Object.keys(link).forEach(function(key) {
-			result[key] = link[key];
+			if (Array.isArray(link[key])) {
+				result[key] = jsonLDList(link[key]);
+			} else {
+				result[key] = link[key];
+			}
 		});
 		return result;
 	});
-	return list;
+	if (meta) {
+		meta.data = list;
+		return meta;
+	} else {
+		return list;
+	}
 }
 
 app.route(apiBase + 'uuid/:id').get((req, res) => {
+	var schema = null;
+	var entitype = null;
+
+	var getEntity = function(result) {
+		for (i in result.data) {
+			if (result.data[i].length) {
+				return result.data[i][0];
+			}
+		}
+	};
+	
         graphQuery("Id", req.params)
 	.then(function(result) {
 		for (i in result.data) {
-			if (result.data[i].length) {
+			if (result.data[i] && result.data[i].length) {
 				result = result.data[i][0];
-				var entitytype = i.replace(/^all/, '');
+				entitytype = i.replace(/^all/, '');
 				switch(entitytype) {
 					case "Vak":
 					case "Vakkern":
 					case "Vaksubkern":
 					case "Vakinhoud":
-						var schema = inhoudSchemaURL;
+						schema = inhoudSchemaURL;
 					break;
 					default:
-						var schema = doelSchemaURL;
+						schema = doelSchemaURL;
 					break;
 				}
-				res.send(jsonLD(result, schema, entitytype));
-				return;
+				return result;
 			}
 		}
+		return result;
+	})
+	.then(function(result) {
+		if (result.replacedBy) {
+			return Promise.all(result.replacedBy.map(function(id) {
+				return graphQuery("Id", {id: id})
+				.then(function(result) {
+					return getEntity(result);
+				})
+				.then(function(entity) {
+					return {
+						id: entity.id,
+						title: entity.title
+					}
+				});
+			}))
+			.then(function(replacedBy) {
+				result.replacedBy = replacedBy;
+				return result;
+			});
+		}
+		return result;
+	})
+	.then(function(result) {
+		if (result.replaces) {
+			return Promise.all(result.replaces.map(function(id) {
+				return graphQuery("Id",{id: id})
+				.then(function(result) {
+					return getEntity(result);
+				})
+				.then(function(entity) {
+					console.log(entity);
+					return {
+						id: entity.id,
+						title: entity.title
+					}
+				});
+			}))
+			.then(function(replaces) {
+				result.replaces = replaces;
+				return result;
+			});
+		}
+		return result;
+	})
+	.then(function(result) {
+		res.send(jsonLD(result, schema, entitytype));
         });
 });
 
 app.route(apiBase + 'deprecated/').get((req, res) => {
-	graphQuery("Deprecated", null, function(result) {
-		res.send(jsonLD(result.data.allDeprecated, inhoudSchemaURL, 'Deprecated'));
+	graphQuery("Deprecated", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allDeprecated, result.data._allDeprecatedMeta));
 	});
 });
 
@@ -161,9 +254,9 @@ app.route(apiBase + 'deprecated/:id/vak/:id').get((req, res) => {
 
 
 app.route(apiBase + 'niveau').get((req, res) => {
-	graphQuery("Niveau", null)
+	graphQuery("Niveau", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveau));
+		res.send(jsonLDList(result.data.allNiveau, null, null, result.data._allNiveauMeta));
 	});
 });
 
@@ -176,9 +269,9 @@ app.route(apiBase + 'niveau/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'doel').get((req, res) => {
-	graphQuery("Doel", null)
+	graphQuery("Doel", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allDoel));
+		res.send(jsonLDList(result.data.allDoel, null, null, result.data._allDoelMeta));
 	});
 });
 
@@ -190,9 +283,9 @@ app.route(apiBase + 'doel/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'kerndoel').get((req, res) => {
-	graphQuery("Kerndoel", null)
+	graphQuery("Kerndoel", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoel));
+		res.send(jsonLDList(result.data.allKerndoel, null, null, result.data._allKerndoelMeta));
 	});
 });
 
@@ -203,10 +296,17 @@ app.route(apiBase + 'kerndoel/:id').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'vak').get((req, res) => {
-	graphQuery("Vak", null)
+app.route(apiBase + 'doelniveau').get((req, res) => {
+	graphQuery("DoelNiveau", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVak));
+		res.send(jsonLDList(result.data.allDoelniveau, null, null, result.data._allDoelniveauMeta));
+	});
+});
+
+app.route(apiBase + 'vak').get((req, res) => {
+	graphQuery("Vak", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allVak, null, null, result.data._allVakMeta));
 	});
 });
 
@@ -218,9 +318,9 @@ app.route(apiBase + 'vak/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'vakkern').get((req, res) => {
-	graphQuery("Vakkern", null)
+	graphQuery("Vakkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVakkern));
+		res.send(jsonLDList(result.data.allVakkern, null, null, result.data._allVakkernMeta));
 	});
 });
 
@@ -232,9 +332,9 @@ app.route(apiBase + 'vakkern/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'vaksubkern').get((req, res) => {
-	graphQuery("Vaksubkern", null)
+	graphQuery("Vaksubkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVaksubkern));
+		res.send(jsonLDList(result.data.allVaksubkern, null, null, result.data._allVaksubkernMeta));
 	});
 });
 
@@ -246,9 +346,9 @@ app.route(apiBase + 'vaksubkern/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'vakinhoud').get((req, res) => {
-	graphQuery("Vakinhoud", null)
+	graphQuery("Vakinhoud", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVakinhoud));
+		res.send(jsonLDList(result.data.allVakinhoud, null, null, result.data._allVakinhoudMeta));
 	});
 });
 
@@ -352,6 +452,9 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 
 function getById(id) {
 	return graphQuery("Id", {id: id}).then(function(result) {
+		if (!result || !result.data) {
+			return null;
+		}
 		for (i in result.data) {
 			if (result.data[i].length) {
 				result = result.data[i][0];
@@ -373,7 +476,11 @@ function getAllVersions(ids, entities) {
 	.then(function(results) {
 		var replaced = [];
 		var all = [];
-		results.forEach(function(entity) {
+		results.forEach(function(entity, index) {
+			if (!entity) {
+				console.error('null values returned for ids at index:'+index,ids);
+				return;
+			}
 			if (entity.replacedBy) {
 				replaced = replaced.concat(entity.replacedBy);
 			}
@@ -434,7 +541,7 @@ app.route(apiBase+"legacy/vak/:vak/").get((req, res) => {
 	var vak = req.params.vak;
 	getLatestVersions([vak])
 	.then(function(results) {
-		res.send(results);	
+		res.send(jsonLDList(results, null, null, {count: results.length}));	
 	});
 });
 
@@ -453,13 +560,17 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/").get((req, res) => {
 	.then(function(idIndex) {
 		var vakken = walkReplacedBy(idIndex, [vak]);
 		var vakkernen = walkReplacedBy(idIndex, [vakkern]);
-		vakkernen = vakkernen.filter(function(entry) {
+		var matchingVakkernen = vakkernen.filter(function(entry) {
 			var matchingVakken = vakken.filter(function(vakEntry) {
 				return hasId(vakEntry.Vakkern, entry.id);
 			});
 			return matchingVakken.length>0;
 		});
-		res.send(vakkernen);		
+		if (matchingVakkernen.length) {
+			res.send(jsonLDList(matchingVakkernen, null, null, {count: vakkernen.length}));
+		} else {
+			res.send(jsonLDList(vakkernen,null,null,{error: 'not found'}));
+		}
 	});
 });
 
@@ -489,13 +600,17 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern").get
 			return matchingVakken.length>0;
 		});
 		
-		vaksubkernen = vaksubkernen.filter(function(entry) {
+		var matchingVaksubkernen = vaksubkernen.filter(function(entry) {
 			var matchingVakkernen = vakkernen.filter(function(vakkernEntry) {
 				return hasId(vakkernEntry.Vaksubkern, entry.id);
 			});
 			return matchingVakkernen.length>0;
 		});
-		res.send(vaksubkernen);
+		if (matchingVaksubkernen.length) {
+			res.send(jsonLDList(matchingVaksubkernen, null, null, {count: vaksubkernen.length}));
+		} else {
+			res.send(jsonLDList(vaksubkernen,null,null,{error: 'not found'}));
+		}
 	});
 
 });
@@ -520,7 +635,7 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakin
 		var vaksubkernen = walkReplacedBy(idIndex, [vaksubkern]);
 		var vakkernen    = walkReplacedBy(idIndex, [vakkern]);
 		var vakken       = walkReplacedBy(idIndex, [vak]);
-
+		
 		vakkernen = vakkernen.filter(function(entry) {
 			var matchingVakken = vakken.filter(function(vakEntry) {
 				return hasId(vakEntry.Vakkern, entry.id);
@@ -535,14 +650,18 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakin
 			return matchingVakkernen.length>0;
 		});
 		
-		vakinhouden = vakinhouden.filter(function(entry) {
+		var matchingVakinhouden = vakinhouden.filter(function(entry) {
 			var matchingVaksubkernen = vaksubkernen.filter(function(vaksubkernEntry) {
 				return hasId(vaksubkernEntry.Vakinhoud, entry.id);
 			});
 			return matchingVaksubkernen.length>0;
 		});
 		
-		res.send(vakinhouden);
+		if (matchingVakinhouden.length) {
+			res.send(jsonLDList(matchingVakinhouden, null, null, {count: vakinhouden.length}));
+		} else {
+			res.send(jsonLDList(vakinhouden,null,null,{error: 'not found'}));
+		}
 	});
 
 });
