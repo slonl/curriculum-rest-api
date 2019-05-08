@@ -10,6 +10,8 @@ const apiBase = "/";
 const backendUrl      = "http://localhost:3000";
 const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonld";
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
+const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
+const leerdoelkaartSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld";
 const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 const niveauURL       = "https://opendata.slo.nl/curriculum/api/v1/niveau/";
 
@@ -68,7 +70,13 @@ function jsonLD(entry, schema, type) {
 		'uuid': entry.id
 	};
 	delete entry.id;
-	['Vak','Vakkern','Vaksubkern','Vakinhoud','Doelniveau', 'Doel', 'Niveau','replaces','replacedBy'].forEach(function(listName) {
+	[
+		'LdkVak','LdkVakkern','LdkVaksubkern','LdkVakinhoud',
+		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
+		'Vak','Vakkern','Vaksubkern','Vakinhoud',
+		'Doelniveau', 'Doel', 'Niveau',
+		'replaces','replacedBy'
+	].forEach(function(listName) {
 		if (entry[listName]) {
 			result[listName] = jsonLDList(entry[listName]);
 			if (listName=='Niveau') {
@@ -150,7 +158,7 @@ function jsonLDList(list, schema, niveau, meta) {
 
 app.route(apiBase + 'uuid/:id').get((req, res) => {
 	var schema = null;
-	var entitype = null;
+	var entitytype = null;
 
 	var getEntity = function(result) {
 		for (i in result.data) {
@@ -172,6 +180,18 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case "Vaksubkern":
 					case "Vakinhoud":
 						schema = inhoudSchemaURL;
+					break;
+					case "LdkVak":
+					case "LdkVakkern":
+					case "LdkVaksubkern":
+					case "LdkVakinhoud":
+						schema = leerdoelkaartSchemaURL;
+					break;
+					case "Kerndoel":
+					case "KerndoelDomein":
+					case "KerndoelVakleergebied":
+					case "KerndoelUitstroomprofiel":
+						schema = kerndoelSchemaURL;
 					break;
 					default:
 						schema = doelSchemaURL;
@@ -275,27 +295,6 @@ app.route(apiBase + 'doel').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'doel/:id').get((req, res) => {
-	graphQuery("DoelById", req.params)
-	.then(function(result) {
-		res.send(jsonLD(result.data.Doel, doelSchemaURL, 'Doel'));
-	});
-});
-
-app.route(apiBase + 'kerndoel').get((req, res) => {
-	graphQuery("Kerndoel", req.params, req.query)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoel, null, null, result.data._allKerndoelMeta));
-	});
-});
-
-app.route(apiBase + 'kerndoel/:id').get((req, res) => {
-	graphQuery("KerndoelById", req.params)
-	.then(function(result) {
-		res.send(jsonLD(result.data.Kerndoel, doelSchemaURL, 'Kerndoel'));
-	});
-});
-
 app.route(apiBase + 'doelniveau').get((req, res) => {
 	graphQuery("DoelNiveau", req.params, req.query)
 	.then(function(result) {
@@ -310,24 +309,10 @@ app.route(apiBase + 'vak').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'vak/:id').get((req, res) => {
-	graphQuery("VakById", req.params)
-	.then(function(result) {
-		res.send(jsonLD(result.data.Vak, inhoudSchemaURL, 'Vak'));
-	});
-});
-
 app.route(apiBase + 'vakkern').get((req, res) => {
 	graphQuery("Vakkern", req.params, req.query)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allVakkern, null, null, result.data._allVakkernMeta));
-	});
-});
-
-app.route(apiBase + 'vakkern/:id').get((req, res) => {
-	graphQuery("VakkernById", req.params)
-	.then(function(result) {
-		res.send(jsonLD(result.data.Vakkern, inhoudSchemaURL, 'Vakkern'));
 	});
 });
 
@@ -338,13 +323,6 @@ app.route(apiBase + 'vaksubkern').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'vaksubkern/:id').get((req, res) => {
-	graphQuery("VaksubkernById", req.params)
-	.then(function(result) {
-		res.send(jsonLD(result.data.Vaksubkern, inhoudSchemaURL, 'Vaksubkern'));
-	});
-});
-
 app.route(apiBase + 'vakinhoud').get((req, res) => {
 	graphQuery("Vakinhoud", req.params, req.query)
 	.then(function(result) {
@@ -352,12 +330,57 @@ app.route(apiBase + 'vakinhoud').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'vakinhoud/:id').get((req, res) => {
-	graphQuery("VakinhoudById", req.params)
+app.route(apiBase + 'ldk_vak').get((req, res) => {
+	graphQuery("LdkVak", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLD(result.data.Vakinhoud, inhoudSchemaURL, 'Vakinhoud'));
+		res.send(jsonLDList(result.data.allLdkVak, null, null, result.data._allLdkVakMeta));
 	});
 });
+app.route(apiBase + 'ldk_vakkern').get((req, res) => {
+	graphQuery("LdkVakkern", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLdkVakkern, null, null, result.data._allLdkVakkernMeta));
+	});
+});
+app.route(apiBase + 'ldk_vaksubkern').get((req, res) => {
+	graphQuery("LdkVaksubkern", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLdkVaksubkern, null, null, result.data._allLdkVaksubkernMeta));
+	});
+});
+app.route(apiBase + 'ldk_vakinhoud').get((req, res) => {
+	graphQuery("LdkVakinhoud", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLdkVakinhoud, null, null, result.data._allLdkVakinhoudMeta));
+	});
+});
+
+app.route(apiBase + 'kerndoel').get((req, res) => {
+	graphQuery("Kerndoel", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allKerndoel, null, null, result.data._allKerndoelMeta));
+	});
+});
+
+app.route(apiBase + 'kerndoel_domein').get((req, res) => {
+	graphQuery("KerndoelDomein", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allKerndoelDomein, null, null, result.data._allKerndoelDomeinMeta));
+	});
+});
+app.route(apiBase + 'kerndoel_vakleergebied').get((req, res) => {
+	graphQuery("KerndoelVakleergebied", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allKerndoelVakleergebied, null, null, result.data._allKerndoelVakleergebiedMeta));
+	});
+});
+app.route(apiBase + 'kerndoel_uitstroomprofiel').get((req, res) => {
+	graphQuery("KerndoelUitstroomprofiel", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allKerndoelUitstroomprofiel, null, null, result.data._allKerndoelUitstroomprofielMeta));
+	});
+});
+
 /* Queries op niveau */
 app.route(apiBase + 'niveau/:niveau/doel').get((req, res) => {
 	graphQuery("DoelOpNiveau", req.params)
