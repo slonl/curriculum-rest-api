@@ -99,12 +99,28 @@ function jsonLD(entry, schema, type) {
 					}
 				});
 			}
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['LdkVak']) {
+				result['LdkVak'] = entry['NiveauIndex'][0]['LdkVak'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/ldk_vak/' + link.id
+					}
+				});
+			}
 		} else {
+			var urlType = '';
+			if (type.substr(0,3)=='Ldk') {
+				urlType = 'ldk_'+type.substr(3).toLowerCase();
+			} else {
+				urlType = type.toLowerCase();
+			}
+				
 			result['Niveau'] = entry['NiveauIndex'].map(function(ni) {
 				return {
 					'@id': baseIdURL + ni.Niveau[0].id,
 					'title': ni.Niveau[0].title,
-					'$ref': niveauURL + ni.Niveau[0].id + '/' + type.toLowerCase() + '/' + result['uuid']
+					'$ref': niveauURL + ni.Niveau[0].id + '/' + urlType + '/' + result['uuid']
 				}
 			});
 		}
@@ -417,6 +433,13 @@ app.route(apiBase + 'niveau/:niveau/vak').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'niveau/:niveau/ldk_vak').get((req, res) => {
+	graphQuery("LdkVakOpNiveau", req.params)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVak));
+	});
+});
+
 app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	graphQuery("VakByIdOpNiveau", req.params)
 	.then(function(result) {
@@ -426,10 +449,26 @@ app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'niveau/:niveau/ldk_vak/:id').get((req, res) => {
+	graphQuery("LdkVakByIdOpNiveau", req.params)
+	.then(function(result) {
+		result.data.allNiveauIndex[0].LdkVak[0].LdkVakkern = result.data.allNiveauIndex[0].LdkVakkern;
+		result.data.allNiveauIndex[0].LdkVak[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVak[0], leerdoelkaartSchemaURL, 'LdkVak'));
+	});
+});
+
 app.route(apiBase + 'niveau/:niveau/vakkern').get((req, res) => {
 	graphQuery("VakkernOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vakkern));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/ldk_vakkern').get((req, res) => {
+	graphQuery("LdkVakkernOpNiveau", req.params)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVakkern));
 	});
 });
 
@@ -442,10 +481,26 @@ app.route(apiBase + 'niveau/:niveau/vakkern/:id').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'niveau/:niveau/ldk_vakkern/:id').get((req, res) => {
+	graphQuery("LdkVakkernByIdOpNiveau", req.params)
+	.then(function(result) {
+		result.data.allNiveauIndex[0].LdkVakkern[0].LdkVaksubkern = result.data.allNiveauIndex[0].LdkVaksubkern;
+		result.data.allNiveauIndex[0].LdkVakkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVakkern[0], leerdoelkaartSchemaURL, 'LdkVakkern'));
+	});
+});
+
 app.route(apiBase + 'niveau/:niveau/vaksubkern').get((req, res) => {
 	graphQuery("VaksubkernOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vaksubkern));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/ldk_vaksubkern').get((req, res) => {
+	graphQuery("LdkVaksubkernOpNiveau", req.params)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVaksubkern));
 	});
 });
 
@@ -458,10 +513,26 @@ app.route(apiBase + 'niveau/:niveau/vaksubkern/:id').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'niveau/:niveau/ldk_vaksubkern/:id').get((req, res) => {
+	graphQuery("LdkVaksubkernByIdOpNiveau", req.params)
+	.then(function(result) {
+		result.data.allNiveauIndex[0].LdkVaksubkern[0].LdkVakinhoud = result.data.allNiveauIndex[0].LdkVakinhoud;
+		result.data.allNiveauIndex[0].LdkVaksubkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVaksubkern[0], leerdoelkaartSchemaURL, 'LdkVaksubkern'));
+	});
+});
+
 app.route(apiBase + 'niveau/:niveau/vakinhoud').get((req, res) => {
 	graphQuery("VakinhoudOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vakinhoud));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/ldk_vakinhoud').get((req, res) => {
+	graphQuery("LdkVakinhoudOpNiveau", req.params)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVakinhoud));
 	});
 });
 
@@ -470,6 +541,14 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 	.then(function(result) {
 		result.data.allNiveauIndex[0].Vakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
 		res.send(jsonLD(result.data.allNiveauIndex[0].Vakinhoud[0], inhoudSchemaURL, 'Vakinhoud'));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/ldk_vakinhoud/:id').get((req, res) => {
+	graphQuery("LdkVakinhoudByIdOpNiveau", req.params)
+	.then(function(result) {
+		result.data.allNiveauIndex[0].LdkVakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVakinhoud[0], leerdoelkaartSchemaURL, 'LdkVakinhoud'));
 	});
 });
 

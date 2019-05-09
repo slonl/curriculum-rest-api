@@ -430,6 +430,42 @@
             '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vak/:vakid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vak/', params.vakid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vakkern/:vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.vakkernid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vaksubkern/:vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vaksubkern/', params.vaksubkernid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vakinhoud/:vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.vakinhoudid);
+            },
+            '/curriculum/api/v1/niveau/:niveau/vak/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vak/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vakkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vaksubkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vak/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vak/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vakkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vakkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vaksubkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vaksubkern/');
+            },
+            '/curriculum/api/v1/niveau/:niveau/ldk_vakinhoud/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
+            },
             '/curriculum/api/v1/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },

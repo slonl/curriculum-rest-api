@@ -394,6 +394,10 @@ query Id($id:ID) {
         id
         title
       }
+      LdkVak {
+        id
+        title
+      }
     }
   }
   allDoelniveau(filter:{id:$id}) {
@@ -508,6 +512,10 @@ query Id($id:ID) {
         title
       }
     }
+    Vak {
+      id
+      title
+    }
   }
   allLdkVakkern(filter:{id:$id}) {
     id
@@ -528,6 +536,10 @@ query Id($id:ID) {
         id
         title
       }
+    }
+    Vakkern {
+      id
+      title
     }
   }
   allLdkVaksubkern(filter:{id:$id}) {
@@ -554,6 +566,10 @@ query Id($id:ID) {
         title
       }
     }
+    Vaksubkern {
+      id
+      title
+    }
   }
   allLdkVakinhoud(filter:{id:$id}) {
     id
@@ -578,6 +594,10 @@ query Id($id:ID) {
         id
         title
       }
+    }
+    Vakinhoud {
+      id
+      title
     }
   }
   allKerndoelDomein(filter:{id:$id}) {
@@ -630,6 +650,15 @@ query VakOpNiveau($niveau:ID) {
   }
 } 
 
+query LdkVakOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVak {
+      id
+      title
+    }
+  }
+} 
+
 query VakByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     Vak(filter:{id:$id}) {
@@ -650,9 +679,39 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
   }
 } 
 
+query LdkVakByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVak(filter:{id:$id}) {
+      id
+      title
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        ...DoelNiveau
+      } 
+    }
+    LdkVakkern(filter:{ldk_vak_id:[$id]}) {
+      id
+      title
+    }
+    Niveau {
+      id
+      title
+    }
+  }
+} 
+
 query VakkernOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     Vakkern {
+      id
+      title
+    }
+  }
+
+} 
+
+query LdkVakkernOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVakkern {
       id
       title
     }
@@ -684,9 +743,42 @@ query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
   }
 } 
 
+query LdkVakkernByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVakkern(filter:{id:$id}) {
+      id
+      title
+      LdkVak {
+        id
+        title
+      }
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        ...DoelNiveau
+      } 
+    }
+    LdkVaksubkern(filter:{ldk_vakkern_id:[$id]}) {
+      id
+      title
+    }
+    Niveau {
+      id
+      title
+    }
+  }
+} 
+
 query VaksubkernOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     Vaksubkern {
+      id
+      title
+    }
+  }
+} 
+
+query LdkVaksubkernOpNiveau($niveau:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVaksubkern {
       id
       title
     }
@@ -716,6 +808,31 @@ query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
     }
   }
 } 
+
+query LdkVaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVaksubkern(filter:{id:$id}) {
+      id
+      title
+      LdkVakkern {
+        id
+        title
+      }
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        ...DoelNiveau
+      } 
+    }
+    LdkVakinhoud(filter:{ldk_vaksubkern_id:[$id]}) {
+      id
+      title
+    }
+    Niveau {
+      id
+      title
+    }
+  }
+} 
+
 query VakinhoudOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     Vakinhoud {
@@ -724,12 +841,22 @@ query VakinhoudOpNiveau($niveau:ID) {
     }
   }
 } 
-query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
+
+query LdkVakinhoudOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakinhoud(filter:{id:$id}) {
+    LdkVakinhoud {
       id
       title
-      Vaksubkern {
+    }
+  }
+} 
+
+query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVakinhoud(filter:{id:$id}) {
+      id
+      title
+      LdkVaksubkern {
         id
         title
       }
