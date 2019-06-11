@@ -65,7 +65,9 @@ query DoelById($id:ID) {
 query Kerndoel($page:Int,$perPage:Int) {
   allKerndoel(page:$page,perPage:$perPage) {
     id
+    prefix
     title
+    description
   }
   _allKerndoelMeta {
     count
@@ -498,6 +500,7 @@ query Id($id:ID) {
   }
   allLdkVak(filter:{id:$id}) {
     id
+    prefix
     title
     LdkVakkern {
       id
