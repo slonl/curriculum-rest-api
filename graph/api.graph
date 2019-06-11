@@ -390,6 +390,7 @@ query Id($id:ID) {
   allNiveau(filter:{id:$id}) {
     id
     title
+    prefix
     description
     NiveauIndex {
       Vak {
