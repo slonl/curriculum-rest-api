@@ -616,6 +616,10 @@ query Id($id:ID) {
   allKerndoelVakleergebied(filter:{id:$id}) {
     id
     title
+    Vak {
+      id
+      title
+    }
     KerndoelDomein {
       id
       title
