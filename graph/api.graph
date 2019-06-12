@@ -19,6 +19,18 @@ fragment DoelNiveau on Doelniveau {
       prefix
     }
 }
+fragment Niveau on Niveau {
+   id
+   title
+   description
+   prefix
+   type
+}
+fragment NiveauShort on Niveau {
+    id
+    title
+    prefix
+}
 query DoelNiveau($page:Int,$perPage:Int) {
   allDoelniveau(page:$page,perPage:$perPage) {
     ...DoelNiveau
@@ -52,11 +64,7 @@ query DoelById($id:ID) {
     Doelniveau {
       id
       Niveau {
-        id
-        title
-        description
-        prefix
-        type
+        ...Niveau
       }
     }
   }
@@ -86,8 +94,7 @@ query KerndoelById($id:ID) {
 
 query Niveau($page:Int,$perPage:Int) {
   allNiveau(page:$page,perPage:$perPage) {
-    id
-    title
+    ...NiveauShort
   }
   _allNiveauMeta {
     count
@@ -95,11 +102,7 @@ query Niveau($page:Int,$perPage:Int) {
 }
 query NiveauById($id:ID) {
   Niveau(id:$id) {
-    id
-    prefix
-    title
-    description
-    type
+    ...Niveau
   }
 }
 query Vak($page:Int,$perPage:Int) {
@@ -126,8 +129,7 @@ query VakById($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -162,8 +164,7 @@ query VakkernById($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -198,8 +199,7 @@ query VaksubkernById($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -230,8 +230,7 @@ query VakinhoudById($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -253,8 +252,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -277,8 +275,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -305,8 +302,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -333,8 +329,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
   }
@@ -388,10 +383,7 @@ query Id($id:ID) {
     }
   }
   allNiveau(filter:{id:$id}) {
-    id
-    title
-    prefix
-    description
+    ...Niveau
     NiveauIndex {
       Vak {
         id
@@ -449,6 +441,7 @@ query Id($id:ID) {
   allKerndoel(filter:{id:$id}) {
     id
     title
+    prefix
     Doelniveau {
       ...DoelNiveau
     }
@@ -511,8 +504,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
     Vak {
@@ -537,8 +529,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
     Vakkern {
@@ -567,8 +558,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
     Vaksubkern {
@@ -597,8 +587,7 @@ query Id($id:ID) {
     }
     NiveauIndex {
       Niveau {
-        id
-        title
+        ...NiveauShort
       }
     }
     Vakinhoud {
@@ -683,8 +672,7 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -703,8 +691,7 @@ query LdkVakByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -747,8 +734,7 @@ query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -771,8 +757,7 @@ query LdkVakkernByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -813,8 +798,7 @@ query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -837,8 +821,7 @@ query LdkVaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
       title
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 } 
@@ -875,8 +858,7 @@ query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
       }
     }
     Niveau {
-      id
-      title
+      ...NiveauShort
     }
   }
 }
