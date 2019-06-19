@@ -64,6 +64,17 @@
                 <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
                 <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
                 <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
+                <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
+                <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma
+                Vakleergebieden</a></li>
+                <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">Examenprogramma Domeinen</a></li>
+                <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">Examenprogramma Subdomeinen</a></li>
+                <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma Eindtermen</a></li>
+                <li><a href="examenprogramma_kop1/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop1)</a></li>
+                <li><a href="examenprogramma_kop2/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop2)</a></li>
+                <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
+                <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
+                <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
             </ul>
         </li>
     </ul>
@@ -275,6 +286,96 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.ExamenprogrammaVakleergebied" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma Vakleergebieden</h3>
+                        <ul data-simply-list="item.ExamenprogrammaVakleergebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Examenprogramma" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma</h3>
+                        <ul data-simply-list="item.Examenprogramma">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaDomein" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma domein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaDomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaSubdomein" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma subdomein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaSubdomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaEindterm" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma eindterm</h3>
+                        <ul data-simply-list="item.ExamenprogrammaEindterm">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaKop1" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma tekst (kop1)</h3>
+                        <ul data-simply-list="item.ExamenprogrammaKop1">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaKop2" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma tekst (kop2)</h3>
+                        <ul data-simply-list="item.ExamenprogrammaKop2">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaKop3" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma tekst (kop3)</h3>
+                        <ul data-simply-list="item.ExamenprogrammaKop3">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaKop4" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma tekst (kop4)</h3>
+                        <ul data-simply-list="item.ExamenprogrammaKop4">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBody" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma tekst (body)</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBody">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
             </article>
         </template>
     </section>
@@ -402,6 +503,17 @@
         'ldk_vakkern/': 'Leerdoelkaart Vakkernen',
         'ldk_vaksubkern/': 'Leerdoelkaart Vaksubkernen',
         'ldk_vakinhoud/': 'Leerdoelkaart Vakinhouden',
+        'examenprogramma_vakleergebied/': 'Examenprogramma Vakleergebied',
+        'examenprogramma/': 'Examenprogramma',
+        'examenprogramma_domein/' : 'Examenprogramma Domein',
+        'examenprogramma_subdomein/' : 'Examenprogramma Subdomein',
+        'examenprogramma_eindterm/' : 'Examenprogramma Eindterm',
+        'examenprogramma_kop1/' : 'Examenprogramma tekst (kop1)',
+        'examenprogramma_kop2/' : 'Examenprogramma tekst (kop2)',
+        'examenprogramma_kop3/' : 'Examenprogramma tekst (kop3)',
+        'examenprogramma_kop4/' : 'Examenprogramma tekst (kop4)',
+        'examenprogramma_body/' : 'Examenprogramma tekst (kop5)',
+        
         'legacy': 'Vervangen door:'
     };
         
@@ -515,6 +627,36 @@
             },
             '/curriculum/api/v1/kerndoel_vakleergebied/': function(params) {
                 browser.actions.list('kerndoel_vakleergebied/')
+            },
+            '/curriculum/api/v1/examenprogramma_vakleergebied/': function(params) {
+                browser.actions.list('examenprogramma_vakleergebied/')
+            },
+            '/curriculum/api/v1/examenprogramma/': function(params) {
+                browser.actions.list('examenprogramma/')
+            },
+            '/curriculum/api/v1/examenprogramma_domein/': function(params) {
+                browser.actions.list('examenprogramma_domein/')
+            },
+            '/curriculum/api/v1/examenprogramma_subdomein/': function(params) {
+                browser.actions.list('examenprogramma_subdomein/')
+            },
+            '/curriculum/api/v1/examenprogramma_eindterm/': function(params) {
+                browser.actions.list('examenprogramma_eindterm/')
+            },
+            '/curriculum/api/v1/examenprogramma_kop1/': function(params) {
+                browser.actions.list('examenprogramma_kop1/')
+            },
+            '/curriculum/api/v1/examenprogramma_kop2/': function(params) {
+                browser.actions.list('examenprogramma_kop2/')
+            },
+            '/curriculum/api/v1/examenprogramma_kop3/': function(params) {
+                browser.actions.list('examenprogramma_kop3/')
+            },
+            '/curriculum/api/v1/examenprogramma_kop4/': function(params) {
+                browser.actions.list('examenprogramma_kop4/')
+            },
+            '/curriculum/api/v1/examenprogramma_body/': function(params) {
+                browser.actions.list('examenprogramma_body/')
             },
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);

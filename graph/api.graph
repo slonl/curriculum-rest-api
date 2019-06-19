@@ -644,6 +644,184 @@ query Id($id:ID) {
       title
     }
   }
+  allExamenprogrammaVakleergebied(filter:{id:$id}) {
+    id
+    title
+    Examenprogramma {
+      id
+      title
+    }    
+  }
+  allExamenprogramma(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaVakleergebied {
+      id
+      title
+    }
+    ExamenprogrammaDomein {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop1 {
+      id
+      prefix
+      title
+    }    
+  }
+  allExamenprogrammaDomein(filter:{id:$id}) {
+    id
+    prefix
+    title
+    Examenprogramma {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaSubdomein {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaEindterm {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaSubdomein(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaDomein {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaEindterm {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaEindterm(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaSubdomein {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaDomein {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaKop1(filter:{id:$id}) {
+    id
+    prefix
+    title
+    Examenprogramma {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop2 {      
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBody {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaKop2(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaKop1 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop3 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBody {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaKop3(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaKop2 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop4 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBody {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaKop4(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaKop3 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBody {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBody(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaKop1 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop2 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop3 {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaKop4 {
+      id
+      prefix
+      title
+    }
+  }
+
 }
 
 # Queries voor alles op specific niveau
@@ -956,6 +1134,116 @@ query KerndoelVakleergebied($page:Int,$perPage:Int) {
     title
   }
   _allKerndoelVakleergebiedMeta {
+    count
+  }
+}
+
+
+query ExamenprogrammaVakleergebied {
+  allExamenprogrammaVakleergebied {
+    id
+    title
+  }
+  _allExamenprogrammaVakleergebiedMeta {
+    count
+  }
+}
+
+query Examenprogramma {
+  allExamenprogramma {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaMeta {
+    count
+  }
+}
+
+query ExamenprogrammaDomein {
+  allExamenprogrammaDomein {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaDomeinMeta {
+    count
+  }
+}
+
+query ExamenprogrammaSubdomein {
+  allExamenprogrammaSubdomein {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaSubdomeinMeta {
+    count
+  }
+}
+
+query ExamenprogrammaEindterm {
+  allExamenprogrammaEindterm {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaEindtermMeta {
+    count
+  }
+}
+
+query ExamenprogrammaKop1 {
+  allExamenprogrammaKop1 {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaKop1Meta {
+    count
+  }
+}
+
+query ExamenprogrammaKop2 {
+  allExamenprogrammaKop2 {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaKop2Meta {
+    count
+  }
+}
+
+query ExamenprogrammaKop3 {
+  allExamenprogrammaKop3 {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaKop3Meta {
+    count
+  }
+}
+
+query ExamenprogrammaKop4 {
+  allExamenprogrammaKop4 {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaKop4Meta {
+    count
+  }
+}
+
+query ExamenprogrammaBody {
+  allExamenprogrammaBody {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBodyMeta {
     count
   }
 }
