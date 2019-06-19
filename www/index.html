@@ -90,7 +90,9 @@
         </template>
         <template data-simply-template="item">
             <article>
-                <h1 data-simply-field="item.title"></h1>
+                <h1>
+                    <span data-simply-field="item.prefix"></span> <span data-simply-field="item.title"></span>
+                </h1>
                 <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-content="fixed">
                     <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
                         <use xlink:href="/assets/icons/feather-sprite.svg#link">
@@ -127,7 +129,7 @@
                 </div>
               
                 <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
-                    <template>
+                    <template data-simply-template="true">
                         <div data-simply-field="item.description"></div>
                     </template>
                 </div>
