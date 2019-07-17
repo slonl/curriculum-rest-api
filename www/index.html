@@ -1,7 +1,6 @@
 <title>SLO Curriculum Browser</title>
 <base href="/curriculum/api/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
-
 <body data-simply-path="/curriculum/">
 
 <header class="slo-navbar">
@@ -60,10 +59,6 @@
                 <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
                 <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
                 <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
-                <li><a href="ldk_vak/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakken</a></li>
-                <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
-                <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
-                <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
                 <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
                 <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma
                 Vakleergebieden</a></li>
@@ -178,45 +173,6 @@
                     <template data-simply-template="true">
                         <h3>Vakinhouden</h3>
                         <ul data-simply-list="item.Vakinhoud">
-                            <template rel="links"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.LdkVak" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Leerdoelkaart Vakken</h3>
-                        <ul data-simply-list="item.LdkVak">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LdkVakkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Leerdoelkaart Vakkernen</h3>
-                        <ul data-simply-list="item.LdkVakkern">
-                            <template rel="links"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.LdkVaksubkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Leerdoelkaart Vaksubkernen</h3>
-                        <ul data-simply-list="item.LdkVaksubkern">
-                            <template rel="links"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.LdkVakinhoud" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Leerdoelkaart Vakinhouden</h3>
-                        <ul data-simply-list="item.LdkVakinhoud">
                             <template rel="links"></template>
                         </ul>
                     
@@ -473,7 +429,7 @@
         </a>
     </li>
 </template>
-<script src="//canary.simplyedit.io/1/simply-edit.js"></script>
+<script src="//yvo.muze.nl/simply-edit/js/simply-edit.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.bind = false; //don't use the simplyview databindings
@@ -499,10 +455,6 @@
         'kerndoel_domein/': 'Kerndoel Domeinen',
         'kerndoel_uitstroomprofiel/': 'Kerndoel Uitstroomprofiel',
         'kerndoel_vakleergebied/': 'Kerndoel Vakleergebied',
-        'ldk_vak/': 'Leerdoelkaart Vakken',
-        'ldk_vakkern/': 'Leerdoelkaart Vakkernen',
-        'ldk_vaksubkern/': 'Leerdoelkaart Vaksubkernen',
-        'ldk_vakinhoud/': 'Leerdoelkaart Vakinhouden',
         'examenprogramma_vakleergebied/': 'Examenprogramma Vakleergebied',
         'examenprogramma/': 'Examenprogramma',
         'examenprogramma_domein/' : 'Examenprogramma Domein',
@@ -544,18 +496,6 @@
             '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vak/:vakid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vak/', params.vakid);
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vakkern/:vakkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.vakkernid);
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vaksubkern/:vaksubkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vaksubkern/', params.vaksubkernid);
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vakinhoud/:vakinhoudid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.vakinhoudid);
-            },
             '/curriculum/api/v1/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
@@ -567,18 +507,6 @@
             },
             '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vak/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'ldk_vak/');
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vakkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'ldk_vakkern/');
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vaksubkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'ldk_vaksubkern/');
-            },
-            '/curriculum/api/v1/niveau/:niveau/ldk_vakinhoud/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
             },
             '/curriculum/api/v1/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
@@ -603,18 +531,6 @@
             },
             '/curriculum/api/v1/doel/': function(params) {
                 browser.actions.list('doel/')
-            },
-            '/curriculum/api/v1/ldk_vak/': function(params) {
-                browser.actions.list('ldk_vak/')
-            },
-            '/curriculum/api/v1/ldk_vakkern/': function(params) {
-                browser.actions.list('ldk_vakkern/')
-            },
-            '/curriculum/api/v1/ldk_vaksubkern/': function(params) {
-                browser.actions.list('ldk_vaksubkern/')
-            },
-            '/curriculum/api/v1/ldk_vakinhoud/': function(params) {
-                browser.actions.list('ldk_vakinhoud/')
             },
             '/curriculum/api/v1/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
@@ -782,11 +698,14 @@
 
     browser.view.pageSize = 100;
         
-    const baseURL = 'https://opendata.slo.nl';
+    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
+	// const apiURL  = 'https://opendata.slo.nl';
+	const apiURL = 'http://curriculum-rest-api.dev.muze.nl';
+
     var slo = {
         api: {
             get: function(path, params) {
-                var url = baseURL + path;
+                var url = apiURL + path;
                 if (!params && window.location.search) {
                     url = url + window.location.search;
                 }
@@ -868,5 +787,18 @@
     browser.view.page = parseInt(args.page)+1;
     browser.view.params = args;
 
+</script>
+<script>
+	if (apiURL != baseURL) {
+		document.body.addEventListener("click", function(evt) {
+			var parent = evt.target;
+			if (parent && !parent.href) {
+				parent = parent.parentNode;
+			}
+			if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
+				parent.href = parent.href.replace(apiURL, baseURL);
+			}
+		});
+	}
 </script>
 </body>

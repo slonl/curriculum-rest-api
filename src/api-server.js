@@ -11,10 +11,9 @@ const backendUrl      = "http://localhost:3000";
 const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonld";
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
-const leerdoelkaartSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld";
 const examenprogrammaSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld";
-const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
-const niveauURL       = "https://opendata.slo.nl/curriculum/api/v1/niveau/";
+const baseIdURL       = "/curriculum/uuid/";
+const niveauURL       = "/curriculum/api/v1/niveau/";
 
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Origin','*');
@@ -79,7 +78,6 @@ function jsonLD(entry, schema, type) {
 	[
 		'ExamenprogrammaBody','ExamenprogrammaKop4','ExamenprogrammaKop3','ExamenprogrammaKop2','ExamenprogrammaKop1',
 		'ExamenprogrammaEindterm','ExamenprogrammaSubdomein','ExamenprogrammaDomein','Examenprogramma','ExamenprogrammaVakleergebied',
-		'LdkVak','LdkVakkern','LdkVaksubkern','LdkVakinhoud',
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
 		'Vak','Vakkern','Vaksubkern','Vakinhoud',
 		'Doelniveau', 'Doel', 'Niveau',
@@ -107,22 +105,9 @@ function jsonLD(entry, schema, type) {
 					}
 				});
 			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['LdkVak']) {
-				result['LdkVak'] = entry['NiveauIndex'][0]['LdkVak'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/ldk_vak/' + link.id
-					}
-				});
-			}
 		} else {
 			var urlType = '';
-			if (type.substr(0,3)=='Ldk') {
-				urlType = 'ldk_'+type.substr(3).toLowerCase();
-			} else {
-				urlType = type.toLowerCase();
-			}
+			urlType = type.toLowerCase();
 				
 			result['Niveau'] = entry['NiveauIndex'].map(function(ni) {
 				return {
@@ -204,12 +189,6 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case "Vaksubkern":
 					case "Vakinhoud":
 						schema = inhoudSchemaURL;
-					break;
-					case "LdkVak":
-					case "LdkVakkern":
-					case "LdkVaksubkern":
-					case "LdkVakinhoud":
-						schema = leerdoelkaartSchemaURL;
 					break;
 					case "Kerndoel":
 					case "KerndoelDomein":
@@ -365,31 +344,6 @@ app.route(apiBase + 'vakinhoud').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'ldk_vak').get((req, res) => {
-	graphQuery("LdkVak", req.params, req.query)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allLdkVak, null, null, result.data._allLdkVakMeta));
-	});
-});
-app.route(apiBase + 'ldk_vakkern').get((req, res) => {
-	graphQuery("LdkVakkern", req.params, req.query)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allLdkVakkern, null, null, result.data._allLdkVakkernMeta));
-	});
-});
-app.route(apiBase + 'ldk_vaksubkern').get((req, res) => {
-	graphQuery("LdkVaksubkern", req.params, req.query)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allLdkVaksubkern, null, null, result.data._allLdkVaksubkernMeta));
-	});
-});
-app.route(apiBase + 'ldk_vakinhoud').get((req, res) => {
-	graphQuery("LdkVakinhoud", req.params, req.query)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allLdkVakinhoud, null, null, result.data._allLdkVakinhoudMeta));
-	});
-});
-
 app.route(apiBase + 'kerndoel').get((req, res) => {
 	graphQuery("Kerndoel", req.params, req.query)
 	.then(function(result) {
@@ -515,13 +469,6 @@ app.route(apiBase + 'niveau/:niveau/vak').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/ldk_vak').get((req, res) => {
-	graphQuery("LdkVakOpNiveau", req.params)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVak));
-	});
-});
-
 app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	graphQuery("VakByIdOpNiveau", req.params)
 	.then(function(result) {
@@ -531,26 +478,10 @@ app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/ldk_vak/:id').get((req, res) => {
-	graphQuery("LdkVakByIdOpNiveau", req.params)
-	.then(function(result) {
-		result.data.allNiveauIndex[0].LdkVak[0].LdkVakkern = result.data.allNiveauIndex[0].LdkVakkern;
-		result.data.allNiveauIndex[0].LdkVak[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVak[0], leerdoelkaartSchemaURL, 'LdkVak'));
-	});
-});
-
 app.route(apiBase + 'niveau/:niveau/vakkern').get((req, res) => {
 	graphQuery("VakkernOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vakkern));
-	});
-});
-
-app.route(apiBase + 'niveau/:niveau/ldk_vakkern').get((req, res) => {
-	graphQuery("LdkVakkernOpNiveau", req.params)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVakkern));
 	});
 });
 
@@ -563,26 +494,10 @@ app.route(apiBase + 'niveau/:niveau/vakkern/:id').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/ldk_vakkern/:id').get((req, res) => {
-	graphQuery("LdkVakkernByIdOpNiveau", req.params)
-	.then(function(result) {
-		result.data.allNiveauIndex[0].LdkVakkern[0].LdkVaksubkern = result.data.allNiveauIndex[0].LdkVaksubkern;
-		result.data.allNiveauIndex[0].LdkVakkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVakkern[0], leerdoelkaartSchemaURL, 'LdkVakkern'));
-	});
-});
-
 app.route(apiBase + 'niveau/:niveau/vaksubkern').get((req, res) => {
 	graphQuery("VaksubkernOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vaksubkern));
-	});
-});
-
-app.route(apiBase + 'niveau/:niveau/ldk_vaksubkern').get((req, res) => {
-	graphQuery("LdkVaksubkernOpNiveau", req.params)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVaksubkern));
 	});
 });
 
@@ -595,26 +510,10 @@ app.route(apiBase + 'niveau/:niveau/vaksubkern/:id').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/ldk_vaksubkern/:id').get((req, res) => {
-	graphQuery("LdkVaksubkernByIdOpNiveau", req.params)
-	.then(function(result) {
-		result.data.allNiveauIndex[0].LdkVaksubkern[0].LdkVakinhoud = result.data.allNiveauIndex[0].LdkVakinhoud;
-		result.data.allNiveauIndex[0].LdkVaksubkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVaksubkern[0], leerdoelkaartSchemaURL, 'LdkVaksubkern'));
-	});
-});
-
 app.route(apiBase + 'niveau/:niveau/vakinhoud').get((req, res) => {
 	graphQuery("VakinhoudOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].Vakinhoud));
-	});
-});
-
-app.route(apiBase + 'niveau/:niveau/ldk_vakinhoud').get((req, res) => {
-	graphQuery("LdkVakinhoudOpNiveau", req.params)
-	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveauIndex[0].LdkVakinhoud));
 	});
 });
 
@@ -623,14 +522,6 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 	.then(function(result) {
 		result.data.allNiveauIndex[0].Vakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
 		res.send(jsonLD(result.data.allNiveauIndex[0].Vakinhoud[0], inhoudSchemaURL, 'Vakinhoud'));
-	});
-});
-
-app.route(apiBase + 'niveau/:niveau/ldk_vakinhoud/:id').get((req, res) => {
-	graphQuery("LdkVakinhoudByIdOpNiveau", req.params)
-	.then(function(result) {
-		result.data.allNiveauIndex[0].LdkVakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-		res.send(jsonLD(result.data.allNiveauIndex[0].LdkVakinhoud[0], leerdoelkaartSchemaURL, 'LdkVakinhoud'));
 	});
 });
 
