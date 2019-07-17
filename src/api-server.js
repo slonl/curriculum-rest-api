@@ -36,6 +36,12 @@ function graphQuery(operationName, variables, query) {
 	if (!query) {
 		query = {};
 	}
+
+	for (i in variables) {
+		// replace legacy bk: ids to basic uuids.
+		variables[i] = variables[i].replace(/^bk:/, '');
+	}
+
 	variables.page = query.page ? query.page : 0;
 	variables.perPage = query.perPage ? query.perPage : 100;
 
