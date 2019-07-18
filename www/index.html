@@ -714,6 +714,10 @@
                     var pages = total / browser.view.pageSize;
                     browser.view.max = Math.ceil(pages);
                 }
+            },
+			register : function(email) {
+				var url = '/curriculum/api/v1/register/';
+				slo.api.get(url + "?email=" + email);
             }
         }
     });
