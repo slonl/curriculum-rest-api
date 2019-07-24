@@ -1,7 +1,11 @@
 const express = require('express');
+const basicAuth = require('express-basic-auth')
+const watch = require('watch');
 const request = require('request-promise-native');
 const fs = require('fs');
 const path = require('path');
+const uuidv4 = require('uuidv4');
+const sendmail = require('sendmail')();
 
 const app = express();
 const port = 4000;
@@ -25,6 +29,78 @@ app.use(function(req, res, next) {
 	next();
 });
 
+app.route(apiBase + 'register/').get((req, res) => {
+	var user = req.query.email;
+    console.log("Register " + user);
+
+	var keyData = fs.readFileSync("apiKeys.json", "utf8");
+	keyData = JSON.parse(keyData);
+
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+	today = yyyy + '-' + mm + '-' + dd;
+
+	if (!keyData[user]) {
+		keyData[user] = {
+			key : uuidv4(),
+			created : today
+		}
+		sendApiKey(user, keyData[user].key);
+	}
+	fs.writeFile("apiKeys.json.new", JSON.stringify(keyData, null, 2), function() {
+		fs.rename("apiKeys.json.new", "apiKeys.json", readKeys);
+	});
+});
+
+function myAuthorizer(username, password) {
+    console.log("checking api key for " + username);
+    if (!apiKeys[username]) {
+        console.log('user does not exist');
+        return false;
+    }
+    if (basicAuth.safeCompare(password, apiKeys[username].key)) {
+        return true;
+    } else {
+       console.log('password does not match');
+    }
+}
+app.use(basicAuth( { authorizer: myAuthorizer, challenge: true } ));
+
+var apiKeys = {};
+ 
+function readKeys() {
+    var keyData = fs.readFileSync("apiKeys.json", "utf8");
+    try {
+       keyData = JSON.parse(keyData);
+    } catch (e) {
+        console.log("Invalid JSON in key API data");
+        console.log(e);
+    }
+    apiKeys = keyData;
+}
+
+watch.createMonitor('.', function(monitor) {
+    monitor.files['./apikeys.json']
+    monitor.on('changed', function(f, curr, prev) { 
+        readKeys();
+    });
+});
+
+function sendApiKey(email, key) {
+	var mail = {
+	    from: "SLO Opendata <opendata@slo.nl>",
+	    to: email,
+	    subject: "SLO Opendata API key",
+	    text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
+	    html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
+	}
+
+	sendmail(mail);
+}
+
+readKeys();
 
 var graphQueries = fs.readFileSync("graph/api.graph", "utf8");
 
@@ -739,6 +815,10 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakin
 		}
 	});
 
+});
+
+app.route(apiBase + 'register/').get((req, res) => {
+    console.log("Register user " + req.param.email);
 });
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
