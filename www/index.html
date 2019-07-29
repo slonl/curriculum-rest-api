@@ -90,17 +90,17 @@
         </template>
         <template data-simply-template="register">
             <h1>API Key registreren</h1>
-			<p>Vul hier het e-mailadres in. De API key wordt naar dit adres toegestuurd.</p>
-			<form data-simply-command="register" method="GET">
-				<label>E-mail:
-					<input type="text" name="email">
-				</label>
-				<input type="submit" class="slo-button" value="Registreren">
-			</form>
+            <p>Vul hier het e-mailadres in. De API key wordt naar dit adres toegestuurd.</p>
+            <form data-simply-command="register" method="GET">
+                <label>E-mail:
+                    <input type="text" name="email">
+                </label>
+                <input type="submit" class="slo-button" value="Registreren">
+            </form>
         </template>
         <template data-simply-template="registered">
             <h1>Bedankt!</h1>
-			<p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
+            <p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
         </template>
         <template data-simply-template="doelniveauList">
             <h1 data-simply-field="listTitle"></h1>
@@ -603,9 +603,9 @@
             '/curriculum/api/v1/legacy/vak/:vak': function(params) {
                 browser.actions.legacy(params);
             },
-			'/curriculum/api/v1/register/': function(params) { 
-				browser.view.view = 'register';
-			},
+            '/curriculum/api/v1/register/': function(params) { 
+                browser.view.view = 'register';
+            },
             '/curriculum/api/v1/:*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
@@ -621,11 +621,11 @@
                 page = Math.max(0, browser.view.page-2);
                 browser.actions.updatePage(page);
             },
-			register : function(el, value) {
-				var email = el.querySelector("input").value;
-				browser.actions.register(email);
-				browser.view.view = "registered";
-			}
+            register : function(el, value) {
+                var email = el.querySelector("input").value;
+                browser.actions.register(email);
+                browser.view.view = "registered";
+            }
         },
         actions: {
             updatePage: function(page) {
