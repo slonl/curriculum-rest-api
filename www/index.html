@@ -153,6 +153,19 @@
                         <div data-simply-field="item.description"></div>
                     </template>
                 </div>
+                <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerlingteksten</h3>
+                        <ul data-simply-list="item.Leerlingtekst">
+                            <template>
+                                <li>
+                                    <div data-simply-field="title">titel</div>
+                                    <div data-simply-field="description">description</div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.Vak" data-simply-content="template"
                     data-simply-transformer="truthy">
                     <template data-simply-template="true">
