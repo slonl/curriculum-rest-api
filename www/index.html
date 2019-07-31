@@ -635,7 +635,7 @@
                 browser.actions.updatePage(page);
             },
             register : function(el, value) {
-                var email = el.querySelector("input").value;
+                var email = encodeURIComponent(el.querySelector("input").value);
                 browser.actions.register(email);
                 browser.view.view = "registered";
             }
@@ -828,16 +828,16 @@
 
 </script>
 <script>
-	if (apiURL != baseURL) {
-		document.body.addEventListener("click", function(evt) {
-			var parent = evt.target;
-			if (parent && !parent.href) {
-				parent = parent.parentNode;
-			}
-			if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
-				parent.href = parent.href.replace(apiURL, baseURL);
-			}
-		});
-	}
+    if (apiURL != baseURL) {
+        document.body.addEventListener("click", function(evt) {
+            var parent = evt.target;
+            if (parent && !parent.href) {
+                parent = parent.parentNode;
+            }
+            if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
+                parent.href = parent.href.replace(apiURL, baseURL);
+            }
+        });
+    }
 </script>
 </body>
