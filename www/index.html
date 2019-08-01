@@ -90,17 +90,17 @@
         </template>
         <template data-simply-template="register">
             <h1>API Key registreren</h1>
-			<p>Vul hier het e-mailadres in. De API key wordt naar dit adres toegestuurd.</p>
-			<form data-simply-command="register" method="GET">
-				<label>E-mail:
-					<input type="text" name="email">
-				</label>
-				<input type="submit" class="slo-button" value="Registreren">
-			</form>
+            <p>Vul hier het e-mailadres in. De API key wordt naar dit adres toegestuurd.</p>
+            <form data-simply-command="register" method="GET">
+                <label>E-mail:
+                    <input type="text" name="email">
+                </label>
+                <input type="submit" class="slo-button" value="Registreren">
+            </form>
         </template>
         <template data-simply-template="registered">
             <h1>Bedankt!</h1>
-			<p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
+            <p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
         </template>
         <template data-simply-template="doelniveauList">
             <h1 data-simply-field="listTitle"></h1>
@@ -151,6 +151,19 @@
                 <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <div data-simply-field="item.description"></div>
+                    </template>
+                </div>
+                <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerlingteksten</h3>
+                        <ul data-simply-list="item.Leerlingtekst">
+                            <template>
+                                <li>
+                                    <div data-simply-field="title">titel</div>
+                                    <div data-simply-field="description">description</div>
+                                </li>
+                            </template>
+                        </ul>
                     </template>
                 </div>
                 <div data-simply-field="item.Vak" data-simply-content="template"
@@ -603,9 +616,9 @@
             '/curriculum/api/v1/legacy/vak/:vak': function(params) {
                 browser.actions.legacy(params);
             },
-			'/curriculum/api/v1/register/': function(params) { 
-				browser.view.view = 'register';
-			},
+            '/curriculum/api/v1/register/': function(params) { 
+                browser.view.view = 'register';
+            },
             '/curriculum/api/v1/:*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
@@ -621,11 +634,11 @@
                 page = Math.max(0, browser.view.page-2);
                 browser.actions.updatePage(page);
             },
-			register : function(el, value) {
-				var email = el.querySelector("input").value;
-				browser.actions.register(email);
-				browser.view.view = "registered";
-			}
+            register : function(el, value) {
+                var email = encodeURIComponent(el.querySelector("input").value);
+                browser.actions.register(email);
+                browser.view.view = "registered";
+            }
         },
         actions: {
             updatePage: function(page) {
@@ -715,9 +728,9 @@
                     browser.view.max = Math.ceil(pages);
                 }
             },
-			register : function(email) {
-				var url = '/curriculum/api/v1/register/';
-				slo.api.get(url + "?email=" + email);
+            register : function(email) {
+                var url = '/curriculum/api/v1/register/';
+                slo.api.get(url + "?email=" + email);
             }
         }
     });
@@ -815,16 +828,16 @@
 
 </script>
 <script>
-	if (apiURL != baseURL) {
-		document.body.addEventListener("click", function(evt) {
-			var parent = evt.target;
-			if (parent && !parent.href) {
-				parent = parent.parentNode;
-			}
-			if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
-				parent.href = parent.href.replace(apiURL, baseURL);
-			}
-		});
-	}
+    if (apiURL != baseURL) {
+        document.body.addEventListener("click", function(evt) {
+            var parent = evt.target;
+            if (parent && !parent.href) {
+                parent = parent.parentNode;
+            }
+            if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
+                parent.href = parent.href.replace(apiURL, baseURL);
+            }
+        });
+    }
 </script>
 </body>

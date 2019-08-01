@@ -20,8 +20,13 @@ const baseIdURL       = "/curriculum/uuid/";
 const niveauURL       = "/curriculum/api/v1/niveau/";
 
 app.use(function(req, res, next) {
-	res.header('Access-Control-Allow-Origin','*');
-	if (req.accepts('html')) {
+	res.header('Access-Control-Allow-Credentials', true);
+	res.header('Access-Control-Allow-Origin', req.headers.origin ? req.headers.origin : '*');
+	res.header('Access-Control-Allow-Headers','Authorization');
+	if ('OPTIONS' == req.method) {
+		res.send(200);
+		return;
+	} else if (req.accepts('html')) {
 		res.set('Content-Type', 'text/html');
 		res.sendFile(path.join(__dirname, '../www/', 'index.html'));
 		return;
