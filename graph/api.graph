@@ -4,6 +4,10 @@ fragment DoelNiveau on Doelniveau {
       id
       title
       description
+#      Leerlingtekst {
+#        title
+#        description
+#      }     
     }
     Niveau {
       id
@@ -31,6 +35,10 @@ fragment NiveauShort on Niveau {
     title
     prefix
 }
+#fragment Leerlingtekst on Leerlingtekst {
+#    title
+#    description
+#}
 query DoelNiveau($page:Int,$perPage:Int) {
   allDoelniveau(page:$page,perPage:$perPage) {
     ...DoelNiveau
@@ -60,7 +68,10 @@ query DoelById($id:ID) {
     id
     title
     description
-    volgnr
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
+    
     Doelniveau {
       id
       Niveau {
@@ -86,6 +97,9 @@ query KerndoelById($id:ID) {
   Kerndoel(id:$id) {
     id
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Doelniveau {
       ...DoelNiveau
     }
@@ -103,6 +117,9 @@ query Niveau($page:Int,$perPage:Int) {
 query NiveauById($id:ID) {
   Niveau(id:$id) {
     ...Niveau
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
   }
 }
 query Vak($page:Int,$perPage:Int) {
@@ -119,10 +136,13 @@ query VakById($id:ID) {
     id
     title
     description
-    unreleased
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     replaces
     Vakkern {
       id
+      title
     }
     Doelniveau {
       ...DoelNiveau
@@ -148,8 +168,10 @@ query VakkernById($id:ID) {
     id
     title
     description
-    volgnr
-    unreleased
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
+    
     replaces
     Vaksubkern {
       id
@@ -183,12 +205,14 @@ query VaksubkernById($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Vakinhoud {
       id
       title
     }
-    volgnr
-    unreleased
+    
     replaces
     Doelniveau {
       ...DoelNiveau
@@ -218,8 +242,10 @@ query VakinhoudById($id:ID) {
     id
     title
     description
-    volgnr
-    unreleased
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
+    
     replaces
     Doelniveau {
       ...DoelNiveau
@@ -241,8 +267,10 @@ query Id($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     replaces
-    unreleased
     Vakkern {
       id
       title
@@ -260,8 +288,10 @@ query Id($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     replaces
-    unreleased
     Vaksubkern {
       id
       title
@@ -283,8 +313,10 @@ query Id($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     replaces
-    unreleased
     Vakinhoud {
       id
       title
@@ -310,8 +342,10 @@ query Id($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     replaces
-    unreleased
     Doelniveau {
       ...DoelNiveau
     }
@@ -337,7 +371,10 @@ query Id($id:ID) {
     id
     title
     description
-    volgnr
+#    Leerlingtekst {
+#       ...Leerlingtekst
+#    }
+    
     Doelniveau {
       ...DoelNiveau
       Vak {
@@ -389,6 +426,14 @@ query Id($id:ID) {
         id
         title
       }
+#      KerndoelVakleergebied {
+#        id
+#        title
+#      }
+#      ExamenprogrammaVakleergebied {
+#        id
+#        title
+#      }
     }
   }
   allDoelniveau(filter:{id:$id}) {
@@ -438,6 +483,9 @@ query Id($id:ID) {
     id
     title
     prefix
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Doelniveau {
       ...DoelNiveau
     }
@@ -446,6 +494,9 @@ query Id($id:ID) {
     id
     title
     description
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     types
     replacedBy
     Vakkern {
@@ -491,6 +542,9 @@ query Id($id:ID) {
   allKerndoelDomein(filter:{id:$id}) {
     id
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Kerndoel {
       id
       title
@@ -500,10 +554,18 @@ query Id($id:ID) {
       id
       title
     }
+#    NiveauIndex {
+#      Niveau {
+#        ...NiveauShort
+#      }
+#    }
   }
   allKerndoelVakleergebied(filter:{id:$id}) {
     id
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Vak {
       id
       title
@@ -521,10 +583,18 @@ query Id($id:ID) {
       title
       prefix
     }
+#    NiveauIndex {
+#      Niveau {
+#        ...NiveauShort
+#      }
+#    }
   }
   allKerndoelUitstroomprofiel(filter:{id:$id}) {
     id
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     KerndoelVakleergebied {
       id
       title
@@ -533,15 +603,25 @@ query Id($id:ID) {
   allExamenprogrammaVakleergebied(filter:{id:$id}) {
     id
     title
+    Vak {
+      id
+      title
+    }
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Examenprogramma {
       id
       title
-    }    
+    } 
   }
   allExamenprogramma(filter:{id:$id}) {
     id
     prefix
-    title
+    title    
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaVakleergebied {
       id
       title
@@ -555,12 +635,24 @@ query Id($id:ID) {
       id
       prefix
       title
-    }    
+    }
+    Niveau {
+      id
+      title
+    }
   }
   allExamenprogrammaDomein(filter:{id:$id}) {
     id
     prefix
     title
+    ce_se
+    Tag {
+      id
+      title
+    }
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Examenprogramma {
       id
       prefix
@@ -576,11 +668,23 @@ query Id($id:ID) {
       prefix
       title
     }
+    Niveau {
+      id
+      title
+    }
   }
   allExamenprogrammaSubdomein(filter:{id:$id}) {
     id
     prefix
     title
+    ce_se
+    Tag {
+      id
+      title
+    }
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaDomein {
       id
       prefix
@@ -591,11 +695,19 @@ query Id($id:ID) {
       prefix
       title
     }
+    Niveau {
+      id
+      title
+    }
   }
   allExamenprogrammaEindterm(filter:{id:$id}) {
     id
     prefix
     title
+    ce_se
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaSubdomein {
       id
       prefix
@@ -606,11 +718,18 @@ query Id($id:ID) {
       prefix
       title
     }
+    Niveau {
+      id
+      title
+    }
   }
   allExamenprogrammaKop1(filter:{id:$id}) {
     id
     prefix
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     Examenprogramma {
       id
       prefix
@@ -631,6 +750,9 @@ query Id($id:ID) {
     id
     prefix
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaKop1 {
       id
       prefix
@@ -651,6 +773,9 @@ query Id($id:ID) {
     id
     prefix
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaKop2 {
       id
       prefix
@@ -671,6 +796,9 @@ query Id($id:ID) {
     id
     prefix
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaKop3 {
       id
       prefix
@@ -686,6 +814,9 @@ query Id($id:ID) {
     id
     prefix
     title
+#    Leerlingtekst {
+#      ...Leerlingtekst
+#    }
     ExamenprogrammaKop1 {
       id
       prefix
@@ -707,7 +838,129 @@ query Id($id:ID) {
       title
     }
   }
-
+  allSyllabus(filter:{id:$id}) {
+    id    
+    title
+    ingangsdatum
+    versie
+    url
+    jaargang
+    status
+    ce_se
+    Examenprogramma {
+      id
+      title
+    }
+    SyllabusSpecifiekeEindterm {
+      id
+      title
+    }
+    SyllabusToelichting {
+      id
+      title
+    }
+    SyllabusVakbegrip {
+      id
+      title
+    }
+  }
+  allSyllabusVakbegrip(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ce_se
+    Tag {
+      id
+      title
+    }
+    ExamenprogrammaEindterm {
+      id
+      title
+    }
+    Syllabus {
+      id
+      title
+    }
+  }
+  allSyllabusToelichting(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ce_se
+    Tag {
+      id
+      title
+    }
+    ExamenprogrammaEindterm {
+      id
+      title
+    }
+    ExamenprogrammaDomein {
+      id
+      title
+    }
+    Examenprogramma {
+      id
+      title
+    }
+    Syllabus {
+      id
+      title
+    }
+  } 
+  allSyllabusSpecifiekeEindterm(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ce_se
+    Tag {
+      id
+      title
+    }
+    ExamenprogrammaEindterm {
+      id
+      title
+    }
+    ExamenprogrammaDomein {
+      id
+      title
+    }
+    Examenprogramma {
+      id
+      title
+    }
+    Syllabus {
+      id
+      title
+    }
+  }
+  allVakkencluster(filter:{id:$id}) {
+    id
+    title
+    Niveau {
+      id
+      title
+    }
+    Vak {
+      id
+      title
+    }    
+  }
+  allLeerlijn(filter:{id:$id}) {
+    id
+    title
+    Vak {
+      id
+      title
+    }
+    Doelniveau {
+      ...DoelNiveau
+    }
+    Niveau {
+      id
+      title
+    }
+  }
 }
 
 # Queries voor alles op specific niveau
@@ -898,9 +1151,43 @@ query KerndoelVakleergebied($page:Int,$perPage:Int) {
   }
 }
 
+#query KerndoelVakleergebiedOpNiveau($niveau:ID) {
+#  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+#    KerndoelVakleergebied {
+#      id
+#      title
+#    }
+#  }
+#} 
+#
+#query KerndoelVakleergebiedByIdOpNiveau($niveau:ID, $id:ID) {
+#  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+#    KerndoelVakleergebied(filter:{id:$id}) {
+#      id
+#      title
+#    }
+#    KerndoelDomein(filter:{kerndoel_vakleergebied_id:[$id]}) {
+#      id
+#      title
+#      Kerndoel(filter:{niveau_id:[$niveau]}) {
+#        id
+#        prefix
+#        title
+#      }
+#    }
+#    Kerndoel(filter:{kerndoel_vakleergebied_id:[$id]}) {
+#      id
+#      prefix
+#      title
+#    }
+#    Niveau {
+#      ...NiveauShort
+#    }
+#  }
+#} 
 
-query ExamenprogrammaVakleergebied {
-  allExamenprogrammaVakleergebied {
+query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
+  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage) {
     id
     title
   }
@@ -909,8 +1196,8 @@ query ExamenprogrammaVakleergebied {
   }
 }
 
-query Examenprogramma {
-  allExamenprogramma {
+query Examenprogramma($page:Int,$perPage:Int) {
+  allExamenprogramma (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -920,8 +1207,8 @@ query Examenprogramma {
   }
 }
 
-query ExamenprogrammaDomein {
-  allExamenprogrammaDomein {
+query ExamenprogrammaDomein($page:Int,$perPage:Int) {
+  allExamenprogrammaDomein (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -931,8 +1218,8 @@ query ExamenprogrammaDomein {
   }
 }
 
-query ExamenprogrammaSubdomein {
-  allExamenprogrammaSubdomein {
+query ExamenprogrammaSubdomein($page:Int,$perPage:Int) {
+  allExamenprogrammaSubdomein (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -942,8 +1229,8 @@ query ExamenprogrammaSubdomein {
   }
 }
 
-query ExamenprogrammaEindterm {
-  allExamenprogrammaEindterm {
+query ExamenprogrammaEindterm($page:Int,$perPage:Int) {
+  allExamenprogrammaEindterm (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -953,8 +1240,8 @@ query ExamenprogrammaEindterm {
   }
 }
 
-query ExamenprogrammaKop1 {
-  allExamenprogrammaKop1 {
+query ExamenprogrammaKop1($page:Int,$perPage:Int) {
+  allExamenprogrammaKop1 (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -964,8 +1251,8 @@ query ExamenprogrammaKop1 {
   }
 }
 
-query ExamenprogrammaKop2 {
-  allExamenprogrammaKop2 {
+query ExamenprogrammaKop2($page:Int,$perPage:Int) {
+  allExamenprogrammaKop2 (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -975,8 +1262,8 @@ query ExamenprogrammaKop2 {
   }
 }
 
-query ExamenprogrammaKop3 {
-  allExamenprogrammaKop3 {
+query ExamenprogrammaKop3($page:Int,$perPage:Int) {
+  allExamenprogrammaKop3 (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -986,8 +1273,8 @@ query ExamenprogrammaKop3 {
   }
 }
 
-query ExamenprogrammaKop4 {
-  allExamenprogrammaKop4 {
+query ExamenprogrammaKop4($page:Int,$perPage:Int) {
+  allExamenprogrammaKop4 (page:$page,perPage:$perPage) {
     id
     prefix
     title
@@ -997,13 +1284,111 @@ query ExamenprogrammaKop4 {
   }
 }
 
-query ExamenprogrammaBody {
-  allExamenprogrammaBody {
+query ExamenprogrammaBody($page:Int,$perPage:Int) {
+  allExamenprogrammaBody (page:$page,perPage:$perPage) {
     id
     prefix
     title
   }
   _allExamenprogrammaBodyMeta {
+    count
+  }
+}
+
+#query lpibVakkencluster {
+#  allLpibVakkencluster {
+#    id
+#    title
+#    LpibVak {
+#      id
+#      title
+#    }
+#  }
+#}
+#query lpibBouw {
+#  allLpibBouw {
+#    id
+#    title
+#    LpibOpleidingsniveau {
+#      LpibNiveau {
+#        id
+#        title
+#      }
+#    }
+#  }
+#}
+#query lpibVakkenclusterByBouw($id:ID) {
+#  allLpibVakkencluster(filter:{lpib_bouw_id:[$id]}) {
+#    id
+#    title
+#    LpibBouw {
+#      id
+#      title
+#    }
+#    LpibVak {
+#      id
+#      title
+#    }
+#  }
+#}
+
+query Syllabus($page:Int,$perPage:Int) {
+  allSyllabus (page:$page,perPage:$perPage) {
+    id    
+    title   
+  }
+  _allSyllabusMeta {
+    count
+  }
+}
+
+query SyllabusVakbegrip($page:Int,$perPage:Int) {
+  allSyllabusVakbegrip (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allSyllabusVakbegripMeta {
+    count
+  }
+}
+
+query SyllabusToelichting($page:Int,$perPage:Int) {
+  allSyllabusToelichting (page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allSyllabusToelichtingMeta {
+    count
+  }
+}
+
+query SyllabusSpecifiekeEindterm($page:Int,$perPage:Int) {
+  allSyllabusSpecifiekeEindterm (page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allSyllabusSpecifiekeEindtermMeta {
+    count
+  }
+}
+
+query Vakkencluster($page:Int,$perPage:Int) {
+  allVakkencluster (page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allVakkenclusterMeta {
+    count
+  }
+}
+
+query Leerlijn($page:Int,$perPage:Int) {
+  allLeerlijn (page:$page,perPage:$perPage) {
+    id
+    title
+  }
+  _allLeerlijnMeta {
     count
   }
 }

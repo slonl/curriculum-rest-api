@@ -48,6 +48,7 @@
     <ul class="slo-navbar-nav">
         <li><a href="/curriculum/api/v1/" class="slo-nav" data-simply-group="menu">API Browser</a>
             <ul class="slo-navbar-nav">
+                <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
                 <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
                 <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
                 <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
@@ -55,6 +56,7 @@
                 <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
                 <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
                 <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
+                <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
                 <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
                 <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
                 <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
@@ -70,6 +72,10 @@
                 <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
                 <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
                 <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
+                <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
+                <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
+                <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
+                <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">Syllabus vakbegrippen</a></li>
             </ul>
         </li>
     </ul>
@@ -359,6 +365,42 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.Syllabus" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Syllabus</h3>
+                        <ul data-simply-list="item.Syllabus">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.SyllabusSpecifiekeEindterm" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Syllabus specifieke eindterm</h3>
+                        <ul data-simply-list="item.SyllabusSpecifiekeEindterm">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.SyllabusVakbegrip" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Syllabus vakbegrip</h3>
+                        <ul data-simply-list="item.SyllabusVakbegrip">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.SyllabusToelichting" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Syllabus toelichting</h3>
+                        <ul data-simply-list="item.SyllabusToelichting">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
             </article>
         </template>
     </section>
@@ -471,6 +513,8 @@
     };
 
     var titles = {
+		'vakkencluster/': 'Vakkenclusters',
+		'leerlijn/': 'Leerlijnen',
         'vak/': 'Vakken',
         'vakkern/': 'Vakkernen',
         'vaksubkern/': 'Vaksubkernen',
@@ -492,6 +536,10 @@
         'examenprogramma_kop3/' : 'Examenprogramma tekst (kop3)',
         'examenprogramma_kop4/' : 'Examenprogramma tekst (kop4)',
         'examenprogramma_body/' : 'Examenprogramma tekst (kop5)',
+		'syllabus/' : 'Syllabus',
+		'syllabus_specifieke_eindterm/' : 'Syllabus specifieke eindterm',
+		'syllabus_toelichting/': 'Syllabus toelichting',
+		'syllabus_vakbegrip/' : 'Syllabus vakbegrip',
         
         'legacy': 'Vervangen door:'
     };
@@ -499,6 +547,9 @@
     var browser = simply.app({
         container: document.body,
         routes: {
+            '/curriculum/api/v1/niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
+            },
             '/curriculum/api/v1/niveau/:niveau/vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
             },
@@ -600,6 +651,24 @@
             },
             '/curriculum/api/v1/examenprogramma_body/': function(params) {
                 browser.actions.list('examenprogramma_body/')
+            },
+            '/curriculum/api/v1/vakkencluster/': function(params) {
+                browser.actions.list('vakkencluster/')
+            },
+            '/curriculum/api/v1/leerlijn/': function(params) {
+                browser.actions.list('leerlijn/')
+            },
+            '/curriculum/api/v1/syllabus/': function(params) {
+                browser.actions.list('syllabus/')
+            },
+            '/curriculum/api/v1/syllabus_specifieke_eindterm/': function(params) {
+                browser.actions.list('syllabus_specifieke_eindterm/')
+            },
+            '/curriculum/api/v1/syllabus_toelichting/': function(params) {
+                browser.actions.list('syllabus_toelichting/')
+            },
+            '/curriculum/api/v1/syllabus_vakbegrip/': function(params) {
+                browser.actions.list('syllabus_vakbegrip/')
             },
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);

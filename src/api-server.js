@@ -16,15 +16,17 @@ const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonl
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
 const examenprogrammaSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld";
-const baseIdURL       = "/curriculum/uuid/";
+const syllabusSchemaURL = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
+const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 const niveauURL       = "/curriculum/api/v1/niveau/";
+const notfound        = { error: "not found"};
 
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Credentials', true);
 	res.header('Access-Control-Allow-Origin', req.headers.origin ? req.headers.origin : '*');
 	res.header('Access-Control-Allow-Headers','Authorization');
 	if ('OPTIONS' == req.method) {
-		res.send(200);
+		res.sendStatus(200);
 		return;
 	} else if (req.accepts('html')) {
 		res.set('Content-Type', 'text/html');
@@ -110,6 +112,7 @@ readKeys();
 var graphQueries = fs.readFileSync("graph/api.graph", "utf8");
 
 function graphQuery(operationName, variables, query) {
+	console.log(operationName);
 	if (!variables) {
 		variables = {};
 	}
@@ -186,6 +189,15 @@ function jsonLD(entry, schema, type) {
 					}
 				});
 			}
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['KerndoelVakleergebied']) {
+				result['KerndoelVakleergebied'] = entry['NiveauIndex'][0]['KerndoelVakleergebied'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/kerndoel_vakleergebied/' + link.id
+					}
+				});
+			}
 		} else {
 			var urlType = '';
 			urlType = type.toLowerCase();
@@ -219,15 +231,18 @@ function jsonLD(entry, schema, type) {
 	return result;
 }
 
-function jsonLDList(list, schema, niveau, meta) {
-	if (schema) {
-		list['@context'] = schema;
-	}
+function jsonLDList(list, schema, type, meta) {
 	list = list.map(function(link) {
 		var result = {
 			'@id': baseIdURL + link.id,
 			'uuid': link.id
 		};
+		if (schema) {
+			result['@context'] = schema;
+		}
+		if (type) {
+			result['@type'] = type;
+		}
 		delete link.id;
 		Object.keys(link).forEach(function(key) {
 			if (Array.isArray(link[key])) {
@@ -258,7 +273,8 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 		}
 	};
 	
-        graphQuery("Id", req.params)
+	console.log('uuid/:id');
+	 graphQuery("Id", req.params)
 	.then(function(result) {
 		for (i in result.data) {
 			if (result.data[i] && result.data[i].length) {
@@ -287,7 +303,7 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'ExamenprogrammaKop3':
 					case 'ExamenprogrammaKop4':
 						schema = examenprogrammaSchemaURL;
-					break;					
+					break;		
 					default:
 						schema = doelSchemaURL;
 					break;
@@ -295,7 +311,7 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 				return result;
 			}
 		}
-		return result;
+		throw new Error("404: not found");
 	})
 	.then(function(result) {
 		if (result.replacedBy) {
@@ -342,7 +358,14 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 	})
 	.then(function(result) {
 		res.send(jsonLD(result, schema, entitytype));
-        });
+	})
+	.catch(function(err) {
+		var code = err.message.split(':')[0];
+		if (!code) {
+			code = 501;
+		}
+		res.status(code).send({ error: code, message: err.message});
+	});
 });
 
 app.route(apiBase + 'deprecated/').get((req, res) => {
@@ -371,12 +394,13 @@ app.route(apiBase + 'deprecated/:id/vak/:id').get((req, res) => {
 app.route(apiBase + 'niveau').get((req, res) => {
 	graphQuery("Niveau", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveau, null, null, result.data._allNiveauMeta));
+		res.send(jsonLDList(result.data.allNiveau, doelSchemaURL, 'Niveau', result.data._allNiveauMeta));
 	});
 });
 
 
 app.route(apiBase + 'niveau/:id').get((req, res) => {
+	console.log('niveau/:id');
 	graphQuery("NiveauById", req.params)
 	.then(function(result) {
 		res.send(jsonLD(result.data.Niveau, doelSchemaURL, 'Niveau'));
@@ -386,133 +410,173 @@ app.route(apiBase + 'niveau/:id').get((req, res) => {
 app.route(apiBase + 'doel').get((req, res) => {
 	graphQuery("Doel", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allDoel, null, null, result.data._allDoelMeta));
+		res.send(jsonLDList(result.data.allDoel, doelSchemaURL, 'Doel', result.data._allDoelMeta));
 	});
 });
 
 app.route(apiBase + 'doelniveau').get((req, res) => {
 	graphQuery("DoelNiveau", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allDoelniveau, null, null, result.data._allDoelniveauMeta));
+		res.send(jsonLDList(result.data.allDoelniveau, doelSchemaURL, 'DoelNiveau', result.data._allDoelniveauMeta));
 	});
 });
-
+app.route(apiBase + 'vakkencluster').get((req, res) => {
+	graphQuery("Vakkencluster", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allVakkencluster, inhoudSchemaURL, null, result.data._allVakkenclusterMeta));
+	});
+});
+app.route(apiBase + 'leerlijn').get((req, res) => {
+	graphQuery("Leerlijn", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLeerlijn, inhoudSchemaURL, null, result.data._allLeerlijnMeta));
+	});
+});
+app.route(apiBase + 'niveau/:id/vakkencluster').get((req, res) => {
+	graphQuery("VakkenclusterByNiveau", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allVakkencluster, inhoudSchemaURL, null, result.data._allVakkenclusterMeta));
+	});
+});
 app.route(apiBase + 'vak').get((req, res) => {
 	graphQuery("Vak", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVak, null, null, result.data._allVakMeta));
+		res.send(jsonLDList(result.data.allVak, inhoudSchemaURL, 'Vak', result.data._allVakMeta));
 	});
 });
 
 app.route(apiBase + 'vakkern').get((req, res) => {
 	graphQuery("Vakkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVakkern, null, null, result.data._allVakkernMeta));
+		res.send(jsonLDList(result.data.allVakkern, inhoudSchemaURL, 'Vakkern', result.data._allVakkernMeta));
 	});
 });
 
 app.route(apiBase + 'vaksubkern').get((req, res) => {
 	graphQuery("Vaksubkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVaksubkern, null, null, result.data._allVaksubkernMeta));
+		res.send(jsonLDList(result.data.allVaksubkern, inhoudSchemaURL, 'Vaksubkern', result.data._allVaksubkernMeta));
 	});
 });
 
 app.route(apiBase + 'vakinhoud').get((req, res) => {
 	graphQuery("Vakinhoud", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVakinhoud, null, null, result.data._allVakinhoudMeta));
+		res.send(jsonLDList(result.data.allVakinhoud, inhoudSchemaURL, 'Vakinhoud', result.data._allVakinhoudMeta));
 	});
 });
 
 app.route(apiBase + 'kerndoel').get((req, res) => {
 	graphQuery("Kerndoel", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoel, null, null, result.data._allKerndoelMeta));
+		res.send(jsonLDList(result.data.allKerndoel, kerndoelSchemaURL, 'Kerndoel', result.data._allKerndoelMeta));
 	});
 });
 
 app.route(apiBase + 'kerndoel_domein').get((req, res) => {
 	graphQuery("KerndoelDomein", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoelDomein, null, null, result.data._allKerndoelDomeinMeta));
+		res.send(jsonLDList(result.data.allKerndoelDomein, kerndoelSchemaURL, 'KerndoelDomein', result.data._allKerndoelDomeinMeta));
 	});
 });
 app.route(apiBase + 'kerndoel_vakleergebied').get((req, res) => {
 	graphQuery("KerndoelVakleergebied", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoelVakleergebied, null, null, result.data._allKerndoelVakleergebiedMeta));
+		res.send(jsonLDList(result.data.allKerndoelVakleergebied, kerndoelSchemaURL, 'KerndoelVakleergebied', result.data._allKerndoelVakleergebiedMeta));
 	});
 });
 app.route(apiBase + 'kerndoel_uitstroomprofiel').get((req, res) => {
 	graphQuery("KerndoelUitstroomprofiel", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allKerndoelUitstroomprofiel, null, null, result.data._allKerndoelUitstroomprofielMeta));
+		res.send(jsonLDList(result.data.allKerndoelUitstroomprofiel, kerndoelSchemaURL, 'KerndoelUitstroomprofiel', result.data._allKerndoelUitstroomprofielMeta));
 	});
 });
 
 app.route(apiBase + 'examenprogramma_vakleergebied').get((req, res) => {
 	graphQuery("ExamenprogrammaVakleergebied", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaVakleergebied, null, null, result.data._allExamenprogrammaVakleergebiedMeta));
+		res.send(jsonLDList(result.data.allExamenprogrammaVakleergebied, examenprogrammaSchemaURL, 'ExamenprogrammaVakleergebied', result.data._allExamenprogrammaVakleergebiedMeta));
 	});
 });
 app.route(apiBase + 'examenprogramma').get((req, res) => {
 	graphQuery("Examenprogramma", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogramma, null, null, result.data._allExamenprogrammaMeta));
+		res.send(jsonLDList(result.data.allExamenprogramma, examenprogrammaSchemaURL, 'Examenprogramma', result.data._allExamenprogrammaMeta));
 	});
 });
 app.route(apiBase + 'examenprogramma_domein').get((req, res) => {
 	graphQuery("ExamenprogrammaDomein", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaDomein, null, null, result.data._allExamenprogrammaDomeinMeta));
+		res.send(jsonLDList(result.data.allExamenprogrammaDomein, examenprogrammaSchemaURL, 'ExamenprogrammaDomein', result.data._allExamenprogrammaDomeinMeta));
 	});
 });
 app.route(apiBase + 'examenprogramma_subdomein').get((req, res) => {
 	graphQuery("ExamenprogrammaSubdomein", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaSubdomein, null, null, result.data._allExamenprogrammaSubdomeinMeta));
+		res.send(jsonLDList(result.data.allExamenprogrammaSubdomein, examenprogrammaSchemaURL, 'ExamenprogrammaSubdomein', result.data._allExamenprogrammaSubdomeinMeta));
 	});
 });
 app.route(apiBase + 'examenprogramma_eindterm').get((req, res) => {
 	graphQuery("ExamenprogrammaEindterm", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaEindterm, null, null, result.data._allExamenprogrammaEindtermMeta));
+		res.send(jsonLDList(result.data.allExamenprogrammaEindterm, examenprogrammaSchemaURL, 'ExamenprogrammaEindterm', result.data._allExamenprogrammaEindtermMeta));
 	});
 });
 app.route(apiBase + 'examenprogramma_kop1').get((req, res) => {
 	graphQuery("ExamenprogrammaKop1", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaKop1, null, null, result.data._allExamenprogrammaKop1Meta));
+		res.send(jsonLDList(result.data.allExamenprogrammaKop1, examenprogrammaSchemaURL, 'ExamenprogrammaKop1', result.data._allExamenprogrammaKop1Meta));
 	});
 });
 app.route(apiBase + 'examenprogramma_kop2').get((req, res) => {
 	graphQuery("ExamenprogrammaKop2", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaKop2, null, null, result.data._allExamenprogrammaKop2Meta));
+		res.send(jsonLDList(result.data.allExamenprogrammaKop2, examenprogrammaSchemaURL, 'ExamenprogrammaKop2', result.data._allExamenprogrammaKop2Meta));
 	});
 });
 app.route(apiBase + 'examenprogramma_kop3').get((req, res) => {
 	graphQuery("ExamenprogrammaKop3", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaKop3, null, null, result.data._allExamenprogrammaKop3Meta));
+		res.send(jsonLDList(result.data.allExamenprogrammaKop3, examenprogrammaSchemaURL, 'ExamenprogrammaKop3', result.data._allExamenprogrammaKop3Meta));
 	});
 });
 app.route(apiBase + 'examenprogramma_kop4').get((req, res) => {
 	graphQuery("ExamenprogrammaKop4", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaKop4, null, null, result.data._allExamenprogrammaKop4Meta));
+		res.send(jsonLDList(result.data.allExamenprogrammaKop4, examenprogrammaSchemaURL, 'ExamenprogrammaKop4', result.data._allExamenprogrammaKop4Meta));
 	});
 });
 app.route(apiBase + 'examenprogramma_body').get((req, res) => {
 	graphQuery("ExamenprogrammaBody", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allExamenprogrammaBody, null, null, result.data._allExamenprogrammaBodyMeta));
+		res.send(jsonLDList(result.data.allExamenprogrammaBody, examenprogrammaSchemaURL, 'ExamenprogrammaBody', result.data._allExamenprogrammaBodyMeta));
 	});
 });
-
-
+app.route(apiBase + 'syllabus').get((req, res) => {
+	graphQuery("Syllabus", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allSyllabus, syllabusSchemaURL, 'Syllabus', result.data._allSyllabusMeta));
+	});
+});
+app.route(apiBase + 'syllabus_toelichting').get((req, res) => {
+	graphQuery("SyllabusToelichting", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allSyllabusToelichting, syllabusSchemaURL, 'SyllabusToelichting', result.data._allSyllabusToelichtingMeta));
+	});
+});
+app.route(apiBase + 'syllabus_specifieke_eindterm').get((req, res) => {
+	graphQuery("SyllabusSpecifiekeEindterm", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allSyllabusSpecifiekeEindterm, syllabusSchemaURL, 'SyllabusSpecifiekeEindterm', result.data._allSyllabusSpecifiekeEindtermMeta));
+	});
+});
+app.route(apiBase + 'syllabus_vakbegrip').get((req, res) => {
+console.log("hier");
+	graphQuery("SyllabusVakbegrip", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allSyllabusVakbegrip, syllabusSchemaURL, 'SyllabusVakbegrip', result.data._allSyllabusVakbegripMeta));
+	});
+});
 
 /* Queries op niveau */
 app.route(apiBase + 'niveau/:niveau/doel').get((req, res) => {
@@ -603,6 +667,25 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 	.then(function(result) {
 		result.data.allNiveauIndex[0].Vakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
 		res.send(jsonLD(result.data.allNiveauIndex[0].Vakinhoud[0], inhoudSchemaURL, 'Vakinhoud'));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied').get((req, res) => {
+	console.log('hier');
+	graphQuery("KerndoelVakleergebiedOpNiveau", req.params)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveauIndex[0].KerndoelVakleergebied));
+	});
+});
+
+app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied/:id').get((req, res) => {
+	console.log('hier dan');
+	graphQuery("KerndoelVakleergebiedByIdOpNiveau", req.params)
+	.then(function(result) {
+		result.data.allNiveauIndex[0].KerndoelVakleergebied[0].KerndoelDomein = result.data.allNiveauIndex[0].KerndoelDomein;
+		result.data.allNiveauIndex[0].KerndoelVakleergebied[0].Kerndoel = result.data.allNiveauIndex[0].Kerndoel;
+		result.data.allNiveauIndex[0].KerndoelVakleergebied[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+		res.send(jsonLD(result.data.allNiveauIndex[0].KerndoelVakleergebied[0], kerndoelSchemaURL, 'Vak'));
 	});
 });
 
@@ -825,5 +908,12 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakin
 app.route(apiBase + 'register/').get((req, res) => {
     console.log("Register user " + req.param.email);
 });
+
+
+// add routes above this line
+app.route('*').get((req,res) => {
+	res.status(404).send(notfound);
+});
+
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
