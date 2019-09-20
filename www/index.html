@@ -72,6 +72,15 @@
                 <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
                 <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
                 <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
+                <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht profielen</a></li>
+                <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kernen</a></li>
+                <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kerndelen</a></li>
+                <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht globale eindtermen</a></li>
+                <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht modules</a></li>
+                <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevakken</a></li>
+                <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht deeltaken</a></li>
+                <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht moduletaken</a></li>
+                <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevaktaken</a></li>
                 <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
                 <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
                 <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
@@ -365,6 +374,88 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.ExamenprogrammaBgProfiel" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht profiel</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgProfiel">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+
+                <div data-simply-field="item.ExamenprogrammaBgKern" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht kern</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgKern">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgKerndeel" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht kerndeel</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgKerndeel">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgGlobaleEindterm" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht globale eindterm</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgGlobaleEindterm">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgModule" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht module</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgModule">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgKeuzevak" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht keuzevak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgKeuzevak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgDeeltaak" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht deeltaak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgDeeltaak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgModuletaak" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht moduletaak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgModuletaak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgKeuzevaktaak" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht keuzevaktaak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgKeuzevaktaak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.Syllabus" data-simply-content="template"
                     data-simply-transformer="truthy">
                     <template data-simply-template="true">
@@ -513,8 +604,8 @@
     };
 
     var titles = {
-		'vakkencluster/': 'Vakkenclusters',
-		'leerlijn/': 'Leerlijnen',
+        'vakkencluster/': 'Vakkenclusters',
+        'leerlijn/': 'Leerlijnen',
         'vak/': 'Vakken',
         'vakkern/': 'Vakkernen',
         'vaksubkern/': 'Vaksubkernen',
@@ -536,10 +627,19 @@
         'examenprogramma_kop3/' : 'Examenprogramma tekst (kop3)',
         'examenprogramma_kop4/' : 'Examenprogramma tekst (kop4)',
         'examenprogramma_body/' : 'Examenprogramma tekst (kop5)',
-		'syllabus/' : 'Syllabus',
-		'syllabus_specifieke_eindterm/' : 'Syllabus specifieke eindterm',
-		'syllabus_toelichting/': 'Syllabus toelichting',
-		'syllabus_vakbegrip/' : 'Syllabus vakbegrip',
+        'examenprogramma_bg_profiel/' : 'Examenprogramma beroepsgericht profielen',
+        'examenprogramma_bg_kern/' : 'Examenprogramma beroepsgericht kernen',
+        'examenprogramma_bg_kerndeel/' : 'Examenprogramma beroepsgericht kerndelen',
+        'examenprogramma_bg_globale_eindterm/' : 'Examenprogramma beroepsgericht globale eindtermen',
+        'examenprogramma_bg_module/' : 'Examenprogramma beroepsgericht modules',
+        'examenprogramma_bg_keuzevak/' : 'Examenprogramma beroepsgericht keuzevakken',
+        'examenprogramma_bg_deeltaak/' : 'Examenprogramma beroepsgericht deeltaken',
+        'examenprogramma_bg_moduletaak/' : 'Examenprogramma beroepsgericht moduletaken',
+        'examenprogramma_bg_keuzevaktaak/' : 'Examenprogramma beroepsgericht keuzevaktaken',
+        'syllabus/' : 'Syllabus',
+        'syllabus_specifieke_eindterm/' : 'Syllabus specifieke eindterm',
+        'syllabus_toelichting/': 'Syllabus toelichting',
+        'syllabus_vakbegrip/' : 'Syllabus vakbegrip',
         
         'legacy': 'Vervangen door:'
     };
@@ -651,6 +751,33 @@
             },
             '/curriculum/api/v1/examenprogramma_body/': function(params) {
                 browser.actions.list('examenprogramma_body/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_profiel/': function(params) {
+                browser.actions.list('examenprogramma_bg_profiel/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_kern/': function(params) {
+                browser.actions.list('examenprogramma_bg_kern/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_kerndeel/': function(params) {
+                browser.actions.list('examenprogramma_bg_kerndeel/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_globale_eindterm/': function(params) {
+                browser.actions.list('examenprogramma_bg_globale_eindterm/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_module/': function(params) {
+                browser.actions.list('examenprogramma_bg_module/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_keuzevak/': function(params) {
+                browser.actions.list('examenprogramma_bg_keuzevak/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_deeltaak/': function(params) {
+                browser.actions.list('examenprogramma_bg_deeltaak/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_moduletaak/': function(params) {
+                browser.actions.list('examenprogramma_bg_moduletaak/')
+            },
+            '/curriculum/api/v1/examenprogramma_bg_keuzevaktaak/': function(params) {
+                browser.actions.list('examenprogramma_bg_keuzevaktaak/')
             },
             '/curriculum/api/v1/vakkencluster/': function(params) {
                 browser.actions.list('vakkencluster/')
