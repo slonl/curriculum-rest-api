@@ -838,6 +838,101 @@ query Id($id:ID) {
       title
     }
   }
+  allExamenprogrammaBgProfiel(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgKern {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBgModule {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBgKeuzevak {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgKern(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgKerndeel {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgKerndeel(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgGlobaleEindterm {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
+    id
+    prefix
+    title
+  }
+  allExamenprogrammaBgModule(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgDeeltaak {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBgModuletaak {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgDeeltaak(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgGlobaleEindterm {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgModuletaak(filter:{id:$id}) {
+    id
+    prefix
+    title
+  }
+  allExamenprogrammaBgKeuzevak(filter:{id:$id}) {
+    id
+    prefix
+    title
+    ExamenprogrammaBgDeeltaak {
+      id
+      prefix
+      title
+    }
+    ExamenprogrammaBgKeuzevaktaak {
+      id
+      prefix
+      title
+    }
+  }
+  allExamenprogrammaBgKeuzevaktaak(filter:{id:$id}) {
+    id
+    prefix
+    title
+  }
   allSyllabus(filter:{id:$id}) {
     id    
     title
@@ -1295,6 +1390,96 @@ query ExamenprogrammaBody($page:Int,$perPage:Int) {
   }
 }
 
+query ExamenprogrammaBgProfiel($page:Int,$perPage:Int) {
+  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgProfielMeta {
+     count
+  }
+}
+query ExamenprogrammaBgKern($page:Int,$perPage:Int) {
+  allExamenprogrammaBgKern (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgKernMeta {
+    count
+  }
+}
+query ExamenprogrammaBgKerndeel($page:Int,$perPage:Int) {
+  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgKerndeelMeta {
+    count
+  }
+}
+query ExamenprogrammaBgGlobaleEindterm($page:Int,$perPage:Int) {
+  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgGlobaleEindtermMeta {
+    count
+  }
+}
+query ExamenprogrammaBgModule($page:Int,$perPage:Int) {
+  allExamenprogrammaBgModule (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgModuleMeta {
+    count
+  }
+}
+query ExamenprogrammaBgDeeltaak($page:Int,$perPage:Int) {
+  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgDeeltaakMeta {
+    count
+  }
+}
+query ExamenprogrammaBgModuletaak($page:Int,$perPage:Int) {
+  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgModuletaakMeta {
+    count
+  }
+}
+query ExamenprogrammaBgKeuzevak($page:Int,$perPage:Int) {
+  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgKeuzevakMeta {
+    count
+  }
+}
+query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
+  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage) {
+    id
+    prefix
+    title
+  }
+  _allExamenprogrammaBgKeuzevaktaakMeta {
+    count
+  }
+}
 #query lpibVakkencluster {
 #  allLpibVakkencluster {
 #    id

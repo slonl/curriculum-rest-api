@@ -16,6 +16,7 @@ const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonl
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
 const examenprogrammaSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld";
+const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma_bg.jsonld";
 const syllabusSchemaURL = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
 const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 const niveauURL       = "/curriculum/api/v1/niveau/";
@@ -162,6 +163,8 @@ function jsonLD(entry, schema, type) {
 	[
 		'ExamenprogrammaBody','ExamenprogrammaKop4','ExamenprogrammaKop3','ExamenprogrammaKop2','ExamenprogrammaKop1',
 		'ExamenprogrammaEindterm','ExamenprogrammaSubdomein','ExamenprogrammaDomein','Examenprogramma','ExamenprogrammaVakleergebied',
+		'ExamenprogrammaBgProfiel','ExamenprogrammaBgKern','ExamenprogrammaBgKerndeel','ExamenprogrammaBgGlobaleEindterm','ExamenprogrammaBgModule',
+		'ExamenprogrammaBgKeuzevak','ExamenprogrammaBgDeeltaak','ExamenprogrammaBgModuletaak','ExamenprogrammaBgKeuzevaktaak',
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
 		'Vak','Vakkern','Vaksubkern','Vakinhoud',
 		'Doelniveau', 'Doel', 'Niveau',
@@ -303,7 +306,18 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'ExamenprogrammaKop3':
 					case 'ExamenprogrammaKop4':
 						schema = examenprogrammaSchemaURL;
-					break;		
+					break;
+					case 'ExamenprogrammaBgProfiel':
+					case 'ExamenprogrammaBgKern':
+					case 'ExamenprogrammaBgKerndeel':
+					case 'ExamenprogrammaBgGlobaleEindterm':
+					case 'ExamenprogrammaBgModule':
+					case 'ExamenprogrammaBgKeuzevak':
+					case 'ExamenprogrammaBgDeeltaak':
+					case 'ExamenprogrammaBgModuletaak':
+					case 'ExamenprogrammaBgKeuzevaktaak':
+						schema = examenprogrammaBgSchemaURL;
+					break;
 					default:
 						schema = doelSchemaURL;
 					break;
@@ -552,6 +566,62 @@ app.route(apiBase + 'examenprogramma_body').get((req, res) => {
 		res.send(jsonLDList(result.data.allExamenprogrammaBody, examenprogrammaSchemaURL, 'ExamenprogrammaBody', result.data._allExamenprogrammaBodyMeta));
 	});
 });
+
+app.route(apiBase + 'examenprogramma_bg_profiel').get((req, res) => {
+	graphQuery("ExamenprogrammaBgProfiel", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgProfiel, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgProfiel', result.data._allExamenprogrammaBgProfielMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_kern').get((req, res) => {
+	graphQuery("ExamenprogrammaBgKern", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgKern, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgKern', result.data._allExamenprogrammaBgKernMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_kerndeel').get((req, res) => {
+	graphQuery("ExamenprogrammaBgKerndeel", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgKerndeel, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgKerndeel', result.data._allExamenprogrammaBgKerndeelMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_globale_eindterm').get((req, res) => {
+	graphQuery("ExamenprogrammaBgGlobaleEindterm", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgGlobaleEindterm, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgGlobaleEindterm', result.data._allExamenprogrammaBgGlobaleEindtermMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_module').get((req, res) => {
+	graphQuery("ExamenprogrammaBgModule", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgModule, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgModule', result.data._allExamenprogrammaBgModuleMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_keuzevak').get((req, res) => {
+	graphQuery("ExamenprogrammaBgKeuzevak", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgKeuzevak, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgKeuzevak', result.data._allExamenprogrammaBgKeuzevakMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_deeltaak').get((req, res) => {
+	graphQuery("ExamenprogrammaBgDeeltaak", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgDeeltaak, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgDeeltaak', result.data._allExamenprogrammaBgDeeltaakMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_moduletaak').get((req, res) => {
+	graphQuery("ExamenprogrammaBgModuletaak", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgModuletaak, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgModuletaak', result.data._allExamenprogrammaBgModuletaakMeta));
+	});
+});
+app.route(apiBase + 'examenprogramma_bg_keuzevaktaak').get((req, res) => {
+	graphQuery("ExamenprogrammaBgKeuzevaktaak", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allExamenprogrammaBgKeuzevaktaak, examenprogrammaBgSchemaURL, 'ExamenprogrammaBgKeuzevaktaak', result.data._allExamenprogrammaBgKeuzevaktaakMeta));
+	});
+});
+
 app.route(apiBase + 'syllabus').get((req, res) => {
 	graphQuery("Syllabus", req.params, req.query)
 	.then(function(result) {
