@@ -11,7 +11,6 @@ const app = express();
 const port = 4000;
 const apiBase = "/";
 
-const backendUrl      = "http://localhost:3000";
 const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonld";
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
@@ -19,7 +18,13 @@ const examenprogrammaSchemaURL = "https://opendata.slo.nl/curriculum/schemas/exa
 const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma_bg.jsonld";
 const syllabusSchemaURL = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
 const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
-const niveauURL       = "/curriculum/api/v1/niveau/";
+
+//const backendUrl      = "http://localhost:3000";
+//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
+const backendUrl      = 'https://opendata.slo.nl:3000';
+const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2019/';
+
+const niveauURL       = baseDatasetURL + "api/v1/niveau/";
 const notfound        = { error: "not found"};
 
 app.use(function(req, res, next) {
@@ -157,6 +162,8 @@ function jsonLD(entry, schema, type) {
 		'@id': baseIdURL + entry.id,
 		'@context': schema,
 		'@type': type,
+		'@isPartOf': baseDatasetURL,
+		'@references': baseDatasetURL + 'uuid/'+entry.id,
 		'uuid': entry.id
 	};
 	delete entry.id;
@@ -238,8 +245,10 @@ function jsonLDList(list, schema, type, meta) {
 	list = list.map(function(link) {
 		var result = {
 			'@id': baseIdURL + link.id,
+			'@references': baseDatasetURL + 'uuid/'+link.id,
 			'uuid': link.id
 		};
+
 		if (schema) {
 			result['@context'] = schema;
 		}
@@ -258,6 +267,7 @@ function jsonLDList(list, schema, type, meta) {
 	});
 	if (meta) {
 		meta.data = list;
+		meta['@isPartOf'] = baseDatasetURL;
 		return meta;
 	} else {
 		return list;
@@ -641,7 +651,6 @@ app.route(apiBase + 'syllabus_specifieke_eindterm').get((req, res) => {
 	});
 });
 app.route(apiBase + 'syllabus_vakbegrip').get((req, res) => {
-console.log("hier");
 	graphQuery("SyllabusVakbegrip", req.params, req.query)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allSyllabusVakbegrip, syllabusSchemaURL, 'SyllabusVakbegrip', result.data._allSyllabusVakbegripMeta));
@@ -741,7 +750,6 @@ app.route(apiBase + 'niveau/:niveau/vakinhoud/:id').get((req, res) => {
 });
 
 app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied').get((req, res) => {
-	console.log('hier');
 	graphQuery("KerndoelVakleergebiedOpNiveau", req.params)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allNiveauIndex[0].KerndoelVakleergebied));
@@ -749,7 +757,6 @@ app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied').get((req, res) => {
 });
 
 app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied/:id').get((req, res) => {
-	console.log('hier dan');
 	graphQuery("KerndoelVakleergebiedByIdOpNiveau", req.params)
 	.then(function(result) {
 		result.data.allNiveauIndex[0].KerndoelVakleergebied[0].KerndoelDomein = result.data.allNiveauIndex[0].KerndoelDomein;

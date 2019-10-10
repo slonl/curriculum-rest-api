@@ -1,5 +1,5 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/api/v1/">
+<base href="/curriculum/2019/api/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
 <body data-simply-path="/curriculum/">
 
@@ -46,7 +46,7 @@
         </template>
     </ul>
     <ul class="slo-navbar-nav">
-        <li><a href="/curriculum/api/v1/" class="slo-nav" data-simply-group="menu">API Browser</a>
+        <li><a href="/" class="slo-nav" data-simply-group="menu">API Browser</a>
             <ul class="slo-navbar-nav">
                 <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
                 <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
@@ -128,7 +128,7 @@
                 <h1>
                     <span data-simply-field="item.prefix"></span> <span data-simply-field="item.title"></span>
                 </h1>
-                <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-content="fixed">
+                <a class="slo-tag" href="#" data-simply-field="item.@references" data-simply-content="fixed">
                     <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
                         <use xlink:href="/assets/icons/feather-sprite.svg#link">
                     </use></svg></label>
@@ -498,7 +498,7 @@
 </main>
 <template id="deprecatedLinks">
     <li>
-        <a href="#" data-simply-field="@id" data-simply-content="fixed">
+        <a href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
         <span data-simply-field="Vak" data-simply-content="template"
@@ -555,7 +555,7 @@
 </template>
 <template id="links">
     <li>
-        <a href="#" data-simply-field="@id" data-simply-content="fixed">
+        <a href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
         <span data-simply-field="$ref" data-simply-content="template"
@@ -572,7 +572,7 @@
 </template>
 <template id="doelniveau">
     <li>
-        <a href="#" data-simply-field="@id" data-simply-content="fixed">
+        <a href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="Doel.0.title">titel</span>
         </a>
         <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
@@ -594,15 +594,27 @@
 <script>
     simply.bind = false; //don't use the simplyview databindings
     
-    //FIXME: dit moet niet nodig zijn
-    // bug is: ga naar een item (uuid/iets) ga naar een lijst (/vak/) ga
-    // naar een item (uuid/iets) -> console geeft een error over 'dataParent
-    // is undefined' ofzo.
-
-    simply.route.goto = function(path) {
-        window.location = baseURL + path;
-    };
-
+	var release = {
+		basePath: '/curriculum/2019/',
+		apiPath: '/curriculum/2019/api/v1/'
+	};
+	(function() {
+//		var goto = simply.route.goto;
+//	    simply.route.goto = function(path) {
+//	        return goto(release.apiPath + path);
+//	    };
+	    
+		var match = simply.route.match;
+		simply.route.match = function(path, options) {
+			if (path.indexOf(release.apiPath)===0) {
+				path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
+			} else if (path.indexOf(release.basePath+'uuid/')===0) {
+				path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
+			}
+			return match(path, options);
+		};
+	})();
+	
     var titles = {
         'vakkencluster/': 'Vakkenclusters',
         'leerlijn/': 'Leerlijnen',
@@ -643,179 +655,182 @@
         
         'legacy': 'Vervangen door:'
     };
-        
+
     var browser = simply.app({
         container: document.body,
         routes: {
-            '/curriculum/api/v1/niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
+            'niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
             },
-            '/curriculum/api/v1/niveau/:niveau/vak/:vakid': function(params) {
+            'niveau/:niveau/vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
             },
-            '/curriculum/api/v1/niveau/:niveau/vakkern/:vakkernid': function(params) {
+            'niveau/:niveau/vakkern/:vakkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakkern/', params.vakkernid);
             },
-            '/curriculum/api/v1/niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
+            'niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vaksubkern/', params.vaksubkernid);
             },
-            '/curriculum/api/v1/niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
+            'niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakinhoud/', params.vakinhoudid);
             },
-            '/curriculum/api/v1/niveau/:niveau/vak/': function(params) {
+            'niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vakkern/': function(params) {
+            'niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vaksubkern/': function(params) {
+            'niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
+            'niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vak/': function(params) {
+            'niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vakkern/': function(params) {
+            'niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vaksubkern/': function(params) {
+            'niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            '/curriculum/api/v1/niveau/:niveau/vakinhoud/': function(params) {
+            'niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            '/curriculum/api/v1/niveau/:niveau': function(params) {
+            'niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },
-            '/curriculum/api/v1/vak/': function(params) {
+            'vak/': function(params) {
                 browser.actions.list('vak/')
             },
-            '/curriculum/api/v1/vakkern/': function(params) {
+            'vakkern/': function(params) {
                 browser.actions.list('vakkern/')
             },
-            '/curriculum/api/v1/vaksubkern/': function(params) {
+            'vaksubkern/': function(params) {
                 browser.actions.list('vaksubkern/')
             },
-            '/curriculum/api/v1/vakinhoud/': function(params) {
+            'vakinhoud/': function(params) {
                 browser.actions.list('vakinhoud/')
             },
-            '/curriculum/api/v1/niveau/': function(params) {
+            'niveau/': function(params) {
                 browser.actions.list('niveau/')
             },
-            '/curriculum/api/v1/doelniveau/': function(params) {
+            'doelniveau/': function(params) {
                 browser.actions.doelniveauList('doelniveau/')
             },
-            '/curriculum/api/v1/doel/': function(params) {
+            'doel/': function(params) {
                 browser.actions.list('doel/')
             },
-            '/curriculum/api/v1/kerndoel/': function(params) {
+            'kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
             },
-            '/curriculum/api/v1/kerndoel_domein/': function(params) {
+            'kerndoel_domein/': function(params) {
                 browser.actions.list('kerndoel_domein/')
             },
-            '/curriculum/api/v1/kerndoel_uitstroomprofiel/': function(params) {
+            'kerndoel_uitstroomprofiel/': function(params) {
                 browser.actions.list('kerndoel_uitstroomprofiel/')
             },
-            '/curriculum/api/v1/kerndoel_vakleergebied/': function(params) {
+            'kerndoel_vakleergebied/': function(params) {
                 browser.actions.list('kerndoel_vakleergebied/')
             },
-            '/curriculum/api/v1/examenprogramma_vakleergebied/': function(params) {
+            'examenprogramma_vakleergebied/': function(params) {
                 browser.actions.list('examenprogramma_vakleergebied/')
             },
-            '/curriculum/api/v1/examenprogramma/': function(params) {
+            'examenprogramma/': function(params) {
                 browser.actions.list('examenprogramma/')
             },
-            '/curriculum/api/v1/examenprogramma_domein/': function(params) {
+            'examenprogramma_domein/': function(params) {
                 browser.actions.list('examenprogramma_domein/')
             },
-            '/curriculum/api/v1/examenprogramma_subdomein/': function(params) {
+            'examenprogramma_subdomein/': function(params) {
                 browser.actions.list('examenprogramma_subdomein/')
             },
-            '/curriculum/api/v1/examenprogramma_eindterm/': function(params) {
+            'examenprogramma_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_eindterm/')
             },
-            '/curriculum/api/v1/examenprogramma_kop1/': function(params) {
+            'examenprogramma_kop1/': function(params) {
                 browser.actions.list('examenprogramma_kop1/')
             },
-            '/curriculum/api/v1/examenprogramma_kop2/': function(params) {
+            'examenprogramma_kop2/': function(params) {
                 browser.actions.list('examenprogramma_kop2/')
             },
-            '/curriculum/api/v1/examenprogramma_kop3/': function(params) {
+            'examenprogramma_kop3/': function(params) {
                 browser.actions.list('examenprogramma_kop3/')
             },
-            '/curriculum/api/v1/examenprogramma_kop4/': function(params) {
+            'examenprogramma_kop4/': function(params) {
                 browser.actions.list('examenprogramma_kop4/')
             },
-            '/curriculum/api/v1/examenprogramma_body/': function(params) {
+            'examenprogramma_body/': function(params) {
                 browser.actions.list('examenprogramma_body/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_profiel/': function(params) {
+            'examenprogramma_bg_profiel/': function(params) {
                 browser.actions.list('examenprogramma_bg_profiel/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_kern/': function(params) {
+            'examenprogramma_bg_kern/': function(params) {
                 browser.actions.list('examenprogramma_bg_kern/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_kerndeel/': function(params) {
+            'examenprogramma_bg_kerndeel/': function(params) {
                 browser.actions.list('examenprogramma_bg_kerndeel/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_globale_eindterm/': function(params) {
+            'examenprogramma_bg_globale_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_bg_globale_eindterm/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_module/': function(params) {
+            'examenprogramma_bg_module/': function(params) {
                 browser.actions.list('examenprogramma_bg_module/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_keuzevak/': function(params) {
+            'examenprogramma_bg_keuzevak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevak/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_deeltaak/': function(params) {
+            'examenprogramma_bg_deeltaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_deeltaak/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_moduletaak/': function(params) {
+            'examenprogramma_bg_moduletaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_moduletaak/')
             },
-            '/curriculum/api/v1/examenprogramma_bg_keuzevaktaak/': function(params) {
+            'examenprogramma_bg_keuzevaktaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevaktaak/')
             },
-            '/curriculum/api/v1/vakkencluster/': function(params) {
+            'vakkencluster/': function(params) {
                 browser.actions.list('vakkencluster/')
             },
-            '/curriculum/api/v1/leerlijn/': function(params) {
+            'leerlijn/': function(params) {
                 browser.actions.list('leerlijn/')
             },
-            '/curriculum/api/v1/syllabus/': function(params) {
+            'syllabus/': function(params) {
                 browser.actions.list('syllabus/')
             },
-            '/curriculum/api/v1/syllabus_specifieke_eindterm/': function(params) {
+            'syllabus_specifieke_eindterm/': function(params) {
                 browser.actions.list('syllabus_specifieke_eindterm/')
             },
-            '/curriculum/api/v1/syllabus_toelichting/': function(params) {
+            'syllabus_toelichting/': function(params) {
                 browser.actions.list('syllabus_toelichting/')
             },
-            '/curriculum/api/v1/syllabus_vakbegrip/': function(params) {
+            'syllabus_vakbegrip/': function(params) {
                 browser.actions.list('syllabus_vakbegrip/')
             },
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
-            '/curriculum/api/v1/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
+            'uuid/:id': function(params) {
+                browser.actions.item(params.id);
+            },
+            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
                 browser.actions.legacy(params);
             },            
-            '/curriculum/api/v1/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
+            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
                 browser.actions.legacy(params);
             },
-            '/curriculum/api/v1/legacy/vak/:vak/vakkern/:vakkern': function(params) {
+            'legacy/vak/:vak/vakkern/:vakkern': function(params) {
                 browser.actions.legacy(params);
             },
-            '/curriculum/api/v1/legacy/vak/:vak': function(params) {
+            'legacy/vak/:vak': function(params) {
                 browser.actions.legacy(params);
             },
-            '/curriculum/api/v1/register/': function(params) { 
+            'register/': function(params) { 
                 browser.view.view = 'register';
             },
-            '/curriculum/api/v1/:*': function(params) {
+            ':*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
                 }
@@ -847,7 +862,7 @@
                 }).join('&');
             },
             list: function(type) {
-                return slo.api.get('/curriculum/api/v1/'+type)
+                return slo.api.get(release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'list';
                     browser.view.list = json.data;
@@ -861,7 +876,7 @@
                 });
             },
             doelniveauList: function(type) {
-                return slo.api.get('/curriculum/api/v1/'+type)
+                return slo.api.get(release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'doelniveauList';
                     browser.view.list = json.data;
@@ -870,7 +885,7 @@
                 });
             },
             item: function(id) {
-                return slo.api.get('/curriculum/api/v1/uuid/'+id+'/')
+                return slo.api.get(release.apiPath+'uuid/'+id+'/')
                 .then(function(json) {
                     browser.view.view = 'item';
                     browser.view.item = json;
@@ -878,7 +893,7 @@
                 });
             },
             listOpNiveau: function(niveau, type) {
-                return slo.api.get('/curriculum/api/v1/niveau/'+niveau+'/'+type)
+                return slo.api.get(release.apiPath+niveau+'/'+type)
                 .then(function(json) {
                     browser.view.view = 'list';
                     browser.view.list = json;
@@ -887,7 +902,7 @@
                 });
             },
             itemOpNiveau: function(niveau, type, id) {
-                return slo.api.get('/curriculum/api/v1/niveau/'+niveau+'/'+type+id)
+                return slo.api.get(release.apiPath+'niveau/'+niveau+'/'+type+id)
                 .then(function(json) {
                     browser.view.view = 'item';
                     browser.view.item = json;
@@ -899,7 +914,7 @@
                 browser.actions.updatePaging();
             },
             legacy: function(params) {
-                var url = '/curriculum/api/v1/legacy/';
+                var url = release.apiPath+'legacy/';
                 ['vak','vakkern','vaksubkern','vakinhoud'].forEach(function(inhoud)
                 {
                     if (params[inhoud]) {
@@ -925,7 +940,7 @@
                 }
             },
             register : function(email) {
-                var url = '/curriculum/api/v1/register/';
+                var url = release.apiPath+'register/';
                 slo.api.get(url + "?email=" + email);
             }
         }
@@ -933,8 +948,10 @@
 
     browser.view.pageSize = 100;
         
+//    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
+//    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
     const baseURL = 'https://opendata.slo.nl';
-	const apiURL  = 'https://opendata.slo.nl';
+    const apiURL  = 'https://opendata.slo.nl';
 
     var slo = {
         api: {
