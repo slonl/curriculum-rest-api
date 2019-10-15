@@ -23,6 +23,24 @@ fragment DoelNiveau on Doelniveau {
       prefix
     }
 }
+fragment Doelen on Doelniveau {
+    id
+    Doel {
+      id
+      title
+      description
+#      Leerlingtekst {
+#        title
+#        description
+#      }     
+    }
+    Kerndoel {
+      id
+      title
+      description
+      prefix
+    }
+}
 fragment Niveau on Niveau {
    id
    title
@@ -154,6 +172,48 @@ query VakById($id:ID) {
     }
   }
 }
+
+query DoelenOpNiveauByVakById($id:ID, $niveau:[ID]){  
+  Vak(id:$id) {
+    id
+    title
+    NiveauIndex(filter:{niveau_id:$niveau}) {
+      Niveau {
+        id
+        title
+      }
+    }
+    Vakkern {
+      id
+      title
+      Vaksubkern {
+        id
+        title
+        Vakinhoud {
+          id
+          title
+	      Doelniveau(filter:{niveau_id:$niveau}) {
+  	        ...Doelen
+          }
+        }
+        Doelniveau(filter:{niveau_id:$niveau}) {
+          ...Doelen
+        }
+      }
+      Vakinhoud {
+        id
+        title
+        Doelniveau(filter:{niveau_id:$niveau}) {
+          ...Doelen
+        }
+      }
+      Doelniveau(filter:{niveau_id:$niveau}) {
+        ...Doelen
+      }
+    }
+  }
+}
+
 query Vakkern($page:Int,$perPage:Int) {
   allVakkern(page:$page,perPage:$perPage) {
     id

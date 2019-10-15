@@ -19,10 +19,10 @@ const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/e
 const syllabusSchemaURL = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
 const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 
-//const backendUrl      = "http://localhost:3000";
-//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
-const backendUrl      = 'https://opendata.slo.nl:3000';
-const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2019/';
+const backendUrl      = "http://localhost:3000";
+const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
+//const backendUrl      = 'https://opendata.slo.nl:3500';
+//const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2019/';
 
 const niveauURL       = baseDatasetURL + "api/v1/niveau/";
 const notfound        = { error: "not found"};
@@ -700,6 +700,15 @@ app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 		result.data.allNiveauIndex[0].Vak[0].Niveau = result.data.allNiveauIndex[0].Niveau;
 		res.send(jsonLD(result.data.allNiveauIndex[0].Vak[0], inhoudSchemaURL, 'Vak'));
 	});
+});
+
+app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get((req, res) => {
+    graphQuery('DoelenOpNiveauByVakById', req.params)
+    .then(function(result) {
+        result.data.Vak.Niveau = result.data.Vak.NiveauIndex[0].Niveau;
+		delete result.data.Vak.NiveauIndex;
+        res.send(jsonLD(result.data.Vak, inhoudSchemaURL, 'Vak'));
+    });
 });
 
 app.route(apiBase + 'niveau/:niveau/vakkern').get((req, res) => {
