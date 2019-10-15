@@ -696,6 +696,18 @@ query Id($id:ID) {
       prefix
       title
     }
+    Syllabus {
+      id
+      title
+    }
+    SyllabusToelichting {
+      id
+      title
+    }
+    SyllabusSpecifiekeEindterm {
+      id
+      title
+    }
     Niveau {
       id
       title
@@ -726,6 +738,14 @@ query Id($id:ID) {
     ExamenprogrammaEindterm {
       id
       prefix
+      title
+    }
+    SyllabusToelichting {
+      id
+      title
+    }
+    SyllabusSpecifiekeEindterm {
+      id
       title
     }
     Niveau {
@@ -776,6 +796,18 @@ query Id($id:ID) {
     ExamenprogrammaDomein {
       id
       prefix
+      title
+    }
+    SyllabusSpecifiekeEindterm {
+      id
+      title
+    }
+    SyllabusToelichting {
+      id
+      title
+    }
+    SyllabusVakbegrip {
+      id
       title
     }
     Niveau {
