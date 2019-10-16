@@ -708,9 +708,11 @@ query Id($id:ID) {
       id
       title
     }
-    Niveau {
-      id
-      title
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allExamenprogrammaDomein(filter:{id:$id}) {
@@ -748,9 +750,11 @@ query Id($id:ID) {
       id
       title
     }
-    Niveau {
-      id
-      title
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allExamenprogrammaSubdomein(filter:{id:$id}) {
@@ -775,9 +779,11 @@ query Id($id:ID) {
       prefix
       title
     }
-    Niveau {
-      id
-      title
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
     }
   }
   allExamenprogrammaEindterm(filter:{id:$id}) {
