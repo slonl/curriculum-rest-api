@@ -138,13 +138,24 @@
                     <label class="slo-tag-label">Type</label>
                     <span data-simply-field="item.@type"></span>
                 </div>
-                <div class="slo-tag bg-brand" data-simply-field="item.unreleased" data-simply-content="template" data-simply-default-template="false">
+                <span data-simply-field="item.unreleased" data-simply-content="template" data-simply-default-template="false">
                     <template data-simply-template="true">
-                        Unreleased
+                        <div class="slo-tag bg-brand">
+                            Unreleased
+                        </div>
                     </template>
                     <template data-simply-template="false">
                     </template>
-                </div>
+                </span>
+                <span data-simply-field="item.bron" data-simply-content="template"
+                data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag">
+                            <label class="slo-tag-label">Bron</label>
+                            <span data-simply-field="item.bron"></span>
+                        </div>
+                    </template>
+                </span>
                 <div data-simply-field="item.@type" data-simply-content="template">
                     <template data-simply-template="Deprecated">
                         <label>Vervangen door</label>
@@ -168,6 +179,15 @@
                         <div data-simply-field="item.description"></div>
                     </template>
                 </div>
+                <div data-simply-field="item.vakbegrippen" data-simply-content="template"  data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div>
+                            <h3>Vakbegrippen</h3>
+                            <div data-simply-field="item.vakbegrippen"></div>
+                        </div>
+                    </template>
+                </div>
+                
                 <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerlingteksten</h3>
