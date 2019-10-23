@@ -29,6 +29,8 @@ fragment Doelen on Doelniveau {
       id
       title
       description
+      bron
+      vakbegrippen
 #      Leerlingtekst {
 #        title
 #        description
@@ -86,6 +88,8 @@ query DoelById($id:ID) {
     id
     title
     description
+	bron
+	vakbegrippen
 #    Leerlingtekst {
 #      ...Leerlingtekst
 #    }
@@ -431,6 +435,8 @@ query Id($id:ID) {
     id
     title
     description
+	bron
+	vakbegrippen
 #    Leerlingtekst {
 #       ...Leerlingtekst
 #    }
