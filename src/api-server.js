@@ -242,6 +242,12 @@ function jsonLD(entry, schema, type) {
 }
 
 function jsonLDList(list, schema, type, meta) {
+	// remove dummy entries from returned list
+	// TODO: remove these in the graphql server, they are only there to 
+	// provide access to properties which aren't actually set in the current data, but may be set later
+	if (list[list.length-1] && list[list.length-1].id && list[list.length-1].id<0) {
+		list.pop();
+	}
 	list = list.map(function(link) {
 		var result = {
 			'@id': baseIdURL + link.id,
