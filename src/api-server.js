@@ -534,6 +534,12 @@ app.route(apiBase + 'examenprogramma').get((req, res) => {
 		res.send(jsonLDList(result.data.allExamenprogramma, examenprogrammaSchemaURL, 'Examenprogramma', result.data._allExamenprogrammaMeta));
 	});
 });
+app.route(apiBase + 'examenprogramma/:id').get((req, res) => {
+	graphQuery("ExamenprogrammaVolledig", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLD(result.data.Examenprogramma, examenprogrammaSchemaURL, 'Examenprogramma'));
+	});
+});
 app.route(apiBase + 'examenprogramma_domein').get((req, res) => {
 	graphQuery("ExamenprogrammaDomein", req.params, req.query)
 	.then(function(result) {
@@ -644,6 +650,14 @@ app.route(apiBase + 'syllabus').get((req, res) => {
 		res.send(jsonLDList(result.data.allSyllabus, syllabusSchemaURL, 'Syllabus', result.data._allSyllabusMeta));
 	});
 });
+
+app.route(apiBase + 'syllabus/:id').get((req, res) => {
+	graphQuery("SyllabusVolledig", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLD(result.data.Syllabus, syllabusSchemaURL, 'Syllabus'));
+	});
+});
+
 app.route(apiBase + 'syllabus_toelichting').get((req, res) => {
 	graphQuery("SyllabusToelichting", req.params, req.query)
 	.then(function(result) {

@@ -1705,3 +1705,189 @@ query Leerlijn($page:Int,$perPage:Int) {
     count
   }
 }
+query ExamenprogrammaVolledig($id:ID) {
+  Examenprogramma(id:$id){
+    id
+    prefix
+    title
+    NiveauIndex {
+      Niveau {
+        id
+        title        
+      }
+    }
+    Syllabus {
+      id
+      title
+      ce_se
+		}
+    ExamenprogrammaKop1 {
+      id
+      title
+      ExamenprogrammaKop2 {
+        id
+        title
+        ExamenprogrammaKop3 {
+          id
+          title
+          ExamenprogrammaKop4 {
+            id
+            title
+            ExamenprogrammaBody {
+              id
+              title
+              ce_se
+            }
+					}
+          ExamenprogrammaBody {
+            id
+            title
+            ce_se
+          }
+        }
+        ExamenprogrammaKop4 {
+          id
+          title
+          ExamenprogrammaBody {
+            id
+            title
+            ce_se
+          }
+        }
+        ExamenprogrammaBody {
+          id
+          title
+          ce_se
+        }
+			}
+      ExamenprogrammaKop3 {
+        id
+        title
+        ExamenprogrammaKop4 {
+          id
+          title
+          ExamenprogrammaBody {
+            id
+            title
+            ce_se
+          }
+        }
+        ExamenprogrammaBody {
+          id
+          title
+          ce_se
+        }
+      }
+      ExamenprogrammaBody {
+        id
+        title
+        ce_se
+      }
+    }
+    ExamenprogrammaDomein {
+      id
+      title
+      ce_se
+      ExamenprogrammaSubdomein {
+        id
+        title
+        ce_se
+        ExamenprogrammaEindterm {
+          id
+          title
+          ce_se
+				}
+      }
+      ExamenprogrammaEindterm {
+        id
+        title
+        ce_se
+      }
+    }
+    ExamenprogrammaVakleergebied {
+      id
+      title
+    }
+  } 
+}
+
+query SyllabusVolledig($id:ID){
+  Syllabus(id:$id){
+    id
+    title
+    ingangsdatum
+    versie
+    url
+    jaargang
+    status
+    ce_se
+    NiveauIndex {
+      Niveau {
+        id
+        title
+      }
+    }
+    SyllabusSpecifiekeEindterm {
+      id
+      prefix
+      title
+      ce_se
+      Tag {
+        id
+        title
+      }
+      ExamenprogrammaEindterm {
+        id
+        title
+      }
+      ExamenprogrammaDomein {
+        id
+        title
+      }
+      Examenprogramma {
+        id
+        title
+      }
+    }
+    SyllabusToelichting {
+      id
+      prefix
+      title
+      ce_se
+      Tag {
+        id
+        title
+      }
+      ExamenprogrammaEindterm {
+        id
+        title
+      }
+      ExamenprogrammaDomein {
+        id
+        title
+      }
+      Examenprogramma {
+        id
+        title
+      }
+      SyllabusSpecifiekeEindterm {
+        id
+        title
+      }      
+    }
+    SyllabusVakbegrip {
+      id
+      prefix
+      title
+      ce_se
+      Tag {
+        id
+        title
+      }
+      ExamenprogrammaEindterm {
+        id
+        title
+      }
+    }
+  }
+}
