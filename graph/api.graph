@@ -5,10 +5,10 @@ fragment DoelNiveau on Doelniveau {
       title
       description
       vakbegrippen
-#      Leerlingtekst {
-#        title
-#        description
-#      }     
+      Leerlingtekst {
+        title
+        description
+      }     
     }
     Niveau {
       id
@@ -32,10 +32,10 @@ fragment Doelen on Doelniveau {
       description
       bron
       vakbegrippen
-#      Leerlingtekst {
-#        title
-#        description
-#      }     
+      Leerlingtekst {
+        title
+        description
+      }     
     }
     Kerndoel {
       id
@@ -56,10 +56,10 @@ fragment NiveauShort on Niveau {
     title
     prefix
 }
-#fragment Leerlingtekst on Leerlingtekst {
-#    title
-#    description
-#}
+fragment Leerlingtekst on Leerlingtekst {
+    title
+    description
+}
 query DoelNiveau($page:Int,$perPage:Int) {
   allDoelniveau(page:$page,perPage:$perPage) {
     ...DoelNiveau
@@ -91,9 +91,9 @@ query DoelById($id:ID) {
     description
     bron
     vakbegrippen
-#    Leerlingtekst {
-#      ...Leerlingtekst
-#    }
+    Leerlingtekst {
+      ...Leerlingtekst
+    }
     
     Doelniveau {
       id
@@ -454,9 +454,9 @@ query Id($id:ID) {
     description
     bron
     vakbegrippen
-#    Leerlingtekst {
-#       ...Leerlingtekst
-#    }
+    Leerlingtekst {
+       ...Leerlingtekst
+    }
     
     Doelniveau {
       ...DoelNiveau
