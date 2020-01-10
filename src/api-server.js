@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const uuidv4 = require('uuidv4');
 const sendmail = require('sendmail')();
+const mcache = require('memory-cache');
 
 const app = express();
 const port = 4000;
@@ -26,6 +27,27 @@ const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019
 
 const niveauURL       = baseDatasetURL + "api/v1/niveau/";
 const notfound        = { error: "not found"};
+
+var cache = function() {
+  return (req, res, next) => {
+    let key = '__express__' + req.originalUrl || req.url
+    let cachedBody = mcache.get(key)
+    if (cachedBody) {
+      console.log("cache hit for " + key);
+      res.send(cachedBody)
+      return
+    } else {
+      console.log("cache miss for " + key);
+      res.sendResponse = res.send
+      res.send = (body) => {
+        // mcache.put(key, body, duration * 1000);
+        mcache.put(key, body);
+        res.sendResponse(body)
+      }
+      next()
+    }
+  }
+};
 
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Credentials', true);
@@ -722,7 +744,7 @@ app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get((req, res) => {
+app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get(cache(), (req, res) => {
     graphQuery('DoelenOpNiveauByVakById', req.params)
     .then(function(result) {
         result.data.Vak.Niveau = result.data.Vak.NiveauIndex[0].Niveau;
@@ -785,7 +807,7 @@ app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied').get((req, res) => {
 	});
 });
 
-app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied/:id').get((req, res) => {
+app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied/:id').get(cache(), (req, res) => {
 	graphQuery("KerndoelVakleergebiedByIdOpNiveau", req.params)
 	.then(function(result) {
 		result.data.allNiveauIndex[0].KerndoelVakleergebied[0].KerndoelDomein = result.data.allNiveauIndex[0].KerndoelDomein;
