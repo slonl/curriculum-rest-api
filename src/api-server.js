@@ -744,11 +744,30 @@ app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	});
 });
 
+function FilterEmptyDoelniveau(ent) {
+    var found = false;
+    ['Vakkern','Vaksubkern','Vakinhoud'].forEach(function(type) {
+        if (ent[type]) {
+            ent[type] = ent[type].filter(FilterEmptyDoelniveau);
+            if (!ent[type].length) {
+                delete ent[type];
+            } else {
+                found = true;
+            }
+        }
+    });
+    if (ent.Doelniveau && ent.Doelniveau.length) {
+        found = true;
+    }
+    return found;
+}
+
 app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get(cache(), (req, res) => {
     graphQuery('DoelenOpNiveauByVakById', req.params)
     .then(function(result) {
         result.data.Vak.Niveau = result.data.Vak.NiveauIndex[0].Niveau;
-		delete result.data.Vak.NiveauIndex;
+        delete result.data.Vak.NiveauIndex;
+        FilterEmptyDoelniveau(result.data.Vak);
         res.send(jsonLD(result.data.Vak, inhoudSchemaURL, 'Vak'));
     });
 });
