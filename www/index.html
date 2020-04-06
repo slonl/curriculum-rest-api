@@ -53,6 +53,10 @@
                 <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
                 <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
                 <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
+                <li><a href="ldk_vak/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakken</a></li>
+                <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
+                <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
+                <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
                 <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
                 <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
                 <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
@@ -238,6 +242,45 @@
                             <template rel="links"></template>
                         </ul>
                     
+                    </template>
+                </div>
+                <div data-simply-field="item.LdkVak" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerdoelkaart Vakken</h3>
+                        <ul data-simply-list="item.LdkVak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.LdkVakkern" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerdoelkaart Vakkernen</h3>
+                        <ul data-simply-list="item.LdkVakkern">
+                            <template rel="links"></template>
+                        </ul>
+
+                    </template>
+                </div>
+                <div data-simply-field="item.LdkVaksubkern" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerdoelkaart Vaksubkernen</h3>
+                        <ul data-simply-list="item.LdkVaksubkern">
+                            <template rel="links"></template>
+                        </ul>
+
+                    </template>
+                </div>
+                <div data-simply-field="item.LdkVakinhoud" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerdoelkaart Vakinhouden</h3>
+                        <ul data-simply-list="item.LdkVakinhoud">
+                            <template rel="links"></template>
+                        </ul>
+
                     </template>
                 </div>
                 <div data-simply-field="item.Doelniveau" data-simply-content="template"
@@ -593,7 +636,12 @@
 <template id="doelniveau">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <span data-simply-field="Doel.0.title">titel</span>
+            <span data-simply-field="Doel.0.title"></span>
+            <span data-simply-field="Kerndoel.0.title"></span>
+            <span data-simply-field="ExamenprogrammaDomein.0.prefix"></span> <span data-simply-field="ExamenprogrammaDomein.0.title"></span>
+            <span data-simply-field="ExamenprogrammaSubdomein.0.prefix"></span> <span data-simply-field="ExamenprogrammaSubdomein.0.title"></span>
+            <span data-simply-field="ExamenprogrammaEindterm.0.prefix"></span> <span data-simply-field="ExamenprogrammaEindterm.0.title"></span>
+			<span data-simply-field="ExamenprogrammaBgModule.0.prefix"></span> <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
         </a>
         <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
              <template>
@@ -613,28 +661,33 @@
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.bind = false; //don't use the simplyview databindings
+
+    var release = {
+        basePath: '/curriculum/api-acpt/',
+        apiPath: '/curriculum/api-acpt/v1/'
+    };
+
+	simply.route.init({
+		root: release.apiPath
+	});    
+
+    (function() {
+//        var goto = simply.route.goto;
+//        simply.route.goto = function(path) {
+//            return goto(release.apiPath + path);
+//        };
+        
+        var match = simply.route.match;
+        simply.route.match = function(path, options) {
+            if (path.indexOf(release.apiPath)===0) {
+                path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
+            } else if (path.indexOf(release.basePath+'uuid/')===0) {
+                path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
+            }
+            return match(path, options);
+        };
+    })();
     
-	var release = {
-		basePath: '/curriculum/2019/',
-		apiPath: '/curriculum/2019/api/v1/'
-	};
-	(function() {
-//		var goto = simply.route.goto;
-//	    simply.route.goto = function(path) {
-//	        return goto(release.apiPath + path);
-//	    };
-	    
-		var match = simply.route.match;
-		simply.route.match = function(path, options) {
-			if (path.indexOf(release.apiPath)===0) {
-				path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
-			} else if (path.indexOf(release.basePath+'uuid/')===0) {
-				path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
-			}
-			return match(path, options);
-		};
-	})();
-	
     var titles = {
         'vakkencluster/': 'Vakkenclusters',
         'leerlijn/': 'Leerlijnen',
@@ -649,6 +702,10 @@
         'kerndoel_domein/': 'Kerndoel Domeinen',
         'kerndoel_uitstroomprofiel/': 'Kerndoel Uitstroomprofiel',
         'kerndoel_vakleergebied/': 'Kerndoel Vakleergebied',
+		'ldk_vak/': 'Leerdoelkaart Vakken',
+        'ldk_vakkern/': 'Leerdoelkaart Vakkernen',
+        'ldk_vaksubkern/': 'Leerdoelkaart Vaksubkernen',
+        'ldk_vakinhoud/': 'Leerdoelkaart Vakinhouden',
         'examenprogramma_vakleergebied/': 'Examenprogramma Vakleergebied',
         'examenprogramma/': 'Examenprogramma',
         'examenprogramma_domein/' : 'Examenprogramma Domein',
@@ -679,175 +736,211 @@
     var browser = simply.app({
         container: document.body,
         routes: {
-            'niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
+            '/niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
             },
-            'niveau/:niveau/vak/:vakid': function(params) {
+            '/niveau/:niveau/vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
             },
-            'niveau/:niveau/vakkern/:vakkernid': function(params) {
+            '/niveau/:niveau/vakkern/:vakkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakkern/', params.vakkernid);
             },
-            'niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
+            '/niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vaksubkern/', params.vaksubkernid);
             },
-            'niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
+            '/niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakinhoud/', params.vakinhoudid);
             },
-            'niveau/:niveau/vak/': function(params) {
+            '/niveau/:niveau/ldk_vak/:vakid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vak/', params.vakid);
+            },
+            '/niveau/:niveau/ldk_vakkern/:vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.vakkernid);
+            },
+            '/niveau/:niveau/ldk_vaksubkern/:vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vaksubkern/', params.vaksubkernid);
+            },
+            '/niveau/:niveau/ldk_vakinhoud/:vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.vakinhoudid);
+            },
+            '/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            'niveau/:niveau/vakkern/': function(params) {
+            '/niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            'niveau/:niveau/vaksubkern/': function(params) {
+            '/niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            'niveau/:niveau/vakinhoud/': function(params) {
+            '/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            'niveau/:niveau/vak/': function(params) {
+            '/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            'niveau/:niveau/vakkern/': function(params) {
+            '/niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            'niveau/:niveau/vaksubkern/': function(params) {
+            '/niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            'niveau/:niveau/vakinhoud/': function(params) {
+            '/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            'niveau/:niveau': function(params) {
+            '/niveau/:niveau/ldk_vak/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vak/');
+            },
+            '/niveau/:niveau/ldk_vakkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vakkern/');
+            },
+            '/niveau/:niveau/ldk_vaksubkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vaksubkern/');
+            },
+            '/niveau/:niveau/ldk_vakinhoud/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
+            },
+            '/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },
-            'vak/': function(params) {
+            '/vak/': function(params) {
                 browser.actions.list('vak/')
             },
-            'vakkern/': function(params) {
+            '/vakkern/': function(params) {
                 browser.actions.list('vakkern/')
             },
-            'vaksubkern/': function(params) {
+            '/vaksubkern/': function(params) {
                 browser.actions.list('vaksubkern/')
             },
-            'vakinhoud/': function(params) {
+            '/vakinhoud/': function(params) {
                 browser.actions.list('vakinhoud/')
             },
-            'niveau/': function(params) {
+            '/niveau/': function(params) {
                 browser.actions.list('niveau/')
             },
-            'doelniveau/': function(params) {
+            '/doelniveau/': function(params) {
                 browser.actions.doelniveauList('doelniveau/')
             },
-            'doel/': function(params) {
+            '/doel/': function(params) {
                 browser.actions.list('doel/')
             },
-            'kerndoel/': function(params) {
+            '/ldk_vak/': function(params) {
+                browser.actions.list('ldk_vak/')
+            },
+            '/ldk_vakkern/': function(params) {
+                browser.actions.list('ldk_vakkern/')
+            },
+            '/ldk_vaksubkern/': function(params) {
+                browser.actions.list('ldk_vaksubkern/')
+            },
+            '/ldk_vakinhoud/': function(params) {
+                browser.actions.list('ldk_vakinhoud/')
+            },
+            '/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
             },
-            'kerndoel_domein/': function(params) {
+            '/kerndoel_domein/': function(params) {
                 browser.actions.list('kerndoel_domein/')
             },
-            'kerndoel_uitstroomprofiel/': function(params) {
+            '/kerndoel_uitstroomprofiel/': function(params) {
                 browser.actions.list('kerndoel_uitstroomprofiel/')
             },
-            'kerndoel_vakleergebied/': function(params) {
+            '/kerndoel_vakleergebied/': function(params) {
                 browser.actions.list('kerndoel_vakleergebied/')
             },
-            'examenprogramma_vakleergebied/': function(params) {
+            '/examenprogramma_vakleergebied/': function(params) {
                 browser.actions.list('examenprogramma_vakleergebied/')
             },
-            'examenprogramma/': function(params) {
+            '/examenprogramma/': function(params) {
                 browser.actions.list('examenprogramma/')
             },
-            'examenprogramma_domein/': function(params) {
+            '/examenprogramma_domein/': function(params) {
                 browser.actions.list('examenprogramma_domein/')
             },
-            'examenprogramma_subdomein/': function(params) {
+            '/examenprogramma_subdomein/': function(params) {
                 browser.actions.list('examenprogramma_subdomein/')
             },
-            'examenprogramma_eindterm/': function(params) {
+            '/examenprogramma_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_eindterm/')
             },
-            'examenprogramma_kop1/': function(params) {
+            '/examenprogramma_kop1/': function(params) {
                 browser.actions.list('examenprogramma_kop1/')
             },
-            'examenprogramma_kop2/': function(params) {
+            '/examenprogramma_kop2/': function(params) {
                 browser.actions.list('examenprogramma_kop2/')
             },
-            'examenprogramma_kop3/': function(params) {
+            '/examenprogramma_kop3/': function(params) {
                 browser.actions.list('examenprogramma_kop3/')
             },
-            'examenprogramma_kop4/': function(params) {
+            '/examenprogramma_kop4/': function(params) {
                 browser.actions.list('examenprogramma_kop4/')
             },
-            'examenprogramma_body/': function(params) {
+            '/examenprogramma_body/': function(params) {
                 browser.actions.list('examenprogramma_body/')
             },
-            'examenprogramma_bg_profiel/': function(params) {
+            '/examenprogramma_bg_profiel/': function(params) {
                 browser.actions.list('examenprogramma_bg_profiel/')
             },
-            'examenprogramma_bg_kern/': function(params) {
+            '/examenprogramma_bg_kern/': function(params) {
                 browser.actions.list('examenprogramma_bg_kern/')
             },
-            'examenprogramma_bg_kerndeel/': function(params) {
+            '/examenprogramma_bg_kerndeel/': function(params) {
                 browser.actions.list('examenprogramma_bg_kerndeel/')
             },
-            'examenprogramma_bg_globale_eindterm/': function(params) {
+            '/examenprogramma_bg_globale_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_bg_globale_eindterm/')
             },
-            'examenprogramma_bg_module/': function(params) {
+            '/examenprogramma_bg_module/': function(params) {
                 browser.actions.list('examenprogramma_bg_module/')
             },
-            'examenprogramma_bg_keuzevak/': function(params) {
+            '/examenprogramma_bg_keuzevak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevak/')
             },
-            'examenprogramma_bg_deeltaak/': function(params) {
+            '/examenprogramma_bg_deeltaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_deeltaak/')
             },
-            'examenprogramma_bg_moduletaak/': function(params) {
+            '/examenprogramma_bg_moduletaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_moduletaak/')
             },
-            'examenprogramma_bg_keuzevaktaak/': function(params) {
+            '/examenprogramma_bg_keuzevaktaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevaktaak/')
             },
-            'vakkencluster/': function(params) {
+            '/vakkencluster/': function(params) {
                 browser.actions.list('vakkencluster/')
             },
-            'leerlijn/': function(params) {
+            '/leerlijn/': function(params) {
                 browser.actions.list('leerlijn/')
             },
-            'syllabus/': function(params) {
+            '/syllabus/': function(params) {
                 browser.actions.list('syllabus/')
             },
-            'syllabus_specifieke_eindterm/': function(params) {
+            '/syllabus_specifieke_eindterm/': function(params) {
                 browser.actions.list('syllabus_specifieke_eindterm/')
             },
-            'syllabus_toelichting/': function(params) {
+            '/syllabus_toelichting/': function(params) {
                 browser.actions.list('syllabus_toelichting/')
             },
-            'syllabus_vakbegrip/': function(params) {
+            '/syllabus_vakbegrip/': function(params) {
                 browser.actions.list('syllabus_vakbegrip/')
             },
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
-            'uuid/:id': function(params) {
+            '/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
-            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
                 browser.actions.legacy(params);
             },            
-            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
                 browser.actions.legacy(params);
             },
-            'legacy/vak/:vak/vakkern/:vakkern': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern': function(params) {
                 browser.actions.legacy(params);
             },
-            'legacy/vak/:vak': function(params) {
+            '/legacy/vak/:vak': function(params) {
                 browser.actions.legacy(params);
             },
-            'register/': function(params) { 
+            '/register/': function(params) { 
                 browser.view.view = 'register';
             },
             ':*': function(params) {
