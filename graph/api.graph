@@ -348,6 +348,10 @@ query Id($id:ID) {
       id
       title
     }
+    Vakinhoud {
+      id
+      title
+    }
     ExamenprogrammaVakleergebied {
       id
       title
@@ -374,6 +378,10 @@ query Id($id:ID) {
 #    }
     replaces
     Vaksubkern {
+      id
+      title
+    }
+    Vakinhoud {
       id
       title
     }
@@ -441,6 +449,18 @@ query Id($id:ID) {
           title
         }
       }
+    }
+    Vakkern {
+      id
+      title
+      Vak {
+        id
+        title
+      }
+    }
+    Vak {
+      id
+      title
     }
     NiveauIndex {
       Niveau {

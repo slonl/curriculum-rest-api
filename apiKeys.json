@@ -2,5 +2,37 @@
   "opendata@slo.nl": {
     "key": "358500d3-cf79-440b-817d-9f0ef9daa399",
     "created": "2019-07-18"
+  },
+  "auke@muze.nl": {
+    "key": "eabb1cbb-663e-4bc5-80da-b6f107b4a93b",
+    "created": "2019-07-31"
+  },
+  "tab@infoprojects.nl": {
+    "key": "b0aeb5c1-02a5-498a-ad6c-f78622f7bb58",
+    "created": "2019-07-31"
+  },
+  "auke+test2@muze.nl": {
+    "key": "75fb2c9e-937f-442c-9182-8151e9840bd9",
+    "created": "2019-08-05"
+  },
+  "youssef@leerlevels.nl": {
+    "key": "b3e13209-a4a9-467d-8b8c-ae27c56e7f53",
+    "created": "2019-08-15"
+  },
+  "jonas@leerlevels.nl": {
+    "key": "4db453b7-3f0c-4faa-a448-068977ab8c52",
+    "created": "2019-08-15"
+  },
+  "info@junioreinstein.nl": {
+    "key": "3fdbbf6c-d0cf-4293-89c9-0fc23db2e35e",
+    "created": "2019-08-23"
+  },
+  "yvo@muze.nl": {
+    "key": "3af5331c-8685-4ba2-a301-5fe856b27532",
+    "created": "2019-09-10"
+  },
+  "yvo+2@muze.nl": {
+    "key": "701e6674-eceb-4ba0-8ff8-f4a4d42ad43a",
+    "created": "2019-09-10"
   }
 }

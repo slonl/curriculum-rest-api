@@ -1,7 +1,7 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/2019/api/v1/">
+<base href="/curriculum/api-acpt/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
-<body data-simply-path="/curriculum/">
+<body>
 
 <header class="slo-navbar">
     <nav class="slo-navbar-left slo-logo bg-brand">
@@ -37,54 +37,88 @@
             <li><i data-icon="ei-tag"></i>
             <a href="#" class="slo-nav" data-simply-field="link" data-simply-group="menu"
             data-simply-command="simply-select">link</a>
-            <ul class="slo-navbar-nav" data-simply-list="submenu">
+            <ul class="" data-simply-list="submenu">
                 <template data-simply-template="default">
-                    <li><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
-                    data-simply-command="simply-select">link</a></li>
+                    <li>
+                        <a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
+                            data-simply-command="simply-select">link</a>
+                        <ul class="" data-simply-list="submenu">
+                            <template data-simply-template="default">
+                                <li><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
+                                data-simply-command="simply-select">link</a>    
+                                </li>
+                            </template>
+                        </ul>                    
+                    </li>
                 </template>
             </ul>
         </template>
     </ul>
     <ul class="slo-navbar-nav">
         <li><a href="/" class="slo-nav" data-simply-group="menu">API Browser</a>
+        <li><a href="/curriculum/api-acpt/v1/" class="slo-nav" data-simply-group="menu">API Browser</a>
             <ul class="slo-navbar-nav">
-                <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
-                <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
-                <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
-                <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
-                <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
-                <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
-                <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
-                <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
-                <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
-                <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
-                <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
-                <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
-                <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
-                <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
-                <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma
-                Vakleergebieden</a></li>
-                <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">Examenprogramma Domeinen</a></li>
-                <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">Examenprogramma Subdomeinen</a></li>
-                <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma Eindtermen</a></li>
-                <li><a href="examenprogramma_kop1/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop1)</a></li>
-                <li><a href="examenprogramma_kop2/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop2)</a></li>
-                <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
-                <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
-                <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
-                <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht profielen</a></li>
-                <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kernen</a></li>
-                <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kerndelen</a></li>
-                <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht globale eindtermen</a></li>
-                <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht modules</a></li>
-                <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevakken</a></li>
-                <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht deeltaken</a></li>
-                <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht moduletaken</a></li>
-                <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevaktaken</a></li>
-                <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
-                <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
-                <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
-                <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">Syllabus vakbegrippen</a></li>
+                <li><a href="#">Curriculum Kern</a>
+                    <ul>
+                        <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
+                        <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
+                        <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Inhouden</a>
+                    <ul>
+                        <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
+                        <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
+                        <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
+                        <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
+                        <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
+                        <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Kerndoelen</a>
+                    <ul>
+                        <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
+                        <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
+                        <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
+                        <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Examenprogramma</a>
+                    <ul>
+                        <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
+                        <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma Vakleergebieden</a></li>
+                        <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">Examenprogramma Domeinen</a></li>
+                        <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">Examenprogramma Subdomeinen</a></li>
+                        <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma Eindtermen</a></li>
+                        <li><a href="examenprogramma_kop1/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop1)</a></li>
+                        <li><a href="examenprogramma_kop2/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop2)</a></li>
+                        <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
+                        <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
+                        <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Examenprogramma
+                Beroepsgericht</a>
+                    <ul>
+                        <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht profielen</a></li>
+                        <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kernen</a></li>
+                        <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kerndelen</a></li>
+                        <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht globale eindtermen</a></li>
+                        <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht modules</a></li>
+                        <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevakken</a></li>
+                        <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht deeltaken</a></li>
+                        <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht moduletaken</a></li>
+                        <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevaktaken</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Syllabus</a>
+                    <ul>
+                        <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
+                        <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
+                        <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
+                        <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">Syllabus vakbegrippen</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>
@@ -93,12 +127,33 @@
 <main class="slo-main">
     <div class="error" data-simply-field="error"></div>
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
+        <template data-simply-template="home">
+            <h1 class="title" data-simply-field="title"></h1>
+            <div class="content" data-simply-field="content"></div>
+        </template>
         <template data-simply-template="notfound">
             <h1>404: Page Not Found</h1>
             <p>Sorry, deze pagina bestaat niet.</p>
         </template>
         <template data-simply-template="list">
             <h1 data-simply-field="listTitle"></h1>
+            <ul class="slo-navbar-nav slo-paging">
+                <li>
+                    <button data-simply-command="previousPage"
+                    class="slo-button" title="vorige pagina"><svg
+                    class="slo-icon slo-icon-feather"><use
+                    xlink:href="/files/feather-sprite.svg#chevron-left"></use></svg></button>
+                </li>
+                <li>
+                    <span data-simply-field="page"></span> /
+                    <span data-simply-field="max"></span>
+                <li>
+                    <button data-simply-command="nextPage" class="slo-button"
+                    title="volgende pagina"><svg
+                    class="slo-icon slo-icon-feather"><use
+                    xlink:href="/files/feather-sprite.svg#chevron-right"></use></svg></button>
+                </li>
+            </ul>
             <ul data-simply-list="list" xdata-simply-data="list">
                 <template rel="links"></template>
             </ul>
@@ -125,8 +180,13 @@
         </template>
         <template data-simply-template="item">
             <article>
-                <h1>
-                    <span data-simply-field="item.prefix"></span> <span data-simply-field="item.title"></span>
+                <h1 data-simply-content="template" data-simply-default-template="default" data-simply-field="item.@type">
+                    <template data-simply-template="default">
+                        <span><span data-simply-field="item.prefix"></span> <span data-simply-field="item.title"></span></span>
+                    </template>
+                    <template data-simply-template="Niveau">
+                        <span data-simply-field="item.title"></span>
+                    </template>
                 </h1>
                 <a class="slo-tag" href="#" data-simply-field="item.@references" data-simply-content="fixed">
                     <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
@@ -138,6 +198,14 @@
                     <label class="slo-tag-label">Type</label>
                     <span data-simply-field="item.@type"></span>
                 </div>
+                <span data-simply-field="item.ce_se" data-simply-content="template"  data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag">
+                            <label class="slo-tag-label">CE/SE</label>
+                            <span data-simply-field="item.ce_se"></span>
+                        </div>
+                    </template>
+                </span>
                 <span data-simply-field="item.unreleased" data-simply-content="template" data-simply-default-template="false">
                     <template data-simply-template="true">
                         <div class="slo-tag bg-brand">
@@ -173,7 +241,6 @@
                         </ul>
                     </template>
                 </div>
-              
                 <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <div data-simply-field="item.description"></div>
@@ -187,15 +254,14 @@
                         </div>
                     </template>
                 </div>
-                
                 <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerlingteksten</h3>
                         <ul data-simply-list="item.Leerlingtekst">
                             <template>
                                 <li>
-                                    <div data-simply-field="title">titel</div>
-                                    <div data-simply-field="description">description</div>
+                                    <div data-simply-field="title"></div>
+                                    <div data-simply-field="description"></div>
                                 </li>
                             </template>
                         </ul>
@@ -313,42 +379,6 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Examenprogramma" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma</h3>
-                        <ul data-simply-list="item.Examenprogramma">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaDomein" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma domein</h3>
-                        <ul data-simply-list="item.ExamenprogrammaDomein">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaSubdomein" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma subdomein</h3>
-                        <ul data-simply-list="item.ExamenprogrammaSubdomein">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaEindterm" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma eindterm</h3>
-                        <ul data-simply-list="item.ExamenprogrammaEindterm">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
                 <div data-simply-field="item.ExamenprogrammaKop1" data-simply-content="template"
                     data-simply-transformer="truthy">
                     <template data-simply-template="true">
@@ -390,6 +420,42 @@
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (body)</h3>
                         <ul data-simply-list="item.ExamenprogrammaBody">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Examenprogramma" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma</h3>
+                        <ul data-simply-list="item.Examenprogramma">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaDomein" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma domein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaDomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaSubdomein" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma subdomein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaSubdomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaEindterm" data-simply-content="template"
+                    data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma eindterm</h3>
+                        <ul data-simply-list="item.ExamenprogrammaEindterm">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -576,6 +642,10 @@
 <template id="links">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
+            <span data-simply-content="template" data-simply-field="@type" data-simply-default-template="default">
+                <template data-simply-template="default"><span data-simply-field="prefix"></span></template>
+                <template data-simply-template="Niveau"><span></span></template>
+            </span>
             <span data-simply-field="title">titel</span>
         </a>
         <span data-simply-field="$ref" data-simply-content="template"
@@ -593,7 +663,19 @@
 <template id="doelniveau">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <span data-simply-field="Doel.0.title">titel</span>
+            <div data-simply-field="Doel.0.title"
+            data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span data-simply-field="Doel.0.title">titel</span>
+                </template>
+            </div>
+            <div data-simply-field="Kerndoel.0.title"
+            data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span data-simply-field="Kerndoel.0.prefix">prefix</span>
+                    <span data-simply-field="Kerndoel.0.title">titel</span>
+                </template>
+            </div>
         </a>
         <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
              <template>
@@ -609,16 +691,35 @@
         </a>
     </li>
 </template>
-<script src="//cdn.simplyedit.io/1/1.25/simply-edit.js"></script>
+<script src="/assets/js/settings.js"></script>
+<script src="//canary.simplyedit.io/1/simply-edit.js"
+            data-api-key="flashy-leather-7944"
+            data-simply-images="/img/"
+            data-simply-files="/files/"
+            data-simply-settings="seSettings"
+            data-storage-get-post-only
+></script>
+<!-- script src="//cdn.simplyedit.io/1/1.25/simply-edit.js"></script -->
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
+    simply.route.init({
+        root: '/curriculum/api-acpt/v1/'
+    });
+    
     simply.bind = false; //don't use the simplyview databindings
     
 	var release = {
-		basePath: '/curriculum/2019/',
-		apiPath: '/curriculum/2019/api/v1/'
+		basePath: '/curriculum/api-acpt/',
+		apiPath: '/curriculum/api-acpt/v1/'
 	};
 	(function() {
+	    simply.route.goto = function(path) {
+                if (path.indexOf(release.basePath) === 0) {
+                    window.location = path;
+                } else {
+                    window.location = release.apiPath + path;
+                }
+            };
 //		var goto = simply.route.goto;
 //	    simply.route.goto = function(path) {
 //	        return goto(release.apiPath + path);
@@ -629,6 +730,8 @@
 			if (path.indexOf(release.apiPath)===0) {
 				path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
 			} else if (path.indexOf(release.basePath+'uuid/')===0) {
+				path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
+			} else if (path.indexOf(release.basePath+'v1/uuid/')===0) {
 				path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
 			}
 			return match(path, options);
@@ -679,190 +782,189 @@
     var browser = simply.app({
         container: document.body,
         routes: {
-            'niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
+            '/niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
             },
-            'niveau/:niveau/vak/:vakid': function(params) {
+            '/niveau/:niveau/vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
             },
-            'niveau/:niveau/vakkern/:vakkernid': function(params) {
+            '/niveau/:niveau/vakkern/:vakkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakkern/', params.vakkernid);
             },
-            'niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
+            '/niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vaksubkern/', params.vaksubkernid);
             },
-            'niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
+            '/niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakinhoud/', params.vakinhoudid);
             },
-            'niveau/:niveau/vak/': function(params) {
+            '/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            'niveau/:niveau/vakkern/': function(params) {
+            '/niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            'niveau/:niveau/vaksubkern/': function(params) {
+            '/niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            'niveau/:niveau/vakinhoud/': function(params) {
+            '/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            'niveau/:niveau/vak/': function(params) {
+            '/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
-            'niveau/:niveau/vakkern/': function(params) {
+            '/niveau/:niveau/vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakkern/');
             },
-            'niveau/:niveau/vaksubkern/': function(params) {
+            '/niveau/:niveau/vaksubkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
             },
-            'niveau/:niveau/vakinhoud/': function(params) {
+            '/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
             },
-            'niveau/:niveau': function(params) {
+            '/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },
-            'vak/': function(params) {
+            '/vak/': function(params) {
                 browser.actions.list('vak/')
             },
-            'vakkern/': function(params) {
+            '/vakkern/': function(params) {
                 browser.actions.list('vakkern/')
             },
-            'vaksubkern/': function(params) {
+            '/vaksubkern/': function(params) {
                 browser.actions.list('vaksubkern/')
             },
-            'vakinhoud/': function(params) {
+            '/vakinhoud/': function(params) {
                 browser.actions.list('vakinhoud/')
             },
-            'niveau/': function(params) {
+            '/niveau/': function(params) {
                 browser.actions.list('niveau/')
             },
-            'doelniveau/': function(params) {
+            '/doelniveau/': function(params) {
                 browser.actions.doelniveauList('doelniveau/')
             },
-            'doel/': function(params) {
-                browser.actions.list('doel/')
-            },
-            'kerndoel/': function(params) {
+            '/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
             },
-            'kerndoel_domein/': function(params) {
+            '/doel/': function(params) {
+                browser.actions.list('doel/')
+            },
+            '/kerndoel_domein/': function(params) {
                 browser.actions.list('kerndoel_domein/')
             },
-            'kerndoel_uitstroomprofiel/': function(params) {
+            '/kerndoel_uitstroomprofiel/': function(params) {
                 browser.actions.list('kerndoel_uitstroomprofiel/')
             },
-            'kerndoel_vakleergebied/': function(params) {
+            '/kerndoel_vakleergebied/': function(params) {
                 browser.actions.list('kerndoel_vakleergebied/')
             },
-            'examenprogramma_vakleergebied/': function(params) {
+            '/examenprogramma_vakleergebied/': function(params) {
                 browser.actions.list('examenprogramma_vakleergebied/')
             },
-            'examenprogramma/': function(params) {
+            '/examenprogramma/': function(params) {
                 browser.actions.list('examenprogramma/')
             },
-            'examenprogramma_domein/': function(params) {
+            '/examenprogramma_domein/': function(params) {
                 browser.actions.list('examenprogramma_domein/')
             },
-            'examenprogramma_subdomein/': function(params) {
+            '/examenprogramma_subdomein/': function(params) {
                 browser.actions.list('examenprogramma_subdomein/')
             },
-            'examenprogramma_eindterm/': function(params) {
+            '/examenprogramma_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_eindterm/')
             },
-            'examenprogramma_kop1/': function(params) {
+            '/examenprogramma_kop1/': function(params) {
                 browser.actions.list('examenprogramma_kop1/')
             },
-            'examenprogramma_kop2/': function(params) {
+            '/examenprogramma_kop2/': function(params) {
                 browser.actions.list('examenprogramma_kop2/')
             },
-            'examenprogramma_kop3/': function(params) {
+            '/examenprogramma_kop3/': function(params) {
                 browser.actions.list('examenprogramma_kop3/')
             },
-            'examenprogramma_kop4/': function(params) {
+            '/examenprogramma_kop4/': function(params) {
                 browser.actions.list('examenprogramma_kop4/')
             },
-            'examenprogramma_body/': function(params) {
+            '/examenprogramma_body/': function(params) {
                 browser.actions.list('examenprogramma_body/')
             },
-            'examenprogramma_bg_profiel/': function(params) {
+            '/examenprogramma_bg_profiel/': function(params) {
                 browser.actions.list('examenprogramma_bg_profiel/')
             },
-            'examenprogramma_bg_kern/': function(params) {
+            '/examenprogramma_bg_kern/': function(params) {
                 browser.actions.list('examenprogramma_bg_kern/')
             },
-            'examenprogramma_bg_kerndeel/': function(params) {
+            '/examenprogramma_bg_kerndeel/': function(params) {
                 browser.actions.list('examenprogramma_bg_kerndeel/')
             },
-            'examenprogramma_bg_globale_eindterm/': function(params) {
+            '/examenprogramma_bg_globale_eindterm/': function(params) {
                 browser.actions.list('examenprogramma_bg_globale_eindterm/')
             },
-            'examenprogramma_bg_module/': function(params) {
+            '/examenprogramma_bg_module/': function(params) {
                 browser.actions.list('examenprogramma_bg_module/')
             },
-            'examenprogramma_bg_keuzevak/': function(params) {
+            '/examenprogramma_bg_keuzevak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevak/')
             },
-            'examenprogramma_bg_deeltaak/': function(params) {
+            '/examenprogramma_bg_deeltaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_deeltaak/')
             },
-            'examenprogramma_bg_moduletaak/': function(params) {
+            '/examenprogramma_bg_moduletaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_moduletaak/')
             },
-            'examenprogramma_bg_keuzevaktaak/': function(params) {
+            '/examenprogramma_bg_keuzevaktaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevaktaak/')
             },
-            'vakkencluster/': function(params) {
+            '/vakkencluster/': function(params) {
                 browser.actions.list('vakkencluster/')
             },
-            'leerlijn/': function(params) {
+            '/leerlijn/': function(params) {
                 browser.actions.list('leerlijn/')
             },
-            'syllabus/': function(params) {
+            '/syllabus/': function(params) {
                 browser.actions.list('syllabus/')
             },
-            'syllabus_specifieke_eindterm/': function(params) {
+            '/syllabus_specifieke_eindterm/': function(params) {
                 browser.actions.list('syllabus_specifieke_eindterm/')
             },
-            'syllabus_toelichting/': function(params) {
+            '/syllabus_toelichting/': function(params) {
                 browser.actions.list('syllabus_toelichting/')
             },
-            'syllabus_vakbegrip/': function(params) {
+            '/syllabus_vakbegrip/': function(params) {
                 browser.actions.list('syllabus_vakbegrip/')
             },
-            '/curriculum/uuid/:id': function(params) {
+            '/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
-            'uuid/:id': function(params) {
-                browser.actions.item(params.id);
-            },
-            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
                 browser.actions.legacy(params);
             },            
-            'legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
                 browser.actions.legacy(params);
             },
-            'legacy/vak/:vak/vakkern/:vakkern': function(params) {
+            '/legacy/vak/:vak/vakkern/:vakkern': function(params) {
                 browser.actions.legacy(params);
             },
-            'legacy/vak/:vak': function(params) {
+            '/legacy/vak/:vak': function(params) {
                 browser.actions.legacy(params);
             },
-            'register/': function(params) { 
+            '/register/': function(params) { 
                 browser.view.view = 'register';
             },
             ':*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
+                } else {
+                    browser.view.view = 'home';
                 }
             }
         },
         commands: {
             nextPage: function(el,value) {
-                page = Math.min(browser.view.max-1, parseInt(browser.view.page));
+                page = Math.min(browser.view.max+1, parseInt(browser.view.page+2));
                 browser.actions.updatePage(page);
             },
             previousPage: function(el,value) {
-                page = Math.max(0, browser.view.page-2);
+                page = Math.max(1, browser.view.page);
                 browser.actions.updatePage(page);
             },
             register : function(el, value) {
@@ -876,7 +978,7 @@
                 window.location.search =
                 '?'+Object.keys(browser.view.params).map(function(key) {
                     if (key=='page') {
-                        return 'page='+page;
+                        return 'page='+(page-1);
                     }
                     return encodeURIComponent(key)+'='+encodeURIComponent(browser.view.params[key]);
                 }).join('&');
@@ -978,11 +1080,19 @@
             get: function(path, params) {
                 var url = apiURL + path;
                 if (!params && window.location.search) {
-                    url = url + window.location.search;
+                    var locationUrl = new URL(window.location);
+                    params = {};
+                    locationUrl.searchParams.forEach(function(entry, key) {
+                        params[key] = entry;
+                    });
                 }
                 if (params) {
                     var args = Object.keys(params).map(function(param) {
-                        return encodeURIComponent(param)+'='+encodeURIComponent(params[param]);
+                        if (param == "page") {
+                            return encodeURIComponent(param)+'='+encodeURIComponent(params[param]-1);
+                        } else {
+                            return encodeURIComponent(param)+'='+encodeURIComponent(params[param]);
+                        }
                     }).join('&');
                     url = url + '?' + args;
                 }
@@ -1033,10 +1143,15 @@
         }
     };
     
-    document.addEventListener('simply-content-loaded', function(evt) {
-        var menu = editor.currentData['/'].menu;
-        var api = menu[0].submenu[0]['data-simply-template'] = 'api';
-    });
+    editor.transformers.uuidLink = {
+        render: function(data) {
+            this.originalValue = data;
+            return data.replace("curriculum/uuid", "curriculum/api-acpt/uuid");
+        },
+        extract: function(data) {
+            return this.originalValue;
+        }
+    };
     
     var parseQueryString = function( queryString ) {
         var params = {}, queries, temp, i, l;
@@ -1054,9 +1169,9 @@
     
     var args = parseQueryString(window.location.search.substring(1, window.location.search.length));
     if (!args.page) {
-        args.page = 0;
+        args.page = 1;
     }
-    browser.view.page = parseInt(args.page)+1;
+    browser.view.page = parseInt(args.page);
     browser.view.params = args;
 
 </script>
