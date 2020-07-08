@@ -9,7 +9,7 @@ const sendmail = require('sendmail')();
 const mcache = require('memory-cache');
 
 const app = express();
-const port = 4000;
+const port = 4500;
 const apiBase = "/";
 
 const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonld";
@@ -23,7 +23,7 @@ const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 
 //const backendUrl      = "http://localhost:3000";
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
-const backendUrl      = 'https://opendata.slo.nl:3500';
+const backendUrl      = 'http://opendata.slo.nl:3500';
 const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 
 const niveauURL       = baseDatasetURL + "niveau/";
@@ -199,14 +199,22 @@ function jsonLD(entry, schema, type) {
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
 		'Vak','Vakkern','Vaksubkern','Vakinhoud',
 		'Doelniveau', 'Doel', 'Niveau',
+		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
-		if (entry[listName]) {
+		if (entry[listName] && Array.isArray(entry[listName])) {
 			result[listName] = jsonLDList(entry[listName]);
 			if (listName=='Niveau') {
-				result[listName] = result[listName].map(function(entry) {
-					entry['$ref'] = niveauURL + entry.uuid;
-					return entry;
+				result[listName] = result[listName]
+				.sort(function(a,b) {
+					return a.prefix<b.prefix ? -1 : 1;
+				})
+				.map(function(childEntry) {
+					childEntry['$ref'] = niveauURL + childEntry.uuid;
+					if (type=='Vak') {
+						childEntry['$ref'] += '/vak/' + result.uuid;
+					}
+					return childEntry;
 				});
 			}
 			delete entry[listName];
@@ -249,10 +257,15 @@ function jsonLD(entry, schema, type) {
 				urlType = type.toLowerCase();
 			}
 				
-			result['Niveau'] = entry['NiveauIndex'].map(function(ni) {
+			result['Niveau'] = entry['NiveauIndex']
+			.sort(function(a,b) {
+				return (a.Niveau[0].prefix<b.Niveau[0].prefix ? -1 : 1);
+			})
+			.map(function(ni) {
 				return {
 					'@id': baseIdURL + ni.Niveau[0].id,
 					'title': ni.Niveau[0].title,
+					'prefix': ni.Niveau[0].prefix+'-1',
 					'$ref': niveauURL + ni.Niveau[0].id + '/' + urlType + '/' + result['uuid']
 				}
 			});
@@ -282,8 +295,11 @@ function jsonLDList(list, schema, type, meta) {
 	// remove dummy entries from returned list
 	// TODO: remove these in the graphql server, they are only there to 
 	// provide access to properties which aren't actually set in the current data, but may be set later
-	if (list[list.length-1] && list[list.length-1].id && list[list.length-1].id<0) {
+	if (list[list.length-1] && list[list.length-1].id && parseInt(list[list.length-1].id)<0) {
 		list.pop();
+	}
+	if (list[0] && list[0].id && parseInt(list[0].id)<0) {
+		list.shift();
 	}
 	list = list.map(function(link) {
 		var result = {
@@ -376,6 +392,12 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'ExamenprogrammaBgModuletaak':
 					case 'ExamenprogrammaBgKeuzevaktaak':
 						schema = examenprogrammaBgSchemaURL;
+					break;
+					case 'Syllabus':
+					case 'SyllabusSpecifiekeEindterm':
+					case 'SyllabusToelichting':
+					case 'SyllabusVakbegrip':
+						schema = syllabusSchemaURL;
 					break;
 					default:
 						schema = doelSchemaURL;
@@ -776,16 +798,19 @@ app.route(apiBase + 'niveau/:niveau/kerndoel/:id').get((req, res) => {
 app.route(apiBase + 'niveau/:niveau/vak').get((req, res) => {
 	graphQuery("VakOpNiveau", req.params)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allNiveauIndex[0].Vak));
+		res.send(jsonLDList(result.data.allNiveau[0].Vak));
 	});
 });
 
 app.route(apiBase + 'niveau/:niveau/vak/:id').get((req, res) => {
 	graphQuery("VakByIdOpNiveau", req.params)
 	.then(function(result) {
-		result.data.allNiveauIndex[0].Vak[0].Vakkern = result.data.allNiveauIndex[0].Vakkern;
-		result.data.allNiveauIndex[0].Vak[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-		res.send(jsonLD(result.data.allNiveauIndex[0].Vak[0], inhoudSchemaURL, 'Vak'));
+		var vak     = result.data.allNiveau[0].Vak[0];
+		delete result.data.allNiveau[0].Vak;
+		vak.Vakkern = result.data.allNiveauIndex[0].Vakkern;
+		delete result.data.allNiveauIndex[0];
+		vak.Niveau  = result.data.allNiveau;
+		res.send(jsonLD(vak, inhoudSchemaURL, 'Vak'));
 	});
 });
 
@@ -826,8 +851,7 @@ function FilterEmptyDoelniveau(ent) {
 app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get(cache(), (req, res) => {
     graphQuery('DoelenOpNiveauByVakById', req.params)
     .then(function(result) {
-        result.data.Vak.Niveau = result.data.Vak.NiveauIndex[0].Niveau;
-        delete result.data.Vak.NiveauIndex;
+        result.data.Vak.Niveau = result.data.Vak.Niveau[0];
         FilterEmptyDoelniveau(result.data.Vak);
         res.send(jsonLD(result.data.Vak, inhoudSchemaURL, 'Vak'));
     });
