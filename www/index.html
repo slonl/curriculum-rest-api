@@ -1,5 +1,5 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/2019/api/v1/">
+<base href="/curriculum/api-acpt/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
 <body data-simply-path="/curriculum/">
 
@@ -48,47 +48,75 @@
     <ul class="slo-navbar-nav">
         <li><a href="/" class="slo-nav" data-simply-group="menu">API Browser</a>
             <ul class="slo-navbar-nav">
-                <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
-                <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
-                <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
-                <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
-                <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
-                <li><a href="ldk_vak/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakken</a></li>
-                <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
-                <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
-                <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
-                <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
-                <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
-                <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
-                <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
-                <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
-                <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
-                <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
-                <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
-                <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
-                <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma
-                Vakleergebieden</a></li>
-                <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">Examenprogramma Domeinen</a></li>
-                <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">Examenprogramma Subdomeinen</a></li>
-                <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma Eindtermen</a></li>
-                <li><a href="examenprogramma_kop1/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop1)</a></li>
-                <li><a href="examenprogramma_kop2/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop2)</a></li>
-                <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
-                <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
-                <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
-                <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht profielen</a></li>
-                <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kernen</a></li>
-                <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kerndelen</a></li>
-                <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht globale eindtermen</a></li>
-                <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht modules</a></li>
-                <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevakken</a></li>
-                <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht deeltaken</a></li>
-                <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht moduletaken</a></li>
-                <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevaktaken</a></li>
-                <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
-                <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
-                <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
-                <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">Syllabus vakbegrippen</a></li>
+                <li><a>Inhouden</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
+                        <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
+                        <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
+                        <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
+                        <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
+                        <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
+                    </ul>
+                </li>
+                <li><a>Leerdoelenkaarten</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="ldk_vak/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakken</a></li>
+                        <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakkernen</a></li>
+                        <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vaksubkernen</a></li>
+                        <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">Leerdoelkaart Vakinhouden</a></li>
+                    </ul>
+                </li>
+                <li><a>Doelen (Basisset)</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
+                        <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
+                        <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
+                    </ul>
+                </li>
+                <li><a>Kerndoelen</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoelen</a></li>
+                        <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">Kerndoel Domeinen</a></li>
+                        <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">Kerndoel Uitstroomprofiel</a></li>
+                        <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">Kerndoel Vakleergebied</a></li>
+                    </ul>
+                </li>
+                <li><a>Examenprogramma</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogrammas</a></li>
+                        <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">Examenprogramma
+                        Vakleergebieden</a></li>
+                        <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">Examenprogramma Domeinen</a></li>
+                        <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">Examenprogramma Subdomeinen</a></li>
+                        <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma Eindtermen</a></li>
+                        <li><a href="examenprogramma_kop1/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop1)</a></li>
+                        <li><a href="examenprogramma_kop2/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop2)</a></li>
+                        <li><a href="examenprogramma_kop3/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop3)</a></li>
+                        <li><a href="examenprogramma_kop4/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (kop4)</a></li>
+                        <li><a href="examenprogramma_body/" class="slo-nav" data-simply-group="menu">Examenprogramma Teksten (body)</a></li>
+                    </ul>
+                </li>
+                <li><a>Examenprogramma Beroepsgericht</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht profielen</a></li>
+                        <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kernen</a></li>
+                        <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht kerndelen</a></li>
+                        <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht globale eindtermen</a></li>
+                        <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht modules</a></li>
+                        <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevakken</a></li>
+                        <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht deeltaken</a></li>
+                        <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht moduletaken</a></li>
+                        <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">Examenprogramma beroepsgericht keuzevaktaken</a></li>
+                    </ul>
+                </li>
+                <li><a>Syllabus</a>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
+                        <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">Syllabus specifieke eindtermen</a></li>
+                        <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">Syllabus toelichtingen</a></li>
+                        <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">Syllabus vakbegrippen</a></li>
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>
@@ -342,7 +370,7 @@
                     data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Niveau's</h3>
-                        <ul class="slo-navbar" data-simply-list="item.Niveau">
+                        <ul class="slo-navbar" style="flex-wrap: wrap;" data-simply-list="item.Niveau">
                             <template rel="refs"></template>
                         </ul>
                     </template>
@@ -1006,7 +1034,7 @@
                 });
             },
             listOpNiveau: function(niveau, type) {
-                return slo.api.get(release.apiPath+niveau+'/'+type)
+                return slo.api.get(release.apiPath+'niveau/'+niveau+'/'+type)
                 .then(function(json) {
                     browser.view.view = 'list';
                     browser.view.list = json;
