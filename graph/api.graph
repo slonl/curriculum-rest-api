@@ -160,7 +160,7 @@ query KerndoelById($id:ID) {
 }
 
 query Niveau($page:Int,$perPage:Int) {
-  allNiveau(page:$page,perPage:$perPage) {
+  allNiveau(page:$page,perPage:$perPage,sortField:"prefix") {
     ...NiveauShort
   }
   _allNiveauMeta {
@@ -531,11 +531,15 @@ query Id($id:ID) {
     }
   }
   allNiveau(filter:{id:$id}) {
-    ...Niveau
-    Vak {
-      id
-      title
-    }
+    id
+    title
+    description
+    type
+#    ...Niveau
+#    Vak {
+#      id
+#      title
+#    }
 #    NiveauIndex {
 #      KerndoelVakleergebied {
 #        id
@@ -1373,13 +1377,15 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
       title
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
-      } 
-      Vakkern(filter:{vak_id:[$id]}) {
-        id
-        title
       }
     }
     ...NiveauShort
+  }
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    Vakkern(filter:{vak_id:[$id]}) {
+      id
+      title
+    }
   }
 } 
 
