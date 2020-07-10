@@ -197,7 +197,7 @@ function jsonLD(entry, schema, type) {
 		'ExamenprogrammaBgKeuzevak','ExamenprogrammaBgDeeltaak','ExamenprogrammaBgModuletaak','ExamenprogrammaBgKeuzevaktaak',
 		'LdkVak','LdkVakkern','LdkVaksubkern','LdkVakinhoud',
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
-		'Vak','Vakkern','Vaksubkern','Vakinhoud',
+		'Vak','Vakkern','Vaksubkern','Vakinhoud','Vakkencluster','Leerlijn',
 		'Doelniveau', 'Doel', 'Niveau',
 		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'replaces','replacedBy'
@@ -317,7 +317,33 @@ function jsonLDList(list, schema, type, meta) {
 		delete link.id;
 		Object.keys(link).forEach(function(key) {
 			if (Array.isArray(link[key])) {
-				result[key] = jsonLDList(link[key]);
+				if (key=='NiveauIndex') {
+					result['Niveau'] = link['NiveauIndex']
+					.sort(function(a,b) {
+						return (a.Niveau[0].prefix<b.Niveau[0].prefix ? -1 : 1);
+					})
+					.map(function(ni) {
+						return {
+							'@id': baseIdURL + ni.Niveau[0].id,
+							'title': ni.Niveau[0].title,
+							'@references': niveauURL + ni.Niveau[0].id + '/'
+						}
+					});
+				} else if (key=='Niveau') {
+					result['Niveau'] = link['Niveau']
+					.sort(function(a,b) {
+						return (a.prefix<b.prefix ? -1 : 1);
+					})
+					.map(function(ni) {
+						return {
+							'@id': baseIdURL + ni.id,
+							'title': ni.title,
+							'@references': niveauURL + ni.id + '/'
+						}
+					});
+				} else {
+					result[key] = jsonLDList(link[key]).sort();
+				}
 			} else {
 				result[key] = link[key];
 			}
@@ -447,6 +473,31 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 				result.replaces = replaces;
 				return result;
 			});
+		}
+		return result;
+	})
+	.then(function(result) {
+		if (entitytype=='Vak') {
+			var examenprogramma = [];
+			var syllabus = [];
+			if (result['ExamenprogrammaVakleergebied']) {
+				result['ExamenprogrammaVakleergebied'].forEach(function(vlg) {
+					if (vlg['Examenprogramma']) {
+						vlg['Examenprogramma'].forEach(function(exp) {
+							examenprogramma.push(exp);
+							if (exp['Syllabus']) {
+								syllabus = syllabus.concat(exp['Syllabus']);
+							}
+						});
+					}
+				});
+			}
+			if (examenprogramma.length) {
+				result['Examenprogramma'] = examenprogramma;
+			}
+			if (syllabus.length) {
+				result['Syllabus'] = syllabus;
+			}
 		}
 		return result;
 	})

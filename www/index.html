@@ -1,6 +1,14 @@
 <title>SLO Curriculum Browser</title>
 <base href="/curriculum/api-acpt/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
+<style>
+    .slo-tag-mini {
+        display: inline-flex;
+        font-size: 0.7em;
+        height: 1.6em;
+        min-width: 0;
+    }
+</style>
 <body data-simply-path="/curriculum/">
 
 <header class="slo-navbar">
@@ -158,7 +166,15 @@
         <template data-simply-template="item">
             <article>
                 <h1>
-                    <span data-simply-field="item.prefix"></span> <span data-simply-field="item.title"></span>
+                    <span data-simply-field="item.prefix" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <span class="slo-tag slo-tag-mini">
+                                <span class="slo-tag-label">Prefix</span>
+                                <span data-simply-field="item.prefix"></span>
+                            </span>
+                        </template>
+                    </span>
+                    <span data-simply-field="item.title"></span>
                 </h1>
                 <a class="slo-tag" href="#" data-simply-field="item.@references" data-simply-content="fixed">
                     <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
@@ -179,8 +195,7 @@
                     <template data-simply-template="false">
                     </template>
                 </span>
-                <span data-simply-field="item.bron" data-simply-content="template"
-                data-simply-transformer="truthy">
+                <span data-simply-field="item.bron" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <div class="slo-tag">
                             <label class="slo-tag-label">Bron</label>
@@ -196,8 +211,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.replaces" data-simply-content="template"
-                data-simply-transformer="truthy">
+                <div data-simply-field="item.replaces" data-simply-content="template" data-simply-transformer="replaces">
                     <template data-simply-template="true">
                         <label>Vervangt</label>
                         <ul data-simply-list="item.replaces">
@@ -205,9 +219,17 @@
                         </ul>
                     </template>
                 </div>
-              
+                <div data-simply-field="item.Niveau" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Niveau's</h3>
+                        <ul class="slo-navbar" style="flex-wrap: wrap;" data-simply-list="item.Niveau">
+                            <template rel="refs"></template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
                     <template data-simply-template="true">
+                        <h3>Description</h3>
                         <div data-simply-field="item.description"></div>
                     </template>
                 </div>
@@ -233,8 +255,23 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vak" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.Vakkencluster" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Vakkenclusters</h3>
+                        <ul data-simply-list="item.Vakkencluster">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Leerlijn" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Leerlijnen</h3>
+                        <ul data-simply-list="item.Leerlijn">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Vak" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakken</h3>
                         <ul data-simply-list="item.Vak">
@@ -242,18 +279,15 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vakkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.Vakkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakkernen</h3>
                         <ul data-simply-list="item.Vakkern">
                             <template rel="links"></template>
                         </ul>
-                    
                     </template>
                 </div>
-                <div data-simply-field="item.Vaksubkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.Vaksubkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vaksubkernen</h3>
                         <ul data-simply-list="item.Vaksubkern">
@@ -262,18 +296,15 @@
                     
                     </template>
                 </div>
-                <div data-simply-field="item.Vakinhoud" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.Vakinhoud" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakinhouden</h3>
                         <ul data-simply-list="item.Vakinhoud">
                             <template rel="links"></template>
                         </ul>
-                    
                     </template>
                 </div>
-                <div data-simply-field="item.LdkVak" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.LdkVak" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerdoelkaart Vakken</h3>
                         <ul data-simply-list="item.LdkVak">
@@ -281,48 +312,31 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.LdkVakkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.LdkVakkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerdoelkaart Vakkernen</h3>
                         <ul data-simply-list="item.LdkVakkern">
                             <template rel="links"></template>
                         </ul>
-
                     </template>
                 </div>
-                <div data-simply-field="item.LdkVaksubkern" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.LdkVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerdoelkaart Vaksubkernen</h3>
                         <ul data-simply-list="item.LdkVaksubkern">
                             <template rel="links"></template>
                         </ul>
-
                     </template>
                 </div>
-                <div data-simply-field="item.LdkVakinhoud" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.LdkVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerdoelkaart Vakinhouden</h3>
                         <ul data-simply-list="item.LdkVakinhoud">
                             <template rel="links"></template>
                         </ul>
-
                     </template>
                 </div>
-                <div data-simply-field="item.Doelniveau" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Doelen op niveau</h3>
-                        <ul data-simply-list="item.Doelniveau">
-                            <template rel="doelniveau"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.Doel" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.Doel" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Doelen</h3>
                         <ul data-simply-list="item.Doel">
@@ -330,35 +344,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Kerndoel" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Kerndoelen</h3>
-                        <ul data-simply-list="item.Kerndoel">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.KerndoelDomein" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Kerndoel domeinen</h3>
-                        <ul data-simply-list="item.KerndoelDomein">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.KerndoelUitstroomprofiel" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Kerndoel uitstroomprofiel</h3>
-                        <ul data-simply-list="item.KerndoelUitstroomprofiel">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.KerndoelVakleergebied" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.KerndoelVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Kerndoel vakleergebied</h3>
                         <ul data-simply-list="item.KerndoelVakleergebied">
@@ -366,26 +352,31 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Niveau" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.KerndoelDomein" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <h3>Niveau's</h3>
-                        <ul class="slo-navbar" style="flex-wrap: wrap;" data-simply-list="item.Niveau">
-                            <template rel="refs"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaVakleergebied" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma Vakleergebieden</h3>
-                        <ul data-simply-list="item.ExamenprogrammaVakleergebied">
+                        <h3>Kerndoel domeinen</h3>
+                        <ul data-simply-list="item.KerndoelDomein">
                             <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Examenprogramma" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.KerndoelUitstroomprofiel" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Kerndoel uitstroomprofiel</h3>
+                        <ul data-simply-list="item.KerndoelUitstroomprofiel">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Kerndoel" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Kerndoelen</h3>
+                        <ul data-simply-list="item.Kerndoel">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Examenprogramma" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma</h3>
                         <ul data-simply-list="item.Examenprogramma">
@@ -393,35 +384,15 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaDomein" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <h3>Examenprogramma domein</h3>
-                        <ul data-simply-list="item.ExamenprogrammaDomein">
+                        <h3>Examenprogramma Vakleergebieden</h3>
+                        <ul data-simply-list="item.ExamenprogrammaVakleergebied">
                             <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaSubdomein" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma subdomein</h3>
-                        <ul data-simply-list="item.ExamenprogrammaSubdomein">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaEindterm" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma eindterm</h3>
-                        <ul data-simply-list="item.ExamenprogrammaEindterm">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaKop1" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaKop1" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (kop1)</h3>
                         <ul data-simply-list="item.ExamenprogrammaKop1">
@@ -429,8 +400,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaKop2" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaKop2" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (kop2)</h3>
                         <ul data-simply-list="item.ExamenprogrammaKop2">
@@ -438,8 +408,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaKop3" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaKop3" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (kop3)</h3>
                         <ul data-simply-list="item.ExamenprogrammaKop3">
@@ -447,8 +416,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaKop4" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaKop4" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (kop4)</h3>
                         <ul data-simply-list="item.ExamenprogrammaKop4">
@@ -456,8 +424,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBody" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBody" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma tekst (body)</h3>
                         <ul data-simply-list="item.ExamenprogrammaBody">
@@ -465,8 +432,31 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBgProfiel" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaDomein" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma domein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaDomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaSubdomein" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma subdomein</h3>
+                        <ul data-simply-list="item.ExamenprogrammaSubdomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaEindterm" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma eindterm</h3>
+                        <ul data-simply-list="item.ExamenprogrammaEindterm">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgProfiel" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht profiel</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgProfiel">
@@ -475,8 +465,7 @@
                     </template>
                 </div>
 
-                <div data-simply-field="item.ExamenprogrammaBgKern" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgKern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht kern</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgKern">
@@ -484,8 +473,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBgKerndeel" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgKerndeel" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht kerndeel</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgKerndeel">
@@ -493,17 +481,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBgGlobaleEindterm" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma beroepsgericht globale eindterm</h3>
-                        <ul data-simply-list="item.ExamenprogrammaBgGlobaleEindterm">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaBgModule" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgModule" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht module</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgModule">
@@ -511,8 +489,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBgKeuzevak" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgKeuzevak" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht keuzevak</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgKeuzevak">
@@ -520,26 +497,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.ExamenprogrammaBgDeeltaak" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma beroepsgericht deeltaak</h3>
-                        <ul data-simply-list="item.ExamenprogrammaBgDeeltaak">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaBgModuletaak" data-simply-content="template"
-                    data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>Examenprogramma beroepsgericht moduletaak</h3>
-                        <ul data-simply-list="item.ExamenprogrammaBgModuletaak">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.ExamenprogrammaBgKeuzevaktaak" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgKeuzevaktaak" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Examenprogramma beroepsgericht keuzevaktaak</h3>
                         <ul data-simply-list="item.ExamenprogrammaBgKeuzevaktaak">
@@ -547,8 +505,31 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Syllabus" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.ExamenprogrammaBgDeeltaak" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht deeltaak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgDeeltaak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgModuletaak" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht moduletaak</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgModuletaak">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ExamenprogrammaBgGlobaleEindterm" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Examenprogramma beroepsgericht globale eindterm</h3>
+                        <ul data-simply-list="item.ExamenprogrammaBgGlobaleEindterm">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Syllabus" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Syllabus</h3>
                         <ul data-simply-list="item.Syllabus">
@@ -556,8 +537,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.SyllabusSpecifiekeEindterm" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.SyllabusSpecifiekeEindterm" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Syllabus specifieke eindterm</h3>
                         <ul data-simply-list="item.SyllabusSpecifiekeEindterm">
@@ -565,8 +545,7 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.SyllabusVakbegrip" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.SyllabusVakbegrip" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Syllabus vakbegrip</h3>
                         <ul data-simply-list="item.SyllabusVakbegrip">
@@ -574,12 +553,19 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.SyllabusToelichting" data-simply-content="template"
-                    data-simply-transformer="truthy">
+                <div data-simply-field="item.SyllabusToelichting" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Syllabus toelichting</h3>
                         <ul data-simply-list="item.SyllabusToelichting">
                             <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Doelen op niveau</h3>
+                        <ul data-simply-list="item.Doelniveau">
+                            <template rel="doelniveau"></template>
                         </ul>
                     </template>
                 </div>
@@ -592,8 +578,7 @@
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
-        <span data-simply-field="Vak" data-simply-content="template"
-        data-simply-transformer="truthy">
+        <span data-simply-field="Vak" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 <label>vak:
                     <ul data-simply-list="Vak">
@@ -602,8 +587,7 @@
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vakkern" data-simply-content="template"
-        data-simply-transformer="truthy">
+        <span data-simply-field="Vakkern" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 <label>vakkern:
                 <ul data-simply-list="Vakkern">
@@ -612,8 +596,7 @@
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vaksubkern" data-simply-content="template"
-        data-simply-transformer="truthy">
+        <span data-simply-field="Vaksubkern" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 <label>vaksubkern:
                 <ul data-simply-list="Vaksubkern">
@@ -622,8 +605,7 @@
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vakinhoud" data-simply-content="template"
-        data-simply-transformer="truthy">
+        <span data-simply-field="Vakinhoud" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 <label>vakinhoud: 
                 <ul data-simply-list="Vakinhoud">
@@ -632,8 +614,7 @@
                 </label>
             </template>
         </span>
-        <span data-simply-field="$ref" data-simply-content="template"
-        data-simply-transformer="truthy">
+        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 &nbsp;<a class="slo-tag slo-tag-inline" href="#" data-simply-field="$ref"
                 data-simply-content="fixed" data-simply-transformer="niveau">
@@ -647,10 +628,24 @@
 <template id="links">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <span data-simply-field="title">titel</span>
-        </a>
-        <span data-simply-field="$ref" data-simply-content="template"
-        data-simply-transformer="truthy">
+            <span data-simply-field="bron" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">Bron</span>
+                        <span data-simply-field="bron"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">Prefix</span>
+                        <span data-simply-field="prefix"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="title">titel</span></a>
+        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 &nbsp;<a class="slo-tag slo-tag-inline" href="#" data-simply-field="$ref"
                 data-simply-content="fixed" data-simply-transformer="niveau">
@@ -659,21 +654,190 @@
             </template>
             <template data-simply-template="false">false</template>
         </span>
+        <span data-simply-list="Vak">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">Vak</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Vakkern">
+            <template>
+                <span data-simply-list="Vak">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">Vak</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Vaksubkern">
+            <template>
+                <span data-simply-list="Vakkern">
+                    <template>
+                        <span data-simply-list="Vak">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">Vak</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="LdkVak">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">LdkVak</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="LdkVakkern">
+            <template>
+                <span data-simply-list="LdkVak">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">LdkVak</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="LdkVaksubkern">
+            <template>
+                <span data-simply-list="LdkVakkern">
+                    <template>
+                        <span data-simply-list="LdkVak">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">LdkVak</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="KerndoelVakleergebied">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">KerndoelVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Examenprogramma">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">Examenprogramma</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ExamenprogrammaDomein">
+            <template>
+                <span data-simply-list="Examenprogramma">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">Examenprogramma</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ExamenprogrammaBgProfiel">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">ExamenprogrammaBgProfiel</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Syllabus">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">Syllabus</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Niveau">
+            <template>
+                <span class="slo-tag slo-tag-mini" data-simply-field="title">title</span>
+            </template>
+        </span>
     </li>
 </template>
 <template id="doelniveau">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <span data-simply-field="Doel.0.title"></span>
-            <span data-simply-field="Kerndoel.0.title"></span>
-            <span data-simply-field="ExamenprogrammaDomein.0.prefix"></span> <span data-simply-field="ExamenprogrammaDomein.0.title"></span>
-            <span data-simply-field="ExamenprogrammaSubdomein.0.prefix"></span> <span data-simply-field="ExamenprogrammaSubdomein.0.title"></span>
-            <span data-simply-field="ExamenprogrammaEindterm.0.prefix"></span> <span data-simply-field="ExamenprogrammaEindterm.0.title"></span>
-			<span data-simply-field="ExamenprogrammaBgModule.0.prefix"></span> <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
+            <div data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">Doel</span>
+                        <span data-simply-field="Doel.0.bron"></span>
+                    </span>
+                    <span data-simply-field="Doel.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="Kerndoel.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">Kerndoel</span>
+                        <span data-simply-field="Kerndoel.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="Kerndoel.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">ExamenprogrammaDomein</span>
+                        <span data-simply-field="ExamenprogrammaDomein.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaDomein.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaSubdomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">ExamenprogrammaSubdomein</span>
+                        <span data-simply-field="ExamenprogrammaSubdomein.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaSubdomein.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">ExamenprogrammaEindterm</span>
+                        <span data-simply-field="ExamenprogrammaEindterm.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaEindterm.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">ExamenprogrammaBgModule</span>
+                        <span data-simply-field="ExamenprogrammaBgModule.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
+                </template>
+            </div>                    
         </a>
         <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
              <template>
-                 <li><span class="slo-tag" data-simply-field="title">niveau</span></li>
+                 <li><span class="slo-tag slo-tag-mini" data-simply-field="title">niveau</span></li>
              </template>
         </ul>
     </li>
@@ -1132,6 +1296,20 @@
         }
     }
 
+    editor.transformers.replaces = {
+        render: function(data) {
+            this.originalValue = data;
+            if (Array.isArray(data) && data.length > 0) {
+                return "true";
+            } else {
+                return "false";
+            }
+        },
+        extract: function(data) {
+            return this.originalValue;
+        }
+    };
+    
     editor.transformers.truthy = {
         render: function(data) {
             this.originalValue = data;
