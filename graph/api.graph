@@ -1075,10 +1075,6 @@ query Id($id:ID) {
       id
       title
     }
-    SyllabusSpecifiekeEindterm {
-      id
-      title
-    }
     NiveauIndex {
       Niveau {
         ...NiveauShort
@@ -1534,6 +1530,10 @@ query Id($id:ID) {
       title
     }
     Syllabus {
+      id
+      title
+    }
+    SyllabusSpecifiekeEindterm {
       id
       title
     }
