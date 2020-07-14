@@ -201,7 +201,7 @@ query VakById($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    Vakkern {
+    LpibVakkern {
       id
       title
     }
@@ -222,8 +222,8 @@ query VakById($id:ID) {
   }
 }
 
-query Vakkern($page:Int,$perPage:Int) {
-  allVakkern(page:$page,perPage:$perPage,sortField:"title") {
+query LpibVakkern($page:Int,$perPage:Int) {
+  allLpibVakkern(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
     Vak {
@@ -236,12 +236,12 @@ query Vakkern($page:Int,$perPage:Int) {
       }
     }
   }
-  _allVakkernMeta {
+  _allLpibVakkernMeta {
     count
   }
 }
-query VakkernById($id:ID) {
-  Vakkern(id:$id) {
+query LpibVakkernById($id:ID) {
+  LpibVakkern(id:$id) {
     id
     title
     description
@@ -250,7 +250,7 @@ query VakkernById($id:ID) {
 #    }
     
     replaces
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
     }
@@ -268,11 +268,11 @@ query VakkernById($id:ID) {
     }
   }
 }
-query Vaksubkern($page:Int,$perPage:Int) {
-  allVaksubkern(page:$page,perPage:$perPage,sortField:"title") {
+query LpibVaksubkern($page:Int,$perPage:Int) {
+  allLpibVaksubkern(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -286,19 +286,19 @@ query Vaksubkern($page:Int,$perPage:Int) {
       }
     }
   }
-  _allVaksubkernMeta {
+  _allLpibVaksubkernMeta {
     count
   }
 }
-query VaksubkernById($id:ID) {
-  Vaksubkern(id:$id) {
+query LpibVaksubkernById($id:ID) {
+  LpibVaksubkern(id:$id) {
     id
     title
     description
 #    Leerlingtekst {
 #      ...Leerlingtekst
 #    }
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
     }
@@ -307,7 +307,7 @@ query VaksubkernById($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
     }
@@ -318,14 +318,14 @@ query VaksubkernById($id:ID) {
     }
   }
 }
-query Vakinhoud($page:Int,$perPage:Int) {
-  allVakinhoud(page:$page,perPage:$perPage,sortField:"title") {
+query LpibVakinhoud($page:Int,$perPage:Int) {
+  allLpibVakinhoud(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
-      Vakkern {
+      LpibVakkern {
         id
         title
         Vak {
@@ -334,7 +334,7 @@ query Vakinhoud($page:Int,$perPage:Int) {
         }
       }
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -348,12 +348,12 @@ query Vakinhoud($page:Int,$perPage:Int) {
       }
     }
   }
-  _allVakinhoudMeta {
+  _allLpibVakinhoudMeta {
     count
   }
 }
-query VakinhoudById($id:ID) {
-  Vakinhoud(id:$id) {
+query LpibVakinhoudById($id:ID) {
+  LpibVakinhoud(id:$id) {
     id
     title
     description
@@ -365,7 +365,7 @@ query VakinhoudById($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
     }
@@ -385,13 +385,13 @@ query DoelenOpNiveauByVakById($id:ID, $niveau:ID) {
       id
       title
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
-      Vaksubkern {
+      LpibVaksubkern {
         id
         title
-        Vakinhoud {
+        LpibVakinhoud {
           id
           title
           Doelniveau(filter:{niveau_id:[$niveau]}) {
@@ -402,7 +402,7 @@ query DoelenOpNiveauByVakById($id:ID, $niveau:ID) {
           ...Doelen
         }
       }
-      Vakinhoud {
+      LpibVakinhoud {
         id
         title
         Doelniveau(filter:{niveau_id:[$niveau]}) {
@@ -425,15 +425,15 @@ query Id($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    Vakkencluster {
+    LpibVakkencluster {
       id
       title
     }
-    Leerlijn {
+    LpibLeerlijn {
       id
       title
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
       NiveauIndex {
@@ -469,7 +469,7 @@ query Id($id:ID) {
       ...NiveauShort
     }
   }
-  allVakkern(filter:{id:$id}) {
+  allLpibVakkern(filter:{id:$id}) {
     id
     title
     description
@@ -477,7 +477,7 @@ query Id($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
       NiveauIndex {
@@ -486,7 +486,7 @@ query Id($id:ID) {
         }
       }
     }
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
       NiveauIndex {
@@ -508,7 +508,7 @@ query Id($id:ID) {
       }
     }
   }
-  allVaksubkern(filter:{id:$id}) {
+  allLpibVaksubkern(filter:{id:$id}) {
     id
     title
     description
@@ -516,7 +516,7 @@ query Id($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
       NiveauIndex {
@@ -528,7 +528,7 @@ query Id($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -542,7 +542,7 @@ query Id($id:ID) {
       }
     }
   }
-  allVakinhoud(filter:{id:$id}) {
+  allLpibVakinhoud(filter:{id:$id}) {
     id
     title
     description
@@ -557,7 +557,7 @@ query Id($id:ID) {
       id
       title
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -565,10 +565,10 @@ query Id($id:ID) {
         title
       }
     }
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
-      Vakkern {
+      LpibVakkern {
         id
         title
         Vak {
@@ -599,7 +599,7 @@ query Id($id:ID) {
         id
         title
       }
-      Vakkern {
+      LpibVakkern {
         id
         title
         Vak {
@@ -607,10 +607,10 @@ query Id($id:ID) {
           title
         }
       }
-      Vaksubkern {
+      LpibVaksubkern {
         id
         title
-        Vakkern {
+        LpibVakkern {
           id
           title
           Vak {
@@ -619,13 +619,13 @@ query Id($id:ID) {
           }
         }
       }
-      Vakinhoud {
+      LpibVakinhoud {
         id
         title
-        Vaksubkern {
+        LpibVaksubkern {
           id
           title
-          Vakkern {
+          LpibVakkern {
             id
             title
             Vak {
@@ -664,7 +664,7 @@ query Id($id:ID) {
       id
       title
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -672,10 +672,10 @@ query Id($id:ID) {
         title
       }
     }
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
-      Vakkern {
+      LpibVakkern {
         id
         title
         Vak {
@@ -684,13 +684,13 @@ query Id($id:ID) {
         }
       }
     }
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
-      Vaksubkern {
+      LpibVaksubkern {
         id
         title
-        Vakkern {
+        LpibVakkern {
           id
           title
           Vak {
@@ -769,7 +769,7 @@ query Id($id:ID) {
 #    }
     types
     replacedBy
-    Vakkern {
+    LpibVakkern {
       id
       title
       Vak {
@@ -777,10 +777,10 @@ query Id($id:ID) {
         title
       }
     }
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
-      Vakkern {
+      LpibVakkern {
         id
         title
         Vak {
@@ -789,13 +789,13 @@ query Id($id:ID) {
         }
       }
     }
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
-      Vaksubkern {
+      LpibVaksubkern {
         id
         title
-        Vakkern {
+        LpibVakkern {
           id
           title
           Vak {
@@ -857,7 +857,7 @@ query Id($id:ID) {
         ...NiveauShort
       }
     }
-    Vakkern {
+    LpibVakkern {
       id
       title
     }
@@ -887,7 +887,7 @@ query Id($id:ID) {
         ...NiveauShort
       }
     }
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
     }
@@ -914,7 +914,7 @@ query Id($id:ID) {
         ...NiveauShort
       }
     }
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
     }
@@ -1574,7 +1574,7 @@ query Id($id:ID) {
       }
     }
   }
-  allVakkencluster(filter:{id:$id}) {
+  allLpibVakkencluster(filter:{id:$id}) {
     id
     title
     Niveau {
@@ -1589,7 +1589,7 @@ query Id($id:ID) {
       }
     }    
   }
-  allLeerlijn(filter:{id:$id}) {
+  allLpibLeerlijn(filter:{id:$id}) {
     id
     title
     Vak {
@@ -1641,7 +1641,7 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
     ...NiveauShort
   }
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakkern(filter:{vak_id:[$id]}) {
+    LpibVakkern(filter:{vak_id:[$id]}) {
       id
       title
     }
@@ -1666,9 +1666,9 @@ query LdkVakByIdOpNiveau($niveau:ID, $id:ID) {
   }
 }
 
-query VakkernOpNiveau($niveau:ID) {
+query LpibVakkernOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakkern {
+    LpibVakkern {
       id
       title
     }
@@ -1684,9 +1684,9 @@ query LdkVakkernOpNiveau($niveau:ID) {
   }
 }
 
-query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
+query LpibVakkernByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakkern(filter:{id:$id}) {
+    LpibVakkern(filter:{id:$id}) {
       id
       title
       Vak {
@@ -1697,7 +1697,7 @@ query VakkernByIdOpNiveau($niveau:ID, $id:ID) {
         ...DoelNiveau
       } 
     }
-    Vaksubkern(filter:{vakkern_id:[$id]}) {
+    LpibVaksubkern(filter:{lpib_vakkern_id:[$id]}) {
       id
       title
     }
@@ -1736,21 +1736,21 @@ query LdkVaksubkernOpNiveau($niveau:ID) {
   }
 }
 
-query VaksubkernOpNiveau($niveau:ID) {
+query LpibVaksubkernOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vaksubkern {
+    LpibVaksubkern {
       id
       title
     }
   }
 } 
 
-query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
+query LpibVaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vaksubkern(filter:{id:$id}) {
+    LpibVaksubkern(filter:{id:$id}) {
       id
       title
-      Vakkern {
+      LpibVakkern {
         id
         title
       }
@@ -1758,7 +1758,7 @@ query VaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
         ...DoelNiveau
       } 
     }
-    Vakinhoud(filter:{vaksubkern_id:[$id]}) {
+    LpibVakinhoud(filter:{lpib_vaksubkern_id:[$id]}) {
       id
       title
     }
@@ -1789,9 +1789,9 @@ query LdkVaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
   }
 }
 
-query VakinhoudOpNiveau($niveau:ID) {
+query LpibVakinhoudOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakinhoud {
+    LpibVakinhoud {
       id
       title
     }
@@ -1806,12 +1806,12 @@ query LdkVakinhoudOpNiveau($niveau:ID) {
   }
 }
 
-query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
+query LpibVakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    Vakinhoud(filter:{id:$id}) {
+    LpibVakinhoud(filter:{id:$id}) {
       id
       title
-      Vaksubkern {
+      LpibVaksubkern {
         id
         title
       }
@@ -1825,22 +1825,22 @@ query VakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
   }
 }
 
-query LeerlijnOpNiveau($id:ID) {
-  allLeerlijn(filter:{niveau_id:[$id]}) {
+query LpibLeerlijnOpNiveau($id:ID) {
+  allLpibLeerlijn(filter:{niveau_id:[$id]}) {
     id
     title
   }
-  _allLeerlijnMeta(filter:{niveau_id:[$id]}) {
+  _allLpibLeerlijnMeta(filter:{niveau_id:[$id]}) {
     count
   }
 }
 
-query VakkenclusterOpNiveau($id:ID) {
-  allVakkencluster(filter:{niveau_id:[$id]}) {
+query LpibVakkenclusterOpNiveau($id:ID) {
+  allLpibVakkencluster(filter:{niveau_id:[$id]}) {
     id
     title
   }
-  _allVakkenclusterMeta(filter:{niveau_id:[$id]}) {
+  _allLpibVakkenclusterMeta(filter:{niveau_id:[$id]}) {
     count
   }
 }
@@ -1860,9 +1860,9 @@ query DeprecatedById($id:ID) {
     description
     types
     replacedBy
-    vakkern_id
-    vaksubkern_id
-    vakinhoud_id
+    lpib_vakkern_id
+    lpib_vaksubkern_id
+    lpib_vakinhoud_id
     doelniveau_id
   }
 }    
@@ -2252,8 +2252,8 @@ query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
     count
   }
 }
-#query lpibVakkencluster {
-#  allLpibVakkencluster {
+#query lpibLpibVakkencluster {
+#  allLpibLpibVakkencluster {
 #    id
 #    title
 #    LpibVak {
@@ -2274,8 +2274,8 @@ query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
 #    }
 #  }
 #}
-#query lpibVakkenclusterByBouw($id:ID) {
-#  allLpibVakkencluster(filter:{lpib_bouw_id:[$id]}) {
+#query lpibLpibVakkenclusterByBouw($id:ID) {
+#  allLpibLpibVakkencluster(filter:{lpib_bouw_id:[$id]}) {
 #    id
 #    title
 #    LpibBouw {
@@ -2342,28 +2342,28 @@ query SyllabusSpecifiekeEindterm($page:Int,$perPage:Int) {
   }
 }
 
-query Vakkencluster($page:Int,$perPage:Int) {
-  allVakkencluster (page:$page,perPage:$perPage,sortField:"title") {
+query LpibVakkencluster($page:Int,$perPage:Int) {
+  allLpibVakkencluster (page:$page,perPage:$perPage,sortField:"title") {
     id
     title
     Niveau {
       ...NiveauShort
     }
   }
-  _allVakkenclusterMeta {
+  _allLpibVakkenclusterMeta {
     count
   }
 }
 
-query Leerlijn($page:Int,$perPage:Int) {
-  allLeerlijn (page:$page,perPage:$perPage,sortField:"title") {
+query LpibLeerlijn($page:Int,$perPage:Int) {
+  allLpibLeerlijn (page:$page,perPage:$perPage,sortField:"title") {
     id
     title
     Niveau {
       ...NiveauShort
     }
   }
-  _allLeerlijnMeta {
+  _allLpibLeerlijnMeta {
     count
   }
 }

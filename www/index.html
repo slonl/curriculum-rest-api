@@ -56,14 +56,21 @@
     <ul class="slo-navbar-nav">
         <li><a href="/" class="slo-nav" data-simply-group="menu">API Browser</a>
             <ul class="slo-navbar-nav">
-                <li><a>Inhouden</a>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
-                        <li><a href="vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
+                <li><a href="#">Curriculum Basis</a>
+                    <ul>
+                        <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
+                        <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
+                        <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Curriculum Leerplan-in-beeld</a>
+                    <ul>
+                        <li><a href="lpib_leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
+                        <li><a href="lpib_vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
                         <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
-                        <li><a href="vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
-                        <li><a href="vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
-                        <li><a href="vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
+                        <li><a href="lpib_vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
+                        <li><a href="lpib_vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
+                        <li><a href="lpib_vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
                     </ul>
                 </li>
                 <li><a>Leerdoelenkaarten</a>
@@ -255,18 +262,18 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vakkencluster" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.LpibVakkencluster" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakkenclusters</h3>
-                        <ul data-simply-list="item.Vakkencluster">
+                        <ul data-simply-list="item.LpibVakkencluster">
                             <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Leerlijn" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.LpibLeerlijn" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Leerlijnen</h3>
-                        <ul data-simply-list="item.Leerlijn">
+                        <ul data-simply-list="item.LpibLeerlijn">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -279,27 +286,27 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vakkern" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.LpibVakkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakkernen</h3>
-                        <ul data-simply-list="item.Vakkern">
+                        <ul data-simply-list="item.LpibVakkern">
                             <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vaksubkern" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.LpibVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vaksubkernen</h3>
-                        <ul data-simply-list="item.Vaksubkern">
+                        <ul data-simply-list="item.LpibVaksubkern">
                             <template rel="links"></template>
                         </ul>
                     
                     </template>
                 </div>
-                <div data-simply-field="item.Vakinhoud" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.LpibVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakinhouden</h3>
-                        <ul data-simply-list="item.Vakinhoud">
+                        <ul data-simply-list="item.LpibVakinhoud">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -587,28 +594,28 @@
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vakkern" data-simply-content="template" data-simply-transformer="truthy">
+        <span data-simply-field="LpibVakkern" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                <label>vakkern:
-                <ul data-simply-list="Vakkern">
+                <label>lpib_vakkern:
+                <ul data-simply-list="LpibVakkern">
                     <template rel="links"></template>
                 </ul>
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vaksubkern" data-simply-content="template" data-simply-transformer="truthy">
+        <span data-simply-field="LpibVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                <label>vaksubkern:
-                <ul data-simply-list="Vaksubkern">
+                <label>lpib_vaksubkern:
+                <ul data-simply-list="LpibVaksubkern">
                     <template rel="links"></template>
                 </ul>
                 </label>
             </template>
         </span>
-        <span data-simply-field="Vakinhoud" data-simply-content="template" data-simply-transformer="truthy">
+        <span data-simply-field="LpibVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                <label>vakinhoud: 
-                <ul data-simply-list="Vakinhoud">
+                <label>lpib_vakinhoud: 
+                <ul data-simply-list="LpibVakinhoud">
                     <template rel="links"></template>
                 </ul>
                 </label>
@@ -662,7 +669,7 @@
                 </span>
             </template>
         </span>
-        <span data-simply-list="Vakkern">
+        <span data-simply-list="LpibVakkern">
             <template>
                 <span data-simply-list="Vak">
                     <template>
@@ -674,9 +681,9 @@
                 </span>
             </template>
         </span>
-        <span data-simply-list="Vaksubkern">
+        <span data-simply-list="LpibVaksubkern">
             <template>
-                <span data-simply-list="Vakkern">
+                <span data-simply-list="LpibVakkern">
                     <template>
                         <span data-simply-list="Vak">
                             <template>
@@ -881,12 +888,12 @@
     })();
     
     var titles = {
-        'vakkencluster/': 'Vakkenclusters',
-        'leerlijn/': 'Leerlijnen',
+        'lpib_vakkencluster/': 'Vakkenclusters',
+        'lpib_leerlijn/': 'Leerlijnen',
         'vak/': 'Vakken',
-        'vakkern/': 'Vakkernen',
-        'vaksubkern/': 'Vaksubkernen',
-        'vakinhoud/': 'Vakinhouden',
+        'lpib_vakkern/': 'Vakkernen',
+        'lpib_vaksubkern/': 'Vaksubkernen',
+        'lpib_vakinhoud/': 'Vakinhouden',
         'niveau/': 'Niveau\'s',
         'doel/': 'Doelen',
         'doelniveau/': 'Doelen op Niveau',
@@ -934,50 +941,59 @@
             '/niveau/:niveau/vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
             },
-            '/niveau/:niveau/vakkern/:vakkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'vakkern/', params.vakkernid);
+            '/niveau/:niveau/vakkern/:lpib_vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vakkern/', params.lpib_vakkernid);
             },
-            '/niveau/:niveau/vaksubkern/:vaksubkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'vaksubkern/', params.vaksubkernid);
+            '/niveau/:niveau/vaksubkern/:lpib_vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vaksubkern/', params.lpib_vaksubkernid);
             },
-            '/niveau/:niveau/vakinhoud/:vakinhoudid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'vakinhoud/', params.vakinhoudid);
+            '/niveau/:niveau/vakinhoud/:lpib_vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vakinhoud/', params.lpib_vakinhoudid);
+            },
+            '/niveau/:niveau/lpib_vakkern/:lpib_vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vakkern/', params.lpib_vakkernid);
+            },
+            '/niveau/:niveau/lpib_vaksubkern/:lpib_vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vaksubkern/', params.lpib_vaksubkernid);
+            },
+            '/niveau/:niveau/lpib_vakinhoud/:lpib_vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'lpib_vakinhoud/', params.lpib_vakinhoudid);
             },
             '/niveau/:niveau/ldk_vak/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'ldk_vak/', params.vakid);
             },
-            '/niveau/:niveau/ldk_vakkern/:vakkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.vakkernid);
+            '/niveau/:niveau/ldk_vakkern/:lpib_vakkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.lpib_vakkernid);
             },
-            '/niveau/:niveau/ldk_vaksubkern/:vaksubkernid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vaksubkern/', params.vaksubkernid);
+            '/niveau/:niveau/ldk_vaksubkern/:lpib_vaksubkernid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vaksubkern/', params.lpib_vaksubkernid);
             },
-            '/niveau/:niveau/ldk_vakinhoud/:vakinhoudid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.vakinhoudid);
-            },
-            '/niveau/:niveau/vak/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vak/');
-            },
-            '/niveau/:niveau/vakkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vakkern/');
-            },
-            '/niveau/:niveau/vaksubkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
-            },
-            '/niveau/:niveau/vakinhoud/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
+            '/niveau/:niveau/ldk_vakinhoud/:lpib_vakinhoudid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.lpib_vakinhoudid);
             },
             '/niveau/:niveau/vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
+            '/niveau/:niveau/lpib_vakkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vakkern/');
+            },
+            '/niveau/:niveau/lpib_vaksubkern/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vaksubkern/');
+            },
+            '/niveau/:niveau/lpib_vakinhoud/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vakinhoud/');
+            },
             '/niveau/:niveau/vakkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vakkern/');
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vakkern/');
             },
             '/niveau/:niveau/vaksubkern/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vaksubkern/');
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vaksubkern/');
             },
             '/niveau/:niveau/vakinhoud/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vakinhoud/');
+                browser.actions.listOpNiveau(params.niveau, 'lpib_vakinhoud/');
+            },
+            '/niveau/:niveau/vak/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vak/');
             },
             '/niveau/:niveau/ldk_vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'ldk_vak/');
@@ -997,14 +1013,23 @@
             '/vak/': function(params) {
                 browser.actions.list('vak/')
             },
+            '/lpib_vakkern/': function(params) {
+                browser.actions.list('lpib_vakkern/')
+            },
+            '/lpib_vaksubkern/': function(params) {
+                browser.actions.list('lpib_vaksubkern/')
+            },
+            '/lpib_vakinhoud/': function(params) {
+                browser.actions.list('lpib_vakinhoud/')
+            },
             '/vakkern/': function(params) {
-                browser.actions.list('vakkern/')
+                browser.actions.list('lpib_vakkern/')
             },
             '/vaksubkern/': function(params) {
-                browser.actions.list('vaksubkern/')
+                browser.actions.list('lpib_vaksubkern/')
             },
             '/vakinhoud/': function(params) {
-                browser.actions.list('vakinhoud/')
+                browser.actions.list('lpib_vakinhoud/')
             },
             '/niveau/': function(params) {
                 browser.actions.list('niveau/')
@@ -1096,11 +1121,17 @@
             '/examenprogramma_bg_keuzevaktaak/': function(params) {
                 browser.actions.list('examenprogramma_bg_keuzevaktaak/')
             },
+            '/lpib_vakkencluster/': function(params) {
+                browser.actions.list('lpib_vakkencluster/')
+            },
+            '/lpib_leerlijn/': function(params) {
+                browser.actions.list('lpib_leerlijn/')
+            },
             '/vakkencluster/': function(params) {
-                browser.actions.list('vakkencluster/')
+                browser.actions.list('lpib_vakkencluster/')
             },
             '/leerlijn/': function(params) {
-                browser.actions.list('leerlijn/')
+                browser.actions.list('lpib_leerlijn/')
             },
             '/syllabus/': function(params) {
                 browser.actions.list('syllabus/')
@@ -1120,13 +1151,13 @@
             '/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
-            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern/vakinhoud/:vakinhoud': function(params) {
+            '/legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/lpib_vaksubkern/:lpib_vaksubkern/lpib_vakinhoud/:lpib_vakinhoud': function(params) {
                 browser.actions.legacy(params);
             },            
-            '/legacy/vak/:vak/vakkern/:vakkern/vaksubkern/:vaksubkern': function(params) {
+            '/legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/lpib_vaksubkern/:lpib_vaksubkern': function(params) {
                 browser.actions.legacy(params);
             },
-            '/legacy/vak/:vak/vakkern/:vakkern': function(params) {
+            '/legacy/vak/:vak/lpib_vakkern/:lpib_vakkern': function(params) {
                 browser.actions.legacy(params);
             },
             '/legacy/vak/:vak': function(params) {
@@ -1220,7 +1251,7 @@
             },
             legacy: function(params) {
                 var url = release.apiPath+'legacy/';
-                ['vak','vakkern','vaksubkern','vakinhoud'].forEach(function(inhoud)
+                ['vak','lpib_vakkern','lpib_vaksubkern','lpib_vakinhoud'].forEach(function(inhoud)
                 {
                     if (params[inhoud]) {
                         url += inhoud+'/'+params[inhoud]+'/';
