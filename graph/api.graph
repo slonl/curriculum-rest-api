@@ -1568,6 +1568,10 @@ query Id($id:ID) {
       id
       title
     }
+    SyllabusToelichting {
+      id
+      title
+    }
     NiveauIndex {
       Niveau {
         ...NiveauShort
@@ -2321,6 +2325,12 @@ query SyllabusToelichting($page:Int,$perPage:Int) {
     Syllabus {
       id
       title
+    }
+    SyllabusSpecifiekeEindterm{
+      Syllabus {
+        id
+        title
+      }
     }
   }
   _allSyllabusToelichtingMeta {
