@@ -180,20 +180,20 @@ query NiveauById($id:ID) {
 #    }
   }
 }
-query Vak($page:Int,$perPage:Int) {
-  allVak(page:$page,perPage:$perPage,sortField:"title") {
+query Vakleergebied($page:Int,$perPage:Int) {
+  allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
     Niveau {
       ...NiveauShort
     }
   }
-  _allVakMeta {
+  _allVakleergebiedMeta {
     count
   }
 }
-query VakById($id:ID) {
-  Vak(id:$id) {
+query VakleergebiedById($id:ID) {
+  Vakleergebied(id:$id) {
     id
     title
     description
@@ -204,9 +204,6 @@ query VakById($id:ID) {
     LpibVakkern {
       id
       title
-    }
-    Doelniveau {
-      ...DoelNiveau
     }
     Niveau {
       ...NiveauShort
@@ -226,7 +223,7 @@ query LpibVakkern($page:Int,$perPage:Int) {
   allLpibVakkern(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -257,7 +254,7 @@ query LpibVakkernById($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -275,7 +272,7 @@ query LpibVaksubkern($page:Int,$perPage:Int) {
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -328,7 +325,7 @@ query LpibVakinhoud($page:Int,$perPage:Int) {
       LpibVakkern {
         id
         title
-        Vak {
+        Vakleergebied {
           id
           title
         }
@@ -337,7 +334,7 @@ query LpibVakinhoud($page:Int,$perPage:Int) {
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -377,8 +374,8 @@ query LpibVakinhoudById($id:ID) {
   }
 }
 
-query DoelenOpNiveauByVakById($id:ID, $niveau:ID) {
-  Vak(id:$id) {
+query DoelenOpNiveauByVakleergebiedById($id:ID, $niveau:ID) {
+  Vakleergebied(id:$id) {
     id
     title
     Niveau(filter:{id:$niveau}) {
@@ -417,7 +414,7 @@ query DoelenOpNiveauByVakById($id:ID, $niveau:ID) {
 }
 
 query Id($id:ID) {
-  allVak(filter:{id:$id}) {
+  allVakleergebied(filter:{id:$id}) {
     id
     title
     description
@@ -458,12 +455,9 @@ query Id($id:ID) {
       id
       title
     }
-    LdkVak {
+    LdkVakleergebied {
       id
       title
-    }
-    Doelniveau {
-      ...DoelNiveau
     }
     Niveau {
       ...NiveauShort
@@ -498,7 +492,7 @@ query Id($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -531,7 +525,7 @@ query Id($id:ID) {
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -553,14 +547,10 @@ query Id($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    Vak {
-      id
-      title
-    }
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -571,7 +561,7 @@ query Id($id:ID) {
       LpibVakkern {
         id
         title
-        Vak {
+        Vakleergebied {
           id
           title
         }
@@ -595,14 +585,10 @@ query Id($id:ID) {
     
     Doelniveau {
       ...DoelNiveau
-      Vak {
-        id
-        title
-      }
       LpibVakkern {
         id
         title
-        Vak {
+        Vakleergebied {
           id
           title
         }
@@ -613,7 +599,7 @@ query Id($id:ID) {
         LpibVakkern {
           id
           title
-          Vak {
+          Vakleergebied {
             id
             title
           }
@@ -628,7 +614,7 @@ query Id($id:ID) {
           LpibVakkern {
             id
             title
-            Vak {
+            Vakleergebied {
               id
               title
             }
@@ -643,7 +629,7 @@ query Id($id:ID) {
     description
     type
 #    ...Niveau
-#    Vak {
+#    Vakleergebied {
 #      id
 #      title
 #    }
@@ -660,14 +646,10 @@ query Id($id:ID) {
   }
   allDoelniveau(filter:{id:$id}) {
     ...DoelNiveau
-    Vak {
-      id
-      title
-    }
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -678,7 +660,7 @@ query Id($id:ID) {
       LpibVakkern {
         id
         title
-        Vak {
+        Vakleergebied {
           id
           title
         }
@@ -693,21 +675,21 @@ query Id($id:ID) {
         LpibVakkern {
           id
           title
-          Vak {
+          Vakleergebied {
             id
             title
           }
         }
       }
     }
-    LdkVak {
+    LdkVakleergebied {
       id
       title
     }
     LdkVakkern {
       id
       title
-      LdkVak {
+      LdkVakleergebied {
         id
         title
       }
@@ -718,7 +700,7 @@ query Id($id:ID) {
       LdkVakkern {
         id
         title
-        LdkVak {
+        LdkVakleergebied {
           id
           title
         }
@@ -733,7 +715,7 @@ query Id($id:ID) {
         LdkVakkern {
           id
           title
-          LdkVak {
+          LdkVakleergebied {
             id
             title
           }
@@ -772,7 +754,7 @@ query Id($id:ID) {
     LpibVakkern {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -783,7 +765,7 @@ query Id($id:ID) {
       LpibVakkern {
         id
         title
-        Vak {
+        Vakleergebied {
           id
           title
         }
@@ -798,7 +780,7 @@ query Id($id:ID) {
         LpibVakkern {
           id
           title
-          Vak {
+          Vakleergebied {
             id
             title
           }
@@ -809,7 +791,7 @@ query Id($id:ID) {
       ...DoelNiveau
     }
   }
-  allLdkVak(filter:{id:$id}) {
+  allLdkVakleergebied(filter:{id:$id}) {
     id
     title
     LdkVakkern {
@@ -828,7 +810,7 @@ query Id($id:ID) {
         ...NiveauShort
       }
     }
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -848,7 +830,7 @@ query Id($id:ID) {
     Doelniveau {
       ...DoelNiveau
     }
-    LdkVak {
+    LdkVakleergebied {
       id
       title
     }
@@ -877,7 +859,7 @@ query Id($id:ID) {
     }
     LdkVakkern {
       ...LdkVakkern
-      LdkVak {
+      LdkVakleergebied {
         id
         title
       }
@@ -903,7 +885,7 @@ query Id($id:ID) {
       ...LdkVaksubkern
       LdkVakkern {
         ...LdkVakkern
-        LdkVak {
+        LdkVakleergebied {
           id
           title
         }
@@ -949,7 +931,7 @@ query Id($id:ID) {
 #    Leerlingtekst {
 #      ...Leerlingtekst
 #    }
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -986,7 +968,7 @@ query Id($id:ID) {
   allExamenprogrammaVakleergebied(filter:{id:$id}) {
     id
     title
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -1581,7 +1563,7 @@ query Id($id:ID) {
       id
       title
     }
-    Vak {
+    Vakleergebied {
       id
       title
       Niveau {
@@ -1592,7 +1574,7 @@ query Id($id:ID) {
   allLpibLeerlijn(filter:{id:$id}) {
     id
     title
-    Vak {
+    Vakleergebied {
       id
       title
       Niveau {
@@ -1613,7 +1595,7 @@ query Id($id:ID) {
 # Queries voor alles op specific niveau
 query VakOpNiveau($niveau:ID) {
   allNiveau(filter:{id:$niveau}) {
-    Vak {
+    Vakleergebied {
       id
       title
     }
@@ -1622,26 +1604,23 @@ query VakOpNiveau($niveau:ID) {
 
 query LdkVakOpNiveau($niveau:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    LdkVak {
+    LdkVakleergebied {
       id
       title
     }
   }
 } 
 
-query VakByIdOpNiveau($niveau:ID, $id:ID) {
+query VakleergebiedByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveau(filter:{id:$niveau}) {
-    Vak(filter:{id:$id}) {
+    Vakleergebied(filter:{id:$id}) {
       id
       title
-      Doelniveau(filter:{niveau_id:[$niveau]}) {
-        ...DoelNiveau
-      }
     }
     ...NiveauShort
   }
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    LpibVakkern(filter:{vak_id:[$id]}) {
+    LpibVakkern(filter:{vakleergebied_id:[$id]}) {
       id
       title
     }
@@ -1650,14 +1629,14 @@ query VakByIdOpNiveau($niveau:ID, $id:ID) {
 
 query LdkVakByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-    LdkVak(filter:{id:$id}) {
+    LdkVakleergebied(filter:{id:$id}) {
       id
       title
       Doelniveau(filter:{niveau_id:[$niveau]}) {
         ...DoelNiveau
       } 
     }
-    LdkVakkern(filter:{ldk_vak_id:[$id]}) {
+    LdkVakkern(filter:{ldk_vakleergebied_id:[$id]}) {
       ...LdkVakkern
     }
     Niveau {
@@ -1689,7 +1668,7 @@ query LpibVakkernByIdOpNiveau($niveau:ID, $id:ID) {
     LpibVakkern(filter:{id:$id}) {
       id
       title
-      Vak {
+      Vakleergebied {
         id
         title
       }
@@ -1711,7 +1690,7 @@ query LdkVakkernByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     LdkVakkern(filter:{id:$id}) {
       ...LdkVakkern
-      LdkVak {
+      LdkVakleergebied {
         id
         title
       }
@@ -1882,8 +1861,8 @@ query DeprecatedById($id:ID) {
 #    }
 #  }
 #}
-query LdkVak($page:Int,$perPage:Int) {
-  allLdkVak(page:$page,perPage:$perPage,sortField:"title") {
+query LdkVakleergebied($page:Int,$perPage:Int) {
+  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
     NiveauIndex {
@@ -1892,14 +1871,14 @@ query LdkVak($page:Int,$perPage:Int) {
       }
     }
   }
-  _allLdkVakMeta {
+  _allLdkVakleergebiedMeta {
     count
   }
 }
 query LdkVakkern($page:Int,$perPage:Int) {
   allLdkVakkern(page:$page,perPage:$perPage,sortField:"title") {
     ...LdkVakkern
-    LdkVak {
+    LdkVakleergebied {
       id
       title
     }
@@ -1917,7 +1896,7 @@ query LdkVaksubkern($page:Int,$perPage:Int) {
   allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title") {
     ...LdkVaksubkern
     LdkVakkern {
-      LdkVak {
+      LdkVakleergebied {
         id
         title
       }
@@ -1937,7 +1916,7 @@ query LdkVakinhoud($page:Int,$perPage:Int) {
     ...LdkVakinhoud
     LdkVaksubkern {
       LdkVakkern {
-        LdkVak {
+        LdkVakleergebied {
           id
           title
         }
@@ -2381,7 +2360,7 @@ query ExamenprogrammaVolledig($id:ID) {
       id
       title
       ce_se
-		}
+    }
     ExamenprogrammaKop1 {
       id
       title
@@ -2399,7 +2378,7 @@ query ExamenprogrammaVolledig($id:ID) {
               title
               ce_se
             }
-					}
+          }
           ExamenprogrammaBody {
             id
             title
@@ -2420,7 +2399,7 @@ query ExamenprogrammaVolledig($id:ID) {
           title
           ce_se
         }
-			}
+      }
       ExamenprogrammaKop3 {
         id
         title
@@ -2457,7 +2436,7 @@ query ExamenprogrammaVolledig($id:ID) {
           id
           title
           ce_se
-				}
+        }
       }
       ExamenprogrammaEindterm {
         id
