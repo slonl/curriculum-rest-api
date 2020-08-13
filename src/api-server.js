@@ -586,21 +586,21 @@ app.route(apiBase + 'niveau/:id/vakkencluster').get((req, res) => {
 app.route(apiBase + 'vakleergebied').get((req, res) => {
 	graphQuery("Vakleergebied", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVak, lpibSchemaURL, 'Vakleergebied', result.data._allVakMeta));
+		res.send(jsonLDList(result.data.allVakleergebied, lpibSchemaURL, 'Vakleergebied', result.data._allVakleergebiedMeta));
 	});
 });
 
 app.route(apiBase + 'lpib_vakkern').get((req, res) => {
 	graphQuery("LpibVakkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVakkern, lpibSchemaURL, 'LpibVakkern', result.data._allVakkernMeta));
+		res.send(jsonLDList(result.data.allLpibVakkern, lpibSchemaURL, 'LpibVakkern', result.data._allLpibVakkernMeta));
 	});
 });
 
 app.route(apiBase + 'lpib_vaksubkern').get((req, res) => {
 	graphQuery("LpibVaksubkern", req.params, req.query)
 	.then(function(result) {
-		res.send(jsonLDList(result.data.allVaksubkern, lpibSchemaURL, 'LpibVaksubkern', result.data._allVaksubkernMeta));
+		res.send(jsonLDList(result.data.allLpibVaksubkern, lpibSchemaURL, 'LpibVaksubkern', result.data._allLpibVaksubkernMeta));
 	});
 });
 
