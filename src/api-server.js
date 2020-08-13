@@ -1115,7 +1115,7 @@ app.route(apiBase+"legacy/vak/:vak/").get((req, res) => {
 	});
 });
 
-app.route(apiBase+"legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/").get((req, res) => {
+app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var idIndex = {};
@@ -1144,7 +1144,7 @@ app.route(apiBase+"legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/").get((req, res) 
 	});
 });
 
-app.route(apiBase+"legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/lpib_vaksubkern/:lpib_vaksubkern").get((req, res) => {
+app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var lpib_vaksubkern = req.params.lpib_vaksubkern;
@@ -1185,7 +1185,7 @@ app.route(apiBase+"legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/lpib_vaksubkern/:l
 
 });
 
-app.route(apiBase+"legacy/vak/:vak/lpib_vakkern/:lpib_vakkern/lpib_vaksubkern/:lpib_vaksubkern/lpib_vakinhoud/:lpib_vakinhoud").get((req, res) => {
+app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern/vakinhoud/:lpib_vakinhoud").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var lpib_vaksubkern = req.params.lpib_vaksubkern;
