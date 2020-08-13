@@ -1362,7 +1362,9 @@
     
     document.addEventListener('simply-content-loaded', function(evt) {
         var menu = editor.currentData['/'].menu;
-        var api = menu[0].submenu[0]['data-simply-template'] = 'api';
+        if (menu && menu[1]) {
+            var api = menu[1].submenu[0]['data-simply-template'] = 'api';
+        }
     });
     
     var parseQueryString = function( queryString ) {
