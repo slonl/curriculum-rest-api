@@ -58,6 +58,7 @@
             <ul class="slo-navbar-nav">
                 <li><a href="#">Curriculum Basis</a>
                     <ul>
+                        <li><a href="vakleergebied/" class="slo-nav" data-simply-group="menu">Vakleergebieden</a></li>
                         <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau's</a></li>
                         <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">Doelen op Niveau</a></li>
                         <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doelen</a></li>
@@ -67,7 +68,6 @@
                     <ul>
                         <li><a href="lpib_leerlijn/" class="slo-nav" data-simply-group="menu">Leerlijnen</a></li>
                         <li><a href="lpib_vakkencluster/" class="slo-nav" data-simply-group="menu">Vakkenclusters</a></li>
-                        <li><a href="vak/" class="slo-nav" data-simply-group="menu">Vakken</a></li>
                         <li><a href="lpib_vakkern/" class="slo-nav" data-simply-group="menu">Vakkernen</a></li>
                         <li><a href="lpib_vaksubkern/" class="slo-nav" data-simply-group="menu">Vaksubkernen</a></li>
                         <li><a href="lpib_vakinhoud/" class="slo-nav" data-simply-group="menu">Vakinhouden</a></li>
@@ -278,10 +278,10 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.Vak" data-simply-content="template" data-simply-transformer="truthy">
+                <div data-simply-field="item.Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <h3>Vakken</h3>
-                        <ul data-simply-list="item.Vak">
+                        <h3>Vakleergebieden</h3>
+                        <ul data-simply-list="item.Vakleergebied">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -585,10 +585,10 @@
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
-        <span data-simply-field="Vak" data-simply-content="template" data-simply-transformer="truthy">
+        <span data-simply-field="Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                <label>vak:
-                    <ul data-simply-list="Vak">
+                <label>vakleergebied:
+                    <ul data-simply-list="Vakleergebied">
                         <template rel="links"></template>
                     </ul>
                 </label>
@@ -661,20 +661,20 @@
             </template>
             <template data-simply-template="false">false</template>
         </span>
-        <span data-simply-list="Vak">
+        <span data-simply-list="Vakleergebied">
             <template>
                 <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">Vak</span>
+                    <span class="slo-tag-label">Vakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="LpibVakkern">
             <template>
-                <span data-simply-list="Vak">
+                <span data-simply-list="Vakleergebied">
                     <template>
                         <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">Vak</span>
+                            <span class="slo-tag-label">Vakleergebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -685,10 +685,10 @@
             <template>
                 <span data-simply-list="LpibVakkern">
                     <template>
-                        <span data-simply-list="Vak">
+                        <span data-simply-list="Vakleergebied">
                             <template>
                                 <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">Vak</span>
+                                    <span class="slo-tag-label">Vakleergebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -890,7 +890,7 @@
     var titles = {
         'lpib_vakkencluster/': 'Vakkenclusters',
         'lpib_leerlijn/': 'Leerlijnen',
-        'vak/': 'Vakken',
+        'vakleergebied/': 'Vakleergebieden',
         'lpib_vakkern/': 'Vakkernen',
         'lpib_vaksubkern/': 'Vaksubkernen',
         'lpib_vakinhoud/': 'Vakinhouden',
@@ -938,8 +938,8 @@
             '/niveau/:niveau/kerndoelvakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
             },
-            '/niveau/:niveau/vak/:vakid': function(params) {
-                browser.actions.itemOpNiveau(params.niveau, 'vak/', params.vakid);
+            '/niveau/:niveau/vakleergebied/:vakid': function(params) {
+                browser.actions.itemOpNiveau(params.niveau, 'vakleergebied/', params.vakid);
             },
             '/niveau/:niveau/vakkern/:lpib_vakkernid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'lpib_vakkern/', params.lpib_vakkernid);
@@ -971,8 +971,8 @@
             '/niveau/:niveau/ldk_vakinhoud/:lpib_vakinhoudid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'ldk_vakinhoud/', params.lpib_vakinhoudid);
             },
-            '/niveau/:niveau/vak/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vak/');
+            '/niveau/:niveau/vakleergeboed/': function(params) {
+                browser.actions.listOpNiveau(params.niveau, 'vakleergebied/');
             },
             '/niveau/:niveau/lpib_vakkern/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'lpib_vakkern/');
@@ -992,9 +992,6 @@
             '/niveau/:niveau/vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'lpib_vakinhoud/');
             },
-            '/niveau/:niveau/vak/': function(params) {
-                browser.actions.listOpNiveau(params.niveau, 'vak/');
-            },
             '/niveau/:niveau/ldk_vak/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'ldk_vak/');
             },
@@ -1010,8 +1007,8 @@
             '/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },
-            '/vak/': function(params) {
-                browser.actions.list('vak/')
+            '/vakleergebied/': function(params) {
+                browser.actions.list('vakleergebied/')
             },
             '/lpib_vakkern/': function(params) {
                 browser.actions.list('lpib_vakkern/')
