@@ -22,6 +22,7 @@ fragment DoelNiveau on Doelniveau {
       id
       title
       description
+      kerndoelLabel
       prefix
     }
     ExamenprogrammaDomein {
@@ -57,6 +58,7 @@ fragment Doelen on Doelniveau {
       id
       title
       description
+      kerndoelLabel
       prefix
     }
 }
@@ -141,6 +143,7 @@ query Kerndoel($page:Int,$perPage:Int) {
     prefix
     title
     description
+    kerndoelLabel
     Niveau {
       ...NiveauShort
     }
@@ -493,6 +496,10 @@ query Id($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
+    Vakleergebied {
+      id
+      title
+    }
     LpibVakkencluster {
       id
       title
@@ -777,6 +784,8 @@ query Id($id:ID) {
   allKerndoel(filter:{id:$id}) {
     id
     title
+    description
+    kerndoelLabel
     prefix
 #    Leerlingtekst {
 #      ...Leerlingtekst
@@ -962,6 +971,7 @@ query Id($id:ID) {
       id
       title
       prefix
+      kerndoelLabel
       Niveau {
         ...NiveauShort
       }
@@ -998,6 +1008,7 @@ query Id($id:ID) {
       id
       title
       prefix
+      kerndoelLabel
     }
 #    NiveauIndex {
 #      Niveau {
