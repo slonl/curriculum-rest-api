@@ -1,0 +1,28 @@
+{
+  "name": "curriculum-rest-api",
+  "version": "1.0.0",
+  "description": "REST api for curriculum data, uses the GraphQL server in https://github.com/slonl/curriculum-graphql-server. It is written in javascript, using nodejs, with the express framework.",
+  "main": "src/api-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slonl/curriculum-rest-api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slonl/curriculum-rest-api/issues"
+  },
+  "homepage": "https://github.com/slonl/curriculum-rest-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-basic-auth": "^1.2.0",
+    "memory-cache": "^0.2.0",
+    "request-promise-native": "^1.0.9",
+    "sendmail": "^1.6.1",
+    "uuidv4": "^6.2.2",
+    "watch": "^1.0.2"
+  }
+}
