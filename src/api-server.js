@@ -21,10 +21,10 @@ const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/e
 const syllabusSchemaURL          = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
 const baseIdURL                  = "https://opendata.slo.nl/curriculum/uuid/";
 
-//const backendUrl      = "http://localhost:3000";
-//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
-const backendUrl      = 'http://opendata.slo.nl:3500';
-const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const backendUrl      = "http://localhost:3000";
+const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
+//const backendUrl      = 'https://opendata.slo.nl:3500';
+//const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 
 const niveauURL       = baseDatasetURL + "niveau/";
 const notfound        = { error: "not found"};
