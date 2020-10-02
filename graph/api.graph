@@ -170,6 +170,8 @@ query Niveau($page:Int,$perPage:Int) {
   allNiveau(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
+    description
+    prefix
   }
   _allNiveauMeta {
     count
@@ -187,6 +189,7 @@ query Vakleergebied($page:Int,$perPage:Int) {
   allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
     id
     title
+    prefix
     Niveau {
       ...NiveauShort
     }
@@ -200,6 +203,7 @@ query VakleergebiedById($id:ID) {
     id
     title
     description
+    prefix
 #    Leerlingtekst {
 #      ...Leerlingtekst
 #    }
@@ -253,6 +257,7 @@ query LpibVakleergebiedById($id:ID) {
     Vakleergebied {
       id
       title
+      prefix
     }
   }
 }
@@ -456,6 +461,7 @@ query Id($id:ID) {
     id
     title
     description
+    prefix
 #    Leerlingtekst {
 #      ...Leerlingtekst
 #    }
@@ -467,14 +473,6 @@ query Id($id:ID) {
     ExamenprogrammaVakleergebied {
       id
       title
-      Examenprogramma {
-        id
-        title
-        Syllabus {
-          id
-          title
-        }
-      }
     }
     KerndoelVakleergebied {
       id
@@ -686,6 +684,7 @@ query Id($id:ID) {
     title
     description
     type
+    prefix
 #    ...Niveau
 #    Vakleergebied {
 #      id
@@ -800,6 +799,9 @@ query Id($id:ID) {
     }
     Doelniveau {
       ...DoelNiveau
+    }
+    Niveau {
+      ...Niveau
     }
   }
   allDeprecated(filter:{id:$id}) {
