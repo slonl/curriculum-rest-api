@@ -1,5 +1,5 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/2020/api/v1/">
+<base href="/curriculum/api-acpt/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
 <style>
     .slo-tag-mini {
@@ -902,8 +902,8 @@
     simply.bind = false; //don't use the simplyview databindings
 
     var release = {
-        basePath: '/curriculum/2020/api/',
-        apiPath: '/curriculum/2020/api/v1/'
+        basePath: '/curriculum/api-acpt/',
+        apiPath: '/curriculum/api-acpt/v1/'
     };
 
 	simply.route.init({
@@ -1351,10 +1351,10 @@
 
     browser.view.pageSize = 100;
         
-//    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
-//    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
-    const baseURL = 'https://opendata.slo.nl';
-    const apiURL  = 'https://opendata.slo.nl';
+    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
+    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
+//    const baseURL = 'https://opendata.slo.nl';
+//    const apiURL  = 'https://opendata.slo.nl';
 
     var slo = {
         api: {
