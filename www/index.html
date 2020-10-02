@@ -186,14 +186,6 @@
         <template data-simply-template="item">
             <article>
                 <h1>
-                    <span data-simply-field="item.prefix" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <span class="slo-tag slo-tag-mini">
-                                <span class="slo-tag-label">Prefix</span>
-                                <span data-simply-field="item.prefix"></span>
-                            </span>
-                        </template>
-                    </span>
                     <span data-simply-field="item.title"></span>
                 </h1>
                 <a class="slo-tag" href="#" data-simply-field="item.@references" data-simply-content="fixed">
@@ -213,6 +205,14 @@
                         </div>
                     </template>
                     <template data-simply-template="false">
+                    </template>
+                </span>
+                <span data-simply-field="item.prefix" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag">
+                            <span class="slo-tag-label">Prefix</span>
+                            <span data-simply-field="item.prefix"></span>
+                        </div>
                     </template>
                 </span>
                 <span data-simply-field="item.bron" data-simply-content="template" data-simply-transformer="truthy">
@@ -680,7 +680,9 @@
                     </span>
                 </template>
             </span>
-            <span data-simply-field="title">titel</span></a>
+            <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
+            </span></a>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 &nbsp;<a class="slo-tag slo-tag-inline" href="#" data-simply-field="$ref"
