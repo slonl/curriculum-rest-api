@@ -1,12 +1,12 @@
-const express   = require('express');
-const basicAuth = require('express-basic-auth')
-const watch     = require('watch');
-const request   = require('request-promise-native');
-const fs        = require('fs');
-const path      = require('path');
-const uuidv4    = require('uuidv4');
-const sendmail  = require('sendmail')();
-const mcache    = require('memory-cache');
+const express     = require('express');
+const basicAuth   = require('express-basic-auth')
+const watch       = require('watch');
+const request     = require('request-promise-native');
+const fs          = require('fs');
+const path        = require('path');
+const {v4:uuidv4} = require('uuid');
+const nodemailer  = require('nodemailer');
+const mcache      = require('memory-cache');
 
 const app     = express();
 const port    = 4600;
@@ -125,15 +125,21 @@ watch.createMonitor('.', function(monitor) {
 });
 
 function sendApiKey(email, key) {
-	var mail = {
+	let transporter = nodemailer.createTransport({
+	    host: "localhost",
+	    port: 25
+	});
+    	var mail = {
 	    from: "SLO Opendata <opendata@slo.nl>",
 	    to: email,
+	    bcc: 'opendata@slo.nl',
 	    subject: "SLO Opendata API key",
 	    text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
 	    html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
 	}
 
-	sendmail(mail);
+	transporter.sendMail(mail);
+	
 }
 
 readKeys();
@@ -505,7 +511,8 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 		return result;
 	})
 	.then(function(result) {
-		res.send(jsonLD(result, schema, entitytype));
+		var json = jsonLD(result, schema, entitytype);
+		res.send(json);
 	})
 	.catch(function(err) {
 		var code = err.message.split(':')[0];
