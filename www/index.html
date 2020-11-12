@@ -1,5 +1,5 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/api-acpt/v1/">
+<base href="/curriculum/2020/api/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
 <style>
     .slo-tag-mini {
@@ -17,7 +17,7 @@
         background-color: rgba(0,0,0,0.5);
     }
 </style>
-<body data-simply-path="/curriculum/">
+<body data-simply-path="/curriculum/2020/api/v1/">
 
 <header class="slo-navbar">
     <nav class="slo-navbar-left slo-logo bg-brand">
@@ -153,6 +153,10 @@
 <main class="slo-main">
     <div class="error" data-simply-field="error"></div>
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
+        <template data-simply-template="home">
+            <h1 class="title" data-simply-field="title"></h1>
+            <div class="content" data-simply-field="content"></div>
+        </template>
         <template data-simply-template="notfound">
             <h1>404: Page Not Found</h1>
             <p>Sorry, deze pagina bestaat niet.</p>
@@ -908,20 +912,30 @@
     </li>
 </template>
 <!-- script src="//cdn.simplyedit.io/1/1.25/simply-edit.js"></script -->
-<script src="//cdn.simplyedit.io/1/simply-edit.js"></script>
+<script src="//canary.simplyedit.io/1/simply-edit.js"
+            data-api-key="flashy-leather-7944"
+            data-simply-images="/img/"
+            data-simply-files="/files/"
+            data-simply-settings="seSettings"
+            data-storage-get-post-only
+></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.bind = false; //don't use the simplyview databindings
 
     var release = {
-        basePath: '/curriculum/api-acpt/',
-        apiPath: '/curriculum/api-acpt/v1/'
+        basePath: '/curriculum/2020/api/',
+        apiPath: '/curriculum/2020/api/v1/'
     };
 
-	simply.route.init({
-		root: release.apiPath
-	});    
+    simply.route.init({
+	root: release.apiPath
+    });
 
+    if (document.location.pathname.match(/\/curriculum\/api\//)) {
+        document.location.pathname = document.location.pathname.replace(/\/curriculum\/api\//,release.basePath);
+    }
+    
     (function() {
 //        var goto = simply.route.goto;
 //        simply.route.goto = function(path) {
@@ -1234,7 +1248,10 @@
             '/register/': function(params) { 
                 browser.view.view = 'register';
             },
-            ':*': function(params) {
+            '/': function(params) {
+                browser.view.view = 'home';
+            },            
+            '/([^#]+):*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
                 }
@@ -1363,10 +1380,10 @@
 
     browser.view.pageSize = 100;
         
-    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
-    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
-//    const baseURL = 'https://opendata.slo.nl';
-//    const apiURL  = 'https://opendata.slo.nl';
+//    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
+//    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
+    const baseURL = 'https://opendata.slo.nl';
+    const apiURL  = 'https://opendata.slo.nl';
 
     var slo = {
         api: {
