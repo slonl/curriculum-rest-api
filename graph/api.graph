@@ -185,6 +185,29 @@ query NiveauById($id:ID) {
 #    }
   }
 }
+
+query NiveauVakleergebied($page:Int,$perPage:Int) {
+  allNiveau(page:$page,perPage:$perPage,sortField:"title") {
+    id
+    title
+    Vakleergebied {
+      id
+      title
+    }
+    LpibVakleergebied {
+      id
+      title
+      Vakleergebied {
+        id
+        title
+      }
+    }
+  }   
+  _allNiveauMeta {
+    count
+  }
+}
+
 query Vakleergebied($page:Int,$perPage:Int) {
   allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
     id
