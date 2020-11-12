@@ -22,7 +22,7 @@ const syllabusSchemaURL          = "https://opendata.slo.nl/curriculum/schemas/s
 const baseIdURL                  = "https://opendata.slo.nl/curriculum/uuid/";
 
 //const backendUrl      = "http://localhost:3000";
-//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2019/';
+//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2020/api/v1/';
 const backendUrl      = 'http://opendata.slo.nl:3600';
 const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2020/api/v1/';
 
@@ -546,6 +546,12 @@ app.route(apiBase + 'niveau').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'niveau_vakleergebied').get((req, res) => {
+	graphQuery("NiveauVakleergebied", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allNiveau, basisSchemaURL, 'Niveau', result.data._allNiveauMeta));
+	});
+});
 
 app.route(apiBase + 'niveau/:id').get((req, res) => {
 	console.log('niveau/:id');
