@@ -224,6 +224,14 @@
                         </div>
                     </template>
                 </span>
+                <span data-simply-field="item.ce_se" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag">
+                            <span class="slo-tag-label">CE/SE</span>
+                            <span data-simply-field="item.ce_se"></span>
+                        </div>
+                    </template>
+                </span>
                 <span data-simply-field="item.bron" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <div class="slo-tag">
@@ -911,7 +919,15 @@
 <template id="doelniveau">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <div data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
+            <span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label">Prefix</span>
+                        <span data-simply-field="prefix"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
                         <span class="slo-tag-label">Doel</span>
@@ -919,7 +935,7 @@
                     </span>
                     <span data-simply-field="Doel.0.title"></span>
                 </template>
-            </div>
+            </span>
             <div data-simply-field="Kerndoel.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
