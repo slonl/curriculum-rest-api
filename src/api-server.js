@@ -9,7 +9,7 @@ const sendmail  = require('sendmail')();
 const mcache    = require('memory-cache');
 
 const app     = express();
-const port    = 4600;
+const port    = 4500;
 const apiBase = "/";
 
 const lpibSchemaURL              = "https://opendata.slo.nl/curriculum/schemas/lpib.jsonld";
@@ -19,12 +19,13 @@ const leerdoelkaartSchemaURL     = "https://opendata.slo.nl/curriculum/schemas/l
 const examenprogrammaSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld";
 const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma_bg.jsonld";
 const syllabusSchemaURL          = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
+const inhoudslijnenSchemaURL     = "https://opendata.slo.nl/curriculum/schemas/inhoudslijn.jsonld";
 const baseIdURL                  = "https://opendata.slo.nl/curriculum/uuid/";
 
-//const backendUrl      = "http://localhost:3000";
-//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/2020/api/v1/';
-const backendUrl      = 'http://opendata.slo.nl:3600';
-const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2020/api/v1/';
+const backendUrl      = "http://localhost:3500";
+//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
+//const backendUrl      = 'https://opendata.slo.nl:3500';
+const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 
 const niveauURL       = baseDatasetURL + "niveau/";
 const notfound        = { error: "not found"};
@@ -200,6 +201,7 @@ function jsonLD(entry, schema, type) {
 		'LpibVakleergebied','LpibVakkern','LpibVaksubkern','LpibVakinhoud','LpibVakkencluster','LpibLeerlijn',
 		'Vakleergebied', 'Doelniveau', 'Doel', 'Niveau',
 		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
+		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -246,6 +248,15 @@ function jsonLD(entry, schema, type) {
 						'@id': baseIdURL + link.id,
 						'title': link.title,
 						'$ref': niveauURL + result.uuid + '/kerndoel_vakleergebied/' + link.id
+					}
+				});
+			}
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['InhVakleergebied']) {
+				result['InhVakleergebied'] = entry['NiveauIndex'][0]['InhVakleergebied'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/inh_vakleergebied/' + link.id
 					}
 				});
 			}
@@ -426,6 +437,11 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'SyllabusToelichting':
 					case 'SyllabusVakbegrip':
 						schema = syllabusSchemaURL;
+					break;
+					case 'InhVakleergebied':
+					case 'InhInhoudslijn':
+					case 'InhCluster':
+						schema = inhoudslijnenSchemaURL;
 					break;
 					case "Vakleergebied":
 					default:
@@ -829,6 +845,28 @@ app.route(apiBase + 'syllabus_vakbegrip').get((req, res) => {
 	graphQuery("SyllabusVakbegrip", req.params, req.query)
 	.then(function(result) {
 		res.send(jsonLDList(result.data.allSyllabusVakbegrip, syllabusSchemaURL, 'SyllabusVakbegrip', result.data._allSyllabusVakbegripMeta));
+	});
+});
+
+/* Inhoudslijnen */
+app.route(apiBase + 'inh_vakleergebied').get((req, res) => {
+	graphQuery("InhVakleergebied", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allInhVakleergebied, inhoudslijnenSchemaURL, 'InhVakleergebied', result.data._allInhVakleergebiedMeta));
+	});
+});
+
+app.route(apiBase + 'inh_inhoudslijn').get((req, res) => {
+	graphQuery("InhInhoudslijn", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allInhInhoudslijn, inhoudslijnenSchemaURL, 'InhInhoudslijn', result.data._allInhInhoudslijnMeta));
+	});
+});
+
+app.route(apiBase + 'inh_cluster').get((req, res) => {
+	graphQuery("InhCluster", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allInhCluster, inhoudslijnenSchemaURL, 'InhCluster', result.data._allInhClusterMeta));
 	});
 });
 

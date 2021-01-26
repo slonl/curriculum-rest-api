@@ -145,6 +145,15 @@
                     </ul>
                     </details>
                 </li>
+                <li><details>
+                    <summary>Inhoudslijnen</summary>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="inh_vakleergebied/" class="slo-nav" data-simply-group="menu">InhVakleergebied</a></li>
+                        <li><a href="inh_inhoudslijn/" class="slo-nav" data-simply-group="menu">InhInhoudslijn</a></li>
+                        <li><a href="inh_cluster/" class="slo-nav" data-simply-group="menu">InhCluster</a></li>
+                    </ul>
+                    </details>
+                </li>
             </ul>
         </li>
     </ul>
@@ -597,6 +606,32 @@
                         </ul>
                     </template>
                 </div>
+
+                <div data-simply-field="item.InhVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>InhVakleergebied</h3>
+                        <ul data-simply-list="item.InhVakleergebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.InhInhoudslijn" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>InhInhoudslijn</h3>
+                        <ul data-simply-list="item.InhInhoudslijn">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.InhCluster" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>InhCluster</h3>
+                        <ul data-simply-list="item.InhCluster">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                
                 <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Doelniveau</h3>
@@ -828,6 +863,44 @@
                 </span>
             </template>
         </span>
+
+        <span data-simply-list="InhVakleergebied">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">InhVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="InhInhoudslijn">
+            <template>
+                <span data-simply-list="InhVakleergebied">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">InhVakleergebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="InhCluster">
+            <template>
+                <span data-simply-list="InhInhoudslijn">
+                    <template>
+                        <span data-simply-list="InhVakleergebied">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">InhVakleergebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
         <span data-simply-list="Niveau">
             <template>
                 <span class="slo-tag slo-tag-mini" data-simply-field="title">title</span>
@@ -981,7 +1054,10 @@
         'syllabus_specifieke_eindterm/' : 'SyllabusSpecifiekeEindterm',
         'syllabus_toelichting/': 'SyllabusToelichting',
         'syllabus_vakbegrip/' : 'SyllabusVakbegrip',
-        
+        'inh_vakleergebied/' : 'InhVakleergebied',
+        'inh_inhoudslijn/' : 'InhInhoudslijn',
+        'inh_cluster/' : 'InhCluster',
+                
         'legacy': 'Vervangen door:'
     };
 
@@ -1213,6 +1289,16 @@
             '/syllabus_vakbegrip/': function(params) {
                 browser.actions.list('syllabus_vakbegrip/')
             },
+            '/inh_vakleergebied/': function(params) {
+                browser.actions.list('inh_vakleergebied/')
+            },
+            '/inh_inhoudslijn/': function(params) {
+                browser.actions.list('inh_inhoudslijn/')
+            },
+            '/inh_cluster/': function(params) {
+                browser.actions.list('inh_cluster/')
+            },
+            
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
@@ -1363,10 +1449,10 @@
 
     browser.view.pageSize = 100;
         
-    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
-    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
-//    const baseURL = 'https://opendata.slo.nl';
-//    const apiURL  = 'https://opendata.slo.nl';
+//    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
+//    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
+    const baseURL = 'https://opendata.slo.nl';
+    const apiURL  = 'https://opendata.slo.nl';
 
     var slo = {
         api: {
