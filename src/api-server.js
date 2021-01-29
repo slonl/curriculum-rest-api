@@ -9,7 +9,7 @@ const nodemailer  = require('nodemailer');
 const mcache      = require('memory-cache');
 
 const app     = express();
-const port    = 4500;
+const port    = 4600;
 const apiBase = "/";
 
 const lpibSchemaURL              = "https://opendata.slo.nl/curriculum/schemas/lpib.jsonld";
@@ -22,10 +22,10 @@ const syllabusSchemaURL          = "https://opendata.slo.nl/curriculum/schemas/s
 const inhoudslijnenSchemaURL     = "https://opendata.slo.nl/curriculum/schemas/inhoudslijn.jsonld";
 const baseIdURL                  = "https://opendata.slo.nl/curriculum/uuid/";
 
-const backendUrl      = "http://localhost:3500";
+const backendUrl      = "http://localhost:3600";
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
 //const backendUrl      = 'https://opendata.slo.nl:3500';
-const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/2020/api/v1/';
 
 const niveauURL       = baseDatasetURL + "niveau/";
 const notfound        = { error: "not found"};
