@@ -43,6 +43,11 @@ fragment DoelNiveau on Doelniveau {
       title
       prefix
     }
+    LdkVakbegrip {
+      id
+      title
+      ce_se
+    }
 }
 fragment Doelen on Doelniveau {
     id
@@ -66,6 +71,11 @@ fragment Doelen on Doelniveau {
       description
       kerndoelLabel
       prefix
+    }
+    LdkVakbegrip {
+      id
+      title
+      ce_se
     }
 }
 fragment Niveau on Niveau {
@@ -1033,6 +1043,14 @@ query Id($id:ID) {
       title
     }
   }
+  allLdkVakbegrip(filter:{id:$id}) {
+    id
+    title
+    ce_se
+    Doelniveau {
+      ...Doelen
+    }
+  }
   allKerndoelDomein(filter:{id:$id}) {
     id
     title
@@ -1767,6 +1785,11 @@ query Id($id:ID) {
     id
     prefix
     title
+    InhSubcluster {
+      id
+      prefix
+      title
+    }
     Doelniveau {
       ...DoelNiveau
     }
@@ -2146,7 +2169,19 @@ query LdkVakinhoud($page:Int,$perPage:Int) {
     count
   }
 }
-
+query LdkVakbegrip($page:Int,$perPage:Int) {
+  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title") {
+    id
+    title
+    ce_se
+    Doelniveau {
+      ...DoelNiveau
+    }
+  }
+  _allLdkVakbegripMeta {
+    count
+  }
+}
 query KerndoelDomein($page:Int,$perPage:Int) {
   allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title") {
     id
@@ -2810,6 +2845,26 @@ query InhCluster($page:Int, $perPage:Int) {
     }
   }
   _allInhClusterMeta {
+    count
+  }
+}
+
+query InhSubcluster($page:Int, $perPage:Int) {
+  allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix") {
+    id
+    prefix
+    title
+    unreleased
+    InhCluster {
+      InhInhoudslijn {
+        InhVakleergebied {
+          id
+          title
+        }
+      }
+    }
+  }
+  _allInhSubclusterMeta {
     count
   }
 }
