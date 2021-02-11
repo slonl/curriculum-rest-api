@@ -142,6 +142,7 @@
                         <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">LdkVakkern</a></li>
                         <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">LdkVaksubkern</a></li>
                         <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">LdkVakinhoud</a></li>
+                        <li><a href="ldk_vakbegrip/" class="slo-nav" data-simply-group="menu">LdkVakbegrip</a></li>
                     </ul>
                     </details>
                 </li>
@@ -151,6 +152,7 @@
                         <li><a href="inh_vakleergebied/" class="slo-nav" data-simply-group="menu">InhVakleergebied</a></li>
                         <li><a href="inh_inhoudslijn/" class="slo-nav" data-simply-group="menu">InhInhoudslijn</a></li>
                         <li><a href="inh_cluster/" class="slo-nav" data-simply-group="menu">InhCluster</a></li>
+                        <li><a href="inh_subcluster/" class="slo-nav" data-simply-group="menu">InhSubCluster</a></li>
                     </ul>
                     </details>
                 </li>
@@ -162,6 +164,10 @@
 <main class="slo-main">
     <div class="error" data-simply-field="error"></div>
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
+        <template data-simply-template="home">
+            <h1 class="title" data-simply-field="title"></h1>
+            <div class="content" data-simply-field="content"></div>
+        </template>
         <template data-simply-template="notfound">
             <h1>404: Page Not Found</h1>
             <p>Sorry, deze pagina bestaat niet.</p>
@@ -997,7 +1003,13 @@
     </li>
 </template>
 <!-- script src="//cdn.simplyedit.io/1/1.25/simply-edit.js"></script -->
-<script src="//cdn.simplyedit.io/1/simply-edit.js"></script>
+<script src="//canary.simplyedit.io/1/simply-edit.js"
+    data-api-key="flashy-leather-7944"
+    data-simply-images="/img/"
+    data-simply-files="/files/"
+    data-simply-settings="seSettings"
+    data-storage-get-post-only
+></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.bind = false; //don't use the simplyview databindings
@@ -1007,9 +1019,9 @@
         apiPath: '/curriculum/api-acpt/v1/'
     };
 
-	simply.route.init({
-		root: release.apiPath
-	});    
+    simply.route.init({
+        root: release.apiPath
+    });
 
     (function() {
 //        var goto = simply.route.goto;
@@ -1047,6 +1059,7 @@
         'ldk_vakkern/': 'LdkVakkern',
         'ldk_vaksubkern/': 'LdkVaksubkern',
         'ldk_vakinhoud/': 'LdkVakinhoud',
+        'ldk_vakbegrip/': 'LdkVakbegrip',
         'examenprogramma_vakleergebied/': 'ExamenprogrammaVakleergebied',
         'examenprogramma/': 'Examenprogramma',
         'examenprogramma_domein/' : 'ExamenprogrammaDomein',
@@ -1073,7 +1086,8 @@
         'inh_vakleergebied/' : 'InhVakleergebied',
         'inh_inhoudslijn/' : 'InhInhoudslijn',
         'inh_cluster/' : 'InhCluster',
-                
+        'inh_subcluster/': 'InhSubcluster',
+                 
         'legacy': 'Vervangen door:'
     };
 
@@ -1212,6 +1226,9 @@
             '/ldk_vakinhoud/': function(params) {
                 browser.actions.list('ldk_vakinhoud/')
             },
+            '/ldk_vakbegrip/': function(params) {
+                browser.actions.list('ldk_vakbegrip/')
+            },
             '/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
             },
@@ -1313,6 +1330,9 @@
             },
             '/inh_cluster/': function(params) {
                 browser.actions.list('inh_cluster/')
+            },            
+            '/inh_subcluster/': function(params) {
+                browser.actions.list('inh_subcluster/')
             },
             
             '/curriculum/uuid/:id': function(params) {
@@ -1336,7 +1356,10 @@
             '/register/': function(params) { 
                 browser.view.view = 'register';
             },
-            ':*': function(params) {
+            '/': function(params) {
+                browser.view.view = 'home';
+            },
+            '/([^#]+):*': function(params) {
                 if (params.remainder) {
                     browser.actions.notfound(params.remainder);
                 }
