@@ -666,6 +666,12 @@ app.route(apiBase + 'ldk_vakinhoud').get((req, res) => {
 		res.send(jsonLDList(result.data.allLdkVakinhoud, null, null, result.data._allLdkVakinhoudMeta));
 	});
 });
+app.route(apiBase + 'ldk_vakbegrip').get((req, res) => {
+	graphQuery("LdkVakbegrip", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLdkVakbegrip, null, null, result.data._allLdkVakbegripMeta));
+	});
+});
 
 app.route(apiBase + 'kerndoel').get((req, res) => {
 	graphQuery("Kerndoel", req.params, req.query)
@@ -870,6 +876,13 @@ app.route(apiBase + 'inh_cluster').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'inh_subcluster').get((req, res) => {
+	graphQuery("InhSubcluster", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allInhCluster, inhoudslijnenSchemaURL, 'InhSubcluster', result.data._allInhSubclusterMeta));
+	});
+});
+
 /* Queries op niveau */
 app.route(apiBase + 'niveau/:niveau/doel').get((req, res) => {
 	graphQuery("DoelOpNiveau", req.params)
@@ -977,6 +990,15 @@ app.route(apiBase + 'niveau/:niveau/lpib_vakleergebied/:id/doelen').get(cache(),
         result.data.LpibVakleergebied.Niveau = result.data.LpibVakleergebied.Niveau[0];
         FilterEmptyDoelniveau(result.data.LpibVakleergebied);
         res.send(jsonLD(result.data.LpibVakleergebied, lpibSchemaURL, 'LpibVakleergebied'));
+    });
+});
+
+app.route(apiBase + 'niveau/:niveau/ldk_vakleergebied/:id/doelen').get(cache(), (req, res) => {
+    graphQuery('DoelenOpNiveauByLdkVakleergebiedById', req.params)
+    .then(function(result) {
+        result.data.LdkVakleergebied.Niveau = result.data.LdkVakleergebied.Niveau[0];
+        FilterEmptyDoelniveau(result.data.LdkVakleergebied);
+        res.send(jsonLD(result.data.LdkVakleergebied, ldkSchemaURL, 'LdkVakleergebied'));
     });
 });
 
