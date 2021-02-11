@@ -8,6 +8,7 @@ fragment DoelNiveau on Doelniveau {
       description
       vakbegrippen
       bron
+      aanbodid
       Leerlingtekst {
         title
         description
@@ -45,12 +46,15 @@ fragment DoelNiveau on Doelniveau {
 }
 fragment Doelen on Doelniveau {
     id
+    prefix
+    ce_se
     Doel {
       id
       title
       description
       bron
       vakbegrippen
+      aanbodid
       Leerlingtekst {
         title
         description
@@ -445,7 +449,7 @@ query LpibVakinhoudById($id:ID) {
   }
 }
 
-query DoelenOpNiveauByVakleergebiedById($id:ID, $niveau:ID) {
+query DoelenOpNiveauByLpibVakleergebiedById($id:ID, $niveau:ID) {
   LpibVakleergebied(id:$id) {
     id
     title
@@ -473,6 +477,39 @@ query DoelenOpNiveauByVakleergebiedById($id:ID, $niveau:ID) {
       LpibVakinhoud {
         id
         title
+        Doelniveau(filter:{niveau_id:[$niveau]}) {
+          ...Doelen
+        }
+      }
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        ...Doelen
+      }
+    }
+  }
+}
+
+query DoelenOpNiveauByLdkVakleergebiedById($id:ID, $niveau:ID) {
+  LdkVakleergebied(id:$id) {
+    id
+    title
+    NiveauIndex(filter:{niveau_id:[$niveau]}) {
+      Niveau {
+        ...NiveauShort
+      }
+    }
+    LdkVakkern {
+      id
+      title
+      LdkVaksubkern {
+        id
+        title
+        LdkVakinhoud {
+          id
+          title
+          Doelniveau(filter:{niveau_id:[$niveau]}) {
+            ...Doelen
+          }
+        }
         Doelniveau(filter:{niveau_id:[$niveau]}) {
           ...Doelen
         }
