@@ -8,6 +8,7 @@ fragment DoelNiveau on Doelniveau {
       description
       vakbegrippen
       bron
+      aanbodid
       Leerlingtekst {
         title
         description
@@ -42,6 +43,11 @@ fragment DoelNiveau on Doelniveau {
       title
       prefix
     }
+    LdkVakbegrip {
+      id
+      title
+      ce_se
+    }
 }
 fragment Doelen on Doelniveau {
     id
@@ -50,6 +56,7 @@ fragment Doelen on Doelniveau {
       title
       description
       bron
+      aanbodid
       vakbegrippen
       Leerlingtekst {
         title
@@ -62,6 +69,11 @@ fragment Doelen on Doelniveau {
       description
       kerndoelLabel
       prefix
+    }
+    LdkVakbegrip {
+      id
+      title
+      ce_se
     }
 }
 fragment Niveau on Niveau {
@@ -125,6 +137,7 @@ query DoelById($id:ID) {
     title
     description
     bron
+    aanbodid
     vakbegrippen
     Leerlingtekst {
       ...Leerlingtekst
@@ -445,7 +458,7 @@ query LpibVakinhoudById($id:ID) {
   }
 }
 
-query DoelenOpNiveauByVakleergebiedById($id:ID, $niveau:ID) {
+query DoelenOpNiveauByLpibVakleergebiedById($id:ID, $niveau:ID) {
   LpibVakleergebied(id:$id) {
     id
     title
@@ -663,6 +676,7 @@ query Id($id:ID) {
     title
     description
     bron
+    aanbodid
     vakbegrippen
     Leerlingtekst {
        ...Leerlingtekst
@@ -994,6 +1008,14 @@ query Id($id:ID) {
     LpibVakinhoud {
       id
       title
+    }
+  }
+  allLdkVakbegrip(filter:{id:$id}) {
+    id
+    title
+    ce_se
+    Doelniveau {
+      ...Doelen
     }
   }
   allKerndoelDomein(filter:{id:$id}) {
@@ -1730,6 +1752,11 @@ query Id($id:ID) {
     id
     prefix
     title
+    InhSubcluster {
+	id
+	prefix
+	title
+    }
     Doelniveau {
       ...DoelNiveau
     }
@@ -1739,7 +1766,14 @@ query Id($id:ID) {
       }
     }
   }
-
+  allInhSubcluster(filter:{id:$id}) {
+    id
+    prefix
+    title
+    Doelniveau {
+      ...DoelNiveau
+    }
+  }
 
 }
 
@@ -2106,6 +2140,19 @@ query LdkVakinhoud($page:Int,$perPage:Int) {
     }
   }
   _allLdkVakinhoudMeta {
+    count
+  }
+}
+query LdkVakbegrip($page:Int,$perPage:Int) {
+  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title") {
+    id
+    title
+    ce_se
+    Doelniveau {
+      ...DoelNiveau
+    }
+  }
+  _allLdkVakbegripMeta {
     count
   }
 }
@@ -2773,6 +2820,26 @@ query InhCluster($page:Int, $perPage:Int) {
     }
   }
   _allInhClusterMeta {
+    count
+  }
+}
+
+query InhSubcluster($page:Int, $perPage:Int) {
+  allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix") {
+    id
+    prefix
+    title
+    unreleased
+    InhCluster {
+      InhInhoudslijn {
+        InhVakleergebied {
+          id
+          title
+        }
+      }
+    }
+  }
+  _allInhSubclusterMeta {
     count
   }
 }

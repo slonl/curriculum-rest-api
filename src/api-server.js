@@ -202,12 +202,12 @@ function jsonLD(entry, schema, type) {
 		'ExamenprogrammaEindterm','ExamenprogrammaSubdomein','ExamenprogrammaDomein','Examenprogramma','ExamenprogrammaVakleergebied',
 		'ExamenprogrammaBgProfiel','ExamenprogrammaBgKern','ExamenprogrammaBgKerndeel','ExamenprogrammaBgGlobaleEindterm','ExamenprogrammaBgModule',
 		'ExamenprogrammaBgKeuzevak','ExamenprogrammaBgDeeltaak','ExamenprogrammaBgModuletaak','ExamenprogrammaBgKeuzevaktaak',
-		'LdkVakleergebied','LdkVakkern','LdkVaksubkern','LdkVakinhoud',
+		'LdkVakleergebied','LdkVakkern','LdkVaksubkern','LdkVakinhoud', 'LdkVakbegrip',
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
 		'LpibVakleergebied','LpibVakkern','LpibVaksubkern','LpibVakinhoud','LpibVakkencluster','LpibLeerlijn',
 		'Vakleergebied', 'Doelniveau', 'Doel', 'Niveau',
 		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
-		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
+		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster', 'InhSubcluster',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -447,6 +447,7 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'InhVakleergebied':
 					case 'InhInhoudslijn':
 					case 'InhCluster':
+					case 'InhSubcluster':
 						schema = inhoudslijnenSchemaURL;
 					break;
 					case "Vakleergebied":
@@ -673,7 +674,12 @@ app.route(apiBase + 'ldk_vakinhoud').get((req, res) => {
 		res.send(jsonLDList(result.data.allLdkVakinhoud, null, null, result.data._allLdkVakinhoudMeta));
 	});
 });
-
+app.route(apiBase + 'ldk_vakbegrip').get((req, res) => {
+	graphQuery("LdkVakbegrip", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allLdkVakbegrip, null, null, result.data._allLdkVakbegripMeta));
+	});
+});
 app.route(apiBase + 'kerndoel').get((req, res) => {
 	graphQuery("Kerndoel", req.params, req.query)
 	.then(function(result) {
@@ -877,6 +883,14 @@ app.route(apiBase + 'inh_cluster').get((req, res) => {
 	});
 });
 
+app.route(apiBase + 'inh_subcluster').get((req, res) => {
+	graphQuery("InhSubcluster", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allInhSubcluster, inhoudslijnenSchemaURL, 'InhSubcluster', result.data._allInhSubclusterMeta));
+	});
+});
+
+
 /* Queries op niveau */
 app.route(apiBase + 'niveau/:niveau/doel').get((req, res) => {
 	graphQuery("DoelOpNiveau", req.params)
@@ -981,9 +995,13 @@ function FilterEmptyDoelniveau(ent) {
 app.route(apiBase + 'niveau/:niveau/lpib_vakleergebied/:id/doelen').get(cache(), (req, res) => {
     graphQuery('DoelenOpNiveauByLpibVakleergebiedById', req.params)
     .then(function(result) {
-        result.data.LpibVakleergebied.Niveau = result.data.LpibVakleergebied.Niveau[0];
-        FilterEmptyDoelniveau(result.data.LpibVakleergebied);
-        res.send(jsonLD(result.data.LpibVakleergebied, lpibSchemaURL, 'LpibVakleergebied'));
+    	if (result.data.LpibVakleergebied) {
+            result.data.LpibVakleergebied.Niveau = result.data.LpibVakleergebied.Niveau[0];
+            FilterEmptyDoelniveau(result.data.LpibVakleergebied);
+            res.send(jsonLD(result.data.LpibVakleergebied, lpibSchemaURL, 'LpibVakleergebied'));
+	} else {
+	    res.status(404).send(notfound);
+	}
     });
 });
 
@@ -1362,4 +1380,8 @@ app.route('*').get((req,res) => {
 });
 
 
-app.listen(port, () => console.log(`API server listening on port ${port}!`));
+try {
+	app.listen(port, () => console.log(`API server listening on port ${port}!`));
+} catch(error) {
+	res.status(500).send(error);
+}

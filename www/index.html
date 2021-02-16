@@ -142,6 +142,7 @@
                         <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">LdkVakkern</a></li>
                         <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">LdkVaksubkern</a></li>
                         <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">LdkVakinhoud</a></li>
+                        <li><a href="ldk_vakbegrip/" class="slo-nav" data-simply-group="menu">LdkVakbegrip</a></li>
                     </ul>
                     </details>
                 </li>
@@ -151,6 +152,7 @@
                         <li><a href="inh_vakleergebied/" class="slo-nav" data-simply-group="menu">InhVakleergebied</a></li>
                         <li><a href="inh_inhoudslijn/" class="slo-nav" data-simply-group="menu">InhInhoudslijn</a></li>
                         <li><a href="inh_cluster/" class="slo-nav" data-simply-group="menu">InhCluster</a></li>
+                        <li><a href="inh_subcluster/" class="slo-nav" data-simply-group="menu">InhSubcluster</a></li>
                     </ul>
                     </details>
                 </li>
@@ -241,6 +243,14 @@
                         <div class="slo-tag">
                             <label class="slo-tag-label">Bron</label>
                             <span data-simply-field="item.bron"></span>
+                        </div>
+                    </template>
+                </span>
+                <span data-simply-field="item.aanbodid" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag">
+                            <label class="slo-tag-label">AanbodID</label>
+                            <span data-simply-field="item.aanbodid"></span>
                         </div>
                     </template>
                 </span>
@@ -643,6 +653,14 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.InhSubcluster" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>InhCluster</h3>
+                        <ul data-simply-list="item.InhSubcluster">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 
                 <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
@@ -912,6 +930,26 @@
                 </span>
             </template>
         </span>
+        <span data-simply-list="InhSubcluster">
+            <template>
+                <span data-simply-list="InhCluster">
+                    <template>
+                        <span data-simply-list="InhInhoudslijn">
+                            <template>
+                                <span data-simply-list="InhVakleergebied">
+                                    <template>
+                                        <span class="slo-tag slo-tag-mini">
+                                            <span class="slo-tag-label">InhVakleergebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
 
         <span data-simply-list="Niveau">
             <template>
@@ -923,14 +961,14 @@
 <template id="doelniveau">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
-            <span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
+            <!-- span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
                         <span class="slo-tag-label">Prefix</span>
                         <span data-simply-field="prefix"></span>
                     </span>
                 </template>
-            </span>
+            </span -->
             <span data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
@@ -1061,6 +1099,7 @@
         'ldk_vakkern/': 'LdkVakkern',
         'ldk_vaksubkern/': 'LdkVaksubkern',
         'ldk_vakinhoud/': 'LdkVakinhoud',
+        'ldk_vakbegrip/': 'LdkVakbegrip',
         'examenprogramma_vakleergebied/': 'ExamenprogrammaVakleergebied',
         'examenprogramma/': 'Examenprogramma',
         'examenprogramma_domein/' : 'ExamenprogrammaDomein',
@@ -1070,7 +1109,7 @@
         'examenprogramma_kop2/' : 'ExamenprogrammaKop2',
         'examenprogramma_kop3/' : 'ExamenprogrammaKop3',
         'examenprogramma_kop4/' : 'ExamenprogrammaKop4',
-        'examenprogramma_body/' : 'ExamenprogrammaKop5',
+        'examenprogramma_body/' : 'ExamenprogrammaBody',
         'examenprogramma_bg_profiel/' : 'ExamenprogrammaBgProfiel',
         'examenprogramma_bg_kern/' : 'ExamenprogrammaBgKern',
         'examenprogramma_bg_kerndeel/' : 'ExamenprogrammaBgKerndeel',
@@ -1087,7 +1126,8 @@
         'inh_vakleergebied/' : 'InhVakleergebied',
         'inh_inhoudslijn/' : 'InhInhoudslijn',
         'inh_cluster/' : 'InhCluster',
-                
+        'inh_subcluster/': 'InhSubcluster',
+        
         'legacy': 'Vervangen door:'
     };
 
@@ -1226,6 +1266,9 @@
             '/ldk_vakinhoud/': function(params) {
                 browser.actions.list('ldk_vakinhoud/')
             },
+            '/ldk_vakbegrip/': function(params) {
+                browser.actions.list('ldk_vakbegrip/')
+            },
             '/kerndoel/': function(params) {
                 browser.actions.list('kerndoel/')
             },
@@ -1327,6 +1370,9 @@
             },
             '/inh_cluster/': function(params) {
                 browser.actions.list('inh_cluster/')
+            },
+            '/inh_subcluster/': function(params) {
+                browser.actions.list('inh_subcluster/')
             },
             
             '/curriculum/uuid/:id': function(params) {
