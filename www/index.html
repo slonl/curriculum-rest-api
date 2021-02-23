@@ -203,10 +203,9 @@
                 <h1>
                     <span data-simply-field="item.title"></span>
                 </h1>
-                <a class="slo-tag" href="#" data-simply-field="item.@references" data-simply-content="fixed">
-                    <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
-                        <use xlink:href="/assets/icons/feather-sprite.svg#link">
-                    </use></svg></label>
+                <span class="slo-tag"><label class="slo-tag-label">release</label>2020</span>
+                <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-content="fixed">
+                    <label class="slo-tag-label">id</label>
                     <span class="slo-id" data-simply-field="item.uuid"></span>
                 </a>
                 <div class="slo-tag">
@@ -676,7 +675,7 @@
 </main>
 <template id="deprecatedLinks">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a href="#" data-simply-field="@id" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
         <span data-simply-field="Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
@@ -728,7 +727,7 @@
 </template>
 <template id="links">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a href="#" data-simply-field="@id" data-simply-content="fixed">
             <span data-simply-field="bron" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
@@ -960,7 +959,7 @@
 </template>
 <template id="doelniveau">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a href="#" data-simply-field="@id" data-simply-content="fixed">
             <!-- span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
@@ -1462,9 +1461,16 @@
             item: function(id) {
                 return slo.api.get(release.apiPath+'uuid/'+id+'/')
                 .then(function(json) {
-                    browser.view.view = 'item';
-                    browser.view.item = json;
-                    browser.actions.updatePaging();
+                    try {
+                        browser.view.view = 'item';
+                        if (json['@type']=='Doelniveau') {
+                            json.prefix = ''; // quick fix to hide the prefix as the data is incorrect
+                        }
+                        browser.view.item = json;
+                        browser.actions.updatePaging();
+                    } catch(e) {
+                    }
+                    history.pushState({}, '', '/curriculum/uuid/'+id);
                 });
             },
             listOpNiveau: function(niveau, type) {
