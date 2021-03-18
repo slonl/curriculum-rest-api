@@ -20,6 +20,7 @@ const examenprogrammaSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/e
 const examenprogrammaBgSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma_bg.jsonld";
 const syllabusSchemaURL          = "https://opendata.slo.nl/curriculum/schemas/syllabus.jsonld";
 const inhoudslijnenSchemaURL     = "https://opendata.slo.nl/curriculum/schemas/inhoudslijn.jsonld";
+const referentiekaderSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/referentiekader.jsonld";
 const baseIdURL                  = "https://opendata.slo.nl/curriculum/uuid/";
 
 const backendUrl      = "http://localhost:3500";
@@ -202,6 +203,7 @@ function jsonLD(entry, schema, type) {
 		'Vakleergebied', 'Doelniveau', 'Doel', 'Niveau',
 		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
+		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -260,12 +262,25 @@ function jsonLD(entry, schema, type) {
 					}
 				});
 			}
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['RefVakleergebied']) {
+				result['RefVakleergebied'] = entry['NiveauIndex'][0]['RefVakleergebied'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/ref_vakleergebied/' + link.id
+					}
+				});
+			}
 		} else {
 			var urlType = '';
 			if (type.substr(0,3)=='Ldk') {
 				urlType = 'ldk_'+type.substr(3).toLowerCase();
 			} else if (type.substr(0,4)=='Lpib') {
 				urlType = 'lpib_'+type.substr(4).toLowerCase();
+			} else if (type.substr(0,3)=='Inh') {
+				urlType = 'inh_'+type.substr(4).toLowerCase();
+			} else if (type.substr(0,3)=='Ref') {
+				urlType = 'ref_'+type.substr(4).toLowerCase();
 			} else {
 				urlType = type.toLowerCase();
 			}
@@ -442,6 +457,14 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'InhInhoudslijn':
 					case 'InhCluster':
 						schema = inhoudslijnenSchemaURL;
+					break;
+					case 'RefVakleergebied':
+					case 'RefDomein':
+					case 'RefSubdomein':
+					case 'RefOnderwerp':
+					case 'RefDeelonderwerp':
+					case 'RefTekstkenmerk':
+						schema = referentiekaderSchemaURL;
 					break;
 					case "Vakleergebied":
 					default:
@@ -883,7 +906,51 @@ app.route(apiBase + 'inh_subcluster').get((req, res) => {
 	});
 });
 
+/* referentiekader */
+app.route(apiBase + 'ref_vakleergebied').get((req, res) => {
+	graphQuery("RefVakleergebied", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefVakleergebied, referentiekaderSchemaURL, 'RefVakleergebied', result.data._allRefVakleergebiedMeta));
+	});
+});
+
+app.route(apiBase + 'ref_domein').get((req, res) => {
+	graphQuery("RefDomein", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefDomein, referentiekaderSchemaURL, 'RefDomein', result.data._allRefDomeinMeta));
+	});
+});
+
+app.route(apiBase + 'ref_subdomein').get((req, res) => {
+	graphQuery("RefSubdomein", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefSubdomein, referentiekaderSchemaURL, 'RefSubdomein', result.data._allRefSubdomeinMeta));
+	});
+});
+
+app.route(apiBase + 'ref_onderwerp').get((req, res) => {
+	graphQuery("RefOnderwerp", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefOnderwerp, referentiekaderSchemaURL, 'RefOnderwerp', result.data._allRefOnderwerpMeta));
+	});
+});
+
+app.route(apiBase + 'ref_deelonderwerp').get((req, res) => {
+	graphQuery("RefDeelonderwerp", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefDeelonderwerp, referentiekaderSchemaURL, 'RefDeelonderwerp', result.data._allRefDeelonderwerpMeta));
+	});
+});
+
+app.route(apiBase + 'ref_tekstkenmerk').get((req, res) => {
+	graphQuery("RefTekstkenmerk", req.params, req.query)
+	.then(function(result) {
+		res.send(jsonLDList(result.data.allRefTekstkenmerk, referentiekaderSchemaURL, 'RefTekstkenmerk', result.data._allRefTekstkenmerkMeta));
+	});
+});
+
 /* Queries op niveau */
+
 app.route(apiBase + 'niveau/:niveau/doel').get((req, res) => {
 	graphQuery("DoelOpNiveau", req.params)
 	.then(function(result) {

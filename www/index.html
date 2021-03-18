@@ -156,6 +156,18 @@
                     </ul>
                     </details>
                 </li>
+                <li><details>
+                    <summary>Referentiekader</summary>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="ref_vakleergebied/" class="slo-nav" data-simply-group="menu">RefVakleergebied</a></li>
+                        <li><a href="ref_domein/" class="slo-nav" data-simply-group="menu">RefDomein</a></li>
+                        <li><a href="ref_subdomein/" class="slo-nav" data-simply-group="menu">RefSubdomein</a></li>
+                        <li><a href="ref_onderwerp/" class="slo-nav" data-simply-group="menu">RefOnderwerp</a></li>
+                        <li><a href="ref_deelonderwerp/" class="slo-nav" data-simply-group="menu">RefDeelonderwerp</a></li>
+                        <li><a href="ref_tekstkenmerk/" class="slo-nav" data-simply-group="menu">RefTekstkenmerk</a></li>
+                    </ul>
+                    </details>
+                </li>
             </ul>
         </li>
     </ul>
@@ -645,6 +657,54 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.RefVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefVakleergebied</h3>
+                        <ul data-simply-list="item.RefVakleergebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.RefDomein" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefDomein</h3>
+                        <ul data-simply-list="item.RefDomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.RefSubdomein" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefSubdomein</h3>
+                        <ul data-simply-list="item.RefSubdomein">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.RefOnderwerp" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefOnderwerp</h3>
+                        <ul data-simply-list="item.RefOnderwerp">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.RefDeelonderwerp" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefDeelonderwerp</h3>
+                        <ul data-simply-list="item.RefDeelonderwerp">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.RefTekstkenmerk" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>RefTekstkenmerk</h3>
+                        <ul data-simply-list="item.RefTekstkenmerk">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 
                 <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
@@ -915,6 +975,111 @@
             </template>
         </span>
 
+        <span data-simply-list="RefVakleergebied">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">RefVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefDomein">
+            <template>
+                <span data-simply-list="RefVakleergebied">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">RefVakleergebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefSubdomein">
+            <template>
+                <span data-simply-list="RefDomein">
+                    <template>
+                        <span data-simply-list="RefVakleergebied">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefOnderwerp">
+            <template>
+                <span data-simply-list="RefSubdomein">
+                    <template>
+                        <span data-simply-list="RefDomein">
+                            <template>
+                                <span data-simply-list="RefVakleergebied">
+                                    <template>
+                                        <span class="slo-tag slo-tag-mini">
+                                            <span class="slo-tag-label">RefVakleergebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefDeelonderwerp">
+            <template>
+                <span data-simply-list="RefOnderwerp">
+                    <template>
+                        <span data-simply-list="RefSubdomein">
+                            <template>
+                                <span data-simply-list="RefDomein">
+                                    <template>
+                                        <span data-simply-list="RefVakleergebied">
+                                            <template>
+                                                <span class="slo-tag slo-tag-mini">
+                                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefTekstkenmerk">
+            <template>
+                <span data-simply-list="RefOnderwerp">
+                    <template>
+                        <span data-simply-list="RefSubdomein">
+                            <template>
+                                <span data-simply-list="RefDomein">
+                                    <template>
+                                        <span data-simply-list="RefVakleergebied">
+                                            <template>
+                                                <span class="slo-tag slo-tag-mini">
+                                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
         <span data-simply-list="Niveau">
             <template>
                 <span class="slo-tag slo-tag-mini" data-simply-field="title">title</span>
@@ -1087,6 +1252,12 @@
         'inh_inhoudslijn/' : 'InhInhoudslijn',
         'inh_cluster/' : 'InhCluster',
         'inh_subcluster/': 'InhSubcluster',
+        'ref_vakleergebied': 'RefVakleergebied',
+        'ref_domein': 'RefDomein',
+        'ref_subdomein': 'RefSubdomein',
+        'ref_onderwerp': 'RefOnderwerp',
+        'ref_deelonderwerp': 'RefDeelonderwerp',
+        'ref_tekstkenmerk': 'RefTekstkenmerk',
                  
         'legacy': 'Vervangen door:'
     };
@@ -1333,6 +1504,24 @@
             },            
             '/inh_subcluster/': function(params) {
                 browser.actions.list('inh_subcluster/')
+            },
+            '/ref_vakleergebied/': function(params) {
+                browser.actions.list('ref_vakleergebied/')
+            },
+            '/ref_domein/': function(params) {
+                browser.actions.list('ref_domein/')
+            },
+            '/ref_subdomein/': function(params) {
+                browser.actions.list('ref_subdomein/')
+            },
+            '/ref_onderwerp/': function(params) {
+                browser.actions.list('ref_onderwerp/')
+            },
+            '/ref_deelonderwerp/': function(params) {
+                browser.actions.list('ref_deelonderwerp/')
+            },
+            '/ref_tekstkenmerk/': function(params) {
+                browser.actions.list('ref_tekstkenmerk/')
             },
             
             '/curriculum/uuid/:id': function(params) {
