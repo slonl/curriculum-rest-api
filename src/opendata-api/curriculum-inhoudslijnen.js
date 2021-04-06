@@ -1,0 +1,164 @@
+module.exports = {
+	context: 'inhoudslijnen',
+	jsonld: 'https://opendata.slo.nl/curriculum/schemas/inhoudslijnen.jsonld',
+	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-inhoudslijnen/context.json',
+	queries: {
+		InhVakleergebied: `query InhVakleergebied($page:Int, $perPage:Int) {
+			allInhVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
+				id
+				prefix
+				title
+				Vakleergebied {
+					id
+					title
+				}
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			_allInhVakleergebiedMeta {
+				count
+			}
+		}`,
+		InhInhoudslijn: `query InhInhoudslijn($page:Int, $perPage:Int) {
+			allInhInhoudslijn(page:$page, perPage:$perPage, sortField:"prefix") {
+				id
+				prefix
+				title
+				InhVakleergebied {
+					id
+					title
+				}
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			_allInhInhoudslijnMeta {
+				count
+			}
+		}`,
+		InhCluster: `query InhCluster($page:Int, $perPage:Int) {
+			allInhCluster(page:$page, perPage:$perPage, sortField:"prefix") {
+				id
+				prefix
+				title
+				unreleased
+				InhInhoudslijn {
+					InhVakleergebied {
+						id
+						title
+					}
+				}
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			_allInhClusterMeta {
+				count
+			}
+		}`,
+		InhSubcluster: `query InhSubcluster($page:Int, $perPage:Int) {
+			allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix") {
+				id
+				prefix
+				title
+				unreleased
+				InhCluster {
+					InhInhoudslijn {
+						InhVakleergebied {
+							id
+							title
+						}
+					}
+				}
+			}
+			_allInhSubclusterMeta {
+				count
+			}
+		}`
+	},
+	idQuery: `
+		allInhVakleergebied(filter:{id:$id}) {
+			id
+			prefix
+			title
+			InhInhoudslijn {
+				id
+				prefix
+				title      
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		}
+		allInhInhoudslijn(filter:{id:$id}) {
+			id
+			prefix
+			title
+			InhCluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}		
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		}
+		allInhCluster(filter:{id:$id}) {
+			id
+			prefix
+			title
+			InhSubcluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		}
+	`,
+	routes: {
+		'inh_vakleergebied/': (req) =>
+			opendata.api["InhVakleergebied"](req.params, req.query)
+			.then(function(result) {
+				return { data: result.data.allInhVakleergebied, type: 'InhVakleergebied', meta: result.data._allInhVakleergebiedMeta}
+			}),
+		'inh_inhoudslijn/': (req) =>
+			opendata.api["InhInhoudslijn"](req.params, req.query)
+			.then(function(result) {
+				return { data: result.data.allInhInhoudslijn, type: 'InhInhoudslijn', meta: result.data._allInhInhoudslijnMeta}
+			}),
+		'inh_cluster/': (req) =>
+			opendata.api["InhCluster"](req.params, req.query)
+			.then(function(result) {
+				return { data: result.data.allInhCluster, type: 'InhCluster', meta: result.data._allInhClusterMeta}
+			}),
+		'inh_subcluster/': (req) =>
+			opendata.api["InhSubcluster"](req.params, req.query)
+			.then(function(result) {
+				return { data: result.data.allInhCluster, type: 'InhSubcluster', meta: result.data._allInhSubclusterMeta}
+			})
+	}
+};
