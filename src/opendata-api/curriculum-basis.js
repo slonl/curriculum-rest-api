@@ -125,11 +125,7 @@ module.exports = {
 				title
 				description
 				bron
-				vakbegrippen
-				Leerlingtekst {
-					...Leerlingtekst
-				}
-				
+				vakbegrippen				
 				Doelniveau {
 					id
 					prefix
@@ -284,6 +280,10 @@ module.exports = {
 				id
 				title
 			}
+			InhVakleergebied {
+				id
+				title
+			}
 			Niveau {
 				...NiveauShort
 			}
@@ -294,10 +294,6 @@ module.exports = {
 			description
 			bron
 			vakbegrippen
-			Leerlingtekst {
-				 ...Leerlingtekst
-			}
-			
 			Doelniveau {
 				...DoelNiveau
 				LpibVakkern {
