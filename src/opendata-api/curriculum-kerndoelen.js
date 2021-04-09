@@ -125,6 +125,9 @@ module.exports = {
 		  title
 		  prefix
 		  kerndoelLabel
+		  Niveau {
+		    ...NiveauShort
+		  }
 		}
 	  }
 	  allKerndoelUitstroomprofiel(filter:{id:$id}) {
