@@ -283,47 +283,83 @@ module.exports = {
 		'examenprogramma_bg_profiel/': (req) =>
 			opendata.api["ExamenprogrammaBgProfiel"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgProfiel, type: 'ExamenprogrammaBgProfiel', meta: result.data._allresult.data._allExamenprogrammaBgProfielMeta}
+				return { 
+					data: result.data.allExamenprogrammaBgProfiel, 
+					type: 'ExamenprogrammaBgProfiel', 
+					meta: result.data._allExamenprogrammaBgProfielMeta
+				}
 			}),
 		'examenprogramma_bg_kern/': (req) =>
 			opendata.api["ExamenprogrammaBgKern"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgKern, type: 'ExamenprogrammaBgKern', meta: result.data._allExamenprogrammaBgKernMeta}
+				return { 
+					data: result.data.allExamenprogrammaBgKern, 
+					type: 'ExamenprogrammaBgKern', 
+					meta: result.data._allExamenprogrammaBgKernMeta
+				}
 			}),
 		'examenprogramma_bg_kerndeel/': (req) =>
 			opendata.api["ExamenprogrammaBgKerndeel"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgKerndeel, type: 'ExamenprogrammaBgKerndeel', meta: result.data._allExamenprogrammaBgKerndeelMeta}
+				return {
+					data: result.data.allExamenprogrammaBgKerndeel, 
+					type: 'ExamenprogrammaBgKerndeel',
+					meta: result.data._allExamenprogrammaBgKerndeelMeta
+				}
 			}),
 		'examenprogramma_bg_globale_eindterm/': (req) =>
 			opendata.api["ExamenprogrammaBgGlobaleEindterm"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgGlobaleEindterm, type: 'ExamenprogrammaBgGlobaleEindterm', meta: result.data._allExamenprogrammaBgGlobaleEindtermMeta}
+				return {
+					data: result.data.allExamenprogrammaBgGlobaleEindterm,
+					type: 'ExamenprogrammaBgGlobaleEindterm',
+					meta: result.data._allExamenprogrammaBgGlobaleEindtermMeta
+				}
 			}),
 		'examenprogramma_bg_module/': (req) =>
 			opendata.api["ExamenprogrammaBgModule"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgModule, type: 'ExamenprogrammaBgModule', meta: result.data._allExamenprogrammaBgModuleMeta}
+				return {
+					data: result.data.allExamenprogrammaBgModule,
+					type: 'ExamenprogrammaBgModule',
+					meta: result.data._allExamenprogrammaBgModuleMeta
+				}
 			}),
 		'examenprogramma_bg_keuzevak/': (req) =>
 			opendata.api["ExamenprogrammaBgKeuzevak"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgKeuzevak, type: 'ExamenprogrammaBgKeuzevak', meta: result.data._allExamenprogrammaBgKeuzevakMeta}
+				return {
+					data: result.data.allExamenprogrammaBgKeuzevak,
+					type: 'ExamenprogrammaBgKeuzevak',
+					meta: result.data._allExamenprogrammaBgKeuzevakMeta
+				}
 			}),
 		'examenprogramma_bg_deeltaak/': (req) =>
 			opendata.api["ExamenprogrammaBgDeeltaak"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgDeeltaak, type: 'ExamenprogrammaBgDeeltaak', meta: result.data._allExamenprogrammaBgDeeltaakMeta}
+				return {
+					data: result.data.allExamenprogrammaBgDeeltaak,
+					type: 'ExamenprogrammaBgDeeltaak',
+					meta: result.data._allExamenprogrammaBgDeeltaakMeta
+				}
 			}),
 		'examenprogramma_bg_moduletaak/': (req) =>
 			opendata.api["ExamenprogrammaBgModuletaak"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgModuletaak, type: 'ExamenprogrammaBgModuletaak', meta: result.data._allExamenprogrammaBgModuletaakMeta}
+				return {
+					data: result.data.allExamenprogrammaBgModuletaak,
+					type: 'ExamenprogrammaBgModuletaak',
+					meta: result.data._allExamenprogrammaBgModuletaakMeta
+				}
 			}),
 		'examenprogramma_bg_keuzevaktaak/': (req) =>
 			opendata.api["ExamenprogrammaBgKeuzevaktaak"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allExamenprogrammaBgKeuzevaktaak, type: 'ExamenprogrammaBgKeuzevaktaak', meta: result.data._allExamenprogrammaBgKeuzevaktaakMeta}
-		})
+				return {
+					data: result.data.allExamenprogrammaBgKeuzevaktaak,
+					type: 'ExamenprogrammaBgKeuzevaktaak',
+					meta: result.data._allExamenprogrammaBgKeuzevaktaakMeta
+				}
+			})
 	}
 };
