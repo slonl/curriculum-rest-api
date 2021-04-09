@@ -208,12 +208,18 @@ module.exports = {
 				  id
 				  title
 				  ce_se
+				  Niveau {
+				    ...NiveauShort
+				  }
 				}
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
 				ce_se
+				Niveau {
+				  ...NiveauShort
+				}
 			  }
 			}
 			ExamenprogrammaVakleergebied {
@@ -267,8 +273,7 @@ module.exports = {
 		  title
 		}
 		Niveau {
-		  id
-		  title
+		  ...NiveauShort
 		}
 	  }
 	  allExamenprogrammaDomein(filter:{id:$id}) {
@@ -294,16 +299,15 @@ module.exports = {
 		  id
 		  prefix
 		  title
+		  Niveau {
+		    ...NiveauShort
+		  }
 		}
 		SyllabusToelichting {
 		  id
 		  title
 		}
 		SyllabusSpecifiekeEindterm {
-		  id
-		  title
-		}
-		Niveau {
 		  id
 		  title
 		}
@@ -335,6 +339,9 @@ module.exports = {
 		  id
 		  prefix
 		  title
+		  Niveau {
+		    ...NiveauShort
+		  }
 		}
 		NiveauIndex {
 		  Niveau {
