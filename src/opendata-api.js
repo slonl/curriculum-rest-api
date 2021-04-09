@@ -75,7 +75,7 @@ apis.forEach(api => {
 });
 
 opendata.queries.Id = 'query Id($id:ID) {' + opendata.idQuery + '}';
-opendata.api.Id     = (variables, urlQuery) => graphQuery(getFragments(opendata.queries.Id)+opendata.queries.Id, variables, 'Id', urlQuery);
+opendata.api.Id     = (variables, urlQuery) => graphQuery(opendata.url, getFragments(opendata.queries.Id)+opendata.queries.Id, variables, 'Id', urlQuery);
 
 
 
