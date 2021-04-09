@@ -7,20 +7,18 @@ const uuidv4    = require('uuidv4');
 const sendmail  = require('sendmail')();
 const mcache    = require('memory-cache');
 const opendata  = require('./opendata-api.js');
+global.opendata = opendata;
 
 const app       = express();
-const port      = 4500;
-const apiBase   = "/";
-
-const baseIdURL = "https://opendata.slo.nl/curriculum/uuid/";
-
-const backendUrl      = "http://localhost:3500";
-opendata.url          = backendUrl;
-global.opendata = opendata;
+const port      = process.env.NODE_PORT || 4500;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
+const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
+const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
+const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+opendata.url    = graphqlUrl;
 
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
 //const backendUrl      = 'https://opendata.slo.nl:3500';
-const baseDatasetURL  = 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 
 const niveauURL       = baseDatasetURL + "niveau/";
 const notfound        = { error: "not found"};
@@ -55,7 +53,15 @@ app.use(function(req, res, next) {
 		return;
 	} else if (req.accepts('html')) {
 		res.set('Content-Type', 'text/html');
-		res.sendFile(path.join(__dirname, '../www/', 'index.html'));
+		let filePath = path.join(__dirname, '../www/', 'index.html');
+		let file = fs.readFileSync(filePath, 'utf8');
+		process.env.NODE_PORT = port;
+		process.env.NODE_BASE = apiBase;	
+		process.env.NODE_ID_URL = baseIdURL;
+//		process.env.NODE_BACKEND_URL = backendUrl;
+		process.env.NODE_DATA_URL = baseDatasetURL;
+		file = file.replace(/\{\@(.*)\}/gm, (match, p1) => process.env[p1] || '');
+		res.send(file);
 		return;
 	}
 	next();
@@ -392,19 +398,19 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case "LpibVakkern":
 					case "LpibVaksubkern":
 					case "LpibVakinhoud":
-						schema = opendata.schema.lpib;
+						schema = opendata.schemas.lpib;
 					break;
 					case "LdkVakleergebied":
 					case "LdkVakkern":
 					case "LdkVaksubkern":
 					case "LdkVakinhoud":
-						schema = opendata.schema.leerdoelenkaarten;
+						schema = opendata.schemas.leerdoelenkaarten;
 					break;
 					case "Kerndoel":
 					case "KerndoelDomein":
 					case "KerndoelVakleergebied":
 					case "KerndoelUitstroomprofiel":
-						schema = opendata.schema.kerndoelen;
+						schema = opendata.schemas.kerndoelen;
 					break;
 					case 'ExamenprogrammaEindterm':
 					case 'ExamenprogrammaSubdomein':
@@ -415,7 +421,7 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'ExamenprogrammaKop2':
 					case 'ExamenprogrammaKop3':
 					case 'ExamenprogrammaKop4':
-						schema = opendata.schema.examenprogramma;
+						schema = opendata.schemas.examenprogramma;
 					break;
 					case 'ExamenprogrammaBgProfiel':
 					case 'ExamenprogrammaBgKern':
@@ -426,18 +432,18 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'ExamenprogrammaBgDeeltaak':
 					case 'ExamenprogrammaBgModuletaak':
 					case 'ExamenprogrammaBgKeuzevaktaak':
-						schema = opendata.schema.examenprogramma_bg;
+						schema = opendata.schemas.examenprogramma_bg;
 					break;
 					case 'Syllabus':
 					case 'SyllabusSpecifiekeEindterm':
 					case 'SyllabusToelichting':
 					case 'SyllabusVakbegrip':
-						schema = opendata.schema.syllabus;
+						schema = opendata.schemas.syllabus;
 					break;
 					case 'InhVakleergebied':
 					case 'InhInhoudslijn':
 					case 'InhCluster':
-						schema = opendata.schema.inhoudslijnen;
+						schema = opendata.schemas.inhoudslijnen;
 					break;
 					case 'RefVakleergebied':
 					case 'RefDomein':
@@ -445,11 +451,11 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'RefOnderwerp':
 					case 'RefDeelonderwerp':
 					case 'RefTekstkenmerk':
-						schema = opendata.schema.referentiekader;
+						schema = opendata.schemas.referentiekader;
 					break;
 					case "Vakleergebied":
 					default:
-						schema = opendata.schema.basis;
+						schema = opendata.schemas.basis;
 					break;
 				}
 				return result;
