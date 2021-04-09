@@ -1,5 +1,4 @@
 <title>SLO Curriculum Browser</title>
-<base href="/curriculum/api-acpt/v1/">
 <link rel="stylesheet" href="/assets/css/slo.css">
 <style>
     .slo-tag-mini {
@@ -18,7 +17,7 @@
     }
 </style>
 <body data-simply-path="/curriculum/">
-
+<base href="{@NODE_DATA_URL}">
 <header class="slo-navbar">
     <nav class="slo-navbar-left slo-logo bg-brand">
         <a href="/"><img src="/assets/img/slo.png"></a>
@@ -1168,32 +1167,31 @@
     </li>
 </template>
 <!-- script src="//cdn.simplyedit.io/1/1.25/simply-edit.js"></script -->
-<script src="//canary.simplyedit.io/1/simply-edit.js"
+<script src="//cdn.simplyedit.io/1/simply-edit.js"
     data-api-key="flashy-leather-7944"
     data-simply-images="/img/"
     data-simply-files="/files/"
     data-simply-settings="seSettings"
     data-storage-get-post-only
 ></script>
-<script src="/assets/simplyview/dist/simply.everything.js"></script>
+<script src="//unpkg.com/simplyview@2.0.1/dist/simply.everything.js"></script>
 <script>
-    simply.bind = false; //don't use the simplyview databindings
+    function getPath(url) {
+        var anchor = document.createElement('a');
+        anchor.href= url;
+        return anchor.pathname;
+    }
 
     var release = {
-        basePath: '/curriculum/api-acpt/',
-        apiPath: '/curriculum/api-acpt/v1/'
+        basePath: getPath('{@NODE_BASE}'),
+        apiPath: getPath('{@NODE_DATA_URL}')
     };
 
     simply.route.init({
         root: release.apiPath
     });
 
-    (function() {
-//        var goto = simply.route.goto;
-//        simply.route.goto = function(path) {
-//            return goto(release.apiPath + path);
-//        };
-        
+    (function() {       
         var match = simply.route.match;
         simply.route.match = function(path, options) {
             if (path.indexOf(release.apiPath)===0) {
@@ -1220,7 +1218,7 @@
         'kerndoel_domein/': 'KerndoelDomein',
         'kerndoel_uitstroomprofiel/': 'KerndoelUitstroomprofiel',
         'kerndoel_vakleergebied/': 'KerndoelVakleergebied',
-	'ldk_vakleergebied/': 'LdkVakleergebied',
+    	'ldk_vakleergebied/': 'LdkVakleergebied',
         'ldk_vakkern/': 'LdkVakkern',
         'ldk_vaksubkern/': 'LdkVaksubkern',
         'ldk_vakinhoud/': 'LdkVakinhoud',
@@ -1234,7 +1232,7 @@
         'examenprogramma_kop2/' : 'ExamenprogrammaKop2',
         'examenprogramma_kop3/' : 'ExamenprogrammaKop3',
         'examenprogramma_kop4/' : 'ExamenprogrammaKop4',
-        'examenprogramma_body/' : 'ExamenprogrammaKop5',
+        'examenprogramma_body/' : 'ExamenprogrammaBody',
         'examenprogramma_bg_profiel/' : 'ExamenprogrammaBgProfiel',
         'examenprogramma_bg_kern/' : 'ExamenprogrammaBgKern',
         'examenprogramma_bg_kerndeel/' : 'ExamenprogrammaBgKerndeel',
@@ -1252,14 +1250,14 @@
         'inh_inhoudslijn/' : 'InhInhoudslijn',
         'inh_cluster/' : 'InhCluster',
         'inh_subcluster/': 'InhSubcluster',
-        'ref_vakleergebied': 'RefVakleergebied',
-        'ref_domein': 'RefDomein',
-        'ref_subdomein': 'RefSubdomein',
-        'ref_onderwerp': 'RefOnderwerp',
-        'ref_deelonderwerp': 'RefDeelonderwerp',
-        'ref_tekstkenmerk': 'RefTekstkenmerk',
+        'ref_vakleergebied/': 'RefVakleergebied',
+        'ref_domein/': 'RefDomein',
+        'ref_subdomein/': 'RefSubdomein',
+        'ref_onderwerp/': 'RefOnderwerp',
+        'ref_deelonderwerp/': 'RefDeelonderwerp',
+        'ref_tekstkenmerk/': 'RefTekstkenmerk',
                  
-        'legacy': 'Vervangen door:'
+        'legacy/': 'Vervangen door:'
     };
 
     var browser = simply.app({
@@ -1667,6 +1665,7 @@
                     var pages = total / browser.view.pageSize;
                     browser.view.max = Math.ceil(pages);
                 }
+                MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
             },
             register : function(email) {
                 var url = release.apiPath+'register/';
@@ -1679,8 +1678,13 @@
         
 //    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
 //    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
-    const baseURL = 'https://opendata.slo.nl';
-    const apiURL  = 'https://opendata.slo.nl';
+//    const baseURL = 'https://opendata.slo.nl';
+//    const apiURL  = 'https://opendata.slo.nl';
+    const baseURL = '{@NODE_BASE}';
+    let apiURL  = '{@NODE_DATA_URL}';
+    if (apiURL[apiURL.length-1]=='/') {
+        apiURL = apiURL.substr(0,-1);
+    }
 
     var slo = {
         api: {
@@ -1785,17 +1789,12 @@
     browser.view.params = args;
 
 </script>
-<script>
-    if (apiURL != baseURL) {
-        document.body.addEventListener("click", function(evt) {
-            var parent = evt.target;
-            if (parent && !parent.href) {
-                parent = parent.parentNode;
-            }
-            if (parent && parent.href && parent.href.indexOf(apiURL) == 0) {
-                parent.href = parent.href.replace(apiURL, baseURL);
-            }
-        });
-    }
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
 </body>
