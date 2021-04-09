@@ -88,6 +88,10 @@ module.exports = {
 			id
 			prefix
 			title
+			Vakleergebied {
+				id
+				title
+			}
 			InhInhoudslijn {
 				id
 				prefix
@@ -138,6 +142,20 @@ module.exports = {
 				}
 			}
 		}
+		allInhSubcluster(filter:{id:$id}) {
+			id
+			prefix
+			title
+			InhCluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}    
+		}
+
 	`,
 	routes: {
 		'inh_vakleergebied/': (req) =>
