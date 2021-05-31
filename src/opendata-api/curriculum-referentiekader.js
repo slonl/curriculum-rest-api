@@ -30,10 +30,8 @@ module.exports = {
 				title
 				unreleased
 				RefVakleergebied{
-					Vakleergebied {
-							id
-							title
-					}
+					id
+					title
 				}
 				NiveauIndex {
 					Niveau {
@@ -53,10 +51,8 @@ module.exports = {
 				unreleased
 				RefDomein { 
 					RefVakleergebied {
-						Vakleergebied {
-								id
-								title
-						}
+						id
+						title
 					}
 				}
 				NiveauIndex {
@@ -78,10 +74,8 @@ module.exports = {
 				RefSubdomein {
 					RefDomein {
 						RefVakleergebied{
-							Vakleergebied {
-									id
-									title
-							}
+							id
+							title
 						}
 					}
 				}
@@ -105,10 +99,8 @@ module.exports = {
 					RefSubdomein {
 						RefDomein {
 							RefVakleergebied{
-								Vakleergebied {
-										id
-										title
-								}
+								id
+								title
 							}
 						}
 					}
@@ -133,10 +125,8 @@ module.exports = {
 					RefSubdomein {
 						RefDomein {
 							RefVakleergebied{
-								Vakleergebied {
-										id
-										title
-								}
+								id
+								title
 							}
 						}
 					}
@@ -227,6 +217,11 @@ module.exports = {
 				prefix
 				title
 			}
+			RefVakleergebied {
+				id
+				prefix
+				title
+			}
 			Doelniveau {
 				...DoelNiveau
 			}
@@ -245,6 +240,11 @@ module.exports = {
 				prefix
 				title
 			}
+			RefDomein {
+				id
+				prefix
+				title
+			}
 			Doelniveau {
 				...DoelNiveau
 			}
@@ -258,6 +258,11 @@ module.exports = {
 			id
 			prefix
 			title
+			RefSubdomein {
+				id
+				prefix
+				title
+			}
 			RefDeelonderwerp {
 				id
 				prefix
@@ -281,6 +286,11 @@ module.exports = {
 			id
 			prefix
 			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+			}
 			Doelniveau {
 				...DoelNiveau
 			}
@@ -294,6 +304,11 @@ module.exports = {
 			id
 			prefix
 			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+			}
 			Doelniveau {
 				...DoelNiveau
 			}
@@ -335,9 +350,10 @@ module.exports = {
 			.then(function(result) {
 				return { data: result.data.allRefTekstkenmerk, type: 'RefTekstkenmerk', meta: result.data._allRefTekstkenmerkMeta}
 			}),
-		'ref_vakleergebied/:id': (req) =>
-			opendata.api["ReferentiekaderVolledig"](req.params, req.query)
+		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) =>
+			opendata.api["ReferentiekaderVolledig"](req.params)
 			.then(function(result) {
+				result.data.RefVakleergebied.Niveau = result.data.RefVakleergebied.NiveauIndex[0].Niveau[0];
 				return {
 					data: result.data.RefVakleergebied,
 					type: 'Refvakleergebied'
