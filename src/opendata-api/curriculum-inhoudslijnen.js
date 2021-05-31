@@ -81,6 +81,45 @@ module.exports = {
 			_allInhSubclusterMeta {
 				count
 			}
+		}`,
+		InhoudslijnVolledig: `query InhoudslijnVolledig($id:ID, $niveau:ID){
+		  InhVakleergebied(id:$id){
+		    id
+		    prefix
+		    title
+		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
+		      Niveau {
+		        ...NiveauShort
+		      }
+		    }
+		    InhInhoudslijn {
+		      id
+		      prefix
+		      title
+		      InhCluster {
+		        id
+		        prefix
+		        title
+		        InhSubcluster {
+		          id
+		          prefix
+		          title
+		          Doelniveau(filter:{niveau_id:[$niveau]}) {
+		            ...Doelen
+		          }
+		        }
+		        Doelniveau(filter:{niveau_id:[$niveau]}) {
+		          ...Doelen
+		        }
+		      }
+		      Doelniveau(filter:{niveau_id:[$niveau]}) {
+		        ...Doelen
+		      }
+		    }
+		    Doelniveau(filter:{niveau_id:[$niveau]}) {
+		      ...Doelen
+		    }
+		  }
 		}`
 	},
 	idQuery: `
@@ -177,6 +216,15 @@ module.exports = {
 			opendata.api["InhSubcluster"](req.params, req.query)
 			.then(function(result) {
 				return { data: result.data.allInhCluster, type: 'InhSubcluster', meta: result.data._allInhSubclusterMeta}
+			}),
+		'niveau/:niveau/inh_vakleergebied/:id/doelen': (req) =>
+			opendata.api['InhoudslijnVolledig'](req.params)
+			.then(function(result) {
+				result.data.InhVakleergebied.Niveau = result.data.InhVakleergebied.NiveauIndex[0].Niveau[0];
+				return {
+					data: result.data.InhVakleergebied,
+					type: 'InhVakleergebied'
+				}
 			})
 	}
 };
