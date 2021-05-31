@@ -33,13 +33,13 @@ var apis = [
  */
 function getFragments(query) {
 	const re = /\.\.\.(.+)/gm;
+	let fragments = [];
+	while ((match = re.exec(query))!==null) {
+		fragments.push(match[1]);
+	}
+	fragments = fragments.filter((elem,pos) => fragments.indexOf(elem)==pos);
 
-	let fragments = new Set(
-		[...query.matchAll(re)]
-		.map(a => a[1])
-	);
-
-	return [...fragments]
+	return fragments
 		.map(f => opendata.fragments[f])
 		.join("\n");
 }
