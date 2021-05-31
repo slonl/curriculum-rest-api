@@ -3,6 +3,7 @@ const basicAuth = require('express-basic-auth')
 const watch     = require('watch');
 const fs        = require('fs');
 const path      = require('path');
+const url       = require('url');
 const uuidv4    = require('uuidv4');
 const sendmail  = require('sendmail')();
 const mcache    = require('memory-cache');
@@ -15,6 +16,8 @@ const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/a
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
 const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
 const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const baseDatasetPath = url.parse(baseDatasetURL).pathname;
+
 opendata.url    = graphqlUrl;
 
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
@@ -67,7 +70,7 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.route(apiBase + 'register/').get((req) => {
+app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
 	console.log("Register " + user);
 
@@ -325,7 +328,8 @@ function jsonLDList(list, schema, type, meta) {
 						return {
 							'@id': baseIdURL + ni.Niveau[0].id,
 							'title': ni.Niveau[0].title,
-							'@references': niveauURL + ni.Niveau[0].id + '/'
+							'prefix': ni.Niveau[0].prefix,
+							'@references': baseDatasetURL + 'uuid/' + ni.Niveau[0].id
 						}
 					});
 				} else if (key=='Niveau') {
@@ -337,7 +341,8 @@ function jsonLDList(list, schema, type, meta) {
 						return {
 							'@id': baseIdURL + ni.id,
 							'title': ni.title,
-							'@references': niveauURL + ni.id + '/'
+							'prefix': ni.prefix,
+							'@references': baseDatasetURL + 'uuid/' + ni.id //niveauURL + ni.id + '/'
 						}
 					});
 				} else {
@@ -359,7 +364,7 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 Object.keys(opendata.routes).forEach((route) => {
-	app.route(apiBase + route)
+	app.route('/' + route)
 	.get(cache(), (req, res) => {
 		console.log(route);
 		opendata.routes[route](req)
@@ -374,7 +379,7 @@ Object.keys(opendata.routes).forEach((route) => {
 	});
 });
 
-app.route(apiBase + 'uuid/:id').get((req, res) => {
+app.route('/' + 'uuid/:id').get((req, res) => {
 	var schema = null;
 	var entitytype = null;
 
@@ -632,7 +637,7 @@ const flatten = function(arr, result = []) {
 	return result;
 };
 
-app.route(apiBase+"legacy/vak/:vak/").get((req, res) => {
+app.route('/'+"legacy/vak/:vak/").get((req, res) => {
 	var vak = req.params.vak;
 	getLatestVersions([vak])
 	.then(function(results) {
@@ -640,7 +645,7 @@ app.route(apiBase+"legacy/vak/:vak/").get((req, res) => {
 	});
 });
 
-app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/").get((req, res) => {
+app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var idIndex = {};
@@ -669,7 +674,7 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/").get((req, res) => {
 	});
 });
 
-app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern").get((req, res) => {
+app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var lpib_vaksubkern = req.params.lpib_vaksubkern;
@@ -710,7 +715,7 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksub
 
 });
 
-app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern/vakinhoud/:lpib_vakinhoud").get((req, res) => {
+app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern/vakinhoud/:lpib_vakinhoud").get((req, res) => {
 	var vak = req.params.vak;
 	var lpib_vakkern = req.params.lpib_vakkern;
 	var lpib_vaksubkern = req.params.lpib_vaksubkern;
@@ -761,50 +766,50 @@ app.route(apiBase+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksub
 
 });
 
-app.route(apiBase + 'register/').get((req) => {
+app.route('/' + 'register/').get((req) => {
 	console.log("Register user " + req.param.email);
 });
 
 // old names redirect to the new names
-app.route(apiBase + 'vakkern/*').get((req,res) => {
+app.route('/' + 'vakkern/*').get((req,res) => {
 	res.redirect(apiBase + 'lpib_vakkern/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'vaksubkern/*').get((req,res) => {
+app.route('/' + 'vaksubkern/*').get((req,res) => {
 	res.redirect(apiBase + 'lpib_vaksubkern/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'vakinhoud/*').get((req,res) => {
+app.route('/' + 'vakinhoud/*').get((req,res) => {
 	res.redirect(apiBase + 'lpib_vakinhoud/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'leerlijn/*').get((req,res) => {
+app.route('/' + 'leerlijn/*').get((req,res) => {
 	res.redirect(apiBase + 'lpib_leerlijn/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'vakkencluster/*').get((req,res) => {
+app.route('/' + 'vakkencluster/*').get((req,res) => {
 	res.redirect(apiBase + 'lpib_vakkencluster/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/vakkern/*').get((req, res) => {
+app.route('/' + 'niveau/:niveau/vakkern/*').get((req, res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakkern/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/vaksubkern/*').get((req, res) => {
+app.route('/' + 'niveau/:niveau/vaksubkern/*').get((req, res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vaksubkern/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/vakinhoud/*').get((req, res) => {
+app.route('/' + 'niveau/:niveau/vakinhoud/*').get((req, res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakinhoud/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/vak/:id/doelen').get((req,res) => {
+app.route('/' + 'niveau/:niveau/vak/:id/doelen').get((req,res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakleergebied/' + req.params.id + '/doelen');	
 });
-app.route(apiBase + 'niveau/:niveau/vakkencluster/*').get((req, res) => {
+app.route('/' + 'niveau/:niveau/vakkencluster/*').get((req, res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakkencluster/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/vak/*').get((req,res) => {
+app.route('/' + 'niveau/:niveau/vak/*').get((req,res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/vakleergebied/' + req.params[0] ? req.params[0] : '');
 });
-app.route(apiBase + 'niveau/:niveau/kerndoelvakleergebied/*').get((req, res) => {
+app.route('/' + 'niveau/:niveau/kerndoelvakleergebied/*').get((req, res) => {
 	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/kerndoel_vakleergebied/' + req.params[0] ? req.params[0] : '');
 });
 // add routes above this line
 app.route('*').get((req,res) => {
-	res.status(404).send(notfound);
+	res.status(404).send(notfound+'('+baseDatasetPath+':'+req.path+')');
 });
 
 
