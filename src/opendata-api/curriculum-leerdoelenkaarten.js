@@ -426,7 +426,7 @@ module.exports = {
 		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) =>
 			opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params)
 			.then(function(result) {
-				result.data.LdkVakleergebied.Niveau = result.data.LdkVakleergebied.Niveau[0];
+				result.data.LdkVakleergebied.Niveau = result.data.LdkVakleergebied.NiveauIndex[0].Niveau;
 				FilterEmptyDoelniveau(result.data.LdkVakleergebied);
 				return {
 					data: result.data.LdkVakleergebied,
