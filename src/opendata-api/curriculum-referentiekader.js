@@ -150,6 +150,53 @@ module.exports = {
 			_allRefTekstkenmerkMeta {
 				count
 			}
+		}`,
+		ReferentiekaderVolledig: `query ReferentiekaderVolledig($id:ID, $niveau:ID) {
+		  RefVakleergebied(id:$id) {
+		    id
+		    prefix
+		    title
+		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
+		      Niveau {
+		        ...NiveauShort
+		      }
+		    }
+		    RefDomein {
+		      id
+		      prefix 
+		      title
+		      RefSubdomein {
+		        id
+		        prefix
+		        title
+		        RefOnderwerp {
+		          id
+		          prefix
+		          title
+		          RefDeelonderwerp {
+		            id
+		            prefix
+		            title
+		            Doelniveau(filter:{niveau_id:[$niveau]}) {
+		              ...Doelen
+		            }
+		          }
+		          Doelniveau(filter:{niveau_id:[$niveau]}) {
+		            ...Doelen
+		          }
+		        }
+		        Doelniveau(filter:{niveau_id:[$niveau]}) {
+		          ...Doelen
+		        }
+		      }
+		      Doelniveau(filter:{niveau_id:[$niveau]}) {
+		        ...Doelen
+		      }
+		    }
+		    Doelniveau(filter:{niveau_id:[$niveau]}) {
+		      ...Doelen
+		    }
+		  }
 		}`
 	},
 	idQuery: `
@@ -287,6 +334,14 @@ module.exports = {
 			opendata.api["RefTekstkenmerk"](req.params, req.query)
 			.then(function(result) {
 				return { data: result.data.allRefTekstkenmerk, type: 'RefTekstkenmerk', meta: result.data._allRefTekstkenmerkMeta}
+			}),
+		'ref_vakleergebied/:id': (req) =>
+			opendata.api["ReferentiekaderVolledig"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.RefVakleergebied,
+					type: 'Refvakleergebied'
+				}
 			})
 	}
 };
