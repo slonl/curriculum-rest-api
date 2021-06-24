@@ -296,7 +296,7 @@ module.exports = {
 			opendata.api["SyllabusVakleergebied"](req.params, req.query)
 			.then(function(result) {
 				return { data: result.data.allSyllabusVakleergebied, type: 'SyllabusVakleergebied', meta: result.data._allSyllabusVakleergebiedMeta}
-			})
+			}),
 		'syllabus_toelichting/': (req) =>
 			opendata.api["SyllabusToelichting"](req.params, req.query)
 			.then(function(result) {
