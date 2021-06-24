@@ -133,12 +133,6 @@ module.exports = {
 			  title
 			  ce_se
 			}
-			SyllabusSpecifiekeEindterm {
-		      id
-		      prefix
-		      title
-		      ce_se
-		    }
 			ExamenprogrammaKop1 {
 			  id
 			  title
@@ -207,11 +201,29 @@ module.exports = {
 			  title
 			  ce_se
 			  SyllabusSpecifiekeEindterm {
-		        id
-		        prefix
-		        title
-		        ce_se
-		      }
+				id
+				prefix
+				title
+				ce_se
+				SyllabusVakbegrip {
+				  id
+				  prefix
+				  title
+				  ce_se
+				}
+				SyllabusToelichting {
+				  id
+				  prefix
+				  title
+				  ce_se
+				}
+			  }
+			  SyllabusToelichting {
+				id
+				prefix
+				title
+				ce_se
+			  }
 			  ExamenprogrammaSubdomein {
 				id
 				title
@@ -225,16 +237,52 @@ module.exports = {
 			        prefix
 			        title
 			        ce_se
+					SyllabusVakbegrip {
+					  id
+					  prefix
+					  title
+					  ce_se
+					}
+					SyllabusToelichting {
+					  id
+					  prefix
+					  title
+					  ce_se
+					}
 			      }
 				  SyllabusVakbegrip {
-			        id
-			        prefix
-			        title
-				    ce_se
-			      }
+					id
+					prefix
+					title
+					ce_se
+				  }
 				  Niveau {
 				    ...NiveauShort
 				  }
+				}
+				SyllabusSpecifiekeEindterm {
+				  id
+				  prefix
+				  title
+				  ce_se
+				  SyllabusVakbegrip {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
+				  SyllabusToelichting {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
+				}
+				SyllabusToelichting {
+				  id
+				  prefix
+				  title
+				  ce_se
 				}
 			  }
 			  ExamenprogrammaEindterm {
@@ -246,6 +294,18 @@ module.exports = {
 			      prefix
 			      title
 			      ce_se
+				  SyllabusVakbegrip {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
+				  SyllabusToelichting {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
 			    }
 			    SyllabusVakbegrip {
 		          id
