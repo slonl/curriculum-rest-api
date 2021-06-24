@@ -26,6 +26,23 @@ module.exports = {
 			count
 		  }
 		}`,
+		SyllabusVakleergebied: `query SyllabusVakleergebied($page:Int,$perPage:Int) {
+		  allSyllabusVakleergebied (page:$page,perPage:$perPage,sortField:"title") {
+			id
+			title
+			Syllabus {
+			  id
+			  title
+			}
+			Vakleergebied {
+			  id
+			  title
+			}
+		  }
+		  _allSyllabusVakleergebiedMeta {
+			count
+		  }
+		}`,
 		SyllabusToelichting: `query SyllabusToelichting($page:Int,$perPage:Int) {
 		  allSyllabusToelichting (page:$page,perPage:$perPage,sortField:"title") {
 			id
@@ -275,6 +292,11 @@ module.exports = {
 			.then(function(result) {
 				return { data: result.data.Syllabus, type: 'Syllabus'}
 			}),
+		'syllabus_vakleergebied/': (req) =>
+			opendata.api["SyllabusVakleergebied"](req.params, req.query)
+			.then(function(result) {
+				return { data: result.data.allSyllabusVakleergebied, type: 'SyllabusVakleergebied', meta: result.data._allSyllabusVakleergebiedMeta}
+			})
 		'syllabus_toelichting/': (req) =>
 			opendata.api["SyllabusToelichting"](req.params, req.query)
 			.then(function(result) {

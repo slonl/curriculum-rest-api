@@ -118,6 +118,7 @@
                     <summary>Syllabus</summary>
                     <ul class="slo-navbar-nav">
                         <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
+                        <li><a href="syllabus_vakleergebied/" class="slo-nav" data-simply-group="menu">SyllabusVakleergebied</a></li>
                         <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">SyllabusSpecifiekeEindterm</a></li>
                         <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">SyllabusToelichting</a></li>
                         <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">SyllabusVakbegrip</a></li>
@@ -607,6 +608,14 @@
                         </ul>
                     </template>
                 </div>
+                <div data-simply-field="item.SyllabusVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>SyllabusVakleergebied</h3>
+                        <ul data-simply-list="item.SyllabusVakleergebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.SyllabusSpecifiekeEindterm" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>SyllabusSpecifiekeEindterm</h3>
@@ -921,6 +930,18 @@
                 <span class="slo-tag slo-tag-mini">
                     <span class="slo-tag-label">Syllabus</span>
                     <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="SyllabusVakleergebied">
+            <template>
+                <span data-simply-list="Syllabus">
+                    <template>
+                         <span class="slo-tag slo-tag-mini">
+                             <span class="slo-tag-label">Syllabus</span>
+                             <span data-simply-field="title">title</span>
+                         </span>
+                    </template>
                 </span>
             </template>
         </span>
@@ -1243,6 +1264,7 @@
         'examenprogramma_bg_moduletaak/' : 'ExamenprogrammaBgModuletaak',
         'examenprogramma_bg_keuzevaktaak/' : 'ExamenprogrammaBgKeuzevaktaak',
         'syllabus/' : 'Syllabus',
+        'syllabus_vakleergebied': 'SyllabusVakleergebied',
         'syllabus_specifieke_eindterm/' : 'SyllabusSpecifiekeEindterm',
         'syllabus_toelichting/': 'SyllabusToelichting',
         'syllabus_vakbegrip/' : 'SyllabusVakbegrip',
@@ -1481,6 +1503,9 @@
             },
             '/syllabus/': function(params) {
                 browser.actions.list('syllabus/')
+            },
+            '/syllabus_vakleergebied/': function(params) {
+                browser.actions.list('syllabus_vakleergebied/')
             },
             '/syllabus_specifieke_eindterm/': function(params) {
                 browser.actions.list('syllabus_specifieke_eindterm/')
