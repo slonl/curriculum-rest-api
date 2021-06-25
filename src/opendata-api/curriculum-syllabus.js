@@ -187,6 +187,23 @@ module.exports = {
 		  }
 		}
 	  }
+	  allSyllabusVakleergebied(filter:{id:$id}) {
+		id
+		title
+		Syllabus {
+		  id
+		  title
+		}
+		Vakleergebied {
+		  id
+		  title
+		}
+		NiveauIndex {
+		  Niveau {
+			...NiveauShort
+		  }
+		}
+	  }
 	  allSyllabusVakbegrip(filter:{id:$id}) {
 		id
 		prefix
