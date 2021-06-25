@@ -198,11 +198,6 @@ module.exports = {
 		  id
 		  title
 		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
 	  }
 	  allSyllabusVakbegrip(filter:{id:$id}) {
 		id
