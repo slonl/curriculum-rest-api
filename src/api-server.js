@@ -170,6 +170,7 @@ function jsonLD(entry, schema, type) {
 		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
+		'ErkVakleergebied',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -234,6 +235,15 @@ function jsonLD(entry, schema, type) {
 						'@id': baseIdURL + link.id,
 						'title': link.title,
 						'$ref': niveauURL + result.uuid + '/ref_vakleergebied/' + link.id
+					}
+				});
+			}
+			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['ErkVakleergebied']) {
+				result['ErkVakleergebied'] = entry['NiveauIndex'][0]['ErkVakleergebied'].map(function(link) {
+					return {
+						'@id': baseIdURL + link.id,
+						'title': link.title,
+						'$ref': niveauURL + result.uuid + '/erk_vakleergebied/' + link.id
 					}
 				});
 			}
@@ -452,6 +462,9 @@ app.route(apiBase + 'uuid/:id').get((req, res) => {
 					case 'RefDeelonderwerp':
 					case 'RefTekstkenmerk':
 						schema = opendata.schemas.referentiekader;
+					break;
+					case 'ErkVakleergebied':
+						schema = opendata.schemas.erk;
 					break;
 					case "Vakleergebied":
 					default:

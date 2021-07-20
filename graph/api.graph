@@ -250,21 +250,41 @@ query VakleergebiedById($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    LpibVakleergebied {
-      id
-      title
-    }
     Niveau {
       ...NiveauShort
     }
-    ExamenprogrammaVakleergebied {
-      id
-      title
-    }
-    KerndoelVakleergebied {
-      id
-      title
-    }
+	KerndoelVakleergebied {
+		id
+		title
+	}
+	ExamenprogrammaVakleergebied {
+		id
+		title
+	}
+	SyllabusVakleergebied {
+		id
+		title
+	}
+	LdkVakleergebied {
+		id
+		title
+	}
+	InhVakleergebied {
+		id
+		title
+	}
+	RefVakleergebied {
+		id
+		title
+	}
+	ErkVakleergebied {
+		id
+		title
+	}
+	LpibVakleergebied {
+		id
+		title
+	}
   }
 }
 
@@ -542,22 +562,38 @@ query Id($id:ID) {
 #      ...Leerlingtekst
 #    }
     replaces
-    LpibVakleergebied {
-      id
-      title
-    }
-    ExamenprogrammaVakleergebied {
-      id
-      title
-    }
-    KerndoelVakleergebied {
-      id
-      title
-    }
-    LdkVakleergebied {
-      id
-      title
-    }
+	KerndoelVakleergebied {
+		id
+		title
+	}
+	ExamenprogrammaVakleergebied {
+		id
+		title
+	}
+	SyllabusVakleergebied {
+		id
+		title
+	}
+	LdkVakleergebied {
+		id
+		title
+	}
+	InhVakleergebied {
+		id
+		title
+	}
+	RefVakleergebied {
+		id
+		title
+	}
+	ErkVakleergebied {
+		id
+		title
+	}
+	LpibVakleergebied {
+		id
+		title
+	}
     Niveau {
       ...NiveauShort
     }
@@ -1902,7 +1938,16 @@ query Id($id:ID) {
       }
     }
   }
-
+  allErkVakleergebied(filter:{id:$id}) {
+    id
+    prefix
+    title
+    NiveauIndex {
+      Niveau {
+        ...NiveauShort
+      }
+    }
+  }
 }
 
 
@@ -3124,3 +3169,25 @@ query RefTekstkenmerk($page:Int, $perPage:Int) {
     count
   }
 }
+
+query ErkVakleergebied($page:Int, $perPage:Int) {
+  allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
+    id
+    prefix
+    title
+    unreleased
+    Vakleergebied {
+        id
+        title
+    }
+    NiveauIndex {
+      Niveau {
+        ...NiveauShort
+      }
+    }
+  }
+  _allErkVakleergebiedMeta {
+    count
+  }
+}
+
