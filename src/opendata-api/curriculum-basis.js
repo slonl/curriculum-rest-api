@@ -201,11 +201,35 @@ module.exports = {
 				Niveau {
 					...NiveauShort
 				}
+				KerndoelVakleergebied {
+					id
+					title
+				}
 				ExamenprogrammaVakleergebied {
 					id
 					title
 				}
-				KerndoelVakleergebied {
+				SyllabusVakleergebied {
+					id
+					title
+				}
+				LdkVakleergebied {
+					id
+					title
+				}
+				InhVakleergebied {
+					id
+					title
+				}
+				RefVakleergebied {
+					id
+					title
+				}
+				ErkVakleergebied {
+					id
+					title
+				}
+				LpibVakleergebied {
 					id
 					title
 				}
@@ -264,7 +288,7 @@ module.exports = {
 			description
 			prefix
 			replaces
-			LpibVakleergebied {
+			KerndoelVakleergebied {
 				id
 				title
 			}
@@ -272,7 +296,7 @@ module.exports = {
 				id
 				title
 			}
-			KerndoelVakleergebied {
+			SyllabusVakleergebied {
 				id
 				title
 			}
@@ -281,6 +305,18 @@ module.exports = {
 				title
 			}
 			InhVakleergebied {
+				id
+				title
+			}
+			RefVakleergebied {
+				id
+				title
+			}
+			ErkVakleergebied {
+				id
+				title
+			}
+			LpibVakleergebied {
 				id
 				title
 			}

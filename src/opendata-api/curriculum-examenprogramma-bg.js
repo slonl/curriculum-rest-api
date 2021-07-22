@@ -105,6 +105,66 @@ module.exports = {
 			count
 		  }
 		}`
+		ExamenprogrammaBgVolledig: `query ExamenprogrammaBgVolledig($id:ID) {
+		  ExamenprogrammaBg(id:$id){
+			id
+			prefix
+			title
+			NiveauIndex {
+			  Niveau {
+				...NiveauShort
+			  }
+			}
+			ExamenprogrammaBgProfiel {
+			  id
+			  title
+			  ExamenprogrammaBgKern {
+				id
+				title
+				ExamenprogrammaBgKernDeel {
+				  id
+				  title
+				  ExamenprogrammaBgGlobaleEindterm {
+					id
+					title
+				  }
+				}
+			  }
+			  ExamenprogrammaBgModule {
+				id
+				title
+				ExamenprogrammaBgDeeltaak {
+				  id
+				  title
+				  ExamenprogrammaBgGlobaleEindterm {
+					id
+					title
+				  }
+				}
+				ExamenprogrammaBgModuletaak {
+					id
+					title
+				}
+			  }
+			  ExamenprogrammaBgKeuzevak {
+				id
+				title
+				ExamenprogrammaBgDeeltaak {
+				  id
+				  title
+				  ExamenprogrammaBgGlobaleEindterm {
+					id
+					title
+				  }
+				}
+				ExamenprogrammaBgKeuzevaktaak {
+					id
+					title
+				}
+			  }
+			}
+		  } 
+		}`
 	},
 	idQuery: `
 	  allExamenprogrammaBgProfiel(filter:{id:$id}) {
@@ -280,6 +340,14 @@ module.exports = {
 	  }
 	`,
 	routes: {
+		'examenprogramma_bg/:id': (req) =>
+			opendata.api["ExamenprogrammaBgVolledig"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allExamenprogrammaBg, 
+					type: 'ExamenprogrammaBg', 
+				}
+			}),
 		'examenprogramma_bg_profiel/': (req) =>
 			opendata.api["ExamenprogrammaBgProfiel"](req.params, req.query)
 			.then(function(result) {
