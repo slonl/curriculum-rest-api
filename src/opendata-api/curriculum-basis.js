@@ -157,16 +157,72 @@ module.exports = {
 				id
 				title
 				Vakleergebied {
+				  id
+				  title
+				}
+				KerndoelVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
 					id
 					title
+				  }
+				}
+				ExamenprogrammaVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
+				}
+				SyllabusVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
+				}
+				LdkVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
+				}
+				InhVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
+				}
+				RefVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
+				}
+				ErkVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
+					id
+					title
+				  }
 				}
 				LpibVakleergebied {
+				  id
+				  title
+				  Vakleergebied {
 					id
 					title
-					Vakleergebied {
-						id
-						title
-					}
+				  }
 				}
 			}   
 			_allNiveauMeta {
