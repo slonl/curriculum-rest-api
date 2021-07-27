@@ -153,81 +153,52 @@ module.exports = {
 			}
 		}`,
 		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
-				id
-				title
-				Vakleergebied {
-				  id
-				  title
-				}
-				KerndoelVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				ExamenprogrammaVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				SyllabusVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				LdkVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				InhVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				RefVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				ErkVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-				LpibVakleergebied {
-				  id
-				  title
-				  Vakleergebied {
-					id
-					title
-				  }
-				}
-			}   
-			_allNiveauMeta {
-				count
-			}
+		   allNiveau(page:$page,perPage:$perPage,sortField:"title") {
+			   id
+			   title
+			   Vakleergebied {
+				 id
+				 title
+			   }
+			   LpibVakleergebied {
+				 id
+				 title
+			   }
+			   KerndoelVakleergebied {
+				 id
+				 title
+			   }
+			   ErkVakleergebied {
+				 id
+				 title
+			   }
+			   RefVakleergebied {
+			     id
+			     title
+			  }
+		   }
+		   allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
+			 Niveau {
+			   id
+			   title
+			 }
+			 ExamenprogrammaVakleergebied {
+			   id
+			   title
+			 }
+			 SyllabusVakleergebied {
+			   id
+			   title
+			 }
+			 LdkVakleergebied {
+			   id
+			   title
+			 }
+			 InhVakleergebied {
+			   id
+			   title
+			 }
+		   }
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
 			allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
