@@ -104,7 +104,7 @@ module.exports = {
 		  _allExamenprogrammaBgKeuzevaktaakMeta {
 			count
 		  }
-		}`
+		}`,
 		ExamenprogrammaBgVolledig: `query ExamenprogrammaBgVolledig($id:ID) {
 		  ExamenprogrammaBgProfiel(id:$id){
 			id
