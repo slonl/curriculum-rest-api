@@ -104,24 +104,21 @@ module.exports = {
 		  _allExamenprogrammaBgKeuzevaktaakMeta {
 			count
 		  }
-		}`
+		}`,
 		ExamenprogrammaBgVolledig: `query ExamenprogrammaBgVolledig($id:ID) {
-		  ExamenprogrammaBg(id:$id){
+		  ExamenprogrammaBgProfiel(id:$id){
 			id
 			prefix
 			title
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
-			ExamenprogrammaBgProfiel {
-			  id
-			  title
+#			NiveauIndex {
+#			  Niveau {
+#				...NiveauShort
+#			  }
+#			}
 			  ExamenprogrammaBgKern {
 				id
 				title
-				ExamenprogrammaBgKernDeel {
+				ExamenprogrammaBgKerndeel {
 				  id
 				  title
 				  ExamenprogrammaBgGlobaleEindterm {
