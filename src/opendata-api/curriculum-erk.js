@@ -13,10 +13,8 @@ module.exports = {
 						id
 						title
 				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
+				Niveau {
+				  ...NiveauShort
 				}
 			}
 			_allErkVakleergebiedMeta {
@@ -28,11 +26,9 @@ module.exports = {
 		    id
 		    prefix
 		    title
-		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
-		      Niveau {
-		        ...NiveauShort
-		      }
-		    }
+			Niveau {
+			  ...NiveauShort
+			}
 		  }
 		}`
 	},
@@ -41,12 +37,24 @@ module.exports = {
 			id
 			prefix
 			title
+			Niveau {
+			  id
+			  title
+			}
+			Vakleergebied {
+					id
+					title
+			}
 		}`,
 	routes: {
 		'erk_vakleergebied/': (req) =>
 			opendata.api["ErkVakleergebied"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allErkVakleergebied, type: 'ErkVakleergebied', meta: result.data._allErkVakleergebiedMeta}
+				return { 
+					data: result.data.allErkVakleergebied, 
+					type: 'ErkVakleergebied', 
+					meta: result.data._allErkVakleergebiedMeta
+				}
 			}),
 		'erk_vakleergebied/:id': (req) =>
 			opendata.api["ErkVolledig"](req.params, req.query)
