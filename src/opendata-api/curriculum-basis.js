@@ -164,10 +164,6 @@ module.exports = {
 				 id
 				 title
 			   }
-			   KerndoelVakleergebied {
-				 id
-				 title
-			   }
 			   ErkVakleergebied {
 				 id
 				 title
@@ -182,6 +178,10 @@ module.exports = {
 			   id
 			   title
 			 }
+			   KerndoelVakleergebied {
+				 id
+				 title
+			   }
 			 ExamenprogrammaVakleergebied {
 			   id
 			   title
@@ -221,10 +221,6 @@ module.exports = {
 				description
 				prefix
 				replaces
-				LpibVakleergebied {
-					id
-					title
-				}
 				Niveau {
 					...NiveauShort
 				}
@@ -237,6 +233,10 @@ module.exports = {
 					title
 				}
 				SyllabusVakleergebied {
+					id
+					title
+				}
+				ExamenprogrammaBgProfiel {
 					id
 					title
 				}
@@ -324,6 +324,10 @@ module.exports = {
 				title
 			}
 			SyllabusVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaBgProfiel {
 				id
 				title
 			}
