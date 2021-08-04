@@ -198,6 +198,14 @@ module.exports = {
 			   id
 			   title
 			 }
+			   ErkVakleergebied {
+				 id
+				 title
+			   }
+			   RefVakleergebied {
+			     id
+			     title
+			  }
 		   }
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
@@ -602,10 +610,19 @@ module.exports = {
 		'niveau_vakleergebied/': (req) =>
 			opendata.api["NiveauVakleergebied"](req.params, req.query)
 			.then(function(result) {
+				let merged = result.data.allNiveau;
+				result.data.allNiveauIndex.forEach(ni => {
+					let niveau = ni.Niveau;
+					Object.keys(ni).forEach(k => {
+						if (k!=='Niveau') {
+							niveau[k] = ni[k];
+						}
+					});
+					result.data.allNiveau.push(niveau);
+				});
 				return {
-					data: result.data.allNiveau,
-					type: 'Niveau',
-					meta: result.data._allNiveauMeta
+					data: merged,
+					type: 'Niveau'
 				};
 			}),
 		'niveau/:niveau/vakleergebied/': (req) =>

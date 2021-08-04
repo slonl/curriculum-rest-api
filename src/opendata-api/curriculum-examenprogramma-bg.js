@@ -114,11 +114,6 @@ module.exports = {
 			id
 			prefix
 			title
-#			NiveauIndex {
-#			  Niveau {
-#				...NiveauShort
-#			  }
-#			}
 			  ExamenprogrammaBgKern {
 				id
 				title
@@ -164,8 +159,7 @@ module.exports = {
 				}
 			  }
 			}
-		  } 
-		}`
+		  }`
 	},
 	idQuery: `
 	  allExamenprogrammaBgProfiel(filter:{id:$id}) {
@@ -349,8 +343,8 @@ module.exports = {
 			opendata.api["ExamenprogrammaBgVolledig"](req.params, req.query)
 			.then(function(result) {
 				return { 
-					data: result.data.allExamenprogrammaBg, 
-					type: 'ExamenprogrammaBg', 
+					data: result.data.ExamenprogrammaBgProfiel, 
+					type: 'ExamenprogrammaBgProfiel', 
 				}
 			}),
 		'examenprogramma_bg_profiel/': (req) =>

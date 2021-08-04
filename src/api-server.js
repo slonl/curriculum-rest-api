@@ -309,9 +309,15 @@ function jsonLDList(list, schema, type, meta) {
 	// provide access to properties which aren't actually set in the current data, but may be set later
 	if (list[list.length-1] && list[list.length-1].id && parseInt(list[list.length-1].id)<0) {
 		list.pop();
+		if (meta && meta.count) {
+			meta.count--;
+		}
 	}
 	if (list[0] && list[0].id && parseInt(list[0].id)<0) {
 		list.shift();
+		if (meta && meta.count) {
+			meta.count--;
+		}
 	}
 	list = list.map(function(link) {
 		var result = {
