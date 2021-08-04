@@ -19,6 +19,7 @@ var apis = [
 	require('./opendata-api/curriculum-lpib.js'),
 	require('./opendata-api/curriculum-inhoudslijnen.js'),
 	require('./opendata-api/curriculum-referentiekader.js'),
+	require('./opendata-api/curriculum-erk.js'),
 	require('./opendata-api/curriculum-leerdoelenkaarten.js')
 ];
 

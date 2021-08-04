@@ -8,6 +8,10 @@ module.exports = {
 			id
 			prefix
 			title
+			Vakleergebied {
+			  id
+			  title
+			}
 		  }
 		  _allExamenprogrammaBgProfielMeta {
 			 count
@@ -168,6 +172,10 @@ module.exports = {
 		id
 		prefix
 		title
+		Vakleergebied {
+		  id
+		  title
+		}
 		ExamenprogrammaBgKern {
 		  id
 		  prefix

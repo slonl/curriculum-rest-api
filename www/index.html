@@ -1280,6 +1280,7 @@
         'ref_onderwerp/': 'RefOnderwerp',
         'ref_deelonderwerp/': 'RefDeelonderwerp',
         'ref_tekstkenmerk/': 'RefTekstkenmerk',
+        'erk_vakleergebied/': 'ErkVakleergebied',
                  
         'legacy/': 'Vervangen door:'
     };
@@ -1547,6 +1548,9 @@
             },
             '/ref_tekstkenmerk/': function(params) {
                 browser.actions.list('ref_tekstkenmerk/')
+            },
+            '/erk_vakleergebied/': function(params) {
+                browser.actions.list('erk_vakleergebied/')
             },
             
             '/curriculum/uuid/:id': function(params) {
