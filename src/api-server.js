@@ -63,7 +63,7 @@ app.use(function(req, res, next) {
 		process.env.NODE_ID_URL = baseIdURL;
 //		process.env.NODE_BACKEND_URL = backendUrl;
 		process.env.NODE_DATA_URL = baseDatasetURL;
-		file = file.replace(/\{\@(.*)\}/gm, (match, p1) => process.env[p1] || '');
+		file = file.replace(/\{@(.*)\}/gm, (match, p1) => process.env[p1] || '');
 		res.send(file);
 		return;
 	}
@@ -170,7 +170,7 @@ function jsonLD(entry, schema, type) {
 		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
 		'LpibVakleergebied','LpibVakkern','LpibVaksubkern','LpibVakinhoud','LpibVakkencluster','LpibLeerlijn',
 		'Vakleergebied', 'Doelniveau', 'Doel', 'Niveau',
-		'Syllabus','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
+		'Syllabus','SyllabusVakleergebied','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
 		'ErkVakleergebied',
@@ -196,60 +196,26 @@ function jsonLD(entry, schema, type) {
 	});
 	if (entry['NiveauIndex']) {
 		if (type=='Niveau') {
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['LpibVakleergebied']) {
-				result['LpibVakleergebied'] = entry['NiveauIndex'][0]['LpibVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/vakleergebied/' + link.id
-					}
-				});
-			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['LdkVakleergebied']) {
-				result['LdkVakleergebied'] = entry['NiveauIndex'][0]['LdkVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/ldk_vakleergebied/' + link.id
-					}
-				});
-			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['KerndoelVakleergebied']) {
-				result['KerndoelVakleergebied'] = entry['NiveauIndex'][0]['KerndoelVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/kerndoel_vakleergebied/' + link.id
-					}
-				});
-			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['InhVakleergebied']) {
-				result['InhVakleergebied'] = entry['NiveauIndex'][0]['InhVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/inh_vakleergebied/' + link.id
-					}
-				});
-			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['RefVakleergebied']) {
-				result['RefVakleergebied'] = entry['NiveauIndex'][0]['RefVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/ref_vakleergebied/' + link.id
-					}
-				});
-			}
-			if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0]['ErkVakleergebied']) {
-				result['ErkVakleergebied'] = entry['NiveauIndex'][0]['ErkVakleergebied'].map(function(link) {
-					return {
-						'@id': baseIdURL + link.id,
-						'title': link.title,
-						'$ref': niveauURL + result.uuid + '/erk_vakleergebied/' + link.id
-					}
-				});
-			}
+			let vakleergebiedList = {
+				'LpibVakleergebied': 'vakleergebied',
+				'LdkVakleergebied': 'ldk_vakleergebied',
+				'KerndoelVakleergebied': 'kerndoel_vakleergebied',
+				'InhVakleergebied': 'inh_vakleergebied',
+				'RefVakleergebied': 'ref_vakleergebied',
+				'ErkVakleergebied': 'erk_vakleergebied',
+				'SyllabusVakleergebied': 'syllabus_vakleergebied'
+			};
+			Object.keys(vakleergebiedList).forEach(vlg => {
+				if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0][vlg]) {
+					result[vlg] = entry['NiveauIndex'][0][vlg].map(function(link) {
+						return {
+							'@id': baseIdURL + link.id,
+							'title': link.title,
+							'$ref': niveauURL + result.uuid + vakleergebiedList[vlg] + link.id
+						}
+					});
+				}
+			});
 		} else {
 			var urlType = '';
 			if (type) {
@@ -459,6 +425,7 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 					case 'SyllabusSpecifiekeEindterm':
 					case 'SyllabusToelichting':
 					case 'SyllabusVakbegrip':
+					case 'SyllabusVakleergebied':
 						schema = opendata.schemas.syllabus;
 					break;
 					case 'InhVakleergebied':
