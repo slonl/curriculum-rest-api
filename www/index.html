@@ -74,6 +74,18 @@
                     </details>
                 </li>
                 <li><details>
+                    <summary>Niveauhierarchie</summary>
+                    <ul class="slo-navbar-nav">
+                        <li><a href="nh_categorie/" class="slo-nav" data-simply-group="menu">Niveaucategorie</a></li>
+                        <li><a href="nh_sector/" class="slo-nav" data-simply-group="menu">Sector</a></li>
+                        <li><a href="nh_schoolsoort/" class="slo-nav" data-simply-group="menu">Schoolsoort</a></li>
+                        <li><a href="nh_leerweg/" class="slo-nav" data-simply-group="menu">Leerweg</a></li>
+                        <li><a href="nh_bouw/" class="slo-nav" data-simply-group="menu">Bouw</a></li>
+                        <li><a href="nh_niveau/" class="slo-nav" data-simply-group="menu">Niveau</a></li>
+                    </ul>
+                    </details>
+                </li>
+                <li><details>
                     <summary>Kerndoelen</summary>
                     <ul class="slo-navbar-nav">
                         <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">KerndoelVakleergebied</a></li>
@@ -167,6 +179,13 @@
                     <summary>Europees referentiekader</summary>
                     <ul class="slo-navbar-nav">
                         <li><a href="erk_vakleergebied/" class="slo-nav" data-simply-group="menu">ErkVakleergebied</a></li>
+                        <li><a href="erk_gebied/" class="slo-nav" data-simply-group="menu">ErkGebied</a></li>
+                        <li><a href="erk_categorie/" class="slo-nav" data-simply-group="menu">ErkCategorie</a></li>
+                        <li><a href="erk_taalactiviteit/" class="slo-nav" data-simply-group="menu">ErkTaalactiviteit</a></li>
+                        <li><a href="erk_schaal/" class="slo-nav" data-simply-group="menu">ErkSchaal</a></li>
+                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCanDoBeschrijving</a></li>
+                        <li><a href="erk_voorbeeld/" class="slo-nav" data-simply-group="menu">ErkVoorbeeld</a></li>
+                        <li><a href="erk_lesidee/" class="slo-nav" data-simply-group="menu">ErkLesidee</a></li>
                     </ul>
                     </details>
                 </li>
@@ -1281,6 +1300,19 @@
         'ref_deelonderwerp/': 'RefDeelonderwerp',
         'ref_tekstkenmerk/': 'RefTekstkenmerk',
         'erk_vakleergebied/': 'ErkVakleergebied',
+        'erk_gebied/': 'ErkGebied',
+        'erk_categorie/': 'ErkCategorie',
+        'erk_taalactiviteit/': 'ErkTaalactiviteit',
+        'erk_schaal/': 'ErkSchaal',
+        'erk_candobeschrijving/': 'ErkCandobeschrijving',
+        'erk_voorbeeld/': 'ErkVoorbeeld',
+        'erk_lesidee/': 'ErkLesidee',
+        'nh_categorie/': 'NhCategorie',
+        'nh_sector/': 'NhSector',
+        'nh_schoolsoort/': 'NhSchoolsoort',
+        'nh_leerweg/': 'NhLeerweg',
+        'nh_bouw/': 'NhBouw',
+        'nh_niveau/': 'NhNiveau',
                  
         'legacy/': 'Vervangen door:'
     };
@@ -1551,6 +1583,45 @@
             },
             '/erk_vakleergebied/': function(params) {
                 browser.actions.list('erk_vakleergebied/')
+            },
+            '/erk_gebied/': function(params) {
+                browser.actions.list('erk_gebied/')
+            },
+            '/erk_categorie/': function(params) {
+                browser.actions.list('erk_categorie/')
+            },
+            '/erk_taalactiviteit/': function(params) {
+                browser.actions.list('erk_taalactiviteit/')
+            },
+            '/erk_schaal/': function(params) {
+                browser.actions.list('erk_schaal/')
+            },
+            '/erk_candobeschrijving/': function(params) {
+                browser.actions.list('erk_candobeschrijving/')
+            },
+            '/erk_voorbeeld/': function(params) {
+                browser.actions.list('erk_voorbeeld/')
+            },
+            '/erk_lesidee/': function(params) {
+                browser.actions.list('erk_lesidee/')
+            },
+            '/nh_categorie/': function(params) {
+                browser.actions.list('nh_categorie/')
+            },
+            '/nh_sector/': function(params) {
+                browser.actions.list('nh_sector/')
+            },
+            '/nh_schoolsoort/': function(params) {
+                browser.actions.list('nh_schoolsoort/')
+            },
+            '/nh_leerweg/': function(params) {
+                browser.actions.list('nh_leerweg/')
+            },
+            '/nh_bouw/': function(params) {
+                browser.actions.list('nh_bouw/')
+            },
+            '/nh_niveau/': function(params) {
+                browser.actions.list('nh_niveau/')
             },
             
             '/curriculum/uuid/:id': function(params) {
