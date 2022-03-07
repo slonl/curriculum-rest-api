@@ -183,7 +183,7 @@
                         <li><a href="erk_categorie/" class="slo-nav" data-simply-group="menu">ErkCategorie</a></li>
                         <li><a href="erk_taalactiviteit/" class="slo-nav" data-simply-group="menu">ErkTaalactiviteit</a></li>
                         <li><a href="erk_schaal/" class="slo-nav" data-simply-group="menu">ErkSchaal</a></li>
-                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCanDoBeschrijving</a></li>
+                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCandobeschrijving</a></li>
                         <li><a href="erk_voorbeeld/" class="slo-nav" data-simply-group="menu">ErkVoorbeeld</a></li>
                         <li><a href="erk_lesidee/" class="slo-nav" data-simply-group="menu">ErkLesidee</a></li>
                     </ul>
@@ -734,7 +734,62 @@
                         </ul>
                     </template>
                 </div>
-                
+                <div data-simply-field="item.ErkGebied" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Gebied</h3>
+                        <ul data-simply-list="item.ErkGebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkCategorie" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Categorie</h3>
+                        <ul data-simply-list="item.ErkCategorie">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkTaalactiviteit" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Taalactiviteit</h3>
+                        <ul data-simply-list="item.ErkTaalactiviteit">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkSchaal" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Schaal</h3>
+                        <ul data-simply-list="item.ErkSchaal">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkCandobeschrijving" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Cando-beschrijving</h3>
+                        <ul data-simply-list="item.ErkCandobeschrijving">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkVoorbeeld" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Voorbeeld</h3>
+                        <ul data-simply-list="item.ErkVoorbeeld">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkLesidee" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Lesidee</h3>
+                        <ul data-simply-list="item.ErkLesidee">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Doelniveau</h3>
@@ -1016,6 +1071,7 @@
             </template>
         </span>
 
+
         <span data-simply-list="RefVakleergebied">
             <template>
                 <span class="slo-tag slo-tag-mini">
@@ -1108,6 +1164,87 @@
                                             <template>
                                                 <span class="slo-tag slo-tag-mini">
                                                     <span class="slo-tag-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="ErkGebied">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">ErkGebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCategorie">
+            <template>
+                <span data-simply-list="ErkGebied">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">ErkGebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkTaalactiviteit">
+            <template>
+                <span data-simply-list="ErkCategorie">
+                    <template>
+                        <span data-simply-list="ErkGebied">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">ErkGebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkSchaal">
+            <template>
+                <span data-simply-list="ErkTaalactiviteit">
+                    <template>
+                        <span data-simply-list="ErkCategorie">
+                            <template>
+                                <span data-simply-list="ErkGebied">
+                                    <template>
+                                        <span class="slo-tag slo-tag-mini">
+                                            <span class="slo-tag-label">ErkGebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCandobeschrijving">
+            <template>
+                <span data-simply-list="ErkSchaal">
+                    <template>
+                        <span data-simply-list="ErkTaalactiviteit">
+                            <template>
+                                <span data-simply-list="ErkCategorie">
+                                    <template>
+                                        <span data-simply-list="ErkGebied">
+                                            <template>
+                                                <span class="slo-tag slo-tag-mini">
+                                                    <span class="slo-tag-label">ErkGebied</span>
                                                     <span data-simply-field="title">title</span>
                                                 </span>
                                             </template>

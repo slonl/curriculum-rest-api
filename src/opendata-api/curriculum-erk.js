@@ -66,8 +66,6 @@ module.exports = {
 				prefix
 				title
 				erk_candobeschrijving_id
-				erk_voorbeeld_id
-				erk_lesidee_id
 				unreleased
 			}
 			_allErkSchaalMeta {
@@ -80,6 +78,9 @@ module.exports = {
 				prefix
 				title
 				unreleased
+				niveau_id
+				erk_voorbeeld_id
+				erk_lesidee_id
 			}
 			_allErkCandobeschrijvingMeta {
 				count
@@ -136,26 +137,66 @@ module.exports = {
 			id
 			prefix
 			title
+			ErkCategorie {
+			  id
+			  title
+			}
+			ErkTaalactiviteit {
+			  id
+			  title
+			}
+			ErkSchaal {
+			  id
+			  title
+			}
 		}
 		allErkCategorie(filter:{id:$id}) {
 			id
 			prefix
 			title
+			ErkTaalactiviteit {
+			  id
+			  title
+			}
+			ErkSchaal {
+			  id
+			  title
+			}
 		}
 		allErkTaalactiviteit(filter:{id:$id}) {
 			id
 			prefix
 			title
+			ErkSchaal {
+			  id
+			  title
+			}
 		}
 		allErkSchaal(filter:{id:$id}) {
 			id
 			prefix
 			title
+			ErkCandobeschrijving {
+			  id
+			  title
+			}
 		}
 		allErkCandobeschrijving(filter:{id:$id}) {
 			id
 			prefix
 			title
+			Niveau {
+			  id
+			  title
+			}
+			ErkVoorbeeld {
+			  id
+			  title
+			}
+			ErkLesidee {
+			  id
+			  title
+			}
 		}
 		allErkVoorbeeld(filter:{id:$id}) {
 			id
