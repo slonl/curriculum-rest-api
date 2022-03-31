@@ -107,10 +107,6 @@ module.exports = {
 				id
 				title
 			  }
-			  Examenprogramma {
-				id
-				title
-			  }
 			}
 			SyllabusToelichting {
 			  id
@@ -274,15 +270,15 @@ module.exports = {
 		  id
 		  title
 		}
-		Examenprogramma {
-		  id
-		  title
-		}
 		Syllabus {
 		  id
 		  title
 		}
 		SyllabusToelichting {
+		  id
+		  title
+		}
+		SyllabusVakbegrip {
 		  id
 		  title
 		}
