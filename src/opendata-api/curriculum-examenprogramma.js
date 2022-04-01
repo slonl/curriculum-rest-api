@@ -321,14 +321,6 @@ module.exports = {
 		  id
 		  title
 		}
-		SyllabusToelichting {
-		  id
-		  title
-		}
-		SyllabusSpecifiekeEindterm {
-		  id
-		  title
-		}
 		Niveau {
 		  ...NiveauShort
 		}

@@ -117,6 +117,52 @@ module.exports = {
 			  ...NiveauShort
 			}
 		  }
+		}`,
+		ErkSchalen: `query ErkSchalen($page:Int, $perPage:Int) {
+			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix") {
+				id
+				prefix
+				title
+				ErkCategorie {
+					id
+					prefix
+					title
+					ErkTaalactiviteit {
+						id
+						prefix
+						title
+						ErkSchaal {
+							id
+							prefix
+							title
+							algemeen
+						}
+					}
+					ErkSchaal {
+						id
+						prefix
+						title
+						algemeen
+					}
+				}
+				ErkTaalactiviteit {
+					id
+					prefix
+					title
+					ErkSchaal {
+						id
+						prefix
+						title
+						algemeen
+					}
+				}
+				ErkSchaal {
+					id
+					prefix
+					title
+					algemeen
+				} 
+			}
 		}`
 	},
 	idQuery: `
@@ -177,14 +223,20 @@ module.exports = {
 			prefix
 			title
 			ErkCandobeschrijving {
-			  id
-			  title
+				id
+				title
+				isempty
+				Niveau {
+				  id
+				  title
+				}
 			}
 		}
 		allErkCandobeschrijving(filter:{id:$id}) {
 			id
 			prefix
 			title
+			isempty
 			Niveau {
 			  id
 			  title
@@ -287,6 +339,15 @@ module.exports = {
 					data: result.data.allErkLesidee, 
 					type: 'ErkLesidee', 
 					meta: result.data._allErkLesideeMeta
+				}
+			}),
+		'erk_schalen/': (req) =>
+			opendata.api["ErkSchalen"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allErkGebied, 
+					type: 'ErkGebied', 
+					meta: result.data._allallErkGebiedMeta
 				}
 			})
 	}

@@ -235,10 +235,6 @@ module.exports = {
 		  id
 		  title
 		}
-		Examenprogramma {
-		  id
-		  title
-		}
 		Syllabus {
 		  id
 		  title
