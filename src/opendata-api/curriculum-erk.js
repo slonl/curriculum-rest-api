@@ -347,7 +347,7 @@ module.exports = {
 				return { 
 					data: result.data.allErkGebied, 
 					type: 'ErkGebied', 
-					meta: result.data._allallErkGebiedMeta
+					meta: result.data._allErkGebiedMeta
 				}
 			})
 	}
