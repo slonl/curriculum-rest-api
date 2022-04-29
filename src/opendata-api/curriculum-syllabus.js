@@ -158,7 +158,7 @@ module.exports = {
 		ingangsdatum
 		versie
 		url
-		jaargang
+		examenjaar
 		status
 		ce_se
 		Examenprogramma {
