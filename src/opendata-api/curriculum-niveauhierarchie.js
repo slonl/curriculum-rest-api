@@ -144,10 +144,6 @@ module.exports = {
 			id
 			prefix
 			title
-			NhBouw {
-			  id
-			  title
-			}
 			NhNiveau {
 			  id
 			  title
