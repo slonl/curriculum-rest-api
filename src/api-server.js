@@ -173,8 +173,7 @@ function jsonLD(entry, schema, type) {
 		'Syllabus','SyllabusVakleergebied','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
-		'ErkVakleergebied','ErkGebied','ErkCategorie','ErkTaalactiviteit','ErkSchaal','ErkCandobeschrijving','ErkVoorbeeld','ErkLesidee',
-		'NhCategorie','NhSector','NhSchoolsoort','NhLeerweg','NhBouw','NhNiveau',
+		'ErkVakleergebied',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
