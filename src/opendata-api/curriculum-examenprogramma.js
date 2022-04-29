@@ -152,6 +152,7 @@ module.exports = {
 			Syllabus {
 			  id
 			  title
+			  examenjaar
 			  ce_se
 			}
 			ExamenprogrammaKop1 {

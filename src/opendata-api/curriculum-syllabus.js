@@ -6,7 +6,8 @@ module.exports = {
 		Syllabus: `query Syllabus($page:Int,$perPage:Int) {
 		  allSyllabus (page:$page,perPage:$perPage,sortField:"title") {
 			id	
-			title   
+			title
+			examenjaar
 		  }
 		  _allSyllabusMeta {
 			count
@@ -82,7 +83,7 @@ module.exports = {
 			ingangsdatum
 			versie
 			url
-			jaargang
+			examenjaar
 			status
 			ce_se
 			NiveauIndex {
@@ -158,7 +159,7 @@ module.exports = {
 		ingangsdatum
 		versie
 		url
-		jaargang
+		examenjaar
 		status
 		ce_se
 		Examenprogramma {
