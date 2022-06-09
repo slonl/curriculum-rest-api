@@ -184,7 +184,13 @@
 </nav>
 
 <main class="slo-main">
-    <div class="error" data-simply-field="error"></div>
+    <div class="error" data-simply-field="error" data-simply-content="template" data-simply-transformer="truthy">
+        <template data-simply-template="false"></template>
+        <template data-simply-template="true">
+            <span data-simply-field="error"></span>: <span data-simply-field="errorMessage"></span>
+        </template>
+    </div>
+        
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
         <template data-simply-template="home">
             <h1 class="title" data-simply-field="title"></h1>
@@ -328,59 +334,10 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.LpibVakkencluster" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakkencluster</h3>
-                        <ul data-simply-list="item.LpibVakkencluster">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibLeerlijn" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibLeerlijn</h3>
-                        <ul data-simply-list="item.LpibLeerlijn">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
                 <div data-simply-field="item.Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakleergebied</h3>
                         <ul data-simply-list="item.Vakleergebied">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakleergebied</h3>
-                        <ul data-simply-list="item.LpibVakleergebied">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakkern" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakkern</h3>
-                        <ul data-simply-list="item.LpibVakkern">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVaksubkern</h3>
-                        <ul data-simply-list="item.LpibVaksubkern">
-                            <template rel="links"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakinhoud</h3>
-                        <ul data-simply-list="item.LpibVakinhoud">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -1372,13 +1329,7 @@
     })();
     
     var titles = {
-        'lpib_vakkencluster/': 'LpibVakkencluster',
-        'lpib_leerlijn/': 'LpibLeerlijn',
         'vakleergebied/': 'Vakleergebied',
-        'lpib_vakleergebied': 'LpibVakleergebied',
-        'lpib_vakkern/': 'LpibVakkern',
-        'lpib_vaksubkern/': 'LpibVaksubkern',
-        'lpib_vakinhoud/': 'LpibVakinhoud',
         'niveau/': 'Niveau',
         'doel/': 'Doel',
         'doelniveau/': 'DoelNiveau',
@@ -1947,6 +1898,10 @@
                         browser.view.error = '';
                     }
                     return json;
+                })
+                .catch(error => {
+                    browser.view.error = error.error;
+                    browser.view.errorMessage = error.message;
                 });
             }
         }
