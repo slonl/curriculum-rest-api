@@ -163,6 +163,9 @@ module.exports = {
 					algemeen
 				} 
 			}
+			_allErkGebiedMeta {
+				count
+			}
 		}`
 	},
 	idQuery: `

@@ -163,18 +163,22 @@ module.exports = {
 		ce_se
 		Examenprogramma {
 		  id
+		  prefix
 		  title
 		}
 		SyllabusSpecifiekeEindterm {
 		  id
+		  prefix
 		  title
 		}
 		SyllabusToelichting {
 		  id
+		  prefix
 		  title
 		}
 		SyllabusVakbegrip {
 		  id
+		  prefix
 		  title
 		}
 		NiveauIndex {
