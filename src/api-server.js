@@ -17,7 +17,6 @@ const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum
 const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
 const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
-
 opendata.url    = graphqlUrl;
 
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
@@ -31,21 +30,23 @@ var cache = function() {
 		let key = '__express__' + req.originalUrl || req.url
 		let cachedBody = mcache.get(key)
 		if (cachedBody) {
-			//console.log("cache hit for " + key);
 			res.send(cachedBody)
 			return
 		} else {
 			//console.log("cache miss for " + key);
 			res.sendResponse = res.send
 			res.send = (body) => {
-				// mcache.put(key, body, duration * 1000);
-				mcache.put(key, body);
+				if (!res.statusCode>=200 && res.statusCode<400) { // response is ok
+					// mcache.put(key, body, duration * 1000);
+					mcache.put(key, body);
+				}
 				res.sendResponse(body)
 			}
 			next()
 		}
 	}
 };
+
 
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Credentials', true);
@@ -133,6 +134,7 @@ function sendApiKey(email, key) {
 	var mail = {
 		from: "SLO Opendata <opendata@slo.nl>",
 		to: email,
+		bcc: "opendata@slo.nl",
 		subject: "SLO Opendata API key",
 		text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
 		html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
@@ -173,7 +175,8 @@ function jsonLD(entry, schema, type) {
 		'Syllabus','SyllabusVakleergebied','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
-		'ErkVakleergebied',
+		'ErkVakleergebied', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
+		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -273,19 +276,15 @@ function jsonLDList(list, schema, type, meta) {
 	// remove dummy entries from returned list
 	// TODO: remove these in the graphql server, they are only there to 
 	// provide access to properties which aren't actually set in the current data, but may be set later
-	if (list[list.length-1] && list[list.length-1].id && parseInt(list[list.length-1].id)<0) {
-		list.pop();
-		if (meta && meta.count) {
+
+	list = list.filter(link => {
+		if (link.id && parseInt(link.id)<0) {
 			meta.count--;
+			return false;
 		}
-	}
-	if (list[0] && list[0].id && parseInt(list[0].id)<0) {
-		list.shift();
-		if (meta && meta.count) {
-			meta.count--;
-		}
-	}
-	list = list.map(function(link) {
+		return true;
+	})
+	.map(function(link) {
 		var result = {
 			'@id': baseIdURL + link.id,
 			'@references': baseDatasetURL + 'uuid/'+link.id,
@@ -346,6 +345,7 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 Object.keys(opendata.routes).forEach((route) => {
+	console.log('adding route '+route);
 	app.route('/' + route)
 	.get(cache(), (req, res) => {
 		console.log(route);
@@ -357,6 +357,11 @@ Object.keys(opendata.routes).forEach((route) => {
 				result = jsonLD(result.data, result.schema, result.type);
 			}
 			res.send(result);
+		})
+		.catch((err) => {
+			res.setHeader('content-type', 'application/json');
+			res.status(500).send({ error: 500, message: err.message });
+			console.log(route, err);
 		});
 	});
 });
@@ -442,7 +447,22 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 						schema = opendata.schemas.referentiekader;
 					break;
 					case 'ErkVakleergebied':
+					case 'ErkGebied':
+					case 'ErkCategorie':
+					case 'ErkTaalactiviteit':
+					case 'ErkSchaal':
+					case 'ErkCandobeschrijving':
+					case 'ErkVoorbeeld':
+					case 'ErkLesidee':
 						schema = opendata.schemas.erk;
+					break;
+					case 'NhCategorie':
+					case 'NhSector':
+					case 'NhSchoolsoort':
+					case 'NhLeerweg':
+					case 'NhBouw':
+					case 'NhNiveau':
+						schema = opendata.schemas.niveauhierarchie;
 					break;
 					case "Vakleergebied":
 					default:
@@ -527,8 +547,9 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 	.catch(function(err) {
 		var code = err.message.split(':')[0];
 		if (!code) {
-			code = 501;
+			code = 500;
 		}
+		res.setHeader('content-type', 'application/json');
 		res.status(code).send({ error: code, message: err.message});
 	});
 });
