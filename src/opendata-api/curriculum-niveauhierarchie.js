@@ -81,6 +81,38 @@ module.exports = {
 			}
 		}`
 	},
+	typedQueries: {
+		'nh_categorie': `
+			id
+			prefix
+			title
+		`,
+		'nh_sector': `
+			id
+			prefix
+			title
+		`,
+		'nh_schoolsoort': `
+			id
+			prefix
+			title
+		`,
+		'nh_leerweg': `
+			id
+			prefix
+			title
+		`,
+		'nh_bouw': `
+			id
+			prefix
+			title
+		`,
+		'nh_niveau': `
+			id
+			prefix
+			title
+		`
+	},
 	idQuery: `
 		allNhCategorie(filter:{id:$id}) {
 			id

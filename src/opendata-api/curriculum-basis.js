@@ -262,7 +262,7 @@ module.exports = {
 				}
 			}
 		}`,
-		Deprecated: `query Deprecated {
+/*		Deprecated: `query Deprecated {
 			allDeprecated {
 				id
 				title
@@ -282,7 +282,7 @@ module.exports = {
 				doelniveau_id
 			}
 		}`,
-
+*/
 		VakleergebiedOpNiveau: `query VakleergebiedOpNiveau($niveau:ID) {
 			allNiveau(filter:{id:$niveau}) {
 				Vakleergebied {
@@ -301,6 +301,227 @@ module.exports = {
 			}
 		}`
 	},
+	typedQueries: {
+		'vakleergebied': `
+			id
+			prefix
+			title
+			description
+			prefix
+			replaces
+			KerndoelVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaVakleergebied {
+				id
+				title
+			}
+			SyllabusVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaBgProfiel {
+				id
+				title
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			InhVakleergebied {
+				id
+				title
+			}
+			RefVakleergebied {
+				id
+				title
+			}
+			ErkVakleergebied {
+				id
+				title
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'doel':`
+			id
+			title
+			description
+			bron
+			vakbegrippen
+			Doelniveau {
+				...DoelNiveau
+				LpibVakkern {
+					id
+					title
+					LpibVakleergebied {
+						id
+						title
+					}
+				}
+				LpibVaksubkern {
+					id
+					title
+					LpibVakkern {
+						id
+						title
+						LpibVakleergebied {
+							id
+							title
+						}
+					}
+				}
+				LpibVakinhoud {
+					id
+					title
+					LpibVaksubkern {
+						id
+						title
+						LpibVakkern {
+							id
+							title
+							LpibVakleergebied {
+								id
+								title
+							}
+						}
+					}
+				}
+				LdkVakleergebied {
+					id
+					title
+				}
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+				LdkVaksubkern {
+					id
+					title
+					LdkVakkern {
+						id
+						title
+						LdkVakleergebied {
+							id
+							title
+						}
+					}
+				}
+				LdkVakinhoud {
+					id
+					title
+					LdkVaksubkern {
+						id
+						title
+						LdkVakkern {
+							id
+							title
+							LdkVakleergebied {
+								id
+								title
+							}
+						}
+					}
+				}
+			}
+		`,
+		'niveau':`
+			id
+			prefix
+			title
+			description
+			type
+			Vakleergebied {
+				id
+				title
+			}
+		`,
+		'doelniveau':`
+			...DoelNiveau
+			LpibVakkern {
+				id
+				title
+				Vakleergebied {
+					id
+					title
+				}
+			}
+			LpibVaksubkern {
+				id
+				title
+				LpibVakkern {
+					id
+					title
+					LpibVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			LpibVakinhoud {
+				id
+				title
+				LpibVaksubkern {
+					id
+					title
+					LpibVakkern {
+						id
+						title
+						LpibVakleergebied {
+							id
+							title
+						}
+					}
+				}
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			LdkVakkern {
+				id
+				title
+				LdkVakleergebied {
+					id
+					title
+				}
+			}
+			LdkVaksubkern {
+				id
+				title
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			LdkVakinhoud {
+				id
+				title
+				LdkVaksubkern {
+					id
+					title
+					LdkVakkern {
+						id
+						title
+						LdkVakleergebied {
+							id
+							title
+						}
+					}
+				}
+			}
+		`
+	},
 	idQuery: `
 		allVakleergebied(filter:{id:$id}) {
 			id
@@ -309,6 +530,8 @@ module.exports = {
 			description
 			prefix
 			replaces
+			replacedBy
+			deprecated
 			KerndoelVakleergebied {
 				id
 				title
@@ -351,6 +574,9 @@ module.exports = {
 			description
 			bron
 			vakbegrippen
+			replaces
+			replacedBy
+			deprecated
 			Doelniveau {
 				...DoelNiveau
 				LdkVakleergebied {
@@ -401,7 +627,8 @@ module.exports = {
 			title
 			description
 			type
-			prefix
+			replacedBy
+			deprecated
 			Vakleergebied {
 				id
 				title
@@ -409,6 +636,9 @@ module.exports = {
 		}
 		allDoelniveau(filter:{id:$id}) {
 			...DoelNiveau
+			replaces
+			replacedBy
+			deprecated
 			LdkVakleergebied {
 				id
 				title
@@ -450,7 +680,8 @@ module.exports = {
 				}
 			}
 		}
-		allDeprecated(filter:{id:$id}) {
+`,
+/*		allDeprecated(filter:{id:$id}) {
 			id
 			title
 			description
@@ -462,6 +693,7 @@ module.exports = {
 			}
 		}
 	`,
+*/
 	routes: {
 		'niveau/:id': (req) => 
 			opendata.api["NiveauById"](req.params)
@@ -480,6 +712,7 @@ module.exports = {
 					meta:   result.data._allNiveauMeta
 				}
 			}),
+/*
 		'deprecated/': (req) =>
 			opendata.api["Deprecated"](req.params, req.query)
 			.then(function(result) {
@@ -495,6 +728,7 @@ module.exports = {
 					data: result.data.Deprecated
 				};
 			}),
+*/
 		'doel/': (req) =>
 			opendata.api["Doel"](req.params, req.query)
 			.then(function(result) {

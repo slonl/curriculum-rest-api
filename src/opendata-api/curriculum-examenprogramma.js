@@ -286,270 +286,540 @@ module.exports = {
 		  } 
 		}`
 	},
-	idQuery: `
-	  allExamenprogrammaVakleergebied(filter:{id:$id}) {
-		id
-		title
-		Vakleergebied {
-		  id
-		  title
-		}
-		Examenprogramma {
-		  id
-		  title
-		} 
-	  }
-	  allExamenprogramma(filter:{id:$id}) {
-		id
-		prefix
-		title	
-		ExamenprogrammaVakleergebied {
-		  id
-		  title
-		}
-		ExamenprogrammaDomein {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaKop1 {
-		  id
-		  prefix
-		  title
-		}
-		Syllabus {
-		  id
-		  title
-		}
-		Niveau {
-		  ...NiveauShort
-		}
-	  }
-	  allExamenprogrammaDomein(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		Tag {
-		  id
-		  title
-		}
-		Examenprogramma {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaSubdomein {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaEindterm {
-		  id
-		  prefix
-		  title
-		  Niveau {
-		    ...NiveauShort
-		  }
-		}
-		SyllabusToelichting {
-		  id
-		  title
-		}
-		SyllabusSpecifiekeEindterm {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allExamenprogrammaSubdomein(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		Tag {
-		  id
-		  title
-		}
-		ExamenprogrammaDomein {
-		  id
-		  prefix
-		  title
-		  Examenprogramma {
+	typedQueries: {
+		'examenprogramma_vakleergebied':`
 			id
 			title
-		  }
-		}
-		ExamenprogrammaEindterm {
-		  id
-		  prefix
-		  title
-		  Niveau {
-		    ...NiveauShort
-		  }
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allExamenprogrammaEindterm(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		ExamenprogrammaSubdomein {
-		  id
-		  prefix
-		  title
-		  ExamenprogrammaDomein {
+			replaces
+			Vakleergebied {
+				id
+				title
+			}
+			Examenprogramma {
+				id
+				title
+			} 
+		`,
+		'examenprogramma':`
 			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'examenprogramma_domein':`
+			id
+			prefix
+			title
+			ce_se
+			replaces
+			Tag {
+				id
+				title
+			}
+			Examenprogramma {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaSubdomein {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				prefix
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'examenprogramma_subdomein':`
+			id
+			prefix
+			title
+			ce_se
+			replaces
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaEindterm {
+				id
+				prefix
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'examenprogramma_eindterm':`
+			id
+			prefix
+			title
+			ce_se
+			replaces
+			ExamenprogrammaSubdomein {
+				id
+				prefix
+				title
+				ExamenprogrammaDomein {
+					id
+					title
+					Examenprogramma {
+						id
+						title
+					}
+				}
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				title
+			}
+			Niveau {
+				id
+				title
+			}
+		`,
+		'examenprogramma_kop1':`
+			id
+			prefix
 			title
 			Examenprogramma {
-			  id
-			  title
+				id
+				prefix
+				title
 			}
-		  }
-		}
-		ExamenprogrammaDomein {
-		  id
-		  prefix
-		  title
-		  Examenprogramma {
+			ExamenprogrammaKop2 {	  
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_kop2':`
+			id
+			prefix
+			title
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_kop3':`
+			id
+			prefix
+			title
+			ExamenprogrammaKop2 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop4 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_kop4':`
+			id
+			prefix
+			title
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_body':`
+			id
+			prefix
+			title
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaKop2 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop4 {
+				id
+				prefix
+				title
+			}
+		`
+	},
+	idQuery: `
+		allExamenprogrammaVakleergebied(filter:{id:$id}) {
 			id
 			title
-		  }
+			Vakleergebied {
+				id
+				title
+			}
+			Examenprogramma {
+				id
+				title
+			} 
 		}
-		SyllabusSpecifiekeEindterm {
-		  id
-		  title
-		}
-		SyllabusToelichting {
-		  id
-		  title
-		}
-		SyllabusVakbegrip {
-		  id
-		  title
-		}
-		Niveau {
-		  id
-		  title
-		}
-	  }
-	  allExamenprogrammaKop1(filter:{id:$id}) {
-		id
-		prefix
-		title
-		Examenprogramma {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaKop2 {	  
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBody {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaKop2(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ExamenprogrammaKop1 {
-		  id
-		  prefix
-		  title
-		  Examenprogramma {
+		allExamenprogramma(filter:{id:$id}) {
 			id
-			title
-		  }
+			prefix
+			title	
+			ExamenprogrammaVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			Niveau {
+				...NiveauShort
+			}
 		}
-		ExamenprogrammaKop3 {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBody {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaKop3(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ExamenprogrammaKop2 {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaKop4 {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBody {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaKop4(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ExamenprogrammaKop3 {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBody {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBody(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ExamenprogrammaKop1 {
-		  id
-		  prefix
-		  title
-		  Examenprogramma {
+		allExamenprogrammaDomein(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			ce_se
+			Tag {
+				id
+				title
+			}
+			Examenprogramma {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaSubdomein {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				prefix
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		ExamenprogrammaKop2 {
-		  id
-		  prefix
-		  title
+		allExamenprogrammaSubdomein(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaEindterm {
+				id
+				prefix
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		ExamenprogrammaKop3 {
-		  id
-		  prefix
-		  title
+		allExamenprogrammaEindterm(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ce_se
+			ExamenprogrammaSubdomein {
+				id
+				prefix
+				title
+				ExamenprogrammaDomein {
+					id
+					title
+					Examenprogramma {
+						id
+						title
+					}
+				}
+			}
+			ExamenprogrammaDomein {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				title
+			}
+			Niveau {
+				id
+				title
+			}
 		}
-		ExamenprogrammaKop4 {
-		  id
-		  prefix
-		  title
+		allExamenprogrammaKop1(filter:{id:$id}) {
+			id
+			prefix
+			title
+			Examenprogramma {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop2 {	  
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
 		}
-	  }
+		allExamenprogrammaKop2(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		}
+		allExamenprogrammaKop3(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ExamenprogrammaKop2 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop4 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		}
+		allExamenprogrammaKop4(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBody {
+				id
+				prefix
+				title
+			}
+		}
+		allExamenprogrammaBody(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ExamenprogrammaKop1 {
+				id
+				prefix
+				title
+				Examenprogramma {
+					id
+					title
+				}
+			}
+			ExamenprogrammaKop2 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop3 {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaKop4 {
+				id
+				prefix
+				title
+			}
+		}
 	`,
 	routes: {
 		'examenprogramma_vakleergebied': (req) =>

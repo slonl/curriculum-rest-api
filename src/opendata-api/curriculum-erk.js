@@ -168,6 +168,102 @@ module.exports = {
 			}
 		}`
 	},
+	typedQueries: {
+		'erk_vakleergebied': `
+			id
+			prefix
+			title
+			Niveau {
+			  id
+			  title
+			}
+			Vakleergebied {
+					id
+					title
+			}
+		`,
+		'erk_gebied': `
+			id
+			prefix
+			title
+			ErkCategorie {
+			  id
+			  title
+			}
+			ErkTaalactiviteit {
+			  id
+			  title
+			}
+			ErkSchaal {
+			  id
+			  title
+			}
+		`,
+		'erk_categorie': `
+			id
+			prefix
+			title
+			ErkTaalactiviteit {
+			  id
+			  title
+			}
+			ErkSchaal {
+			  id
+			  title
+			}
+		`,
+		'erk_taalactiviteit': `
+			id
+			prefix
+			title
+			ErkSchaal {
+			  id
+			  title
+			}
+		`,
+		'erk_schaal': `
+			id
+			prefix
+			title
+			ErkCandobeschrijving {
+				id
+				title
+				isempty
+				Niveau {
+				  id
+				  title
+				}
+			}
+		`,
+		'erk_candobeschrijving': `
+			id
+			prefix
+			title
+			isempty
+			Niveau {
+			  id
+			  title
+			}
+			ErkVoorbeeld {
+			  id
+			  title
+			}
+			ErkLesidee {
+			  id
+			  title
+			}
+		`,
+		'erk_voorbeeld': `
+			id
+			prefix
+			title
+		`,
+		'erk_lesidee': `
+			id
+			prefix
+			title
+		`
+	},
 	idQuery: `
 		allErkVakleergebied(filter:{id:$id}) {
 			id

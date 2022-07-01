@@ -189,6 +189,136 @@ module.exports = {
 		  }
 		}`
 	},
+	typedQueries: {
+		'ref_vakleergebied': `
+			id
+			prefix
+			title
+			RefDomein {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ref_domein': `
+			id
+			prefix
+			title
+			RefSubdomein {
+				id
+				prefix
+				title
+			}
+			RefVakleergebied {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ref_subdomein': `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+			}
+			RefDomein {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ref_onderwerp': `
+			id
+			prefix
+			title
+			RefSubdomein {
+				id
+				prefix
+				title
+			}
+			RefDeelonderwerp {
+				id
+				prefix
+				title
+			}
+			RefTekstkenmerk {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ref_deelonderwerp': `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ref_tekstkenmerk': `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`
+	},
 	idQuery: `
 		allRefVakleergebied(filter:{id:$id}) {
 			id

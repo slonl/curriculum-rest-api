@@ -122,6 +122,79 @@ module.exports = {
 		  }
 		}`
 	},
+	typedQueries: {
+		'inh_vakleergebied': `
+			id
+			prefix
+			title
+			Vakleergebied {
+				id
+				title
+			}
+			InhInhoudslijn {
+				id
+				prefix
+				title      
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'inh_inhoudslijn': `
+			id
+			prefix
+			title
+			InhCluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}		
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'inh_cluster': `
+			id
+			prefix
+			title
+			InhSubcluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'inh_subcluster': `
+			id
+			prefix
+			title
+			InhCluster {
+				id
+				prefix
+				title
+			}
+			Doelniveau {
+				...DoelNiveau
+			}    
+		`
+	},
 	idQuery: `
 		allInhVakleergebied(filter:{id:$id}) {
 			id

@@ -161,191 +161,377 @@ module.exports = {
 			}
 		  }`
 	},
+	typedQueries: {
+		'examenprogramma_bg_profiel':`
+			id
+			prefix
+			title
+			replaces
+			Vakleergebied {
+			  id
+			  title
+			}
+			ExamenprogrammaBgKern {
+			  id
+			  prefix
+			  title
+			}
+			ExamenprogrammaBgModule {
+			  id
+			  prefix
+			  title
+			}
+			ExamenprogrammaBgKeuzevak {
+			  id
+			  prefix
+			  title
+			}
+		`,
+		'examenprogramma_bg_kern':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_bg_kerndeel':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgKern {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_bg_globale_eindterm':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_bg_module':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgModuletaak{
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_bg_deeltaak':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title	  
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+		`,
+		'examenprogramma_bg_moduletaak':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'examenprogramma_bg_keuzevak':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgKeuzevaktaak {
+				id
+				prefix
+				title
+			}
+		`,
+		'examenprogramma_bg_keuzevaktaak': `
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`
+	},
 	idQuery: `
-	  allExamenprogrammaBgProfiel(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		Vakleergebied {
-		  id
-		  title
-		}
-		ExamenprogrammaBgKern {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgModule {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgKeuzevak {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgKern(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgProfiel {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgKerndeel {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgKerndeel(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgKern {
-		  id
-		  prefix
-		  title
-		  ExamenprogrammaBgProfiel {
+		allExamenprogrammaBgProfiel(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			replaces
+			Vakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaBgKern {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title
+			}
 		}
-		ExamenprogrammaBgGlobaleEindterm {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgKerndeel {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgDeeltaak {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgModule(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgProfiel {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgDeeltaak {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgModuletaak{
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgDeeltaak(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgGlobaleEindterm {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgModule {
-		  id
-		  prefix
-		  title
-		  ExamenprogrammaBgProfiel {
+		allExamenprogrammaBgKern(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+			}
 		}
-		ExamenprogrammaBgKeuzevak {
-		  id
-		  prefix
-		  title	  
-		  ExamenprogrammaBgProfiel {
+		allExamenprogrammaBgKerndeel(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			replaces
+			ExamenprogrammaBgKern {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+			}
 		}
-	  }
-	  allExamenprogrammaBgModuletaak(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgModule {
-		  id
-		  prefix
-		  title
-		  ExamenprogrammaBgProfiel {
+		allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			replaces
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
 		}
-		Niveau {
-		  ...NiveauShort
-		}
-	  }
-	  allExamenprogrammaBgKeuzevak(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgProfiel {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgDeeltaak {
-		  id
-		  prefix
-		  title
-		}
-		ExamenprogrammaBgKeuzevaktaak {
-		  id
-		  prefix
-		  title
-		}
-	  }
-	  allExamenprogrammaBgKeuzevaktaak(filter:{id:$id}) {
-		id
-		prefix
-		title
-#		replaces
-		ExamenprogrammaBgKeuzevak {
-		  id
-		  prefix
-		  title
-		  ExamenprogrammaBgProfiel {
+		allExamenprogrammaBgModule(filter:{id:$id}) {
 			id
+			prefix
 			title
-		  }
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgModuletaak{
+				id
+				prefix
+				title
+			}
 		}
-		Niveau {
-		  ...NiveauShort
+		allExamenprogrammaBgDeeltaak(filter:{id:$id}) {
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title	  
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
 		}
-	  }
+		allExamenprogrammaBgModuletaak(filter:{id:$id}) {
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		}
+		allExamenprogrammaBgKeuzevak(filter:{id:$id}) {
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+			}
+			ExamenprogrammaBgKeuzevaktaak {
+				id
+				prefix
+				title
+			}
+		}
+		allExamenprogrammaBgKeuzevaktaak(filter:{id:$id}) {
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title
+				ExamenprogrammaBgProfiel {
+					id
+					title
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		}
 	`,
 	routes: {
 		'examenprogramma_bg/:id': (req) =>

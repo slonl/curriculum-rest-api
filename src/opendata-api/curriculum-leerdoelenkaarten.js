@@ -244,113 +244,221 @@ module.exports = {
 		  }
 		}`
 	},
-	idQuery: `
-	  allLdkVakleergebied(filter:{id:$id}) {
-		id
-		title
-		LdkVakkern {
-		  ...LdkVakkern
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-		Vakleergebied {
-		  id
-		  title
-		}
-	  }
-	  allLdkVakkern(filter:{id:$id}) {
-		id
-		title
-		prefix
-		LdkVaksubkern {
-		  ...LdkVaksubkern
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LdkVakleergebied {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allLdkVaksubkern(filter:{id:$id}) {
-		...LdkVaksubkern
-		LdkVakinhoud {
-		  ...LdkVakinhoud
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LdkVakkern {
-		  ...LdkVakkern
-		  LdkVakleergebied {
+	typedQueries: {
+		'ldk_vakleergebied': `
 			id
 			title
-		  }
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allLdkVakinhoud(filter:{id:$id}) {
-		id
-		title
-		prefix
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LdkVaksubkern {
-		  ...LdkVaksubkern
-		  LdkVakkern {
-			...LdkVakkern
-			LdkVakleergebied {
-			  id
-			  title
+			LdkVakkern {
+				...LdkVakkern
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
 			}
-		  }
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+			Vakleergebied {
+				id
+				title
+			}
+		`,
+		'ldk_vakkern': `
+			id
+			title
+			prefix
+			LdkVaksubkern {
+				...LdkVaksubkern
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ldk_vaksubkern': `
+			...LdkVaksubkern
+			LdkVakinhoud {
+				...LdkVakinhoud
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVakkern {
+				...LdkVakkern
+				LdkVakleergebied {
+					id
+					title
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ldk_vakinhoud': `
+			id
+			title
+			prefix
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVaksubkern {
+				...LdkVaksubkern
+				LdkVakkern {
+					...LdkVakkern
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'ldk_vakbegrip': `
+			id
+			title
+			ce_se
+			Doelniveau {
+				...Doelen
+			}
+		`
+	},
+	idQuery: `
+		allLdkVakleergebied(filter:{id:$id}) {
+			id
+			title
+			LdkVakkern {
+				...LdkVakkern
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+			Vakleergebied {
+				id
+				title
+			}
 		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
+		allLdkVakkern(filter:{id:$id}) {
+			id
+			title
+			prefix
+			LdkVaksubkern {
+				...LdkVaksubkern
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-	  }
-	  allLdkVakbegrip(filter:{id:$id}) {
-		id
-		title
-		ce_se
-		Doelniveau {
-		  ...Doelen
+		allLdkVaksubkern(filter:{id:$id}) {
+			...LdkVaksubkern
+			LdkVakinhoud {
+				...LdkVakinhoud
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVakkern {
+				...LdkVakkern
+				LdkVakleergebied {
+					id
+					title
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-	  }
+		allLdkVakinhoud(filter:{id:$id}) {
+			id
+			title
+			prefix
+			Doelniveau {
+				...DoelNiveau
+			}
+			LdkVaksubkern {
+				...LdkVaksubkern
+				LdkVakkern {
+					...LdkVakkern
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		}
+		allLdkVakbegrip(filter:{id:$id}) {
+			id
+			title
+			ce_se
+			Doelniveau {
+				...Doelen
+			}
+		}
 	`,
 	routes: {
 		'ldk_vakleergebied/': (req) =>

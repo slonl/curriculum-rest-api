@@ -151,143 +151,281 @@ module.exports = {
 		  }
 		}`
 	},
+	typedQueries: {
+		'syllabus': `
+			id	
+			title
+			ingangsdatum
+			versie
+			url
+			examenjaar
+			status
+			ce_se
+			Examenprogramma {
+				id
+				prefix
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				prefix
+				title
+			}
+			SyllabusToelichting {
+				id
+				prefix
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				prefix
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'syllabus_vakleergebied': `
+			id
+			title
+			Syllabus {
+				id
+				title
+			}
+			Vakleergebied {
+				id
+				title
+			}
+		`,
+		'syllabus_vakbegrip': `
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'syllabus_toelichting': `
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'syllabus_specifieke_eindterm': `
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`
+	},
 	idQuery: `
-	  allSyllabus(filter:{id:$id}) {
-		id	
-		title
-		ingangsdatum
-		versie
-		url
-		examenjaar
-		status
-		ce_se
-		Examenprogramma {
-		  id
-		  prefix
-		  title
+		allSyllabus(filter:{id:$id}) {
+			id	
+			title
+			ingangsdatum
+			versie
+			url
+			examenjaar
+			status
+			ce_se
+			Examenprogramma {
+				id
+				prefix
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				prefix
+				title
+			}
+			SyllabusToelichting {
+				id
+				prefix
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				prefix
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		SyllabusSpecifiekeEindterm {
-		  id
-		  prefix
-		  title
+		allSyllabusVakleergebied(filter:{id:$id}) {
+			id
+			title
+			Syllabus {
+				id
+				title
+			}
+			Vakleergebied {
+				id
+				title
+			}
 		}
-		SyllabusToelichting {
-		  id
-		  prefix
-		  title
+		allSyllabusVakbegrip(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		SyllabusVakbegrip {
-		  id
-		  prefix
-		  title
+		allSyllabusToelichting(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			SyllabusSpecifiekeEindterm {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		} 
+		allSyllabusSpecifiekeEindterm(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ce_se
+			Tag {
+				id
+				title
+			}
+			ExamenprogrammaEindterm {
+				id
+				title
+			}
+			ExamenprogrammaDomein {
+				id
+				title
+			}
+			Syllabus {
+				id
+				title
+			}
+			SyllabusToelichting {
+				id
+				title
+			}
+			SyllabusVakbegrip {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allSyllabusVakleergebied(filter:{id:$id}) {
-		id
-		title
-		Syllabus {
-		  id
-		  title
-		}
-		Vakleergebied {
-		  id
-		  title
-		}
-	  }
-	  allSyllabusVakbegrip(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		Tag {
-		  id
-		  title
-		}
-		ExamenprogrammaEindterm {
-		  id
-		  title
-		}
-		Syllabus {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allSyllabusToelichting(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		Tag {
-		  id
-		  title
-		}
-		ExamenprogrammaEindterm {
-		  id
-		  title
-		}
-		ExamenprogrammaDomein {
-		  id
-		  title
-		}
-		Syllabus {
-		  id
-		  title
-		}
-		SyllabusSpecifiekeEindterm {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  } 
-	  allSyllabusSpecifiekeEindterm(filter:{id:$id}) {
-		id
-		prefix
-		title
-		ce_se
-		Tag {
-		  id
-		  title
-		}
-		ExamenprogrammaEindterm {
-		  id
-		  title
-		}
-		ExamenprogrammaDomein {
-		  id
-		  title
-		}
-		Syllabus {
-		  id
-		  title
-		}
-		SyllabusToelichting {
-		  id
-		  title
-		}
-		SyllabusVakbegrip {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
 	`,
 	routes: {
 		'syllabus/': (req) =>
