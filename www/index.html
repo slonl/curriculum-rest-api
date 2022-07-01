@@ -282,11 +282,11 @@
                         </div>
                     </template>
                 </span>
-                <div data-simply-field="item.@type" data-simply-content="template">
-                    <template data-simply-template="Deprecated">
+                <div data-simply-field="item.replacedBy" data-simply-content="template" data-simply-transformer="replaces">
+                    <template data-simply-template="true">
                         <label>Vervangen door</label>
                         <ul data-simply-list="item.replacedBy">
-                            <template rel="deprecatedLinks"></template>
+                            <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
@@ -294,7 +294,7 @@
                     <template data-simply-template="true">
                         <label>Vervangt</label>
                         <ul data-simply-list="item.replaces">
-                            <template rel="deprecatedLinks"></template>
+                            <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
