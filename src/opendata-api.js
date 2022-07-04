@@ -95,7 +95,6 @@ query getType($id:ID) {
 	allType(filter:{id:$id}) {
 		id
 		type
-		deprecated
 	}
 }
 `;
