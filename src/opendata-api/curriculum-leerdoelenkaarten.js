@@ -23,21 +23,24 @@ module.exports = {
 			id
 			title
 			prefix
+			deprecated
 		}`,
 		LdkVaksubkern: `fragment LdkVaksubkern on LdkVaksubkern {
 			id
 			title
 			prefix
+			deprecated
 		}`,
 		LdkVakinhoud: `fragment LdkVakinhoud on LdkVakinhoud {
 			id
 			title
 			prefix
+			deprecated
 		}`
 	},
 	queries: {
 		LdkVakleergebied: `query LdkVakleergebied($page:Int,$perPage:Int) {
-		  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
+		  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			NiveauIndex {
@@ -51,11 +54,12 @@ module.exports = {
 		  }
 		}`,
 		LdkVakkern: `query LdkVakkern($page:Int,$perPage:Int) {
-		  allLdkVakkern(page:$page,perPage:$perPage,sortField:"title") {
+		  allLdkVakkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			...LdkVakkern
 			LdkVakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 			NiveauIndex {
 			  Niveau {
@@ -68,12 +72,13 @@ module.exports = {
 		  }
 		}`,
 		LdkVaksubkern: `query LdkVaksubkern($page:Int,$perPage:Int) {
-		  allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title") {
+		  allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			...LdkVaksubkern
 			LdkVakkern {
 			  LdkVakleergebied {
 				id
 				title
+				deprecated
 			  }
 			}
 			NiveauIndex {
@@ -87,13 +92,14 @@ module.exports = {
 		  }
 		}`,
 		LdkVakinhoud: `query LdkVakinhoud($page:Int,$perPage:Int) {
-		  allLdkVakinhoud(page:$page,perPage:$perPage,sortField:"title") {
+		  allLdkVakinhoud(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			...LdkVakinhoud
 			LdkVaksubkern {
 			  LdkVakkern {
 				LdkVakleergebied {
 				  id
 				  title
+				  deprecated
 				}
 			  }
 			}
@@ -108,7 +114,7 @@ module.exports = {
 		  }
 		}`,
 		LdkVakbegrip: `query LdkVakbegrip($page:Int,$perPage:Int) {
-		  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title") {
+		  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			ce_se
@@ -160,6 +166,7 @@ module.exports = {
 			LdkVakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		}`,
@@ -168,6 +175,7 @@ module.exports = {
 			LdkVakleergebied(filter:{id:$id}) {
 			  id
 			  title
+			  deprecated
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
 				...DoelNiveau
 			  } 
@@ -195,6 +203,7 @@ module.exports = {
 			  LdkVakleergebied {
 				id
 				title
+				deprecated
 			  }
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
 				...DoelNiveau
@@ -220,6 +229,7 @@ module.exports = {
 			LdkVaksubkern(filter:{id:$id}) {
 			  id
 			  title
+			  deprecated
 			  LdkVakkern {
 				...LdkVakkern
 			  }
@@ -267,6 +277,7 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 		`,
 		'ldk_vakkern': `
@@ -287,6 +298,7 @@ module.exports = {
 			LdkVakleergebied {
 				id
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -312,6 +324,7 @@ module.exports = {
 				LdkVakleergebied {
 					id
 					title
+					deprecated
 				}
 			}
 			NiveauIndex {
@@ -334,6 +347,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
+						deprecated
 					}
 				}
 			}

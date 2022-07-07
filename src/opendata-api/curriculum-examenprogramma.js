@@ -14,18 +14,20 @@ module.exports = {
 			prefix
 			title
 			ce_se
+			deprecated
 		  }
 		  SyllabusToelichting {
 			id
 			prefix
 			title
 			ce_se
+			deprecated
 		  }
 		}`
 	},
 	queries: {
 		ExamenprogrammaVakleergebied: `query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
-		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title") {
+		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 		  }
@@ -34,7 +36,7 @@ module.exports = {
 		  }
 		}`,
 		Examenprogramma: `query Examenprogramma($page:Int,$perPage:Int) {
-		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title") {
+		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -44,13 +46,14 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaDomein: `query ExamenprogrammaDomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title") {
+		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			Examenprogramma {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaDomeinMeta {
@@ -58,16 +61,18 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaSubdomein: `query ExamenprogrammaSubdomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title") {
+		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			ExamenprogrammaDomein {
 			  id
 			  title
+			  deprecated
 			  Examenprogramma {
 				id
 				title
+				deprecated
 			  }
 			}
 		  }
@@ -76,7 +81,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaEindterm: `query ExamenprogrammaEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -86,13 +91,14 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop1: `query ExamenprogrammaKop1($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			Examenprogramma {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaKop1Meta {
@@ -100,7 +106,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop2: `query ExamenprogrammaKop2($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -110,7 +116,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop3: `query ExamenprogrammaKop3($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -120,7 +126,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop4: `query ExamenprogrammaKop4($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -130,7 +136,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBody: `query ExamenprogrammaBody($page:Int,$perPage:Int) {
-		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -153,74 +159,90 @@ module.exports = {
 			  id
 			  title
 			  ce_se
+			  deprecated
 			}
 			ExamenprogrammaKop1 {
 			  id
 			  title
+			  deprecated
 			  ExamenprogrammaKop2 {
 				id
 				title
+				deprecated
 				ExamenprogrammaKop3 {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaKop4 {
 					id
 					title
+					deprecated
 					ExamenprogrammaBody {
 					  id
 					  title
 					  ce_se
+					  deprecated
 					}
 				  }
 				  ExamenprogrammaBody {
 					id
 					title
 					ce_se
+					deprecated
 				  }
 				}
 				ExamenprogrammaKop4 {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaBody {
 					id
 					title
 					ce_se
+					deprecated
 				  }
 				}
 				ExamenprogrammaBody {
 				  id
 				  title
 				  ce_se
+				  deprecated
 				}
 			  }
 			  ExamenprogrammaKop3 {
 				id
 				title
+				deprecated
 				ExamenprogrammaKop4 {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaBody {
 					id
 					title
 					ce_se
+					deprecated
 				  }
 				}
 				ExamenprogrammaBody {
 				  id
 				  title
 				  ce_se
+				  deprecated
 				}
 			  }
 			  ExamenprogrammaBody {
 				id
 				title
 				ce_se
+				deprecated
 			  }
 			}
 			ExamenprogrammaDomein {
 			  id
 			  title
 			  ce_se
+			  deprecated
 			  SyllabusSpecifiekeEindterm {
 				...SyllabusInfo
 			  }
@@ -229,15 +251,18 @@ module.exports = {
 				prefix
 				title
 				ce_se
+				deprecated
 			  }
 			  ExamenprogrammaSubdomein {
 				id
 				title
 				ce_se
+				deprecated
 				ExamenprogrammaEindterm {
 				  id
 				  title
 				  ce_se
+				  deprecated
 				  SyllabusSpecifiekeEindterm {
 					...SyllabusInfo
 				  }
@@ -246,6 +271,7 @@ module.exports = {
 					prefix
 					title
 					ce_se
+					deprecated
 				  }
 				  Niveau {
 				    ...NiveauShort
@@ -259,20 +285,23 @@ module.exports = {
 				  prefix
 				  title
 				  ce_se
+				  deprecated
 				}
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
 				ce_se
+				deprecated
 				SyllabusSpecifiekeEindterm {
 					...SyllabusInfo
-				  }
+			 	}
 			    SyllabusVakbegrip {
 		          id
 		          prefix
 		          title
 				  ce_se
+				  deprecated
 		        }
 				Niveau {
 				  ...NiveauShort
@@ -282,6 +311,7 @@ module.exports = {
 			ExamenprogrammaVakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  } 
 		}`
@@ -290,38 +320,42 @@ module.exports = {
 		'examenprogramma_vakleergebied':`
 			id
 			title
-			replaces
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			Examenprogramma {
 				id
 				title
+				deprecated
 			} 
 		`,
 		'examenprogramma':`
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaVakleergebied {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop1 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			Niveau {
 				...NiveauShort
@@ -332,25 +366,28 @@ module.exports = {
 			prefix
 			title
 			ce_se
-			replaces
 			Tag {
 				id
 				title
+				deprecated
 			}
 			Examenprogramma {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaSubdomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaEindterm {
 				id
 				prefix
 				title
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
@@ -358,10 +395,12 @@ module.exports = {
 			SyllabusToelichting {
 				id
 				title
+				deprecated
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -374,27 +413,33 @@ module.exports = {
 			prefix
 			title
 			ce_se
-			replaces
 			Tag {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				prefix
 				title
+				deprecated
 				Examenprogramma {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaEindterm {
 				id
 				prefix
 				title
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
+			}
+			Doelniveau {
+				...DoelNiveau
 			}
 			NiveauIndex {
 				Niveau {
@@ -407,17 +452,19 @@ module.exports = {
 			prefix
 			title
 			ce_se
-			replaces
 			ExamenprogrammaSubdomein {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaDomein {
 					id
 					title
+					deprecated
 					Examenprogramma {
 						id
 						title
+						deprecated
 					}
 				}
 			}
@@ -425,46 +472,56 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 				Examenprogramma {
 					id
 					title
+					deprecated
 				}
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
+				deprecated
 			}
 			SyllabusToelichting {
 				id
 				title
+				deprecated
 			}
 			SyllabusVakbegrip {
 				id
 				title
+				deprecated
 			}
 			Niveau {
 				id
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_kop1':`
 			id
 			prefix
 			title
+			deprecated
 			Examenprogramma {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop2 {	  
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_kop2':`
@@ -475,20 +532,24 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 				Examenprogramma {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaKop3 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_kop3':`
@@ -499,16 +560,19 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop4 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_kop4':`
@@ -519,11 +583,13 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_body':`
@@ -534,25 +600,30 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 				Examenprogramma {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaKop2 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop3 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop4 {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`
 	},

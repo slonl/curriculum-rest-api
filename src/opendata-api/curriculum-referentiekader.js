@@ -4,14 +4,15 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json',
 	queries: {
 		RefVakleergebied: `query RefVakleergebied($page:Int, $perPage:Int) {
-			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
 				unreleased
 				Vakleergebied {
-						id
-						title
+					id
+					title
+					deprecated
 				}
 				NiveauIndex {
 					Niveau {
@@ -24,7 +25,7 @@ module.exports = {
 			}
 		}`,
 		RefDomein: `query RefDomein($page:Int, $perPage:Int) {
-			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -32,6 +33,7 @@ module.exports = {
 				RefVakleergebied{
 					id
 					title
+					deprecated
 				}
 				NiveauIndex {
 					Niveau {
@@ -44,7 +46,7 @@ module.exports = {
 			}
 		}`,
 		RefSubdomein: `query RefSubdomein($page:Int, $perPage:Int) {
-			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -53,6 +55,7 @@ module.exports = {
 					RefVakleergebied {
 						id
 						title
+						deprecated
 					}
 				}
 				NiveauIndex {
@@ -66,7 +69,7 @@ module.exports = {
 			}
 		}`,
 		RefOnderwerp: `query RefOnderwerp($page:Int, $perPage:Int) {
-			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -76,6 +79,7 @@ module.exports = {
 						RefVakleergebied{
 							id
 							title
+							deprecated
 						}
 					}
 				}
@@ -90,7 +94,7 @@ module.exports = {
 			}
 		}`,
 		RefDeelonderwerp: `query RefDeelonderwerp($page:Int, $perPage:Int) {
-			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -101,6 +105,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
+								deprecated
 							}
 						}
 					}
@@ -116,7 +121,7 @@ module.exports = {
 			}
 		}`,
 		RefTekstkenmerk: `query RefTekstkenmerk($page:Int, $perPage:Int) {
-			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix") {
+			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -127,6 +132,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
+								deprecated
 							}
 						}
 					}
@@ -146,6 +152,7 @@ module.exports = {
 		    id
 		    prefix
 		    title
+		    deprecated
 		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
 		      Niveau {
 		        ...NiveauShort
@@ -155,18 +162,22 @@ module.exports = {
 		      id
 		      prefix 
 		      title
+		      deprecated
 		      RefSubdomein {
 		        id
 		        prefix
 		        title
+		        deprecated
 		        RefOnderwerp {
 		          id
 		          prefix
 		          title
+		          deprecated
 		          RefDeelonderwerp {
 		            id
 		            prefix
 		            title
+		            deprecated
 		            Doelniveau(filter:{niveau_id:[$niveau]}) {
 		              ...Doelen
 		            }
@@ -198,6 +209,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -216,11 +228,13 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefVakleergebied {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -239,11 +253,13 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefDomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -262,16 +278,19 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefDeelonderwerp {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefTekstkenmerk {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -290,6 +309,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -308,6 +328,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -328,6 +349,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -346,11 +368,13 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefVakleergebied {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -369,11 +393,13 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefDomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -392,16 +418,19 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefDeelonderwerp {
 				id
 				prefix
 				title
+				deprecated
 			}
 			RefTekstkenmerk {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -420,6 +449,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -438,6 +468,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau

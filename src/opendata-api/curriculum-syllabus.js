@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-syllabus/context.json',
 	queries: {
 		Syllabus: `query Syllabus($page:Int,$perPage:Int) {
-		  allSyllabus (page:$page,perPage:$perPage,sortField:"title") {
+		  allSyllabus (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id	
 			title   
 		  }
@@ -13,13 +13,14 @@ module.exports = {
 		  }
 		}`,
 		SyllabusVakbegrip: `query SyllabusVakbegrip($page:Int,$perPage:Int) {
-		  allSyllabusVakbegrip (page:$page,perPage:$perPage,sortField:"title") {
+		  allSyllabusVakbegrip (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			Syllabus {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allSyllabusVakbegripMeta {
@@ -27,16 +28,18 @@ module.exports = {
 		  }
 		}`,
 		SyllabusVakleergebied: `query SyllabusVakleergebied($page:Int,$perPage:Int) {
-		  allSyllabusVakleergebied (page:$page,perPage:$perPage,sortField:"title") {
+		  allSyllabusVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			Syllabus {
 			  id
 			  title
+			  deprecated
 			}
 			Vakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allSyllabusVakleergebiedMeta {
@@ -44,17 +47,19 @@ module.exports = {
 		  }
 		}`,
 		SyllabusToelichting: `query SyllabusToelichting($page:Int,$perPage:Int) {
-		  allSyllabusToelichting (page:$page,perPage:$perPage,sortField:"title") {
+		  allSyllabusToelichting (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			Syllabus {
 			  id
 			  title
+			  deprecated
 			}
 			SyllabusSpecifiekeEindterm{
 			  Syllabus {
 				id
 				title
+				deprecated
 			  }
 			}
 		  }
@@ -63,12 +68,13 @@ module.exports = {
 		  }
 		}`,
 		SyllabusSpecifiekeEindterm: `query SyllabusSpecifiekeEindterm($page:Int,$perPage:Int) {
-		  allSyllabusSpecifiekeEindterm (page:$page,perPage:$perPage,sortField:"title") {
+		  allSyllabusSpecifiekeEindterm (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			Syllabus {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allSyllabusSpecifiekeEindtermMeta {
@@ -95,17 +101,21 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
+			  deprecated
 			  Tag {
 				id
 				title
+				deprecated
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			  }
 			  ExamenprogrammaDomein {
 				id
 				title
+				deprecated
 			  }
 			}
 			SyllabusToelichting {
@@ -113,25 +123,31 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
+			  deprecated
 			  Tag {
 				id
 				title
+				deprecated
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			  }
 			  ExamenprogrammaDomein {
 				id
 				title
+				deprecated
 			  }
 			  Examenprogramma {
 				id
 				title
+				deprecated
 			  }
 			  SyllabusSpecifiekeEindterm {
 				id
 				title
+				deprecated
 			  }	  
 			}
 			SyllabusVakbegrip {
@@ -139,13 +155,16 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
+			  deprecated
 			  Tag {
 				id
 				title
+				deprecated
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			  }
 			}
 		  }
@@ -165,21 +184,25 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				prefix
 				title
+				deprecated
 			}
 			SyllabusToelichting {
 				id
 				prefix
 				title
+				deprecated
 			}
 			SyllabusVakbegrip {
 				id
 				prefix
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -193,10 +216,12 @@ module.exports = {
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 		`,
 		'syllabus_vakbegrip': `
@@ -207,14 +232,17 @@ module.exports = {
 			Tag {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			}
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -230,22 +258,27 @@ module.exports = {
 			Tag {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				title
+				deprecated
 			}
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -261,26 +294,32 @@ module.exports = {
 			Tag {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				title
+				deprecated
 			}
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			SyllabusToelichting {
 				id
 				title
+				deprecated
 			}
 			SyllabusVakbegrip {
 				id
 				title
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {

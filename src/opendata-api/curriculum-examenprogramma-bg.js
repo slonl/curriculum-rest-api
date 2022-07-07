@@ -4,13 +4,14 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma-bg/context.json',
 	queries: {
 		ExamenprogrammaBgProfiel: `query ExamenprogrammaBgProfiel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			Vakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaBgProfielMeta {
@@ -18,13 +19,14 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKern: `query ExamenprogrammaBgKern($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKern (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgKern (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaBgKernMeta {
@@ -32,7 +34,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKerndeel: `query ExamenprogrammaBgKerndeel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -42,7 +44,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgGlobaleEindterm: `query ExamenprogrammaBgGlobaleEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -52,13 +54,14 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgModule: `query ExamenprogrammaBgModule($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModule (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgModule (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaBgModuleMeta {
@@ -66,7 +69,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgDeeltaak: `query ExamenprogrammaBgDeeltaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -76,7 +79,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgModuletaak: `query ExamenprogrammaBgModuletaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -86,13 +89,14 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKeuzevak: `query ExamenprogrammaBgKeuzevak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allExamenprogrammaBgKeuzevakMeta {
@@ -100,7 +104,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKeuzevaktaak: `query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage,sortField:"prefix") {
+		  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -114,48 +118,60 @@ module.exports = {
 			id
 			prefix
 			title
+			deprecated
 			  ExamenprogrammaBgKern {
 				id
 				title
+				deprecated
 				ExamenprogrammaBgKerndeel {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
+					deprecated
 				  }
 				}
 			  }
 			  ExamenprogrammaBgModule {
 				id
 				title
+				deprecated
 				ExamenprogrammaBgDeeltaak {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
+					deprecated
 				  }
 				}
 				ExamenprogrammaBgModuletaak {
 					id
 					title
+					deprecated
 				}
 			  }
 			  ExamenprogrammaBgKeuzevak {
 				id
 				title
+				deprecated
 				ExamenprogrammaBgDeeltaak {
 				  id
 				  title
+				  deprecated
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
+					deprecated
 				  }
 				}
 				ExamenprogrammaBgKeuzevaktaak {
 					id
 					title
+					deprecated
 				}
 			  }
 			}
@@ -170,21 +186,25 @@ module.exports = {
 			Vakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 			ExamenprogrammaBgKern {
 			  id
 			  prefix
 			  title
+			  deprecated
 			}
 			ExamenprogrammaBgModule {
 			  id
 			  prefix
 			  title
+			  deprecated
 			}
 			ExamenprogrammaBgKeuzevak {
 			  id
 			  prefix
 			  title
+			  deprecated
 			}
 		`,
 		'examenprogramma_bg_kern':`
@@ -196,96 +216,107 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_bg_kerndeel':`
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgKern {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaBgGlobaleEindterm {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_bg_globale_eindterm':`
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_bg_module':`
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgProfiel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgModuletaak{
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_bg_deeltaak':`
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgGlobaleEindterm {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgModule {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaBgKeuzevak {
 				id
 				prefix
-				title	  
+				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 		`,
@@ -293,14 +324,15 @@ module.exports = {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgModule {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 			Niveau {
@@ -311,35 +343,38 @@ module.exports = {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgProfiel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgKeuzevaktaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 		`,
 		'examenprogramma_bg_keuzevaktaak': `
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgKeuzevak {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 			Niveau {
@@ -352,98 +387,107 @@ module.exports = {
 			id
 			prefix
 			title
-			replaces
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaBgKern {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgModule {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgKeuzevak {
 				id
 				prefix
 				title
+				deprecated
 			}
 		}
 		allExamenprogrammaBgKern(filter:{id:$id}) {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgProfiel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
+				deprecated
 			}
 		}
 		allExamenprogrammaBgKerndeel(filter:{id:$id}) {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgKern {
 				id
 				prefix
 				title
+				deprecated
 				ExamenprogrammaBgProfiel {
 					id
 					title
+					deprecated
 				}
 			}
 			ExamenprogrammaBgGlobaleEindterm {
 				id
 				prefix
 				title
+				deprecated
 			}
 		}
 		allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 		}
 		allExamenprogrammaBgModule(filter:{id:$id}) {
 			id
 			prefix
 			title
-			replaces
 			ExamenprogrammaBgProfiel {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaBgModuletaak{
 				id
 				prefix
 				title
+				deprecated
 			}
 		}
 		allExamenprogrammaBgDeeltaak(filter:{id:$id}) {

@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-kerndoelen/context.json',
 	queries: {
 		Kerndoel: `query Kerndoel($page:Int,$perPage:Int) {
-		  allKerndoel(page:$page,perPage:$perPage,sortField:"prefix") {
+		  allKerndoel(page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
 			id
 			prefix
 			title
@@ -28,12 +28,13 @@ module.exports = {
 		  }
 		}`,
 		KerndoelDomein: `query KerndoelDomein($page:Int,$perPage:Int) {
-		  allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title") {
+		  allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			KerndoelVakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allKerndoelDomeinMeta {
@@ -41,12 +42,13 @@ module.exports = {
 		  }
 		}`,
 		KerndoelUitstroomprofiel: `query KerndoelUitstroomprofiel($page:Int,$perPage:Int) {
-		  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage,sortField:"title") {
+		  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 			KerndoelVakleergebied {
 			  id
 			  title
+			  deprecated
 			}
 		  }
 		  _allKerndoelUitstroomprofielMeta {
@@ -54,7 +56,7 @@ module.exports = {
 		  }
 		}`,
 		KerndoelVakleergebied: `query KerndoelVakleergebied($page:Int,$perPage:Int) {
-		  allKerndoelVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
+		  allKerndoelVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
 			id
 			title
 		  }
@@ -73,9 +75,11 @@ module.exports = {
 			KerndoelDomein {
 				id
 				title
+				deprecated
 				KerndoelVakleergebied {
 					id
 					title
+					deprecated
 				}
 			}
 			Niveau {
@@ -96,6 +100,7 @@ module.exports = {
 				title
 				prefix
 				kerndoelLabel
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
@@ -103,6 +108,7 @@ module.exports = {
 			KerndoelVakleergebied {
 				id
 				title
+				deprecated
 			}
 		`,
 		'kerndoel_vakleergebied': `
@@ -111,20 +117,24 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			KerndoelDomein {
 				id
 				title
+				deprecated
 			}
 			KerndoelUitstroomprofiel {
 				id
 				title
+				deprecated
 			}
 			Kerndoel {
 				id
 				title
 				prefix
 				kerndoelLabel
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
@@ -136,6 +146,7 @@ module.exports = {
 			KerndoelVakleergebied {
 				id
 				title
+				deprecated
 			}
 		`
 	},

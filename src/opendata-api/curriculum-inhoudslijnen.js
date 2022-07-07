@@ -4,13 +4,14 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-inhoudslijnen/context.json',
 	queries: {
 		InhVakleergebied: `query InhVakleergebied($page:Int, $perPage:Int) {
-			allInhVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
+			allInhVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
 				Vakleergebied {
 					id
 					title
+					deprecated
 				}
 				NiveauIndex {
 					Niveau {
@@ -23,13 +24,14 @@ module.exports = {
 			}
 		}`,
 		InhInhoudslijn: `query InhInhoudslijn($page:Int, $perPage:Int) {
-			allInhInhoudslijn(page:$page, perPage:$perPage, sortField:"prefix") {
+			allInhInhoudslijn(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
 				InhVakleergebied {
 					id
 					title
+					deprecated
 				}
 				NiveauIndex {
 					Niveau {
@@ -42,7 +44,7 @@ module.exports = {
 			}
 		}`,
 		InhCluster: `query InhCluster($page:Int, $perPage:Int) {
-			allInhCluster(page:$page, perPage:$perPage, sortField:"prefix") {
+			allInhCluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -51,6 +53,7 @@ module.exports = {
 					InhVakleergebied {
 						id
 						title
+						deprecated
 					}
 				}
 				NiveauIndex {
@@ -64,7 +67,7 @@ module.exports = {
 			}
 		}`,
 		InhSubcluster: `query InhSubcluster($page:Int, $perPage:Int) {
-			allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix") {
+			allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -74,6 +77,7 @@ module.exports = {
 						InhVakleergebied {
 							id
 							title
+							deprecated
 						}
 					}
 				}
@@ -96,14 +100,17 @@ module.exports = {
 		      id
 		      prefix
 		      title
+		      deprecated
 		      InhCluster {
 		        id
 		        prefix
 		        title
+		        deprecated
 		        InhSubcluster {
 		          id
 		          prefix
 		          title
+		          deprecated
 		          Doelniveau(filter:{niveau_id:[$niveau]}) {
 		            ...Doelen
 		          }
@@ -130,11 +137,13 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			InhInhoudslijn {
 				id
 				prefix
-				title      
+				title
+				deprecated 
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -153,6 +162,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -171,6 +181,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -189,6 +200,7 @@ module.exports = {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -203,11 +215,13 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			InhInhoudslijn {
 				id
 				prefix
-				title      
+				title
+				deprecated 
 			}
 			Doelniveau {
 				...DoelNiveau

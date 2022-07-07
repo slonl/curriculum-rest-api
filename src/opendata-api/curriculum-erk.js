@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
 		ErkVakleergebied: `query ErkVakleergebied($page:Int, $perPage:Int) {
-			allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -22,7 +22,7 @@ module.exports = {
 			}
 		}`,
 		ErkGebied: `query ErkGebied($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -36,7 +36,7 @@ module.exports = {
 			}
 		}`,
 		ErkCategorie: `query ErkCategorie($page:Int, $perPage:Int) {
-			allErkCategorie(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -49,7 +49,7 @@ module.exports = {
 			}
 		}`,
 		ErkTaalactiviteit: `query ErkTaalactiviteit($page:Int, $perPage:Int) {
-			allErkTaalactiviteit(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkTaalactiviteit(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -61,7 +61,7 @@ module.exports = {
 			}
 		}`,
 		ErkSchaal: `query ErkSchaal($page:Int, $perPage:Int) {
-			allErkSchaal(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkSchaal(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -73,7 +73,7 @@ module.exports = {
 			}
 		}`,
 		ErkCandobeschrijving: `query ErkCandobeschrijving($page:Int, $perPage:Int) {
-			allErkCandobeschrijving(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkCandobeschrijving(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -87,7 +87,7 @@ module.exports = {
 			}
 		}`,
 		ErkVoorbeeld: `query ErkVoorbeeld($page:Int, $perPage:Int) {
-			allErkVoorbeeld(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkVoorbeeld(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -98,7 +98,7 @@ module.exports = {
 			}
 		}`,
 		ErkLesidee: `query ErkLesidee($page:Int, $perPage:Int) {
-			allErkLesidee(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkLesidee(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -119,7 +119,7 @@ module.exports = {
 		  }
 		}`,
 		ErkSchalen: `query ErkSchalen($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix") {
+			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
 				id
 				prefix
 				title
@@ -174,12 +174,14 @@ module.exports = {
 			prefix
 			title
 			Niveau {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			Vakleergebied {
-					id
-					title
+				id
+				title
+				deprecated
 			}
 		`,
 		'erk_gebied': `
@@ -187,16 +189,19 @@ module.exports = {
 			prefix
 			title
 			ErkCategorie {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			ErkTaalactiviteit {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			ErkSchaal {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 		`,
 		'erk_categorie': `
@@ -204,12 +209,14 @@ module.exports = {
 			prefix
 			title
 			ErkTaalactiviteit {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			ErkSchaal {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 		`,
 		'erk_taalactiviteit': `
@@ -217,8 +224,9 @@ module.exports = {
 			prefix
 			title
 			ErkSchaal {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 		`,
 		'erk_schaal': `
@@ -229,9 +237,11 @@ module.exports = {
 				id
 				title
 				isempty
+				deprecated
 				Niveau {
-				  id
-				  title
+					id
+					title
+					deprecated
 				}
 			}
 		`,
@@ -241,16 +251,19 @@ module.exports = {
 			title
 			isempty
 			Niveau {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			ErkVoorbeeld {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 			ErkLesidee {
-			  id
-			  title
+				id
+				title
+				deprecated
 			}
 		`,
 		'erk_voorbeeld': `
