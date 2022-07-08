@@ -169,7 +169,7 @@ module.exports = {
 			     title
 			  }
 		   }
-		   allNiveauIndex(page:$page, perPage:$perPage, sortField:"title",filter:{deprecated:false}) {
+		   allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
 			 Niveau {
 			   id
 			   title
