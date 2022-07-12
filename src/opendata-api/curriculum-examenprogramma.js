@@ -23,6 +23,16 @@ module.exports = {
 			ce_se
 			deprecated
 		  }
+		  Syllabus {
+			id
+			title
+			ce_se
+			deprecated
+			examenjaar
+			  Niveau {
+				...NiveauShort
+			}
+		  }
 		}`
 	},
 	queries: {
