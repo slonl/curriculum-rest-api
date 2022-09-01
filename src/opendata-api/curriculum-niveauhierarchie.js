@@ -116,28 +116,70 @@ module.exports = {
 	idQuery: `
 		allNhCategorie(filter:{id:$id}) {
 			id
-			prefix
 			title
+			NhSector {
+			  id
+			  title
+			}
+			NhNiveau {
+			  id
+			  title
+			}
 		}
 		allNhSector(filter:{id:$id}) {
 			id
-			prefix
 			title
+			NhSchoolsoort {
+			  id
+			  title
+			}
+			NhBouw {
+			  id
+			  title
+			}
+			NhNiveau {
+			  id
+			  title
+			}
 		}
 		allNhSchoolsoort(filter:{id:$id}) {
 			id
 			prefix
 			title
+			NhLeerweg {
+			  id
+			  title
+			}
+			NhBouw {
+			  id
+			  title
+			}
+			NhNiveau {
+			  id
+			  title
+			}
 		}
 		allNhLeerweg(filter:{id:$id}) {
 			id
 			prefix
 			title
+			NhBouw {
+			  id
+			  title
+			}
+			NhNiveau {
+			  id
+			  title
+			}
 		}
 		allNhBouw(filter:{id:$id}) {
 			id
 			prefix
 			title
+			NhNiveau {
+			  id
+			  title
+			}
 		}
 		allNhNiveau(filter:{id:$id}) {
 			id

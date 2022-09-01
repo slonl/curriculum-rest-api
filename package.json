@@ -5,7 +5,7 @@
   "main": "src/api-server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-   "start": "node src/api-server.js"
+    "start": "node src/api-server.js"
   },
   "repository": {
     "type": "git",
