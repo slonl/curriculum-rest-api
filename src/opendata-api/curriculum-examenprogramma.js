@@ -170,7 +170,6 @@ module.exports = {
 			  title
 			  ce_se
 			  deprecated
-			  examenjaar
 			}
 			ExamenprogrammaKop1 {
 			  id
