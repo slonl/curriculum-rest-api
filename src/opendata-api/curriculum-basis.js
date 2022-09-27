@@ -98,7 +98,7 @@ module.exports = {
 	},
 	queries: {
 		DoelNiveau: `query DoelNiveau($page:Int,$perPage:Int) {
-			allDoelniveau(page:$page,perPage:$perPage,filter:{deprecated:false}) {
+			allDoelniveau(page:$page,perPage:$perPage,filter:{deprecated:null}) {
 				...DoelNiveau
 			}
 			_allDoelniveauMeta {
@@ -111,7 +111,7 @@ module.exports = {
 			}
 		}`,
 		Doel: `query Doel($page:Int,$perPage:Int) {
-			allDoel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+			allDoel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 				id
 				title
 			}
@@ -137,7 +137,7 @@ module.exports = {
 			}
 		}`,
 		Niveau: `query Niveau($page:Int,$perPage:Int) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+			allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 				id
 				title
 				description
@@ -153,7 +153,7 @@ module.exports = {
 			}
 		}`,
 		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int,) {
-		   allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		   allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			   id
 			   title
 			   Vakleergebied {
@@ -205,7 +205,7 @@ module.exports = {
 		   }
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
-			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 				id
 				prefix
 				title

@@ -40,7 +40,7 @@ module.exports = {
 	},
 	queries: {
 		LdkVakleergebied: `query LdkVakleergebied($page:Int,$perPage:Int) {
-		  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			NiveauIndex {
@@ -54,7 +54,7 @@ module.exports = {
 		  }
 		}`,
 		LdkVakkern: `query LdkVakkern($page:Int,$perPage:Int) {
-		  allLdkVakkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allLdkVakkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			...LdkVakkern
 			LdkVakleergebied {
 			  id
@@ -72,7 +72,7 @@ module.exports = {
 		  }
 		}`,
 		LdkVaksubkern: `query LdkVaksubkern($page:Int,$perPage:Int) {
-		  allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			...LdkVaksubkern
 			LdkVakkern {
 			  LdkVakleergebied {
@@ -92,7 +92,7 @@ module.exports = {
 		  }
 		}`,
 		LdkVakinhoud: `query LdkVakinhoud($page:Int,$perPage:Int) {
-		  allLdkVakinhoud(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allLdkVakinhoud(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			...LdkVakinhoud
 			LdkVaksubkern {
 			  LdkVakkern {
@@ -114,7 +114,7 @@ module.exports = {
 		  }
 		}`,
 		LdkVakbegrip: `query LdkVakbegrip($page:Int,$perPage:Int) {
-		  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			ce_se

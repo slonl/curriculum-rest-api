@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-kerndoelen/context.json',
 	queries: {
 		Kerndoel: `query Kerndoel($page:Int,$perPage:Int) {
-		  allKerndoel(page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allKerndoel(page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -28,7 +28,7 @@ module.exports = {
 		  }
 		}`,
 		KerndoelDomein: `query KerndoelDomein($page:Int,$perPage:Int) {
-		  allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			KerndoelVakleergebied {
@@ -42,7 +42,7 @@ module.exports = {
 		  }
 		}`,
 		KerndoelUitstroomprofiel: `query KerndoelUitstroomprofiel($page:Int,$perPage:Int) {
-		  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			KerndoelVakleergebied {
@@ -56,7 +56,7 @@ module.exports = {
 		  }
 		}`,
 		KerndoelVakleergebied: `query KerndoelVakleergebied($page:Int,$perPage:Int) {
-		  allKerndoelVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allKerndoelVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 		  }

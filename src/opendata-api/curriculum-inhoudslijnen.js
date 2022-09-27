@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-inhoudslijnen/context.json',
 	queries: {
 		InhVakleergebied: `query InhVakleergebied($page:Int, $perPage:Int) {
-			allInhVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allInhVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -24,7 +24,7 @@ module.exports = {
 			}
 		}`,
 		InhInhoudslijn: `query InhInhoudslijn($page:Int, $perPage:Int) {
-			allInhInhoudslijn(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allInhInhoudslijn(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -44,7 +44,7 @@ module.exports = {
 			}
 		}`,
 		InhCluster: `query InhCluster($page:Int, $perPage:Int) {
-			allInhCluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allInhCluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -67,7 +67,7 @@ module.exports = {
 			}
 		}`,
 		InhSubcluster: `query InhSubcluster($page:Int, $perPage:Int) {
-			allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allInhSubcluster(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title

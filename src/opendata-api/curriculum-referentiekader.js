@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json',
 	queries: {
 		RefVakleergebied: `query RefVakleergebied($page:Int, $perPage:Int) {
-			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -25,7 +25,7 @@ module.exports = {
 			}
 		}`,
 		RefDomein: `query RefDomein($page:Int, $perPage:Int) {
-			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -46,7 +46,7 @@ module.exports = {
 			}
 		}`,
 		RefSubdomein: `query RefSubdomein($page:Int, $perPage:Int) {
-			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -69,7 +69,7 @@ module.exports = {
 			}
 		}`,
 		RefOnderwerp: `query RefOnderwerp($page:Int, $perPage:Int) {
-			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -94,7 +94,7 @@ module.exports = {
 			}
 		}`,
 		RefDeelonderwerp: `query RefDeelonderwerp($page:Int, $perPage:Int) {
-			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -121,7 +121,7 @@ module.exports = {
 			}
 		}`,
 		RefTekstkenmerk: `query RefTekstkenmerk($page:Int, $perPage:Int) {
-			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title

@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
 		ErkVakleergebied: `query ErkVakleergebied($page:Int, $perPage:Int) {
-			allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -22,7 +22,7 @@ module.exports = {
 			}
 		}`,
 		ErkGebied: `query ErkGebied($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -36,7 +36,7 @@ module.exports = {
 			}
 		}`,
 		ErkCategorie: `query ErkCategorie($page:Int, $perPage:Int) {
-			allErkCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -49,7 +49,7 @@ module.exports = {
 			}
 		}`,
 		ErkTaalactiviteit: `query ErkTaalactiviteit($page:Int, $perPage:Int) {
-			allErkTaalactiviteit(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkTaalactiviteit(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -61,7 +61,7 @@ module.exports = {
 			}
 		}`,
 		ErkSchaal: `query ErkSchaal($page:Int, $perPage:Int) {
-			allErkSchaal(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkSchaal(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -73,7 +73,7 @@ module.exports = {
 			}
 		}`,
 		ErkCandobeschrijving: `query ErkCandobeschrijving($page:Int, $perPage:Int) {
-			allErkCandobeschrijving(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkCandobeschrijving(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -87,7 +87,7 @@ module.exports = {
 			}
 		}`,
 		ErkVoorbeeld: `query ErkVoorbeeld($page:Int, $perPage:Int) {
-			allErkVoorbeeld(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkVoorbeeld(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -98,7 +98,7 @@ module.exports = {
 			}
 		}`,
 		ErkLesidee: `query ErkLesidee($page:Int, $perPage:Int) {
-			allErkLesidee(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkLesidee(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -119,7 +119,7 @@ module.exports = {
 		  }
 		}`,
 		ErkSchalen: `query ErkSchalen($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title

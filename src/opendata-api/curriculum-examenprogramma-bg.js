@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma-bg/context.json',
 	queries: {
 		ExamenprogrammaBgProfiel: `query ExamenprogrammaBgProfiel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -19,7 +19,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKern: `query ExamenprogrammaBgKern($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKern (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgKern (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -34,7 +34,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKerndeel: `query ExamenprogrammaBgKerndeel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -44,7 +44,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgGlobaleEindterm: `query ExamenprogrammaBgGlobaleEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -54,7 +54,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgModule: `query ExamenprogrammaBgModule($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModule (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgModule (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -69,7 +69,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgDeeltaak: `query ExamenprogrammaBgDeeltaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -79,7 +79,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgModuletaak: `query ExamenprogrammaBgModuletaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -89,7 +89,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKeuzevak: `query ExamenprogrammaBgKeuzevak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -104,7 +104,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBgKeuzevaktaak: `query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title

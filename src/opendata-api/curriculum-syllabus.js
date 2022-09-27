@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-syllabus/context.json',
 	queries: {
 		Syllabus: `query Syllabus($page:Int,$perPage:Int) {
-		  allSyllabus (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allSyllabus (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id	
 			title   
 		  }
@@ -13,7 +13,7 @@ module.exports = {
 		  }
 		}`,
 		SyllabusVakbegrip: `query SyllabusVakbegrip($page:Int,$perPage:Int) {
-		  allSyllabusVakbegrip (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allSyllabusVakbegrip (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -28,7 +28,7 @@ module.exports = {
 		  }
 		}`,
 		SyllabusVakleergebied: `query SyllabusVakleergebied($page:Int,$perPage:Int) {
-		  allSyllabusVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allSyllabusVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			Syllabus {
@@ -47,7 +47,7 @@ module.exports = {
 		  }
 		}`,
 		SyllabusToelichting: `query SyllabusToelichting($page:Int,$perPage:Int) {
-		  allSyllabusToelichting (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allSyllabusToelichting (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			Syllabus {
@@ -68,7 +68,7 @@ module.exports = {
 		  }
 		}`,
 		SyllabusSpecifiekeEindterm: `query SyllabusSpecifiekeEindterm($page:Int,$perPage:Int) {
-		  allSyllabusSpecifiekeEindterm (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allSyllabusSpecifiekeEindterm (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 			Syllabus {

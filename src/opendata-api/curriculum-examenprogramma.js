@@ -37,7 +37,7 @@ module.exports = {
 	},
 	queries: {
 		ExamenprogrammaVakleergebied: `query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
-		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			title
 		  }
@@ -46,7 +46,7 @@ module.exports = {
 		  }
 		}`,
 		Examenprogramma: `query Examenprogramma($page:Int,$perPage:Int) {
-		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -56,7 +56,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaDomein: `query ExamenprogrammaDomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -71,7 +71,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaSubdomein: `query ExamenprogrammaSubdomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:false}) {
+		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -91,7 +91,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaEindterm: `query ExamenprogrammaEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -101,7 +101,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop1: `query ExamenprogrammaKop1($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -116,7 +116,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop2: `query ExamenprogrammaKop2($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -126,7 +126,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop3: `query ExamenprogrammaKop3($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -136,7 +136,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaKop4: `query ExamenprogrammaKop4($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title
@@ -146,7 +146,7 @@ module.exports = {
 		  }
 		}`,
 		ExamenprogrammaBody: `query ExamenprogrammaBody($page:Int,$perPage:Int) {
-		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:false}) {
+		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
 			id
 			prefix
 			title

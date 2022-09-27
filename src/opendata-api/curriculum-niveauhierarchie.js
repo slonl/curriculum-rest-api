@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-niveauhierarchie/context.json',
 	queries: {
 		NhCategorie: `query NhCategorie($page:Int, $perPage:Int) {
-			allNhCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -17,7 +17,7 @@ module.exports = {
 			}
 		}`,
 		NhSector: `query NhSector($page:Int, $perPage:Int) {
-			allNhSector(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhSector(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -31,7 +31,7 @@ module.exports = {
 			}
 		}`,
 		NhSchoolsoort: `query NhSchoolsoort($page:Int, $perPage:Int) {
-			allNhSchoolsoort(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhSchoolsoort(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -45,7 +45,7 @@ module.exports = {
 			}
 		}`,
 		NhLeerweg: `query NhLeerweg($page:Int, $perPage:Int) {
-			allNhLeerweg(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhLeerweg(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -58,7 +58,7 @@ module.exports = {
 			}
 		}`,
 		NhBouw: `query NhBouw($page:Int, $perPage:Int) {
-			allNhBouw(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhBouw(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
@@ -70,7 +70,7 @@ module.exports = {
 			}
 		}`,
 		NhNiveau: `query NhNiveau($page:Int, $perPage:Int) {
-			allNhNiveau(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:false}) {
+			allNhNiveau(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
 				prefix
 				title
