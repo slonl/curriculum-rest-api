@@ -153,56 +153,56 @@ module.exports = {
 			}
 		}`,
 		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int,) {
-		   allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			   id
-			   title
-			   Vakleergebied {
-				 id
-				 title
-			   }
-			   ErkVakleergebied {
-				 id
-				 title
-			   }
-			   RefVakleergebied {
-			     id
-			     title
-			  }
-		   }
-		   allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
-			 Niveau {
-			   id
-			   title
-			 }
-			   KerndoelVakleergebied {
-				 id
-				 title
-			   }
-			 ExamenprogrammaVakleergebied {
-			   id
-			   title
-			 }
-			 SyllabusVakleergebied {
-			   id
-			   title
-			 }
-			 LdkVakleergebied {
-			   id
-			   title
-			 }
-			 InhVakleergebied {
-			   id
-			   title
-			 }
-			   ErkVakleergebied {
-				 id
-				 title
-			   }
-			   RefVakleergebied {
-			     id
-			     title
-			  }
-		   }
+			allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
+				id
+				title
+				Vakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				ErkVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				RefVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+			}
+			allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
+				Niveau(filter:{deprecated:null}) {
+					id
+					title
+				}
+				KerndoelVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				ExamenprogrammaVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				SyllabusVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				LdkVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				InhVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				ErkVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+				RefVakleergebied(filter:{deprecated:null}) {
+					id
+					title
+				}
+			}
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
 			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
