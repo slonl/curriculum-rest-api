@@ -251,6 +251,9 @@ module.exports = {
 			id
 			prefix
 			title
+			Niveau {
+				...NiveauShort
+			}
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
