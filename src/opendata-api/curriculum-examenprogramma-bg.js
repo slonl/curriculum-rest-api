@@ -221,12 +221,18 @@ module.exports = {
 		  id
 		  prefix
 		  title
+		  Niveau {
+		    ...NiveauShort
+		  }
 		}
 	  }
 	  allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
 		id
 		prefix
 		title
+		Niveau {
+		  ...NiveauShort
+		}
 #		replaces
 		ExamenprogrammaBgKerndeel {
 		  id
