@@ -166,6 +166,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		Vakleergebied {
 		  id
 		  title
@@ -190,6 +191,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgProfiel {
 		  id
 		  prefix
@@ -205,6 +207,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgKern {
 		  id
 		  prefix
@@ -224,6 +227,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgKerndeel {
 		  id
 		  prefix
@@ -239,6 +243,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgProfiel {
 		  id
 		  prefix
@@ -259,6 +264,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgGlobaleEindterm {
 		  id
 		  prefix
@@ -287,6 +293,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgModule {
 		  id
 		  prefix
@@ -304,6 +311,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgProfiel {
 		  id
 		  prefix
@@ -324,6 +332,7 @@ module.exports = {
 		id
 		prefix
 		title
+#		replaces
 		ExamenprogrammaBgKeuzevak {
 		  id
 		  prefix
