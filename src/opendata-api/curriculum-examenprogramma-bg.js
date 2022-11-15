@@ -161,6 +161,214 @@ module.exports = {
 			}
 		  }`
 	},
+		typedQueries: {
+		'examenprogramma_bg_profiel':`
+			id
+			prefix
+			title
+			replaces
+			Vakleergebied {
+			  id
+			  title
+			  deprecated
+			}
+			ExamenprogrammaBgKern {
+			  id
+			  prefix
+			  title
+			  deprecated
+			}
+			ExamenprogrammaBgModule {
+			  id
+			  prefix
+			  title
+			  deprecated
+			}
+			ExamenprogrammaBgKeuzevak {
+			  id
+			  prefix
+			  title
+			  deprecated
+			}
+		`,
+		'examenprogramma_bg_kern':`
+			id
+			prefix
+			title
+			replaces
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+				deprecated
+			}
+		`,
+		'examenprogramma_bg_kerndeel':`
+			id
+			prefix
+			title
+			ExamenprogrammaBgKern {
+				id
+				prefix
+				title
+				deprecated
+				ExamenprogrammaBgProfiel {
+					id
+					title
+					deprecated
+				}
+			}
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+				deprecated
+			}
+		`,
+		'examenprogramma_bg_globale_eindterm':`
+			id
+			prefix
+			title
+			Niveau {
+				...NiveauShort
+			}
+			ExamenprogrammaBgKerndeel {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+				deprecated
+			}
+		`,
+		'examenprogramma_bg_module':`
+			id
+			prefix
+			title
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgModuletaak{
+				id
+				prefix
+				title
+				deprecated
+			}
+		`,
+		'examenprogramma_bg_deeltaak':`
+			id
+			prefix
+			title
+			ExamenprogrammaBgGlobaleEindterm {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				deprecated
+				ExamenprogrammaBgProfiel {
+					id
+					title
+					deprecated
+				}
+			}
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title
+				deprecated
+				ExamenprogrammaBgProfiel {
+					id
+					title
+					deprecated
+				}
+			}
+		`,
+		'examenprogramma_bg_moduletaak':`
+			id
+			prefix
+			title
+			ExamenprogrammaBgModule {
+				id
+				prefix
+				title
+				deprecated
+				ExamenprogrammaBgProfiel {
+					id
+					title
+					deprecated
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'examenprogramma_bg_keuzevak':`
+			id
+			prefix
+			title
+			ExamenprogrammaBgProfiel {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgDeeltaak {
+				id
+				prefix
+				title
+				deprecated
+			}
+			ExamenprogrammaBgKeuzevaktaak {
+				id
+				prefix
+				title
+				deprecated
+			}
+		`,
+		'examenprogramma_bg_keuzevaktaak': `
+			id
+			prefix
+			title
+			ExamenprogrammaBgKeuzevak {
+				id
+				prefix
+				title
+				deprecated
+				ExamenprogrammaBgProfiel {
+					id
+					title
+					deprecated
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`
+	},
 	idQuery: `
 	  allExamenprogrammaBgProfiel(filter:{id:$id}) {
 		id
