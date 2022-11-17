@@ -1,17 +1,19 @@
 module.exports = {
-	context: 'referentiekader',
-	jsonld: 'https://opendata.slo.nl/curriculum/schemas/referentiekader.jsonld',
-	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json',
-	queries: {
-		RefVakleergebied: `query RefVakleergebied($page:Int, $perPage:Int) {
+  context: "referentiekader",
+  jsonld: "https://opendata.slo.nl/curriculum/schemas/referentiekader.jsonld",
+  schema:
+    "https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json",
+  queries: {
+    RefVakleergebied: `query RefVakleergebied($page:Int, $perPage:Int) {
 			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
 				title
 				unreleased
 				Vakleergebied {
-						id
-						title
+					id
+					title
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -23,7 +25,7 @@ module.exports = {
 				count
 			}
 		}`,
-		RefDomein: `query RefDomein($page:Int, $perPage:Int) {
+    RefDomein: `query RefDomein($page:Int, $perPage:Int) {
 			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
@@ -32,6 +34,7 @@ module.exports = {
 				RefVakleergebied{
 					id
 					title
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -43,7 +46,7 @@ module.exports = {
 				count
 			}
 		}`,
-		RefSubdomein: `query RefSubdomein($page:Int, $perPage:Int) {
+    RefSubdomein: `query RefSubdomein($page:Int, $perPage:Int) {
 			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
@@ -53,6 +56,7 @@ module.exports = {
 					RefVakleergebied {
 						id
 						title
+						
 					}
 				}
 				NiveauIndex {
@@ -65,7 +69,7 @@ module.exports = {
 				count
 			}
 		}`,
-		RefOnderwerp: `query RefOnderwerp($page:Int, $perPage:Int) {
+    RefOnderwerp: `query RefOnderwerp($page:Int, $perPage:Int) {
 			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
@@ -76,6 +80,7 @@ module.exports = {
 						RefVakleergebied{
 							id
 							title
+							
 						}
 					}
 				}
@@ -89,7 +94,7 @@ module.exports = {
 				count
 			}
 		}`,
-		RefDeelonderwerp: `query RefDeelonderwerp($page:Int, $perPage:Int) {
+    RefDeelonderwerp: `query RefDeelonderwerp($page:Int, $perPage:Int) {
 			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
@@ -101,6 +106,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
+								
 							}
 						}
 					}
@@ -115,7 +121,7 @@ module.exports = {
 				count
 			}
 		}`,
-		RefTekstkenmerk: `query RefTekstkenmerk($page:Int, $perPage:Int) {
+    RefTekstkenmerk: `query RefTekstkenmerk($page:Int, $perPage:Int) {
 			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix") {
 				id
 				prefix
@@ -127,6 +133,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
+								
 							}
 						}
 					}
@@ -141,11 +148,12 @@ module.exports = {
 				count
 			}
 		}`,
-		ReferentiekaderVolledig: `query ReferentiekaderVolledig($id:ID, $niveau:ID) {
+    ReferentiekaderVolledig: `query ReferentiekaderVolledig($id:ID, $niveau:ID) {
 		  RefVakleergebied(id:$id) {
 		    id
 		    prefix
 		    title
+		    
 		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
 		      Niveau {
 		        ...NiveauShort
@@ -155,18 +163,22 @@ module.exports = {
 		      id
 		      prefix 
 		      title
+		      
 		      RefSubdomein {
 		        id
 		        prefix
 		        title
+		        
 		        RefOnderwerp {
 		          id
 		          prefix
 		          title
+		          
 		          RefDeelonderwerp {
 		            id
 		            prefix
 		            title
+		            
 		            Doelniveau(filter:{niveau_id:[$niveau]}) {
 		              ...Doelen
 		            }
@@ -187,9 +199,149 @@ module.exports = {
 		      ...Doelen
 		    }
 		  }
-		}`
-	},
-	idQuery: `
+		}`,
+  },
+  typedQueries: {
+    ref_vakleergebied: `
+			id
+			prefix
+			title
+			RefDomein {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+    ref_domein: `
+			id
+			prefix
+			title
+			RefSubdomein {
+				id
+				prefix
+				title
+				
+			}
+			RefVakleergebied {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+    ref_subdomein: `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+				
+			}
+			RefDomein {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+    ref_onderwerp: `
+			id
+			prefix
+			title
+			RefSubdomein {
+				id
+				prefix
+				title
+				
+			}
+			RefDeelonderwerp {
+				id
+				prefix
+				title
+				
+			}
+			RefTekstkenmerk {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+    ref_deelonderwerp: `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+    ref_tekstkenmerk: `
+			id
+			prefix
+			title
+			RefOnderwerp {
+				id
+				prefix
+				title
+				
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+  },
+  idQuery: `
 		allRefVakleergebied(filter:{id:$id}) {
 			id
 			prefix
@@ -198,6 +350,7 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -216,11 +369,13 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			RefVakleergebied {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -239,11 +394,13 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			RefDomein {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -262,16 +419,19 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			RefDeelonderwerp {
 				id
 				prefix
 				title
+				
 			}
 			RefTekstkenmerk {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -290,6 +450,7 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -308,6 +469,7 @@ module.exports = {
 				id
 				prefix
 				title
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -319,45 +481,75 @@ module.exports = {
 			}
 		}
 	`,
-	routes: {
-		'ref_vakleergebied/': (req) =>
-			opendata.api["RefVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefVakleergebied, type: 'RefVakleergebied', meta: result.data._allRefVakleergebiedMeta}
-			}),
-		'ref_domein/': (req) =>
-			opendata.api["RefDomein"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefDomein, type: 'RefDomein', meta: result.data._allRefDomeinMeta}
-			}),
-		'ref_subdomein/': (req) =>
-			opendata.api["RefSubdomein"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefSubdomein, type: 'RefSubdomein', meta: result.data._allRefSubdomeinMeta}
-			}),
-		'ref_onderwerp/': (req) =>
-			opendata.api["RefOnderwerp"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefOnderwerp, type: 'RefOnderwerp', meta: result.data._allRefOnderwerpMeta}
-			}),
-		'ref_deelonderwerp/': (req) =>
-			opendata.api["RefDeelonderwerp"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefDeelonderwerp, type: 'RefDeelonderwerp', meta: result.data._allRefDeelonderwerpMeta}
-			}),
-		'ref_tekstkenmerk/': (req) =>
-			opendata.api["RefTekstkenmerk"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefTekstkenmerk, type: 'RefTekstkenmerk', meta: result.data._allRefTekstkenmerkMeta}
-			}),
-		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) =>
-			opendata.api["ReferentiekaderVolledig"](req.params)
-			.then(function(result) {
-				result.data.RefVakleergebied.Niveau = result.data.RefVakleergebied.NiveauIndex[0].Niveau[0];
-				return {
-					data: result.data.RefVakleergebied,
-					type: 'Refvakleergebied'
-				}
-			})
-	}
+  routes: {
+    "ref_vakleergebied/": (req) =>
+      opendata.api["RefVakleergebied"](req.params, req.query).then(function (
+        result
+      ) {
+        return {
+          data: result.data.allRefVakleergebied,
+          type: "RefVakleergebied",
+          meta: result.data._allRefVakleergebiedMeta,
+        };
+      }),
+    "ref_domein/": (req) =>
+      opendata.api["RefDomein"](req.params, req.query).then(function (result) {
+        return {
+          data: result.data.allRefDomein,
+          type: "RefDomein",
+          meta: result.data._allRefDomeinMeta,
+        };
+      }),
+    "ref_subdomein/": (req) =>
+      opendata.api["RefSubdomein"](req.params, req.query).then(function (
+        result
+      ) {
+        return {
+          data: result.data.allRefSubdomein,
+          type: "RefSubdomein",
+          meta: result.data._allRefSubdomeinMeta,
+        };
+      }),
+    "ref_onderwerp/": (req) =>
+      opendata.api["RefOnderwerp"](req.params, req.query).then(function (
+        result
+      ) {
+        return {
+          data: result.data.allRefOnderwerp,
+          type: "RefOnderwerp",
+          meta: result.data._allRefOnderwerpMeta,
+        };
+      }),
+    "ref_deelonderwerp/": (req) =>
+      opendata.api["RefDeelonderwerp"](req.params, req.query).then(function (
+        result
+      ) {
+        return {
+          data: result.data.allRefDeelonderwerp,
+          type: "RefDeelonderwerp",
+          meta: result.data._allRefDeelonderwerpMeta,
+        };
+      }),
+    "ref_tekstkenmerk/": (req) =>
+      opendata.api["RefTekstkenmerk"](req.params, req.query).then(function (
+        result
+      ) {
+        return {
+          data: result.data.allRefTekstkenmerk,
+          type: "RefTekstkenmerk",
+          meta: result.data._allRefTekstkenmerkMeta,
+        };
+      }),
+    "niveau/:niveau/ref_vakleergebied/:id/doelen": (req) =>
+      opendata.api["ReferentiekaderVolledig"](req.params).then(function (
+        result
+      ) {
+        result.data.RefVakleergebied.Niveau =
+          result.data.RefVakleergebied.NiveauIndex[0].Niveau[0];
+        return {
+          data: result.data.RefVakleergebied,
+          type: "Refvakleergebied",
+        };
+      }),
+  },
 };

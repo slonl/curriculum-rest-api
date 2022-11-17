@@ -9,8 +9,10 @@ module.exports = function graphQuery(url, query, variables, operationName, urlQu
 	}
 
 	for (var i in variables) {
-		// replace legacy bk: ids to basic uuids.
-		variables[i] = variables[i].replace(/^bk:/, '');
+		if (typeof variables[i]==='string') {
+			// replace legacy bk: ids to basic uuids.
+			variables[i] = variables[i].replace(/^bk:/, '');
+		}
 	}
 
 	variables.page = urlQuery.page ? urlQuery.page : 0;

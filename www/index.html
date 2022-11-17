@@ -130,6 +130,7 @@
                         <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">SyllabusToelichting</a></li>
                         <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">SyllabusVakbegrip</a></li>
                     </ul>
+                    </details>
                 </li>
                 <li><details>
                     <summary>Leerplan-in-beeld</summary>
@@ -141,6 +142,7 @@
                         <li><a href="lpib_vaksubkern/" class="slo-nav" data-simply-group="menu">LpibVaksubkern</a></li>
                         <li><a href="lpib_vakinhoud/" class="slo-nav" data-simply-group="menu">LpibVakinhoud</a></li>
                     </ul>
+                    </details>
                 </li>
                 <li><details>
                     <summary>Leerdoelenkaarten</summary>
@@ -183,7 +185,7 @@
                         <li><a href="erk_categorie/" class="slo-nav" data-simply-group="menu">ErkCategorie</a></li>
                         <li><a href="erk_taalactiviteit/" class="slo-nav" data-simply-group="menu">ErkTaalactiviteit</a></li>
                         <li><a href="erk_schaal/" class="slo-nav" data-simply-group="menu">ErkSchaal</a></li>
-                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCanDoBeschrijving</a></li>
+                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCandobeschrijving</a></li>
                         <li><a href="erk_voorbeeld/" class="slo-nav" data-simply-group="menu">ErkVoorbeeld</a></li>
                         <li><a href="erk_lesidee/" class="slo-nav" data-simply-group="menu">ErkLesidee</a></li>
                     </ul>
@@ -195,7 +197,13 @@
 </nav>
 
 <main class="slo-main">
-    <div class="error" data-simply-field="error"></div>
+    <div class="error" data-simply-field="error" data-simply-content="template" data-simply-transformer="truthy">
+        <template data-simply-template="false"></template>
+        <template data-simply-template="true">
+            <span data-simply-field="error"></span>: <span data-simply-field="errorMessage"></span>
+        </template>
+    </div>
+        
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
         <template data-simply-template="home">
             <h1 class="title" data-simply-field="title"></h1>
@@ -287,11 +295,18 @@
                         </div>
                     </template>
                 </span>
-                <div data-simply-field="item.@type" data-simply-content="template">
-                    <template data-simply-template="Deprecated">
+                <span data-simply-field="item.deprecated" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <div class="slo-tag"><label class="slo-tag-label"><svg
+                class="slo-icon slo-icon-feather"><use
+                xlink:href="/files/feather-sprite.svg#trash-2"></use></svg></label>Deprecated</div>
+                    </template>
+                </span>
+                <div data-simply-field="item.replacedBy" data-simply-content="template" data-simply-transformer="replaces">
+                    <template data-simply-template="true">
                         <label>Vervangen door</label>
                         <ul data-simply-list="item.replacedBy">
-                            <template rel="deprecatedLinks"></template>
+                            <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
@@ -299,7 +314,7 @@
                     <template data-simply-template="true">
                         <label>Vervangt</label>
                         <ul data-simply-list="item.replaces">
-                            <template rel="deprecatedLinks"></template>
+                            <template rel="links"></template>
                         </ul>
                     </template>
                 </div>
@@ -339,59 +354,10 @@
                         </ul>
                     </template>
                 </div>
-                <div data-simply-field="item.LpibVakkencluster" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakkencluster</h3>
-                        <ul data-simply-list="item.LpibVakkencluster">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibLeerlijn" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibLeerlijn</h3>
-                        <ul data-simply-list="item.LpibLeerlijn">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
                 <div data-simply-field="item.Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Vakleergebied</h3>
                         <ul data-simply-list="item.Vakleergebied">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakleergebied</h3>
-                        <ul data-simply-list="item.LpibVakleergebied">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakkern" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakkern</h3>
-                        <ul data-simply-list="item.LpibVakkern">
-                            <template rel="links"></template>
-                        </ul>
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVaksubkern</h3>
-                        <ul data-simply-list="item.LpibVaksubkern">
-                            <template rel="links"></template>
-                        </ul>
-                    
-                    </template>
-                </div>
-                <div data-simply-field="item.LpibVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
-                    <template data-simply-template="true">
-                        <h3>LpibVakinhoud</h3>
-                        <ul data-simply-list="item.LpibVakinhoud">
                             <template rel="links"></template>
                         </ul>
                     </template>
@@ -734,7 +700,62 @@
                         </ul>
                     </template>
                 </div>
-                
+                <div data-simply-field="item.ErkGebied" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Gebied</h3>
+                        <ul data-simply-list="item.ErkGebied">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkCategorie" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Categorie</h3>
+                        <ul data-simply-list="item.ErkCategorie">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkTaalactiviteit" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Taalactiviteit</h3>
+                        <ul data-simply-list="item.ErkTaalactiviteit">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkSchaal" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Schaal</h3>
+                        <ul data-simply-list="item.ErkSchaal">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkCandobeschrijving" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Cando-beschrijving</h3>
+                        <ul data-simply-list="item.ErkCandobeschrijving">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkVoorbeeld" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Voorbeeld</h3>
+                        <ul data-simply-list="item.ErkVoorbeeld">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
+                <div data-simply-field="item.ErkLesidee" data-simply-content="template" data-simply-transformer="truthy">
+                    <template data-simply-template="true">
+                        <h3>Lesidee</h3>
+                        <ul data-simply-list="item.ErkLesidee">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                </div>
                 <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
                         <h3>Doelniveau</h3>
@@ -802,6 +823,16 @@
 <template id="links">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
+            <span data-simply-field="deprecated" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="slo-tag slo-tag-mini">
+                        <span class="slo-tag-label"><svg
+                class="slo-icon slo-icon-feather"><use
+                xlink:href="/files/feather-sprite.svg#trash-2"></use></svg></span>
+                        <span>Deprecated</span>
+                    </span>
+                </template>
+            </span>
             <span data-simply-field="bron" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="slo-tag slo-tag-mini">
@@ -1016,6 +1047,7 @@
             </template>
         </span>
 
+
         <span data-simply-list="RefVakleergebied">
             <template>
                 <span class="slo-tag slo-tag-mini">
@@ -1108,6 +1140,87 @@
                                             <template>
                                                 <span class="slo-tag slo-tag-mini">
                                                     <span class="slo-tag-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="ErkGebied">
+            <template>
+                <span class="slo-tag slo-tag-mini">
+                    <span class="slo-tag-label">ErkGebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCategorie">
+            <template>
+                <span data-simply-list="ErkGebied">
+                    <template>
+                        <span class="slo-tag slo-tag-mini">
+                            <span class="slo-tag-label">ErkGebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkTaalactiviteit">
+            <template>
+                <span data-simply-list="ErkCategorie">
+                    <template>
+                        <span data-simply-list="ErkGebied">
+                            <template>
+                                <span class="slo-tag slo-tag-mini">
+                                    <span class="slo-tag-label">ErkGebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkSchaal">
+            <template>
+                <span data-simply-list="ErkTaalactiviteit">
+                    <template>
+                        <span data-simply-list="ErkCategorie">
+                            <template>
+                                <span data-simply-list="ErkGebied">
+                                    <template>
+                                        <span class="slo-tag slo-tag-mini">
+                                            <span class="slo-tag-label">ErkGebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCandobeschrijving">
+            <template>
+                <span data-simply-list="ErkSchaal">
+                    <template>
+                        <span data-simply-list="ErkTaalactiviteit">
+                            <template>
+                                <span data-simply-list="ErkCategorie">
+                                    <template>
+                                        <span data-simply-list="ErkGebied">
+                                            <template>
+                                                <span class="slo-tag slo-tag-mini">
+                                                    <span class="slo-tag-label">ErkGebied</span>
                                                     <span data-simply-field="title">title</span>
                                                 </span>
                                             </template>
@@ -1246,13 +1359,7 @@
     })();
     
     var titles = {
-        'lpib_vakkencluster/': 'LpibVakkencluster',
-        'lpib_leerlijn/': 'LpibLeerlijn',
         'vakleergebied/': 'Vakleergebied',
-        'lpib_vakleergebied': 'LpibVakleergebied',
-        'lpib_vakkern/': 'LpibVakkern',
-        'lpib_vaksubkern/': 'LpibVaksubkern',
-        'lpib_vakinhoud/': 'LpibVakinhoud',
         'niveau/': 'Niveau',
         'doel/': 'Doel',
         'doelniveau/': 'DoelNiveau',
@@ -1821,6 +1928,10 @@
                         browser.view.error = '';
                     }
                     return json;
+                })
+                .catch(error => {
+                    browser.view.error = error.error;
+                    browser.view.errorMessage = error.message;
                 });
             }
         }
