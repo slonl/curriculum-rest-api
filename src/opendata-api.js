@@ -112,10 +112,11 @@ query idQuery($id:ID) {
 	${allType}(filter:{id:$id}) {
 		replaces
 		replacedBy
+		deprecated
 		${typedQuery}
 	}
 }
-`
+`;
 		return graphQuery(opendata.url, getFragments(query)+query, variables, 'idQuery', urlQuery)
 	})
 
