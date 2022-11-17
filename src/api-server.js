@@ -12,11 +12,11 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
-const port      = process.env.NODE_PORT || 4500;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
+const port      = process.env.NODE_PORT || 4700;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2021/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
-const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
-const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3700";
+const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/2021/api/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = graphqlUrl;
 
