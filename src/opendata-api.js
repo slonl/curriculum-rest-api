@@ -46,6 +46,8 @@ function getFragments(query) {
 		.join("\n");
 }
 
+opendata.typedQueries = {}
+
 apis.forEach(api => {
 	if (api.fragments) {
 		opendata.fragments = Object.assign(opendata.fragments, api.fragments);
@@ -67,6 +69,11 @@ apis.forEach(api => {
 			}
 		});
 	}
+	if (api.typedQueries) {
+		for (type in api.typedQueries) {
+			opendata.typedQueries[type] = api.typedQueries[type]
+		}
+	}
 	if (api.idQuery) {
 		opendata.idQuery += api.idQuery
 	}
@@ -76,9 +83,41 @@ apis.forEach(api => {
 	opendata.schemas[api.context] = api.schema;
 });
 
+
+function camelize(str) {
+	return str.replace(/_([a-z])/g, (m, p1) => p1.toUpperCase())
+}
+
 opendata.queries.Id = 'query Id($id:ID) {' + opendata.idQuery + '}';
-opendata.api.Id     = (variables, urlQuery) => graphQuery(opendata.url, getFragments(opendata.queries.Id)+opendata.queries.Id, variables, 'Id', urlQuery);
-
-
+opendata.api.rawId     = (variables, urlQuery) => graphQuery(opendata.url, getFragments(opendata.queries.Id)+opendata.queries.Id, variables, 'Id', urlQuery);
+let getTypeQuery = `
+query getType($id:ID) {
+	allType(filter:{id:$id}) {
+		id
+		type
+	}
+}
+`;
+opendata.api.Id = (variables, urlQuery) => graphQuery(opendata.url, getTypeQuery, variables, 'getType', urlQuery)
+	.then(result => {
+		let type = result.data.allType[0].type
+		let typedQuery = opendata.typedQueries[type]
+		if (!typedQuery) {
+			console.error('missing typedquery for '+type)
+			return opendata.api.rawId(variables, urlQuery)
+		}
+		let allType = camelize('all_'+type);
+		let query = `
+query idQuery($id:ID) {
+	${allType}(filter:{id:$id}) {
+		replaces
+		replacedBy
+		deprecated
+		${typedQuery}
+	}
+}
+`
+		return graphQuery(opendata.url, getFragments(query)+query, variables, 'idQuery', urlQuery)
+	})
 
 module.exports = opendata;

@@ -389,174 +389,338 @@ module.exports = {
 		}`
 */
 	},
-/*
-	idQuery: `
-	  allLpibVakleergebied(filter:{id:$id}) {
-		id
-		title
-		description
-		replaces
-		Vakleergebied {
-		  id
-		  title
-		}
-		LpibVakkencluster {
-		  id
-		  title
-		}
-		LpibLeerlijn {
-		  id
-		  title
-		}
-		LpibVakkern {
-		  id
-		  title
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Niveau {
-		  ...NiveauShort
-		}
-	  }
-	  allLpibVakkern(filter:{id:$id}) {
-		id
-		title
-		description
-		replaces
-		LpibVaksubkern {
-		  id
-		  title
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		LpibVakinhoud {
-		  id
-		  title
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LpibVakleergebied {
-		  id
-		  title
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allLpibVaksubkern(filter:{id:$id}) {
-		id
-		title
-		description
-		replaces
-		LpibVakinhoud {
-		  id
-		  title
-		  NiveauIndex {
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LpibVakkern {
-		  id
-		  title
-		  LpibVakleergebied {
+	typedQueries: {
+		'lpib_vakleergebied': `
 			id
 			title
-		  }
-		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
-		}
-	  }
-	  allLpibVakinhoud(filter:{id:$id}) {
-		id
-		title
-		description
-		replaces
-		Doelniveau {
-		  ...DoelNiveau
-		}
-		LpibVakkern {
-		  id
-		  title
-		  LpibVakleergebied {
+			description
+			replaces
+			Vakleergebied {
+				id
+				title
+			}
+			LpibVakkencluster {
+				id
+				title
+			}
+			LpibLeerlijn {
+				id
+				title
+			}
+			LpibVakkern {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'lpib_vakkern': `
 			id
 			title
-		  }
-		}
-		LpibVaksubkern {
-		  id
-		  title
-		  LpibVakkern {
+			description
+			replaces
+			LpibVaksubkern {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			LpibVakinhoud {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakleergebied {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'lpib_vaksubkern': `
+			id
+			title
+			description
+			replaces
+			LpibVakinhoud {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakkern {
+				id
+				title
+				LpibVakleergebied {
+					id
+					title
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'lpib_vakinhoud': `
+			id
+			title
+			description
+			replaces
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakkern {
+				id
+				title
+				LpibVakleergebied {
+					id
+					title
+				}
+			}
+			LpibVaksubkern {
+				id
+				title
+				LpibVakkern {
+					id
+					title
+					LpibVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
+		`,
+		'lpib_vakkencluster': `
+			id
+			title
+			Niveau {
+				id
+				title
+			}
+			LpibVakleergebied {
+				id
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}	
+		`,
+		'lpib_leerlijn': `
 			id
 			title
 			LpibVakleergebied {
-			  id
-			  title
+				id
+				title
+				Niveau {
+					...NiveauShort
+				}
 			}
-		  }
+			Doelniveau {
+				...DoelNiveau
+			}
+			Niveau {
+				id
+				title
+			}
+		`
+	},
+	idQuery: `
+		allLpibVakleergebied(filter:{id:$id}) {
+			id
+			title
+			description
+			replaces
+			Vakleergebied {
+				id
+				title
+			}
+			LpibVakkencluster {
+				id
+				title
+			}
+			LpibLeerlijn {
+				id
+				title
+			}
+			LpibVakkern {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Niveau {
+				...NiveauShort
+			}
 		}
-		NiveauIndex {
-		  Niveau {
-			...NiveauShort
-		  }
+		allLpibVakkern(filter:{id:$id}) {
+			id
+			title
+			description
+			replaces
+			LpibVaksubkern {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			LpibVakinhoud {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakleergebied {
+				id
+				title
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-	  }
-	  allLpibVakkencluster(filter:{id:$id}) {
-		id
-		title
-		Niveau {
-		  id
-		  title
+		allLpibVaksubkern(filter:{id:$id}) {
+			id
+			title
+			description
+			replaces
+			LpibVakinhoud {
+				id
+				title
+				NiveauIndex {
+					Niveau {
+						...NiveauShort
+					}
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakkern {
+				id
+				title
+				LpibVakleergebied {
+					id
+					title
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		LpibVakleergebied {
-		  id
-		  title
-		  Niveau {
-			...NiveauShort
-		  }
-		}	
-	  }
-	  allLpibLeerlijn(filter:{id:$id}) {
-		id
-		title
-		LpibVakleergebied {
-		  id
-		  title
-		  Niveau {
-			...NiveauShort
-		  }
+		allLpibVakinhoud(filter:{id:$id}) {
+			id
+			title
+			description
+			replaces
+			Doelniveau {
+				...DoelNiveau
+			}
+			LpibVakkern {
+				id
+				title
+				LpibVakleergebied {
+					id
+					title
+				}
+			}
+			LpibVaksubkern {
+				id
+				title
+				LpibVakkern {
+					id
+					title
+					LpibVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			NiveauIndex {
+				Niveau {
+					...NiveauShort
+				}
+			}
 		}
-		Doelniveau {
-		  ...DoelNiveau
+		allLpibVakkencluster(filter:{id:$id}) {
+			id
+			title
+			Niveau {
+				id
+				title
+			}
+			LpibVakleergebied {
+				id
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}	
 		}
-		Niveau {
-		  id
-		  title
+		allLpibLeerlijn(filter:{id:$id}) {
+			id
+			title
+			LpibVakleergebied {
+				id
+				title
+				Niveau {
+					...NiveauShort
+				}
+			}
+			Doelniveau {
+				...DoelNiveau
+			}
+			Niveau {
+				id
+				title
+			}
 		}
-	  }
 	`,
-*/
 	routes: {
 /*
 		'lpib_vakkencluster/': (req) =>

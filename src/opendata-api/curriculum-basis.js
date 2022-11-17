@@ -98,7 +98,7 @@ module.exports = {
 	},
 	queries: {
 		DoelNiveau: `query DoelNiveau($page:Int,$perPage:Int) {
-			allDoelniveau(page:$page,perPage:$perPage) {
+			allDoelniveau(page:$page,perPage:$perPage,) {
 				...DoelNiveau
 			}
 			_allDoelniveauMeta {
@@ -111,7 +111,7 @@ module.exports = {
 			}
 		}`,
 		Doel: `query Doel($page:Int,$perPage:Int) {
-			allDoel(page:$page,perPage:$perPage,sortField:"title") {
+			allDoel(page:$page,perPage:$perPage,sortField:"title",) {
 				id
 				title
 			}
@@ -137,7 +137,7 @@ module.exports = {
 			}
 		}`,
 		Niveau: `query Niveau($page:Int,$perPage:Int) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
+			allNiveau(page:$page,perPage:$perPage,sortField:"title",) {
 				id
 				title
 				description
@@ -152,60 +152,60 @@ module.exports = {
 				...Niveau
 			}
 		}`,
-		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int) {
-		   allNiveau(page:$page,perPage:$perPage,sortField:"title") {
-			   id
-			   title
-			   Vakleergebied {
-				 id
-				 title
-			   }
-			   ErkVakleergebied {
-				 id
-				 title
-			   }
-			   RefVakleergebied {
-			     id
-			     title
-			  }
-		   }
-		   allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
-			 Niveau {
-			   id
-			   title
-			 }
-			   KerndoelVakleergebied {
-				 id
-				 title
-			   }
-			 ExamenprogrammaVakleergebied {
-			   id
-			   title
-			 }
-			 SyllabusVakleergebied {
-			   id
-			   title
-			 }
-			 LdkVakleergebied {
-			   id
-			   title
-			 }
-			 InhVakleergebied {
-			   id
-			   title
-			 }
-			   ErkVakleergebied {
-				 id
-				 title
-			   }
-			   RefVakleergebied {
-			     id
-			     title
-			  }
-		   }
+		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int,) {
+			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
+				id
+				title
+				Vakleergebied {
+					id
+					title
+				}
+				ErkVakleergebied {
+					id
+					title
+				}
+				RefVakleergebied {
+					id
+					title
+				}
+			}
+			allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
+				Niveau {
+					id
+					title
+				}
+				KerndoelVakleergebied {
+					id
+					title
+				}
+				ExamenprogrammaVakleergebied {
+					id
+					title
+				}
+				SyllabusVakleergebied {
+					id
+					title
+				}
+				LdkVakleergebied {
+					id
+					title
+				}
+				InhVakleergebied {
+					id
+					title
+				}
+				ErkVakleergebied {
+					id
+					title
+				}
+				RefVakleergebied {
+					id
+					title
+				}
+			}
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
-			allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
+			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",) {
 				id
 				prefix
 				title
@@ -262,7 +262,7 @@ module.exports = {
 				}
 			}
 		}`,
-		Deprecated: `query Deprecated {
+/*		Deprecated: `query Deprecated {
 			allDeprecated {
 				id
 				title
@@ -282,7 +282,7 @@ module.exports = {
 				doelniveau_id
 			}
 		}`,
-
+*/
 		VakleergebiedOpNiveau: `query VakleergebiedOpNiveau($niveau:ID) {
 			allNiveau(filter:{id:$niveau}) {
 				Vakleergebied {
@@ -301,6 +301,231 @@ module.exports = {
 			}
 		}`
 	},
+	typedQueries: {
+		'vakleergebied': `
+			id
+			prefix
+			title
+			description
+			prefix
+			replaces
+			KerndoelVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaVakleergebied {
+				id
+				title
+			}
+			SyllabusVakleergebied {
+				id
+				title
+			}
+			ExamenprogrammaBgProfiel {
+				id
+				title
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			InhVakleergebied {
+				id
+				title
+			}
+			RefVakleergebied {
+				id
+				title
+			}
+			ErkVakleergebied {
+				id
+				title
+			}
+			Niveau {
+				...NiveauShort
+			}
+		`,
+		'doel':`
+			id
+			title
+			description
+			bron
+			vakbegrippen
+			Doelniveau {
+				...DoelNiveau
+				LdkVakleergebied {
+					id
+					title
+				}
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+				LdkVaksubkern {
+					id
+					title
+					LdkVakkern {
+						id
+						title
+						LdkVakleergebied {
+							id
+							title
+						}
+					}
+				}
+				LdkVakinhoud {
+					id
+					title
+					LdkVaksubkern {
+						id
+						title
+						LdkVakkern {
+							id
+							title
+							LdkVakleergebied {
+								id
+								title
+							}
+						}
+					}
+				}
+				LdkVakleergebied {
+					id
+					title
+				}
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+				LdkVaksubkern {
+					id
+					title
+					LdkVakkern {
+						id
+						title
+						LdkVakleergebied {
+							id
+							title
+						}
+					}
+				}
+				LdkVakinhoud {
+					id
+					title
+					LdkVaksubkern {
+						id
+						title
+						LdkVakkern {
+							id
+							title
+							LdkVakleergebied {
+								id
+								title
+							}
+						}
+					}
+				}
+			}
+		`,
+		'niveau':`
+			id
+			prefix
+			title
+			description
+			type
+			Vakleergebied {
+				id
+				title
+			}
+		`,
+		'doelniveau':`
+			...DoelNiveau
+			LpibVakkern {
+				id
+				title
+				Vakleergebied {
+					id
+					title
+				}
+			}
+			LpibVaksubkern {
+				id
+				title
+				LpibVakkern {
+					id
+					title
+					LpibVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			LpibVakinhoud {
+				id
+				title
+				LpibVaksubkern {
+					id
+					title
+					LpibVakkern {
+						id
+						title
+						LpibVakleergebied {
+							id
+							title
+						}
+					}
+				}
+			}
+			LdkVakleergebied {
+				id
+				title
+			}
+			LdkVakkern {
+				id
+				title
+				LdkVakleergebied {
+					id
+					title
+				}
+			}
+			LdkVaksubkern {
+				id
+				title
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
+						id
+						title
+					}
+				}
+			}
+			LdkVakinhoud {
+				id
+				title
+				LdkVaksubkern {
+					id
+					title
+					LdkVakkern {
+						id
+						title
+						LdkVakleergebied {
+							id
+							title
+						}
+					}
+				}
+			}
+		`
+	},
 	idQuery: `
 		allVakleergebied(filter:{id:$id}) {
 			id
@@ -309,6 +534,8 @@ module.exports = {
 			description
 			prefix
 			replaces
+			replacedBy
+			
 			KerndoelVakleergebied {
 				id
 				title
@@ -351,6 +578,9 @@ module.exports = {
 			description
 			bron
 			vakbegrippen
+			replaces
+			replacedBy
+			
 			Doelniveau {
 				...DoelNiveau
 				LdkVakleergebied {
@@ -401,7 +631,8 @@ module.exports = {
 			title
 			description
 			type
-			prefix
+			replacedBy
+			
 			Vakleergebied {
 				id
 				title
@@ -409,6 +640,9 @@ module.exports = {
 		}
 		allDoelniveau(filter:{id:$id}) {
 			...DoelNiveau
+			replaces
+			replacedBy
+			
 			LdkVakleergebied {
 				id
 				title
@@ -450,7 +684,8 @@ module.exports = {
 				}
 			}
 		}
-		allDeprecated(filter:{id:$id}) {
+`,
+/*		allDeprecated(filter:{id:$id}) {
 			id
 			title
 			description
@@ -462,6 +697,7 @@ module.exports = {
 			}
 		}
 	`,
+*/
 	routes: {
 		'niveau/:id': (req) => 
 			opendata.api["NiveauById"](req.params)
@@ -480,6 +716,7 @@ module.exports = {
 					meta:   result.data._allNiveauMeta
 				}
 			}),
+/*
 		'deprecated/': (req) =>
 			opendata.api["Deprecated"](req.params, req.query)
 			.then(function(result) {
@@ -495,6 +732,7 @@ module.exports = {
 					data: result.data.Deprecated
 				};
 			}),
+*/
 		'doel/': (req) =>
 			opendata.api["Doel"](req.params, req.query)
 			.then(function(result) {
