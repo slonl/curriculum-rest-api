@@ -177,12 +177,12 @@ module.exports = {
 			Niveau {
 				id
 				title
-				deprecated
+				
 			}
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     erk_gebied: `
@@ -192,17 +192,17 @@ module.exports = {
 			ErkCategorie {
 				id
 				title
-				deprecated
+				
 			}
 			ErkTaalactiviteit {
 				id
 				title
-				deprecated
+				
 			}
 			ErkSchaal {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     erk_categorie: `
@@ -212,12 +212,12 @@ module.exports = {
 			ErkTaalactiviteit {
 				id
 				title
-				deprecated
+				
 			}
 			ErkSchaal {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     erk_taalactiviteit: `
@@ -227,7 +227,7 @@ module.exports = {
 			ErkSchaal {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     erk_schaal: `
@@ -238,11 +238,11 @@ module.exports = {
 				id
 				title
 				isempty
-				deprecated
+				
 				Niveau {
 					id
 					title
-					deprecated
+					
 				}
 			}
 		`,
@@ -254,17 +254,17 @@ module.exports = {
 			Niveau {
 				id
 				title
-				deprecated
+				
 			}
 			ErkVoorbeeld {
 				id
 				title
-				deprecated
+				
 			}
 			ErkLesidee {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     erk_voorbeeld: `

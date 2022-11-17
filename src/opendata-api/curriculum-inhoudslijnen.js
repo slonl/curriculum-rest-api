@@ -12,7 +12,7 @@ module.exports = {
 				Vakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -32,7 +32,7 @@ module.exports = {
 				InhVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -54,7 +54,7 @@ module.exports = {
 					InhVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 				NiveauIndex {
@@ -78,7 +78,7 @@ module.exports = {
 						InhVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -101,17 +101,17 @@ module.exports = {
 		      id
 		      prefix
 		      title
-		      deprecated
+		      
 		      InhCluster {
 		        id
 		        prefix
 		        title
-		        deprecated
+		        
 		        InhSubcluster {
 		          id
 		          prefix
 		          title
-		          deprecated
+		          
 		          Doelniveau(filter:{niveau_id:[$niveau]}) {
 		            ...Doelen
 		          }
@@ -138,13 +138,13 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			InhInhoudslijn {
 				id
 				prefix
 				title
-				deprecated 
+				 
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -163,7 +163,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -182,7 +182,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -201,7 +201,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -216,13 +216,13 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			InhInhoudslijn {
 				id
 				prefix
 				title
-				deprecated 
+				 
 			}
 			Doelniveau {
 				...DoelNiveau

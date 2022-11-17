@@ -21,7 +21,7 @@ module.exports = {
 			Syllabus {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allSyllabusVakbegripMeta {
@@ -35,12 +35,12 @@ module.exports = {
 			Syllabus {
 			  id
 			  title
-			  deprecated
+			  
 			}
 			Vakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allSyllabusVakleergebiedMeta {
@@ -54,13 +54,13 @@ module.exports = {
 			Syllabus {
 			  id
 			  title
-			  deprecated
+			  
 			}
 			SyllabusSpecifiekeEindterm{
 			  Syllabus {
 				id
 				title
-				deprecated
+				
 			  }
 			}
 		  }
@@ -75,7 +75,7 @@ module.exports = {
 			Syllabus {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allSyllabusSpecifiekeEindtermMeta {
@@ -102,21 +102,21 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
-			  deprecated
+			  
 			  Tag {
 				id
 				title
-				deprecated
+				
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			  }
 			  ExamenprogrammaDomein {
 				id
 				title
-				deprecated
+				
 			  }
 			}
 			SyllabusToelichting {
@@ -124,31 +124,31 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
-			  deprecated
+			  
 			  Tag {
 				id
 				title
-				deprecated
+				
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			  }
 			  ExamenprogrammaDomein {
 				id
 				title
-				deprecated
+				
 			  }
 			  Examenprogramma {
 				id
 				title
-				deprecated
+				
 			  }
 			  SyllabusSpecifiekeEindterm {
 				id
 				title
-				deprecated
+				
 			  }	  
 			}
 			SyllabusVakbegrip {
@@ -156,16 +156,16 @@ module.exports = {
 			  prefix
 			  title
 			  ce_se
-			  deprecated
+			  
 			  Tag {
 				id
 				title
-				deprecated
+				
 			  }
 			  ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			  }
 			}
 		  }
@@ -185,25 +185,25 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			SyllabusToelichting {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			SyllabusVakbegrip {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			NiveauIndex {
 				Niveau {
@@ -217,12 +217,12 @@ module.exports = {
 			Syllabus {
 				id
 				title
-				deprecated
+				
 			}
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     syllabus_vakbegrip: `
@@ -233,17 +233,17 @@ module.exports = {
 			Tag {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			}
 			Syllabus {
 				id
 				title
-				deprecated
+				
 			}
 			NiveauIndex {
 				Niveau {
@@ -259,27 +259,27 @@ module.exports = {
 			Tag {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaDomein {
 				id
 				title
-				deprecated
+				
 			}
 			Syllabus {
 				id
 				title
-				deprecated
+				
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
-				deprecated
+				
 			}
 			NiveauIndex {
 				Niveau {
@@ -295,32 +295,32 @@ module.exports = {
 			Tag {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaEindterm {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaDomein {
 				id
 				title
-				deprecated
+				
 			}
 			Syllabus {
 				id
 				title
-				deprecated
+				
 			}
 			SyllabusToelichting {
 				id
 				title
-				deprecated
+				
 			}
 			SyllabusVakbegrip {
 				id
 				title
-				deprecated
+				
 			}
 			NiveauIndex {
 				Niveau {

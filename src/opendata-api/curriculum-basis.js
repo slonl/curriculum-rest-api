@@ -157,49 +157,49 @@ module.exports = {
 			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
 				id
 				title
-				Vakleergebied(filter:{deprecated:null}) {
+				Vakleergebied{
 					id
 					title
 				}
-				ErkVakleergebied(filter:{deprecated:null}) {
+				ErkVakleergebied{
 					id
 					title
 				}
-				RefVakleergebied(filter:{deprecated:null}) {
+				RefVakleergebied{
 					id
 					title
 				}
 			}
 			allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
-				Niveau(filter:{deprecated:null}) {
+				Niveau{
 					id
 					title
 				}
-				KerndoelVakleergebied(filter:{deprecated:null}) {
+				KerndoelVakleergebied{
 					id
 					title
 				}
-				ExamenprogrammaVakleergebied(filter:{deprecated:null}) {
+				ExamenprogrammaVakleergebied{
 					id
 					title
 				}
-				SyllabusVakleergebied(filter:{deprecated:null}) {
+				SyllabusVakleergebied{
 					id
 					title
 				}
-				LdkVakleergebied(filter:{deprecated:null}) {
+				LdkVakleergebied{
 					id
 					title
 				}
-				InhVakleergebied(filter:{deprecated:null}) {
+				InhVakleergebied{
 					id
 					title
 				}
-				ErkVakleergebied(filter:{deprecated:null}) {
+				ErkVakleergebied{
 					id
 					title
 				}
-				RefVakleergebied(filter:{deprecated:null}) {
+				RefVakleergebied{
 					id
 					title
 				}
@@ -313,42 +313,42 @@ module.exports = {
 			KerndoelVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			SyllabusVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgProfiel {
 				id
 				title
-				deprecated
+				
 			}
 			LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			InhVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			RefVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ErkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			Niveau {
 				...NiveauShort
@@ -368,7 +368,7 @@ module.exports = {
 					LpibVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 				LpibVaksubkern {
@@ -380,7 +380,7 @@ module.exports = {
 						LpibVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -396,7 +396,7 @@ module.exports = {
 							LpibVakleergebied {
 								id
 								title
-								deprecated
+								
 							}
 						}
 					}
@@ -404,7 +404,7 @@ module.exports = {
 				LdkVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 				LdkVakkern {
 					id
@@ -412,7 +412,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 				LdkVaksubkern {
@@ -424,7 +424,7 @@ module.exports = {
 						LdkVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -440,7 +440,7 @@ module.exports = {
 							LdkVakleergebied {
 								id
 								title
-								deprecated
+								
 							}
 						}
 					}
@@ -456,7 +456,7 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     doelniveau: `
@@ -467,7 +467,7 @@ module.exports = {
 				Vakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			LpibVaksubkern {
@@ -479,7 +479,7 @@ module.exports = {
 					LpibVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 			}
@@ -495,7 +495,7 @@ module.exports = {
 						LpibVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -503,7 +503,7 @@ module.exports = {
 			LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			LdkVakkern {
 				id
@@ -511,7 +511,7 @@ module.exports = {
 				LdkVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			LdkVaksubkern {
@@ -523,7 +523,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 			}
@@ -539,7 +539,7 @@ module.exports = {
 						LdkVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -555,46 +555,46 @@ module.exports = {
 			prefix
 			replaces
 			replacedBy
-			deprecated
+			
 			KerndoelVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			SyllabusVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgProfiel {
 				id
 				title
-				deprecated
+				
 			}
 			LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			InhVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			RefVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ErkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			Niveau {
 				...NiveauShort
@@ -608,13 +608,13 @@ module.exports = {
 			vakbegrippen
 			replaces
 			replacedBy
-			deprecated
+			
 			Doelniveau {
 				...DoelNiveau
 				LdkVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 				LdkVakkern {
 					id
@@ -622,7 +622,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 				LdkVaksubkern {
@@ -634,7 +634,7 @@ module.exports = {
 						LdkVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -650,7 +650,7 @@ module.exports = {
 							LdkVakleergebied {
 								id
 								title
-								deprecated
+								
 							}
 						}
 					}
@@ -664,22 +664,22 @@ module.exports = {
 			description
 			type
 			replacedBy
-			deprecated
+			
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		}
 		allDoelniveau(filter:{id:$id}) {
 			...DoelNiveau
 			replaces
 			replacedBy
-			deprecated
+			
 			LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			LdkVakkern {
 				id
@@ -687,7 +687,7 @@ module.exports = {
 				LdkVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			LdkVaksubkern {
@@ -699,7 +699,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 			}
@@ -715,7 +715,7 @@ module.exports = {
 						LdkVakleergebied {
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}

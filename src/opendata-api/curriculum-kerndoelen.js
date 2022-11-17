@@ -35,7 +35,7 @@ module.exports = {
 			KerndoelVakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allKerndoelDomeinMeta {
@@ -49,7 +49,7 @@ module.exports = {
 			KerndoelVakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allKerndoelUitstroomprofielMeta {
@@ -76,11 +76,11 @@ module.exports = {
 			KerndoelDomein {
 				id
 				title
-				deprecated
+				
 				KerndoelVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			Niveau {
@@ -101,7 +101,7 @@ module.exports = {
 				title
 				prefix
 				kerndoelLabel
-				deprecated
+				
 				Niveau {
 					...NiveauShort
 				}
@@ -109,7 +109,7 @@ module.exports = {
 			KerndoelVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     kerndoel_vakleergebied: `
@@ -118,24 +118,24 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			KerndoelDomein {
 				id
 				title
-				deprecated
+				
 			}
 			KerndoelUitstroomprofiel {
 				id
 				title
-				deprecated
+				
 			}
 			Kerndoel {
 				id
 				title
 				prefix
 				kerndoelLabel
-				deprecated
+				
 				Niveau {
 					...NiveauShort
 				}
@@ -147,7 +147,7 @@ module.exports = {
 			KerndoelVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
   },

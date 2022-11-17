@@ -13,7 +13,7 @@ module.exports = {
 			Vakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allExamenprogrammaBgProfielMeta {
@@ -28,7 +28,7 @@ module.exports = {
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allExamenprogrammaBgKernMeta {
@@ -63,7 +63,7 @@ module.exports = {
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allExamenprogrammaBgModuleMeta {
@@ -98,7 +98,7 @@ module.exports = {
 			ExamenprogrammaBgProfiel {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		  _allExamenprogrammaBgKeuzevakMeta {
@@ -120,60 +120,60 @@ module.exports = {
 			id
 			prefix
 			title
-			deprecated
+			
 			  ExamenprogrammaBgKern {
 				id
 				title
-				deprecated
+				
 				ExamenprogrammaBgKerndeel {
 				  id
 				  title
-				  deprecated
+				  
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
-					deprecated
+					
 				  }
 				}
 			  }
 			  ExamenprogrammaBgModule {
 				id
 				title
-				deprecated
+				
 				ExamenprogrammaBgDeeltaak {
 				  id
 				  title
-				  deprecated
+				  
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
-					deprecated
+					
 				  }
 				}
 				ExamenprogrammaBgModuletaak {
 					id
 					title
-					deprecated
+					
 				}
 			  }
 			  ExamenprogrammaBgKeuzevak {
 				id
 				title
-				deprecated
+				
 				ExamenprogrammaBgDeeltaak {
 				  id
 				  title
-				  deprecated
+				  
 				  ExamenprogrammaBgGlobaleEindterm {
 					id
 					title
-					deprecated
+					
 				  }
 				}
 				ExamenprogrammaBgKeuzevaktaak {
 					id
 					title
-					deprecated
+					
 				}
 			  }
 			}
@@ -188,25 +188,25 @@ module.exports = {
 			Vakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 			ExamenprogrammaBgKern {
 			  id
 			  prefix
 			  title
-			  deprecated
+			  
 			}
 			ExamenprogrammaBgModule {
 			  id
 			  prefix
 			  title
-			  deprecated
+			  
 			}
 			ExamenprogrammaBgKeuzevak {
 			  id
 			  prefix
 			  title
-			  deprecated
+			  
 			}
 		`,
     examenprogramma_bg_kern: `
@@ -218,13 +218,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		`,
     examenprogramma_bg_kerndeel: `
@@ -235,18 +235,18 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			ExamenprogrammaBgGlobaleEindterm {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		`,
     examenprogramma_bg_globale_eindterm: `
@@ -260,13 +260,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		`,
     examenprogramma_bg_module: `
@@ -277,19 +277,19 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgModuletaak{
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		`,
     examenprogramma_bg_deeltaak: `
@@ -300,28 +300,28 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgModule {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			ExamenprogrammaBgKeuzevak {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 		`,
@@ -333,11 +333,11 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			Niveau {
@@ -352,19 +352,19 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgKeuzevaktaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		`,
     examenprogramma_bg_keuzevaktaak: `
@@ -375,11 +375,11 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			Niveau {
@@ -395,25 +395,25 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgKern {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgModule {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgKeuzevak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		}
 		allExamenprogrammaBgKern(filter:{id:$id}) {
@@ -424,13 +424,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgKerndeel {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		}
 		allExamenprogrammaBgKerndeel(filter:{id:$id}) {
@@ -441,18 +441,18 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 				ExamenprogrammaBgProfiel {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			ExamenprogrammaBgGlobaleEindterm {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		}
 		allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
@@ -463,13 +463,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		}
 		allExamenprogrammaBgModule(filter:{id:$id}) {
@@ -480,19 +480,19 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgDeeltaak {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			ExamenprogrammaBgModuletaak{
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 		}
 		allExamenprogrammaBgDeeltaak(filter:{id:$id}) {

@@ -13,7 +13,7 @@ module.exports = {
 				Vakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -34,7 +34,7 @@ module.exports = {
 				RefVakleergebied{
 					id
 					title
-					deprecated
+					
 				}
 				NiveauIndex {
 					Niveau {
@@ -56,7 +56,7 @@ module.exports = {
 					RefVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 				NiveauIndex {
@@ -80,7 +80,7 @@ module.exports = {
 						RefVakleergebied{
 							id
 							title
-							deprecated
+							
 						}
 					}
 				}
@@ -106,7 +106,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
-								deprecated
+								
 							}
 						}
 					}
@@ -133,7 +133,7 @@ module.exports = {
 							RefVakleergebied{
 								id
 								title
-								deprecated
+								
 							}
 						}
 					}
@@ -153,7 +153,7 @@ module.exports = {
 		    id
 		    prefix
 		    title
-		    deprecated
+		    
 		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
 		      Niveau {
 		        ...NiveauShort
@@ -163,22 +163,22 @@ module.exports = {
 		      id
 		      prefix 
 		      title
-		      deprecated
+		      
 		      RefSubdomein {
 		        id
 		        prefix
 		        title
-		        deprecated
+		        
 		        RefOnderwerp {
 		          id
 		          prefix
 		          title
-		          deprecated
+		          
 		          RefDeelonderwerp {
 		            id
 		            prefix
 		            title
-		            deprecated
+		            
 		            Doelniveau(filter:{niveau_id:[$niveau]}) {
 		              ...Doelen
 		            }
@@ -210,7 +210,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -229,13 +229,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefVakleergebied {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -254,13 +254,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefDomein {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -279,19 +279,19 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefDeelonderwerp {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefTekstkenmerk {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -310,7 +310,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -329,7 +329,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -350,7 +350,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -369,13 +369,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefVakleergebied {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -394,13 +394,13 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefDomein {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -419,19 +419,19 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefDeelonderwerp {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			RefTekstkenmerk {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -450,7 +450,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau
@@ -469,7 +469,7 @@ module.exports = {
 				id
 				prefix
 				title
-				deprecated
+				
 			}
 			Doelniveau {
 				...DoelNiveau

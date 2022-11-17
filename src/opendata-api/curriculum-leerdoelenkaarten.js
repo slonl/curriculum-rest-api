@@ -23,19 +23,19 @@ module.exports = {
 			id
 			title
 			prefix
-			deprecated
+			
 		}`,
     LdkVaksubkern: `fragment LdkVaksubkern on LdkVaksubkern {
 			id
 			title
 			prefix
-			deprecated
+			
 		}`,
     LdkVakinhoud: `fragment LdkVakinhoud on LdkVakinhoud {
 			id
 			title
 			prefix
-			deprecated
+			
 		}`,
   },
   queries: {
@@ -59,7 +59,7 @@ module.exports = {
 			LdkVakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 			NiveauIndex {
 			  Niveau {
@@ -78,7 +78,7 @@ module.exports = {
 			  LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			  }
 			}
 			NiveauIndex {
@@ -99,7 +99,7 @@ module.exports = {
 				LdkVakleergebied {
 				  id
 				  title
-				  deprecated
+				  
 				}
 			  }
 			}
@@ -165,7 +165,7 @@ module.exports = {
 			LdkVakleergebied {
 			  id
 			  title
-			  deprecated
+			  
 			}
 		  }
 		}`,
@@ -174,7 +174,7 @@ module.exports = {
 			LdkVakleergebied(filter:{id:$id}) {
 			  id
 			  title
-			  deprecated
+			  
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
 				...DoelNiveau
 			  } 
@@ -202,7 +202,7 @@ module.exports = {
 			  LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			  }
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
 				...DoelNiveau
@@ -228,7 +228,7 @@ module.exports = {
 			LdkVaksubkern(filter:{id:$id}) {
 			  id
 			  title
-			  deprecated
+			  
 			  LdkVakkern {
 				...LdkVakkern
 			  }
@@ -276,7 +276,7 @@ module.exports = {
 			Vakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 		`,
     ldk_vakkern: `
@@ -297,7 +297,7 @@ module.exports = {
 			LdkVakleergebied {
 				id
 				title
-				deprecated
+				
 			}
 			NiveauIndex {
 				Niveau {
@@ -323,7 +323,7 @@ module.exports = {
 				LdkVakleergebied {
 					id
 					title
-					deprecated
+					
 				}
 			}
 			NiveauIndex {
@@ -346,7 +346,7 @@ module.exports = {
 					LdkVakleergebied {
 						id
 						title
-						deprecated
+						
 					}
 				}
 			}
