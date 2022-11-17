@@ -98,7 +98,7 @@ module.exports = {
 	},
 	queries: {
 		DoelNiveau: `query DoelNiveau($page:Int,$perPage:Int) {
-			allDoelniveau(page:$page,perPage:$perPage,) {
+			allDoelniveau(page:$page,perPage:$perPage) {
 				...DoelNiveau
 			}
 			_allDoelniveauMeta {
@@ -111,7 +111,7 @@ module.exports = {
 			}
 		}`,
 		Doel: `query Doel($page:Int,$perPage:Int) {
-			allDoel(page:$page,perPage:$perPage,sortField:"title",) {
+			allDoel(page:$page,perPage:$perPage,sortField:"title") {
 				id
 				title
 			}
@@ -137,7 +137,7 @@ module.exports = {
 			}
 		}`,
 		Niveau: `query Niveau($page:Int,$perPage:Int) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title",) {
+			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
 				id
 				title
 				description
@@ -152,7 +152,7 @@ module.exports = {
 				...Niveau
 			}
 		}`,
-		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int,) {
+		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int) {
 			allNiveau(page:$page,perPage:$perPage,sortField:"title") {
 				id
 				title
@@ -205,7 +205,7 @@ module.exports = {
 			}
 		}`,
 		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
-			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",) {
+			allVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
 				id
 				prefix
 				title
