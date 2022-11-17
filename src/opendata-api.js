@@ -116,7 +116,7 @@ query idQuery($id:ID) {
 		${typedQuery}
 	}
 }
-`;
+`
 		return graphQuery(opendata.url, getFragments(query)+query, variables, 'idQuery', urlQuery)
 	})
 
