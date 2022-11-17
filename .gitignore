@@ -1,7 +1,6 @@
 *~
 node_modules
 package-lock.json
-rest-api/
 www/frop
 www/frop2
 apiKeys.json
