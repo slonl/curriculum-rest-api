@@ -1,419 +1,378 @@
 module.exports = {
-  context: "examenprogramma",
-  jsonld: "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld",
-  schema:
-    "https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json",
-  fragments: {
-    SyllabusInfo: `fragment SyllabusInfo on SyllabusSpecifiekeEindterm {
+	context: 'examenprogramma',
+	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld',
+	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
+	fragments: {
+		SyllabusInfo: `fragment SyllabusInfo on SyllabusSpecifiekeEindterm {
 		  id
 		  prefix
 		  title
 		  ce_se
 		  niveau_id
 		  SyllabusVakbegrip {
+			id
+			prefix
+			title
+			ce_se
+			deprecated
+		  }
+		  SyllabusToelichting {
+			id
+			prefix
+			title
+			ce_se
+			deprecated
+		  }
+		  Syllabus {
+			id
+			title
+			ce_se
+			deprecated
+			examenjaar
+			  Niveau {
+				...NiveauShort
+			}
+		  }
+		}`
+	},
+	queries: {
+		ExamenprogrammaVakleergebied: `query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
+		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
+			id
+			title
+		  }
+		  _allExamenprogrammaVakleergebiedMeta {
+			count
+		  }
+		}`,
+		Examenprogramma: `query Examenprogramma($page:Int,$perPage:Int) {
+		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaMeta {
+			count
+		  }
+		}`,
+		ExamenprogrammaDomein: `query ExamenprogrammaDomein($page:Int,$perPage:Int) {
+		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+			Examenprogramma {
+			  id
+			  title
+			  deprecated
+			}
+		  }
+		  _allExamenprogrammaDomeinMeta {
+			count
+		  }
+		}`,
+		ExamenprogrammaSubdomein: `query ExamenprogrammaSubdomein($page:Int,$perPage:Int) {
+		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+			ExamenprogrammaDomein {
+			  id
+			  title
+			  deprecated
+			  Examenprogramma {
+				id
+				title
+				deprecated
+			  }
+			}
+		  }
+		  _allExamenprogrammaSubdomeinMeta {
+			count
+		  }
+		}`,
+		ExamenprogrammaEindterm: `query ExamenprogrammaEindterm($page:Int,$perPage:Int) {
+		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaEindtermMeta {
+			count
+		  }
+		}`,
+		ExamenprogrammaKop1: `query ExamenprogrammaKop1($page:Int,$perPage:Int) {
+		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+			Examenprogramma {
+			  id
+			  title
+			  deprecated
+			}
+		  }
+		  _allExamenprogrammaKop1Meta {
+			count
+		  }
+		}`,
+		ExamenprogrammaKop2: `query ExamenprogrammaKop2($page:Int,$perPage:Int) {
+		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaKop2Meta {
+			count
+		  }
+		}`,
+		ExamenprogrammaKop3: `query ExamenprogrammaKop3($page:Int,$perPage:Int) {
+		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaKop3Meta {
+			count
+		  }
+		}`,
+		ExamenprogrammaKop4: `query ExamenprogrammaKop4($page:Int,$perPage:Int) {
+		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaKop4Meta {
+			count
+		  }
+		}`,
+		ExamenprogrammaBody: `query ExamenprogrammaBody($page:Int,$perPage:Int) {
+		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
+			id
+			prefix
+			title
+		  }
+		  _allExamenprogrammaBodyMeta {
+			count
+		  }
+		}`,
+		ExamenprogrammaVolledig: `query ExamenprogrammaVolledig($id:ID) {
+		  Examenprogramma(id:$id){
+			id
+			prefix
+			title
+			NiveauIndex {
+			  Niveau {
+				...NiveauShort
+			  }
+			}
+			Syllabus {
+			  id
+			  title
+			  ce_se
+			  deprecated
+			  examenjaar
+			}
+			ExamenprogrammaKop1 {
+			  id
+			  title
+			  deprecated
+			  ExamenprogrammaKop2 {
+				id
+				title
+				deprecated
+				ExamenprogrammaKop3 {
+				  id
+				  title
+				  deprecated
+				  ExamenprogrammaKop4 {
+					id
+					title
+					deprecated
+					ExamenprogrammaBody {
+					  id
+					  title
+					  ce_se
+					  deprecated
+					}
+				  }
+				  ExamenprogrammaBody {
+					id
+					title
+					ce_se
+					deprecated
+				  }
+				}
+				ExamenprogrammaKop4 {
+				  id
+				  title
+				  deprecated
+				  ExamenprogrammaBody {
+					id
+					title
+					ce_se
+					deprecated
+				  }
+				}
+				ExamenprogrammaBody {
+				  id
+				  title
+				  ce_se
+				  deprecated
+				}
+			  }
+			  ExamenprogrammaKop3 {
+				id
+				title
+				deprecated
+				ExamenprogrammaKop4 {
+				  id
+				  title
+				  deprecated
+				  ExamenprogrammaBody {
+					id
+					title
+					ce_se
+					deprecated
+				  }
+				}
+				ExamenprogrammaBody {
+				  id
+				  title
+				  ce_se
+				  deprecated
+				}
+			  }
+			  ExamenprogrammaBody {
+				id
+				title
+				ce_se
+				deprecated
+			  }
+			}
+			ExamenprogrammaDomein {
+			  id
+			  title
+			  ce_se
+			  deprecated
+			  SyllabusSpecifiekeEindterm {
+				...SyllabusInfo
+			  }
+			  SyllabusToelichting {
 				id
 				prefix
 				title
 				ce_se
-				
-				}
-				SyllabusToelichting {
+				deprecated
+			  }
+			  ExamenprogrammaSubdomein {
+				id
+				title
+				ce_se
+				deprecated
+				ExamenprogrammaEindterm {
+				  id
+				  title
+				  ce_se
+				  deprecated
+				  SyllabusSpecifiekeEindterm {
+					...SyllabusInfo
+				  }
+				  SyllabusVakbegrip {
 					id
 					prefix
 					title
 					ce_se
-					
+					deprecated
+				  }
+				  Niveau {
+				    ...NiveauShort
+				  }
 				}
-				Syllabus {
-					id
-					title
-					ce_se
-					
-					examenjaar
-					Niveau {
-						...NiveauShort
-					}
+				SyllabusSpecifiekeEindterm {
+					...SyllabusInfo
 				}
-		  }
-		}`,
-  },
-  queries: {
-    ExamenprogrammaVakleergebied: `query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
-		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title") {
-				id
-				title
-		  }
-		  _allExamenprogrammaVakleergebiedMeta {
-				count
-		  }
-		}`,
-    Examenprogramma: `query Examenprogramma($page:Int,$perPage:Int) {
-		  allExamenprogramma (page:$page,perPage:$perPage,sortField:"title") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaMeta {
-				count
-		  }
-		}`,
-    ExamenprogrammaDomein: `query ExamenprogrammaDomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaDomein (page:$page,perPage:$perPage,sortField:"title") {
-				id
-				prefix
-				title
-				Examenprogramma {
-					id
-					title
-					
+				SyllabusToelichting {
+				  id
+				  prefix
+				  title
+				  ce_se
+				  deprecated
 				}
-		  }
-		  _allExamenprogrammaDomeinMeta {
-				count
-		  }
-		}`,
-    ExamenprogrammaSubdomein: `query ExamenprogrammaSubdomein($page:Int,$perPage:Int) {
-		  allExamenprogrammaSubdomein (page:$page,perPage:$perPage,sortField:"title") {
+			  }
+			  ExamenprogrammaEindterm {
 				id
-				prefix
 				title
-				ExamenprogrammaDomein {
-					id
-					title
-					
-					Examenprogramma {
-						id
-						title
-						
-					}
+				ce_se
+				deprecated
+				SyllabusSpecifiekeEindterm {
+					...SyllabusInfo
+			 	}
+			    SyllabusVakbegrip {
+		          id
+		          prefix
+		          title
+				  ce_se
+				  deprecated
+		        }
+				Niveau {
+				  ...NiveauShort
 				}
-		  }
-		  _allExamenprogrammaSubdomeinMeta {
-				count
-		  }
-		}`,
-    ExamenprogrammaEindterm: `query ExamenprogrammaEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaEindterm (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaEindtermMeta {
-				count
-		  }
-		}`,
-    ExamenprogrammaKop1: `query ExamenprogrammaKop1($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop1 (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-				Examenprogramma {
-					id
-					title
-					
-				}
-		  }
-		  _allExamenprogrammaKop1Meta {
-				count
-		  }
-		}`,
-    ExamenprogrammaKop2: `query ExamenprogrammaKop2($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop2 (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaKop2Meta {
-				count
-		  }
-		}`,
-    ExamenprogrammaKop3: `query ExamenprogrammaKop3($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop3 (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaKop3Meta {
-				count
-		  }
-		}`,
-    ExamenprogrammaKop4: `query ExamenprogrammaKop4($page:Int,$perPage:Int) {
-		  allExamenprogrammaKop4 (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaKop4Meta {
-				count
-		  }
-		}`,
-    ExamenprogrammaBody: `query ExamenprogrammaBody($page:Int,$perPage:Int) {
-		  allExamenprogrammaBody (page:$page,perPage:$perPage,sortField:"prefix") {
-				id
-				prefix
-				title
-		  }
-		  _allExamenprogrammaBodyMeta {
-				count
-		  }
-		}`,
-    ExamenprogrammaVolledig: `query ExamenprogrammaVolledig($id:ID) {
-		  Examenprogramma(id:$id){
-				id
-				prefix
-				title
-				NiveauIndex {
-					Niveau {
-					...NiveauShort
-					}
-				}
-				Syllabus {
-					id
-					title
-					ce_se
-					
-					examenjaar
-				}
-				ExamenprogrammaKop1 {
-					id
-					title
-					
-					ExamenprogrammaKop2 {
-						id
-						title
-						
-						ExamenprogrammaKop3 {
-							id
-							title
-							
-							ExamenprogrammaKop4 {
-								id
-								title
-								
-								ExamenprogrammaBody {
-									id
-									title
-									ce_se
-									
-								}
-							}
-							ExamenprogrammaBody {
-								id
-								title
-								ce_se
-								
-							}
-						}
-						ExamenprogrammaKop4 {
-							id
-							title
-							
-							ExamenprogrammaBody {
-								id
-								title
-								ce_se
-								
-							}
-						}
-						ExamenprogrammaBody {
-							id
-							title
-							ce_se
-							
-						}
-					}
-					ExamenprogrammaKop3 {
-						id
-						title
-						
-						ExamenprogrammaKop4 {
-							id
-							title
-							
-							ExamenprogrammaBody {
-								id
-								title
-								ce_se
-								
-							}
-						}
-						ExamenprogrammaBody {
-							id
-							title
-							ce_se
-							
-						}
-					}
-					ExamenprogrammaBody {
-						id
-						title
-						ce_se
-						
-					}
-				}
-				ExamenprogrammaDomein {
-					id
-					title
-					ce_se
-					
-					SyllabusSpecifiekeEindterm {
-						id
-						prefix
-						title
-						ce_se
-						SyllabusVakbegrip {
-							id
-							prefix
-							title
-							ce_se
-						}
-						SyllabusToelichting {
-							id
-							prefix
-							title
-							ce_se
-						}
-					}
-					SyllabusToelichting {
-						id
-						prefix
-						title
-						ce_se
-						
-					}
-					ExamenprogrammaSubdomein {
-						id
-						title
-						ce_se
-						
-						ExamenprogrammaEindterm {
-							id
-							title
-							ce_se
-							
-							SyllabusSpecifiekeEindterm {
-								id
-								prefix
-								title
-								ce_se
-								SyllabusVakbegrip {
-									id
-									prefix
-									title
-									ce_se
-								}
-								SyllabusToelichting {
-									id
-									prefix
-									title
-									ce_se
-								}
-							}
-							SyllabusVakbegrip {
-								id
-								prefix
-								title
-								ce_se
-								
-							}
-							Niveau {
-								...NiveauShort
-							}
-						}
-						SyllabusSpecifiekeEindterm {
-							id
-							prefix
-							title
-							ce_se
-							SyllabusVakbegrip {
-								id
-								prefix
-								title
-								ce_se
-							}
-							SyllabusToelichting {
-								id
-								prefix
-								title
-								ce_se
-							}
-						}
-						SyllabusToelichting {
-							id
-							prefix
-							title
-							ce_se
-							
-						}
-					}
-					ExamenprogrammaEindterm {
-						id
-						title
-						ce_se
-						
-						SyllabusSpecifiekeEindterm {
-							...SyllabusInfo
-						}
-						SyllabusVakbegrip {
-							id
-							prefix
-							title
-							ce_se
-							
-						}
-						Niveau {
-							...NiveauShort
-						}
-					}
-				}
-				ExamenprogrammaVakleergebied {
-					id
-					title
-					
-				}
+			  }
+			}
+			ExamenprogrammaVakleergebied {
+			  id
+			  title
+			  deprecated
+			}
 		  } 
-		}`,
-  },
-  idQuery: `
-	  allExamenprogrammaVakleergebied(filter:{id:$id}) {
+		}`
+	},
+	typedQueries: {
+		'examenprogramma_vakleergebied':`
 			id
 			title
 			Vakleergebied {
 				id
 				title
+				deprecated
 			}
 			Examenprogramma {
 				id
 				title
+				deprecated
 			} 
-	  }
-	  allExamenprogramma(filter:{id:$id}) {
+		`,
+		'examenprogramma':`
 			id
 			prefix
-			title	
+			title
 			ExamenprogrammaVakleergebied {
 				id
 				title
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaKop1 {
 				id
 				prefix
 				title
+				deprecated
 			}
 			Syllabus {
 				id
 				title
+				deprecated
 			}
 			Niveau {
 				...NiveauShort
 			}
-	  }
-	  allExamenprogrammaDomein(filter:{id:$id}) {
+		`,
+		'examenprogramma_domein':`
 			id
 			prefix
 			title
@@ -421,21 +380,25 @@ module.exports = {
 			Tag {
 				id
 				title
+				deprecated
 			}
 			Examenprogramma {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaSubdomein {
 				id
 				prefix
 				title
+				deprecated
 			}
 			ExamenprogrammaEindterm {
 				id
 				prefix
 				title
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
@@ -443,116 +406,12 @@ module.exports = {
 			SyllabusToelichting {
 				id
 				title
+				deprecated
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
-			}
-			NiveauIndex {
-				Niveau {
-				...NiveauShort
-				}
-			}
-	  }
-	  allExamenprogrammaSubdomein(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ce_se
-			Tag {
-				id
-				title
-			}
-			ExamenprogrammaDomein {
-				id
-				prefix
-				title
-				Examenprogramma {
-				id
-				title
-				Vakleergebied {
-					id
-					title
-					
-				}
-				Examenprogramma {
-					id
-					title
-					
-				}
-			}
-		}
-		`,
-  examenprogramma: `
-			id
-			prefix
-			title
-			ExamenprogrammaVakleergebied {
-				id
-				title
-				
-			}
-			ExamenprogrammaDomein {
-				id
-				prefix
-				title
-				
-			}
-			ExamenprogrammaKop1 {
-				id
-				prefix
-				title
-				
-			}
-			Syllabus {
-				id
-				title
-				
-			}
-			Niveau {
-				...NiveauShort
-			}
-		`,
-  examenprogramma_domein: `
-			id
-			prefix
-			title
-			ce_se
-			Tag {
-				id
-				title
-				
-			}
-			Examenprogramma {
-				id
-				prefix
-				title
-				
-			}
-			ExamenprogrammaSubdomein {
-				id
-				prefix
-				title
-				
-			}
-			ExamenprogrammaEindterm {
-				id
-				prefix
-				title
-				
-				Niveau {
-					...NiveauShort
-				}
-			}
-			SyllabusToelichting {
-				id
-				title
-				
-			}
-			SyllabusSpecifiekeEindterm {
-				id
-				title
-				
+				deprecated
 			}
 			NiveauIndex {
 				Niveau {
@@ -560,7 +419,7 @@ module.exports = {
 				}
 			}
 		`,
-  examenprogramma_subdomein: `
+		'examenprogramma_subdomein':`
 			id
 			prefix
 			title
@@ -568,24 +427,24 @@ module.exports = {
 			Tag {
 				id
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaDomein {
 				id
 				prefix
 				title
-				
+				deprecated
 				Examenprogramma {
 					id
 					title
-					
+					deprecated
 				}
 			}
 			ExamenprogrammaEindterm {
 				id
 				prefix
 				title
-				
+				deprecated
 				Niveau {
 					...NiveauShort
 				}
@@ -599,7 +458,7 @@ module.exports = {
 				}
 			}
 		`,
-  examenprogramma_eindterm: `
+		'examenprogramma_eindterm':`
 			id
 			prefix
 			title
@@ -608,15 +467,15 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 				ExamenprogrammaDomein {
 					id
 					title
-					
+					deprecated
 					Examenprogramma {
 						id
 						title
-						
+						deprecated
 					}
 				}
 			}
@@ -624,59 +483,59 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 				Examenprogramma {
 					id
 					title
-					
+					deprecated
 				}
 			}
 			SyllabusSpecifiekeEindterm {
 				id
 				title
-				
+				deprecated
 			}
 			SyllabusToelichting {
 				id
 				title
-				
+				deprecated
 			}
 			SyllabusVakbegrip {
 				id
 				title
-				
+				deprecated
 			}
 			Niveau {
 				id
 				title
-				
+				deprecated
 			}
 		`,
-  examenprogramma_kop1: `
+		'examenprogramma_kop1':`
 			id
 			prefix
 			title
-			
+			deprecated
 			Examenprogramma {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaKop2 {	  
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 		`,
-  examenprogramma_kop2: `
+		'examenprogramma_kop2':`
 			id
 			prefix
 			title
@@ -684,27 +543,27 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 				Examenprogramma {
 					id
 					title
-					
+					deprecated
 				}
 			}
 			ExamenprogrammaKop3 {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 		`,
-  examenprogramma_kop3: `
+		'examenprogramma_kop3':`
 			id
 			prefix
 			title
@@ -712,22 +571,22 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaKop4 {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 		`,
-  examenprogramma_kop4: `
+		'examenprogramma_kop4':`
 			id
 			prefix
 			title
@@ -735,16 +594,16 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaBody {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 		`,
-  examenprogramma_body: `
+		'examenprogramma_body':`
 			id
 			prefix
 			title
@@ -752,33 +611,34 @@ module.exports = {
 				id
 				prefix
 				title
-				
+				deprecated
 				Examenprogramma {
 					id
 					title
-					
+					deprecated
 				}
 			}
 			ExamenprogrammaKop2 {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaKop3 {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
 			ExamenprogrammaKop4 {
 				id
 				prefix
 				title
-				
+				deprecated
 			}
-		`,
-  idQuery: `
+		`
+	},
+	idQuery: `
 		allExamenprogrammaVakleergebied(filter:{id:$id}) {
 			id
 			title
@@ -1043,115 +903,104 @@ module.exports = {
 			}
 		}
 	`,
-  routes: {
-    examenprogramma_vakleergebied: (req) =>
-      opendata.api["ExamenprogrammaVakleergebied"](req.params, req.query).then(
-        function (result) {
-          return {
-            data: result.data.allExamenprogrammaVakleergebied,
-            type: "ExamenprogrammaVakleergebied",
-            meta: result.data._allExamenprogrammaVakleergebiedMeta,
-          };
-        }
-      ),
-    examenprogramma: (req) =>
-      opendata.api["Examenprogramma"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogramma,
-          type: "Examenprogramma",
-          meta: result.data._allExamenprogrammaMeta,
-        };
-      }),
-    "examenprogramma/:id": (req) =>
-      opendata.api["ExamenprogrammaVolledig"](req.params, req.query).then(
-        function (result) {
-          return {
-            data: result.data.Examenprogramma,
-            type: "Examenprogramma",
-          };
-        }
-      ),
-    examenprogramma_domein: (req) =>
-      opendata.api["ExamenprogrammaDomein"](req.params, req.query).then(
-        function (result) {
-          return {
-            data: result.data.allExamenprogrammaDomein,
-            type: "ExamenprogrammaDomein",
-            meta: result.data._allExamenprogrammaDomeinMeta,
-          };
-        }
-      ),
-    examenprogramma_subdomein: (req) =>
-      opendata.api["ExamenprogrammaSubdomein"](req.params, req.query).then(
-        function (result) {
-          return {
-            data: result.data.allExamenprogrammaSubdomein,
-            type: "ExamenprogrammaSubdomein",
-            meta: result.data._allExamenprogrammaSubdomeinMeta,
-          };
-        }
-      ),
-    examenprogramma_eindterm: (req) =>
-      opendata.api["ExamenprogrammaEindterm"](req.params, req.query).then(
-        function (result) {
-          return {
-            data: result.data.allExamenprogrammaEindterm,
-            type: "ExamenprogrammaEindterm",
-            meta: result.data._allExamenprogrammaEindtermMeta,
-          };
-        }
-      ),
-    examenprogramma_kop1: (req) =>
-      opendata.api["ExamenprogrammaKop1"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogrammaKop1,
-          type: "ExamenprogrammaKop1",
-          meta: result.data._allExamenprogrammaKop1Meta,
-        };
-      }),
-    examenprogramma_kop2: (req) =>
-      opendata.api["ExamenprogrammaKop2"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogrammaKop2,
-          type: "ExamenprogrammaKop2",
-          meta: result.data._allExamenprogrammaKop2Meta,
-        };
-      }),
-    examenprogramma_kop3: (req) =>
-      opendata.api["ExamenprogrammaKop3"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogrammaKop3,
-          type: "ExamenprogrammaKop3",
-          meta: result.data._allExamenprogrammaKop3Meta,
-        };
-      }),
-    examenprogramma_kop4: (req) =>
-      opendata.api["ExamenprogrammaKop4"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogrammaKop4,
-          type: "ExamenprogrammaKop4",
-          meta: result.data._allExamenprogrammaKop4Meta,
-        };
-      }),
-    examenprogramma_body: (req) =>
-      opendata.api["ExamenprogrammaBody"](req.params, req.query).then(function (
-        result
-      ) {
-        return {
-          data: result.data.allExamenprogrammaBody,
-          type: "ExamenprogrammaBody",
-          meta: result.data._allExamenprogrammaBodyMeta,
-        };
-      }),
-  },
+	routes: {
+		'examenprogramma_vakleergebied': (req) =>
+			opendata.api["ExamenprogrammaVakleergebied"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allExamenprogrammaVakleergebied,
+					type: 'ExamenprogrammaVakleergebied',
+					meta: result.data._allExamenprogrammaVakleergebiedMeta
+				}
+			}),
+		'examenprogramma': (req) =>
+			opendata.api["Examenprogramma"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allExamenprogramma,
+					type: 'Examenprogramma', 
+					meta: result.data._allExamenprogrammaMeta
+				}
+			}),
+		'examenprogramma/:id': (req) =>
+			opendata.api["ExamenprogrammaVolledig"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.Examenprogramma,
+					type: 'Examenprogramma'
+				}
+			}),
+		'examenprogramma_domein': (req) =>
+			opendata.api["ExamenprogrammaDomein"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaDomein,
+					type: 'ExamenprogrammaDomein',
+					meta: result.data._allExamenprogrammaDomeinMeta
+				}
+			}),
+		'examenprogramma_subdomein': (req) =>
+			opendata.api["ExamenprogrammaSubdomein"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaSubdomein,
+					type: 'ExamenprogrammaSubdomein',
+					meta: result.data._allExamenprogrammaSubdomeinMeta
+				}
+			}),
+		'examenprogramma_eindterm': (req) =>
+			opendata.api["ExamenprogrammaEindterm"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaEindterm,
+					type: 'ExamenprogrammaEindterm',
+					meta: result.data._allExamenprogrammaEindtermMeta
+				}
+			}),
+		'examenprogramma_kop1': (req) =>
+			opendata.api["ExamenprogrammaKop1"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaKop1,
+					type: 'ExamenprogrammaKop1',
+					meta: result.data._allExamenprogrammaKop1Meta
+				}
+			}),
+		'examenprogramma_kop2': (req) =>
+			opendata.api["ExamenprogrammaKop2"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaKop2,
+					type: 'ExamenprogrammaKop2',
+					meta: result.data._allExamenprogrammaKop2Meta
+				}
+			}),
+		'examenprogramma_kop3': (req) =>
+			opendata.api["ExamenprogrammaKop3"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaKop3,
+					type: 'ExamenprogrammaKop3',
+					meta: result.data._allExamenprogrammaKop3Meta
+				}
+			}),
+		'examenprogramma_kop4': (req) =>
+			opendata.api["ExamenprogrammaKop4"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaKop4,
+					type: 'ExamenprogrammaKop4',
+					meta: result.data._allExamenprogrammaKop4Meta
+				}
+			}),
+		'examenprogramma_body': (req) =>
+			opendata.api["ExamenprogrammaBody"](req.params, req.query)
+			.then(function(result) {
+				return {
+					data: result.data.allExamenprogrammaBody,
+					type: 'ExamenprogrammaBody',
+					meta: result.data._allExamenprogrammaBodyMeta
+				}
+			})
+	}
 };

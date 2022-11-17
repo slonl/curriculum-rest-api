@@ -21,7 +21,6 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/lpib.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-lpib/context.json',
 	queries: {
-/*
 		LpibVakleergebied: `query LpibVakleergebied($page:Int,$perPage:Int) {
 		  allLpibVakleergebied(page:$page,perPage:$perPage,sortField:"title") {
 			id
@@ -387,7 +386,6 @@ module.exports = {
 			}
 		  }
 		}`
-*/
 	},
 	typedQueries: {
 		'lpib_vakleergebied': `
@@ -722,7 +720,6 @@ module.exports = {
 		}
 	`,
 	routes: {
-/*
 		'lpib_vakkencluster/': (req) =>
 			opendata.api["LpibVakkencluster"](req.params, req.query)
 			.then(function(result) {
@@ -870,6 +867,5 @@ module.exports = {
 					type: 'LpibVakinhoud'
 				};
 			})
-*/
 	}
 };
