@@ -112,7 +112,6 @@ query idQuery($id:ID) {
 	${allType}(filter:{id:$id}) {
 		replaces
 		replacedBy
-		deprecated
 		${typedQuery}
 	}
 }
