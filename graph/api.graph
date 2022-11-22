@@ -1996,6 +1996,25 @@ query LdkVakinhoudOpNiveau($niveau:ID) {
   }
 }
 
+query LdkVakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
+  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+    LdkVakinhoud(filter:{id:$id}) {
+      id
+      title
+      LdkVaksubkern {
+        id
+        title
+      }
+      Doelniveau(filter:{niveau_id:[$niveau]}) {
+        ...DoelNiveau
+      }
+    }
+    Niveau {
+      ...NiveauShort
+    }
+  }
+}
+
 query LpibVakinhoudByIdOpNiveau($niveau:ID, $id:ID) {
   allNiveauIndex(filter:{niveau_id:[$niveau]}) {
     LpibVakinhoud(filter:{id:$id}) {
