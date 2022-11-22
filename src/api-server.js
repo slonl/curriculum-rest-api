@@ -16,10 +16,11 @@ const inhoudSchemaURL = "https://opendata.slo.nl/curriculum/schemas/inhoud.jsonl
 const doelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/doel.jsonld";
 const kerndoelSchemaURL   = "https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld";
 const examenprogrammaSchemaURL = "https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld";
-const baseIdURL       = "/curriculum/uuid/";
+const baseIdURL       = "https://opendata.slo.nl/curriculum/uuid/";
 const niveauURL       = "/curriculum/api/v1/niveau/";
 
 app.use(function(req, res, next) {
+console.log(req.path);
 	res.header('Access-Control-Allow-Credentials', true);
 	res.header('Access-Control-Allow-Origin', req.headers.origin ? req.headers.origin : '*');
 	res.header('Access-Control-Allow-Headers','Authorization');
@@ -246,7 +247,7 @@ function jsonLDList(list, schema, niveau, meta) {
 	}
 }
 
-app.route(apiBase + 'uuid/:id').get((req, res) => {
+app.route([apiBase + 'uuid/:id', apiBase + 'curriculum/api/v1/uuid/:id']).get((req, res) => {
 	var schema = null;
 	var entitytype = null;
 
