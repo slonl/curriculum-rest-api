@@ -239,10 +239,6 @@ module.exports = {
 		  id
 		  title
 		}
-		Examenprogramma {
-		  id
-		  title
-		}
 		Syllabus {
 		  id
 		  title
@@ -271,10 +267,6 @@ module.exports = {
 		  title
 		}
 		ExamenprogrammaDomein {
-		  id
-		  title
-		}
-		Examenprogramma {
 		  id
 		  title
 		}

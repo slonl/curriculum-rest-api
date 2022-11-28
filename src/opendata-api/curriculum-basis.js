@@ -160,10 +160,6 @@ module.exports = {
 				 id
 				 title
 			   }
-			   LpibVakleergebied {
-				 id
-				 title
-			   }
 			   ErkVakleergebied {
 				 id
 				 title
@@ -264,10 +260,6 @@ module.exports = {
 					id
 					title
 				}
-				LpibVakleergebied {
-					id
-					title
-				}
 			}
 		}`,
 		Deprecated: `query Deprecated {
@@ -306,12 +298,6 @@ module.exports = {
 					title
 				}
 				...NiveauShort
-			}
-			allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-				LpibVakkern(filter:{vakleergebied_id:[$id]}) {
-					id
-					title
-				}
 			}
 		}`
 	},
@@ -355,10 +341,6 @@ module.exports = {
 				id
 				title
 			}
-			LpibVakleergebied {
-				id
-				title
-			}
 			Niveau {
 				...NiveauShort
 			}
@@ -371,36 +353,40 @@ module.exports = {
 			vakbegrippen
 			Doelniveau {
 				...DoelNiveau
-				LpibVakkern {
+				LdkVakleergebied {
 					id
 					title
-					LpibVakleergebied {
+				}
+				LdkVakkern {
+					id
+					title
+					LdkVakleergebied {
 						id
 						title
 					}
 				}
-				LpibVaksubkern {
+				LdkVaksubkern {
 					id
 					title
-					LpibVakkern {
+					LdkVakkern {
 						id
 						title
-						LpibVakleergebied {
+						LdkVakleergebied {
 							id
 							title
 						}
 					}
 				}
-				LpibVakinhoud {
+				LdkVakinhoud {
 					id
 					title
-					LpibVaksubkern {
+					LdkVaksubkern {
 						id
 						title
-						LpibVakkern {
+						LdkVakkern {
 							id
 							title
-							LpibVakleergebied {
+							LdkVakleergebied {
 								id
 								title
 							}
@@ -423,42 +409,6 @@ module.exports = {
 		}
 		allDoelniveau(filter:{id:$id}) {
 			...DoelNiveau
-			LpibVakkern {
-				id
-				title
-				Vakleergebied {
-					id
-					title
-				}
-			}
-			LpibVaksubkern {
-				id
-				title
-				LpibVakkern {
-					id
-					title
-					LpibVakleergebied {
-						id
-						title
-					}
-				}
-			}
-			LpibVakinhoud {
-				id
-				title
-				LpibVaksubkern {
-					id
-					title
-					LpibVakkern {
-						id
-						title
-						LpibVakleergebied {
-							id
-							title
-						}
-					}
-				}
-			}
 			LdkVakleergebied {
 				id
 				title
@@ -505,43 +455,8 @@ module.exports = {
 			title
 			description
 			types
+			replaces
 			replacedBy
-			LpibVakkern {
-				id
-				title
-				LpibVakleergebied {
-					id
-					title
-				}
-			}
-			LpibVaksubkern {
-				id
-				title
-				LpibVakkern {
-					id
-					title
-					LpibVakleergebied {
-						id
-						title
-					}
-				}
-			}
-			LpibVakinhoud {
-				id
-				title
-				LpibVaksubkern {
-					id
-					title
-					LpibVakkern {
-						id
-						title
-						LpibVakleergebied {
-							id
-							title
-						}
-					}
-				}
-			}
 			Doelniveau {
 				...DoelNiveau
 			}
@@ -633,19 +548,20 @@ module.exports = {
 					type: 'Vakleergebied'
 				}
 			}),
-		'niveau/:niveau/vakleergebied/:id/': (req) =>
-			opendata.api["VakleergebiedByIdOpNiveau"](req.params)
+		'niveau/:niveau/vakleergebied/:id/': (req) => {
+			return opendata.api["VakleergebiedByIdOpNiveau"](req.params)
 			.then(function(result) {
 				var vak = result.data.allNiveau[0].Vakleergebied[0];
 				delete result.data.allNiveau[0].Vakleergebied;
-				vak.LpibVakkern = result.data.allNiveauIndex[0].LpibVakkern;
-				delete result.data.allNiveauIndex[0];
+				//vak.LpibVakkern = result.data.allNiveauIndex[0].LpibVakkern;
+				//delete result.data.allNiveauIndex[0];
 				vak.Niveau  = result.data.allNiveau;
 				return {
 					data: vak,
 					type: 'Vakleergebied'
 				};
 			})
+		}
 
 	}
 };

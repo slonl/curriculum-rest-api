@@ -215,7 +215,7 @@ module.exports = {
 		'inh_subcluster/': (req) =>
 			opendata.api["InhSubcluster"](req.params, req.query)
 			.then(function(result) {
-				return { data: result.data.allInhCluster, type: 'InhSubcluster', meta: result.data._allInhSubclusterMeta}
+				return { data: result.data.allInhSubcluster, type: 'InhSubcluster', meta: result.data._allInhSubclusterMeta}
 			}),
 		'niveau/:niveau/inh_vakleergebied/:id/doelen': (req) =>
 			opendata.api['InhoudslijnVolledig'](req.params)

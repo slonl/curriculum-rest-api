@@ -2,27 +2,6 @@ module.exports = {
 	context: 'examenprogramma',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
-	fragments: {
-		SyllabusInfo: `fragment SyllabusInfo on SyllabusSpecifiekeEindterm {
-		  id
-		  prefix
-		  title
-		  ce_se
-		  niveau_id
-		  SyllabusVakbegrip {
-			id
-			prefix
-			title
-			ce_se
-		  }
-		  SyllabusToelichting {
-			id
-			prefix
-			title
-			ce_se
-		  }
-		}`
-	},
 	queries: {
 		ExamenprogrammaVakleergebied: `query ExamenprogrammaVakleergebied($page:Int,$perPage:Int) {
 		  allExamenprogrammaVakleergebied (page:$page,perPage:$perPage,sortField:"title") {
@@ -222,7 +201,22 @@ module.exports = {
 			  title
 			  ce_se
 			  SyllabusSpecifiekeEindterm {
-				...SyllabusInfo
+				id
+				prefix
+				title
+				ce_se
+				SyllabusVakbegrip {
+				  id
+				  prefix
+				  title
+				  ce_se
+				}
+				SyllabusToelichting {
+				  id
+				  prefix
+				  title
+				  ce_se
+				}
 			  }
 			  SyllabusToelichting {
 				id
@@ -239,8 +233,23 @@ module.exports = {
 				  title
 				  ce_se
 				  SyllabusSpecifiekeEindterm {
-					...SyllabusInfo
-				  }
+			        id
+			        prefix
+			        title
+			        ce_se
+					SyllabusVakbegrip {
+					  id
+					  prefix
+					  title
+					  ce_se
+					}
+					SyllabusToelichting {
+					  id
+					  prefix
+					  title
+					  ce_se
+					}
+			      }
 				  SyllabusVakbegrip {
 					id
 					prefix
@@ -252,7 +261,22 @@ module.exports = {
 				  }
 				}
 				SyllabusSpecifiekeEindterm {
-					...SyllabusInfo
+				  id
+				  prefix
+				  title
+				  ce_se
+				  SyllabusVakbegrip {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
+				  SyllabusToelichting {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
 				}
 				SyllabusToelichting {
 				  id
@@ -266,8 +290,23 @@ module.exports = {
 				title
 				ce_se
 				SyllabusSpecifiekeEindterm {
-					...SyllabusInfo
+			      id
+			      prefix
+			      title
+			      ce_se
+				  SyllabusVakbegrip {
+				    id
+				    prefix
+				    title
+				    ce_se
 				  }
+				  SyllabusToelichting {
+				    id
+				    prefix
+				    title
+				    ce_se
+				  }
+			    }
 			    SyllabusVakbegrip {
 		          id
 		          prefix
@@ -318,14 +357,6 @@ module.exports = {
 		  title
 		}
 		Syllabus {
-		  id
-		  title
-		}
-		SyllabusToelichting {
-		  id
-		  title
-		}
-		SyllabusSpecifiekeEindterm {
 		  id
 		  title
 		}

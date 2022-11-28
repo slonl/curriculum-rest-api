@@ -4,20 +4,21 @@ const watch     = require('watch');
 const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
-const uuidv4    = require('uuidv4');
-const sendmail  = require('sendmail')();
+const { v4: uuidv4 }   = require('uuid');
 const mcache    = require('memory-cache');
+const request   = require('request-promise-native');
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
-const port      = process.env.NODE_PORT || 4500;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
+const port      = process.env.NODE_PORT || 4700;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2021/api/v1";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
-const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
-const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3700";
+const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/2021/api/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
-
 opendata.url    = graphqlUrl;
 
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
@@ -31,15 +32,16 @@ var cache = function() {
 		let key = '__express__' + req.originalUrl || req.url
 		let cachedBody = mcache.get(key)
 		if (cachedBody) {
-			//console.log("cache hit for " + key);
 			res.send(cachedBody)
 			return
 		} else {
 			//console.log("cache miss for " + key);
 			res.sendResponse = res.send
 			res.send = (body) => {
-				// mcache.put(key, body, duration * 1000);
-				mcache.put(key, body);
+				if (!res.statusCode>=200 && res.statusCode<400) { // response is ok
+					// mcache.put(key, body, duration * 1000);
+					mcache.put(key, body);
+				}
 				res.sendResponse(body)
 			}
 			next()
@@ -47,10 +49,11 @@ var cache = function() {
 	}
 };
 
+
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Credentials', true);
 	res.header('Access-Control-Allow-Origin', req.headers.origin ? req.headers.origin : '*');
-	res.header('Access-Control-Allow-Headers','Authorization');
+	res.header('Access-Control-Allow-Headers',['Authorization','Content-Type']);
 	if ('OPTIONS' == req.method) {
 		res.sendStatus(200);
 		return;
@@ -95,6 +98,7 @@ app.route('/' + 'register/').get((req) => {
 	});
 });
 
+
 function myAuthorizer(username, password) {
 	console.log("checking api key for " + username);
 	if (!apiKeys[username]) {
@@ -131,15 +135,31 @@ watch.createMonitor('.', function(monitor) {
 
 function sendApiKey(email, key) {
 	var mail = {
-		from: "SLO Opendata <opendata@slo.nl>",
-		to: email,
-		subject: "SLO Opendata API key",
-		text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
-		html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
+		from: {
+		email: "opendata@slo.nl",
+		name: "SLO Opendata",
+	  },
+	  to: {
+	  	email: email
+	  },
+	  subject: "SLO Opendata API Key",
+	  content: [
+	  	{
+	  		type: "text/html",
+	  		value: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>",
+	      	},
+	    ],
 	}
-
-	sendmail(mail);
-}
+	sgMail.send(mail)
+	.then(function (response) {
+	    console.log(response[0].statusCode);
+	    console.log(response[0].headers);
+	    console.log("api key mail sent");
+	})
+	.catch(function (error) {
+	    console.log(error);
+	});  
+} 
 
 readKeys();
 
@@ -239,7 +259,6 @@ function jsonLD(entry, schema, type) {
 			.map(function(ni) {
 				let niveau = {
 					'@id': baseIdURL + ni.Niveau[0].id,
-				//	'@references':baseDatasetURL + 'uuid/'+link.id,
 					'title': ni.Niveau[0].title,
 					'prefix': ni.Niveau[0].prefix+'-1'
 				};
@@ -274,19 +293,15 @@ function jsonLDList(list, schema, type, meta) {
 	// remove dummy entries from returned list
 	// TODO: remove these in the graphql server, they are only there to 
 	// provide access to properties which aren't actually set in the current data, but may be set later
-	if (list[list.length-1] && list[list.length-1].id && parseInt(list[list.length-1].id)<0) {
-		list.pop();
-		if (meta && meta.count) {
+
+	list = list.filter(link => {
+		if (link.id && parseInt(link.id)<0) {
 			meta.count--;
+			return false;
 		}
-	}
-	if (list[0] && list[0].id && parseInt(list[0].id)<0) {
-		list.shift();
-		if (meta && meta.count) {
-			meta.count--;
-		}
-	}
-	list = list.map(function(link) {
+		return true;
+	})
+	.map(function(link) {
 		var result = {
 			'@id': baseIdURL + link.id,
 			'@references': baseDatasetURL + 'uuid/'+link.id,
@@ -347,6 +362,7 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 Object.keys(opendata.routes).forEach((route) => {
+	console.log('adding route '+route);
 	app.route('/' + route)
 	.get(cache(), (req, res) => {
 		console.log(route);
@@ -358,8 +374,28 @@ Object.keys(opendata.routes).forEach((route) => {
 				result = jsonLD(result.data, result.schema, result.type);
 			}
 			res.send(result);
+		})
+		.catch((err) => {
+			res.setHeader('content-type', 'application/json');
+			res.status(500).send({ error: 500, message: err.message });
+			console.log(route, err);
 		});
 	});
+});
+
+app.route('/' + 'search/').get((req, res) => {
+	request({
+		url: 'http://localhost:3701/search?text='+req.query.text
+	})
+	.then(data => {
+		try {
+			data = JSON.parse(data)
+			res.setHeader("Content-Type", "application/json");
+			res.send(jsonLDList(data))
+		} catch(e) {
+			res.error(e)
+		}
+	})
 });
 
 app.route('/' + 'uuid/:id').get((req, res) => {
@@ -528,11 +564,14 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 	.catch(function(err) {
 		var code = err.message.split(':')[0];
 		if (!code) {
-			code = 501;
+			code = 500;
 		}
+		res.setHeader('content-type', 'application/json');
 		res.status(code).send({ error: code, message: err.message});
 	});
 });
+
+
 
 function getById(id) {
 	return opendata.api.Id({id: id})

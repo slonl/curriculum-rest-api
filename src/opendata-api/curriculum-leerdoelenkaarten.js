@@ -1,6 +1,6 @@
 function FilterEmptyDoelniveau(ent) {
 	var found = false;
-	['LpibVakkern','LpibVaksubkern','LpibVakinhoud'].forEach(function(type) {
+	/*['LpibVakkern','LpibVaksubkern','LpibVakinhoud'].forEach(function(type) {
 		if (ent[type]) {
 			ent[type] = ent[type].filter(FilterEmptyDoelniveau);
 			if (!ent[type].length) {
@@ -9,7 +9,7 @@ function FilterEmptyDoelniveau(ent) {
 				found = true;
 			}
 		}
-	});
+	});*/
 	if (ent.Doelniveau && ent.Doelniveau.length) {
 		found = true;
 	}
@@ -293,10 +293,6 @@ module.exports = {
 			...NiveauShort
 		  }
 		}
-		LpibVakkern {
-		  id
-		  title
-		}
 	  }
 	  allLdkVaksubkern(filter:{id:$id}) {
 		...LdkVaksubkern
@@ -323,10 +319,6 @@ module.exports = {
 			...NiveauShort
 		  }
 		}
-		LpibVaksubkern {
-		  id
-		  title
-		}
 	  }
 	  allLdkVakinhoud(filter:{id:$id}) {
 		id
@@ -349,10 +341,6 @@ module.exports = {
 		  Niveau {
 			...NiveauShort
 		  }
-		}
-		LpibVakinhoud {
-		  id
-		  title
 		}
 	  }
 	  allLdkVakbegrip(filter:{id:$id}) {
@@ -413,23 +401,32 @@ module.exports = {
 					type: 'LdkVakleergebied'
 				};
 			}),
-		'niveau/:niveau/ldk_vakleergebied/:id': (req) =>
-			opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params)
-			.then(function(result) {
-				result.data.allNiveauIndex[0].LdkVakleergebied[0].LdkVakkern = result.data.allNiveauIndex[0].LdkVakkern;
-				result.data.allNiveauIndex[0].LdkVakleergebied[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakleergebied[0],
-					type: 'LdkVakleergebied'
-				}
-			}),
 		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) =>
 			opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params)
 			.then(function(result) {
+				if (!result.data.LdkVakleergebied) {
+					throw new Error('LdkVakleergebied not found: '+req.params.id, 404);
+				}
 				result.data.LdkVakleergebied.Niveau = result.data.LdkVakleergebied.NiveauIndex[0].Niveau;
 				FilterEmptyDoelniveau(result.data.LdkVakleergebied);
 				return {
 					data: result.data.LdkVakleergebied,
+					type: 'LdkVakleergebied'
+				}
+			}),
+		'niveau/:niveau/ldk_vakleergebied/:id/': (req) =>
+			opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params)
+			.then(function(result) {
+				if (!result.data.allNiveauIndex[0]) {
+					throw new Error('Niveau not found: '+req.params.niveau, 404);
+				}
+				if (!result.data.allNiveauIndex[0].LdkVakleergebied[0]) {
+					throw new Error('LdkVakleergebied not found: '+req.params.id, 404);
+				}
+				result.data.allNiveauIndex[0].LdkVakleergebied[0].LdkVakkern = result.data.allNiveauIndex[0].LdkVakkern;
+				result.data.allNiveauIndex[0].LdkVakleergebied[0].Niveau = result.data.allNiveauIndex[0].Niveau;
+				return {
+					data: result.data.allNiveauIndex[0].LdkVakleergebied[0],
 					type: 'LdkVakleergebied'
 				}
 			}),
