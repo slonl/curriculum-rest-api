@@ -24,8 +24,7 @@
     "memory-cache": "^0.2.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
-    "sendmail": "^1.6.1",
-    "uuidv4": "^6.2.2",
+    "uuid": "^9.0.0",
     "watch": "^1.0.2"
   }
 }
