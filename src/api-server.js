@@ -4,7 +4,7 @@ const watch     = require('watch');
 const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
-const uuidv4    = require('uuidv4');
+const { v4: uuidv4 } = require('uuid');
 const mcache    = require('memory-cache');
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
@@ -75,7 +75,7 @@ app.use(function(req, res, next) {
 app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
 	console.log("Register " + user);
-
+	
 	var keyData = fs.readFileSync("apiKeys.json", "utf8");
 	keyData = JSON.parse(keyData);
 
@@ -84,7 +84,7 @@ app.route('/' + 'register/').get((req) => {
 	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 	var yyyy = today.getFullYear();
 	today = yyyy + '-' + mm + '-' + dd;
-
+	
 	if (!keyData[user]) {
 		keyData[user] = {
 			key : uuidv4(),
