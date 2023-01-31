@@ -5,10 +5,11 @@ const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
 const uuidv4    = require('uuidv4');
-const sendmail  = require('sendmail')();
 const mcache    = require('memory-cache');
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
 const port      = process.env.NODE_PORT || 4500;
@@ -132,15 +133,30 @@ watch.createMonitor('.', function(monitor) {
 
 function sendApiKey(email, key) {
 	var mail = {
-		from: "SLO Opendata <opendata@slo.nl>",
-		to: email,
-		bcc: "opendata@slo.nl",
-		subject: "SLO Opendata API key",
-		text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
-		html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
+		from: {
+		email: "opendata@slo.nl",
+		name: "SLO Opendata",
+	  },
+	  to: {
+	  	email: email
+	  },
+	  subject: "SLO Opendata API Key",
+	  content: [
+	  	{
+	  		type: "text/html",
+	  		value: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>",
+	      	},
+	    ],
 	}
-
-	sendmail(mail);
+	sgMail.send(mail)
+	.then(function (response) {
+	    console.log(response[0].statusCode);
+	    console.log(response[0].headers);
+	    console.log("api key mail sent");
+	})
+	.catch(function (error) {
+	    console.log(error);
+	});  
 }
 
 readKeys();
