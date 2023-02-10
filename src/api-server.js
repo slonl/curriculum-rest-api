@@ -7,6 +7,7 @@ const url       = require('url');
 const uuidv4    = require('uuidv4');
 const sendmail  = require('sendmail')();
 const mcache    = require('memory-cache');
+const request = require("request-promise-native");
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
 
@@ -364,6 +365,20 @@ Object.keys(opendata.routes).forEach((route) => {
 			console.log(route, err);
 		});
 	});
+});
+
+app.route("/" + "search/").get((req, res) => {
+  request({
+    url: "http://localhost:3801/search?text=" + req.query.text,
+  }).then((data) => {
+    try {
+      data = JSON.parse(data);
+      res.setHeader("Content-Type", "application/json");
+      res.send(jsonLDList(data));
+    } catch (e) {
+      res.error(e);
+    }
+  });
 });
 
 app.route('/' + 'uuid/:id').get((req, res) => {
