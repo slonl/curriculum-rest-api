@@ -1793,7 +1793,7 @@
         actions: {
             search: function(text) {
                 document.body.classList.remove('slo-paging');
-                return slo.api.get('search', {text: text}).then(data => {
+                return slo.api.get(release.apiPath+'search', {text: text}).then(data => {
                     if (typeof data === 'string') {
                         return JSON.parse(data)
                     }
