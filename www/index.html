@@ -15,6 +15,14 @@
     .slo-navbar-nav summary:hover {
         background-color: rgba(0,0,0,0.5);
     }
+    .slo-search .slo-form-group {
+        --input-border: #666;
+        display: flex;
+        margin-top: 10px;
+    }
+    .slo-search .slo-button {
+        margin-left: 10px;
+    }
 </style>
 <body data-simply-path="/curriculum/">
 <base href="{@NODE_DATA_URL}">
@@ -25,6 +33,14 @@
     <div class="slo-navbar-left">
         OpenData Portal
     </div>
+    <nav class="slo-navbar-right">
+        <form data-simply-command="search-text" class="slo-search">
+            <div class="slo-form-group">
+                <input type="search" name="text" value="" placeholder="Vul een zoektekst in">
+                <button class="slo-button">Zoek</button>
+            </div>
+        </form>
+    </nav>
     <nav class="slo-navbar-right">
         <ul class="slo-navbar-nav slo-paging">
             <li>
@@ -1761,9 +1777,29 @@
                 var email = encodeURIComponent(el.querySelector("input").value);
                 browser.actions.register(email);
                 browser.view.view = "registered";
+            },
+            'search-text': function(form, values) {
+                const text = values.text;
+                if (text) {
+                    browser.actions.search(text)
+                    .then(data => {
+                        browser.view.view = 'list';
+                        browser.view.list = data;
+                        browser.view.listTitle = 'Zoekresultaten voor &quot;'+text+'&quot;';
+                    })
+                }
             }
         },
         actions: {
+            search: function(text) {
+                document.body.classList.remove('slo-paging');
+                return slo.api.get('search', {text: text}).then(data => {
+                    if (typeof data === 'string') {
+                        return JSON.parse(data)
+                    }
+                    return data
+                });
+            },
             updatePage: function(page) {
                 window.location.search =
                 '?'+Object.keys(browser.view.params).map(function(key) {
