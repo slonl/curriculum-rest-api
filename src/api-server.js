@@ -6,17 +6,18 @@ const path      = require('path');
 const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
 const mcache    = require('memory-cache');
+const request = require("request-promise-native");
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
-const port      = process.env.NODE_PORT || 4500;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
+const port      = process.env.NODE_PORT || 4800;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2022/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
-const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
-const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
+const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3800";
+const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/2022/api/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = graphqlUrl;
 
@@ -380,6 +381,20 @@ Object.keys(opendata.routes).forEach((route) => {
 			console.log(route, err);
 		});
 	});
+});
+
+app.route("/" + "search/").get((req, res) => {
+  request({
+    url: "http://localhost:3801/search?text=" + req.query.text,
+  }).then((data) => {
+    try {
+      data = JSON.parse(data);
+      res.setHeader("Content-Type", "application/json");
+      res.send(jsonLDList(data));
+    } catch (e) {
+      res.error(e);
+    }
+  });
 });
 
 app.route('/' + 'uuid/:id').get((req, res) => {
