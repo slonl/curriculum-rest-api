@@ -4,16 +4,17 @@ const watch     = require('watch');
 const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
-const uuidv4    = require('uuidv4');
-const sendmail  = require('sendmail')();
+const { v4: uuidv4 } = require('uuid');
 const mcache    = require('memory-cache');
 const request = require("request-promise-native");
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
-const port      = process.env.NODE_PORT || 4500;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
+const port      = process.env.NODE_PORT || 4800;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2022/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
 const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
 const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3501";
@@ -76,7 +77,7 @@ app.use(function(req, res, next) {
 app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
 	console.log("Register " + user);
-
+	
 	var keyData = fs.readFileSync("apiKeys.json", "utf8");
 	keyData = JSON.parse(keyData);
 
@@ -85,7 +86,7 @@ app.route('/' + 'register/').get((req) => {
 	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
 	var yyyy = today.getFullYear();
 	today = yyyy + '-' + mm + '-' + dd;
-
+	
 	if (!keyData[user]) {
 		keyData[user] = {
 			key : uuidv4(),
@@ -134,15 +135,30 @@ watch.createMonitor('.', function(monitor) {
 
 function sendApiKey(email, key) {
 	var mail = {
-		from: "SLO Opendata <opendata@slo.nl>",
-		to: email,
-		bcc: "opendata@slo.nl",
-		subject: "SLO Opendata API key",
-		text: "Bedankt voor het registreren op opendata.slo.nl. Je API key is:\n" + key,
-		html: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>"
+		from: {
+		email: "opendata@slo.nl",
+		name: "SLO Opendata",
+	  },
+	  to: {
+	  	email: email
+	  },
+	  subject: "SLO Opendata API Key",
+	  content: [
+	  	{
+	  		type: "text/html",
+	  		value: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>",
+	      	},
+	    ],
 	}
-
-	sendmail(mail);
+	sgMail.send(mail)
+	.then(function (response) {
+	    console.log(response[0].statusCode);
+	    console.log(response[0].headers);
+	    console.log("api key mail sent");
+	})
+	.catch(function (error) {
+	    console.log(error);
+	});  
 }
 
 readKeys();
