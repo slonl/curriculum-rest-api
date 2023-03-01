@@ -16,6 +16,7 @@ const port      = process.env.NODE_PORT || 4500;
 const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/api-acpt/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
 const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
+const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3501";
 const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = graphqlUrl;
@@ -368,8 +369,9 @@ Object.keys(opendata.routes).forEach((route) => {
 });
 
 app.route("/" + "search/").get((req, res) => {
+	console.log('search for '+req.query.text)
   request({
-    url: "http://localhost:3801/search?text=" + req.query.text,
+    url: searchUrl + "/search?text=" + req.query.text,
   }).then((data) => {
     try {
       data = JSON.parse(data);
