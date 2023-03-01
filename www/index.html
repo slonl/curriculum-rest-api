@@ -1999,7 +1999,7 @@
     editor.transformers.addTrailingSlash = {
         render: function(data) {
             this.originalValue = data;
-            if(data.length-1 != "/") {
+            if(data[data.length-1] != "/") {
                 data += "/";
             }
             return data;
