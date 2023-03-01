@@ -1360,6 +1360,18 @@
             return match(path, options);
         };
     })();
+
+    (function() {
+        var goto = simply.route.goto;
+        simply.route.goto = function(path) {
+            let uuidPath = '/curriculum/uuid/';
+            if (path.substr(0, uuidPath.length)===uuidPath) {
+                history.pushState({}, '', path);
+                return simply.route.match(path);
+            }
+            return goto(path);
+        };
+    })();
     
     var titles = {
         'vakleergebied/': 'Vakleergebied',
