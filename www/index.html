@@ -247,7 +247,7 @@
                 <h1>
                     <span data-simply-field="item.title"></span>
                 </h1>
-                <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-content="fixed">
+                <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-transformer="addSlashUuidLink" data-simply-content="fixed">
                     <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
                         <use xlink:href="/assets/icons/feather-sprite.svg#link">
                     </use></svg></label>
@@ -1993,6 +1993,22 @@
         render: function(data) {
             this.innerHTML = browser.view.item.title;
             return data;
+        }
+    };
+
+    editor.transformers.addSlashUuidLink = {
+        render: function(data) {
+            this.originalValue = data;
+            var lastCharUrl = data.substr(-1)
+
+            if(lastCharUrl != "/") {
+                data += "/";
+                console.log(data);
+                return data;
+            }
+        },
+        extract: function(data) {
+            return this.originalValue;
         }
     };
     
