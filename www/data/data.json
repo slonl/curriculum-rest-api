@@ -1,0 +1,14 @@
+{
+    "/curriculum/": {
+        "menu": [
+        ],
+        "submenu": [
+            {
+                "link": {
+                    "innerHTML": "API Brower",
+                    "href": "/"
+                }
+            }
+        ]
+    }
+}

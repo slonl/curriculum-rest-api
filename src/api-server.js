@@ -50,6 +50,7 @@ var cache = function() {
 	}
 };
 
+app.use(express.static(process.cwd()+'/www'))
 
 app.use(function(req, res, next) {
 	res.header('Access-Control-Allow-Credentials', true);
@@ -60,7 +61,7 @@ app.use(function(req, res, next) {
 		return;
 	} else if (req.accepts('html')) {
 		res.set('Content-Type', 'text/html');
-		let filePath = path.join(__dirname, '../www/', 'index.html');
+		let filePath = path.join(__dirname, '../data-browser/', 'index.html');
 		let file = fs.readFileSync(filePath, 'utf8');
 		process.env.NODE_PORT = port;
 		process.env.NODE_BASE = apiBase;	
@@ -73,6 +74,7 @@ app.use(function(req, res, next) {
 	}
 	next();
 });
+
 
 app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
