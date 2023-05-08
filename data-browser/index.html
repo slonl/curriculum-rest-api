@@ -1638,8 +1638,8 @@
     browser.view.pageSize = 100;
 
     function updateDataSource(name) {
-        global.document.querySelectorAll('[data-simply-data="'+name+'"]').forEach(function(list) {
-            global.editor.list.applyDataSource(list, name);
+        window.document.querySelectorAll('[data-simply-data="'+name+'"]').forEach(function(list) {
+            window.editor.list.applyDataSource(list, name);
         });
     }
 
@@ -1764,21 +1764,23 @@
     })
     let titles = {}
 
-    Object.entries(contexts).forEach(([path, context]) => {
-        editor.addDataSource(path, {
-            load: Object.entries(context.data).map(([key,value]) => {
-                return {
-                    link: {
-                        href: key+'/',
-                        innerHTML: value
+    Object
+        .entries(contexts)
+        .forEach(([path, context]) => {
+            editor.addDataSource(path, {
+                load: Object.entries(context.data).map(([key,value]) => {
+                    return {
+                        link: {
+                            href: key+'/',
+                            innerHTML: value
+                        }
                     }
-                }
+                })
             })
-        })
-        Object.entries(context.data).forEach(([key,value]) => {
-            titles[key+'/'] = value;
-        })
-    })
+            Object.entries(context.data).forEach(([key,value]) => {
+                titles[key+'/'] = value;
+            })
+        }); // leave this ;, otherwise the (function() ) below is parsed incorrectly
 
     (function() {
         var goto = simply.route.goto;
@@ -1791,6 +1793,7 @@
             return goto(path);
         };
     })();
+
         
 //    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
 //    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';

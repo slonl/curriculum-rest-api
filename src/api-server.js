@@ -36,7 +36,7 @@ var cache = function() {
 			res.send(cachedBody)
 			return
 		} else {
-			//console.log("cache miss for " + key);
+			console.log("cache miss for " + key);
 			res.sendResponse = res.send
 			res.send = (body) => {
 				if (!res.statusCode>=200 && res.statusCode<400) { // response is ok
@@ -365,9 +365,10 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 Object.keys(opendata.routes).forEach((route) => {
-	console.log('adding route '+route);
+	console.log('adding my route '+route);
 	app.route('/' + route)
-	.get(cache(), (req, res) => {
+//	.get(cache(), (req, res) => {
+	.get((req, res) => {
 		console.log(route);
 		opendata.routes[route](req)
 		.then((result) => {
