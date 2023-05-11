@@ -17,7 +17,16 @@
         overflow: auto;
         margin-top: calc(-1 * var(--ds-spacing));
     }
-    ul.slo-navbar li {
+    ul.slo-navbar-small {
+        display: flex;
+        overflow: auto;
+    }
+    ul.slo-navbar-inline {
+        margin: 0;
+        display: inline-flex;
+    }
+    ul.slo-navbar li,
+    ul.slo-navbar-small li {
         list-style: none;
         margin-left: 0;
         padding-left: 0;
@@ -26,7 +35,7 @@
         margin-top: 0;
     }
 </style>
-<body data-simply-path="/curriculum/">
+<body>
 <base href="{@NODE_DATA_URL}">
 <div class="slo-header">
     <img class="slo-logo" src="/img/header-logo-opendata.svg" alt="SLO / opendata">
@@ -58,23 +67,23 @@
     </form>
 </div>
 <main class="slo-main">
-    <nav class="slo-menu">
+    <nav class="slo-menu" data-simply-path="/">
         <div data-simply-list="menu">
             <template>
-                <details open>
+                <details>
                     <summary data-simply-field="title"></summary>
                     <ul class="slo-submenu" data-simply-list="submenu">
                         <template>
-                            <li><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
+                            <li class="slo-submenu-item"><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
                                 data-simply-command="simply-select">link</a></li>
                         </template>
                     </ul>
                 </details>
             </template>
         </div>
-        <ul class="slo-submenu" data-simply-list="submenu">
+        <ul class="slo-menu" data-simply-list="submenu">
             <template>
-                 <li class="slo-submenu-item"><a href="#"
+                 <li class="slo-menu-item"><a href="#"
                  data-simply-field="link" data-simply-group="menu"
                  data-simply-command="simply-select">Contact</a></li>
             </template>
@@ -681,9 +690,16 @@
 
     </div>
 </main>
-<footer class="slo-footer ds-bg-primary-dark">
+<footer class="slo-footer ds-bg-primary-dark ds-dark-background" data-simply-path="/">
     <svg class="slo-logo-footer" width="101px" height="56px" viewBox="0 0 101 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin-bottom: 15px;"><title>SLO logo small - white</title><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Footer-2" transform="translate(-123.000000, -540.000000)" fill="#FFFFFF"><g id="footer" transform="translate(0.000000, 135.000000)"><g id="Logo---White" transform="translate(124.000000, 405.000000)"><g id="Group-8" transform="translate(-0.249370, 0.000000)"><polygon id="Fill-1" points="42.6669061 0.000854237288 39.1851899 2.13106893 39.1851899 55.1183006 52.219732 55.1183006 52.219732 0.000854237288"></polygon><polygon id="Fill-2" points="34.1224131 0.000806779661 26.905564 11.0628633 47.9536552 11.0595412 47.983636 -0.000142372881"></polygon><g id="Group-7" transform="translate(0.000000, 16.558441)"><path d="M1.57793622e-05,33.7890395 L4.89761421,25.9061695 C9.17366356,28.7416045 13.7946498,30.1930169 17.6569642,30.1930169 C19.933295,30.1930169 21.0370614,29.5021921 21.0370614,28.1882486 L21.0370614,28.0496723 C21.0370614,26.528339 18.8991156,25.9061695 14.9672142,24.7996158 C7.58752208,22.8646102 1.72438448,20.3752994 1.72438448,12.9073672 L1.72438448,12.7686328 C1.72438448,4.81710734 8.06973938,0.391683616 16.6914251,0.391683616 C22.1408278,0.391683616 27.7961512,1.98183051 32.0733051,4.74734463 L27.5894416,13.0448362 C23.7269693,10.832678 19.5195602,9.51857627 16.5531979,9.51857627 C14.5533215,9.51857627 13.5192999,10.279322 13.5192999,11.3858757 L13.5192999,11.524452 C13.5192999,12.9760226 15.7258859,13.6679548 19.5882004,14.843322 C26.9688392,16.9180113 32.8308723,19.4759774 32.8308723,26.7357288 L32.8308723,26.8743051 C32.8308723,35.1029831 26.6923848,39.3898305 17.5884818,39.3898305 C11.3116093,39.3898305 5.10448165,37.5236384 1.57793622e-05,33.7890395" id="Fill-3"></path><path d="M58.1480541,19.760391 L58.1480541,19.6218147 C58.1480541,8.9735887 66.8382223,0.0539276836 78.7702603,0.0539276836 C90.7035608,0.0539276836 99.3252465,8.83501243 99.3252465,19.4841876 L99.3252465,19.6218147 C99.3252465,30.271148 90.6339738,39.1906508 78.6331377,39.1906508 C66.7697398,39.1906508 58.1480541,30.4086169 58.1480541,19.760391 M86.6332743,19.760391 L86.6332743,19.6218147 C86.6332743,14.9890011 83.2542817,11.1169333 78.6331377,11.1169333 C73.8739243,11.1169333 70.8389217,14.9203458 70.8389217,19.4841876 L70.8389217,19.6218147 C70.8389217,24.1858147 74.1492741,28.0578825 78.7702603,28.0578825 C83.5297894,28.0578825 86.6332743,24.2546282 86.6332743,19.760391" id="Fill-5"></path></g></g></g></g></g></g></svg>
-    <div class="slo-footer-message">SLO creëert samen met het onderwijsveld inzicht en overzicht in curriculum&shy;vraagstukken voor onderwijs en overheid.</div>
+    <div class="slo-footer-message" data-simply-field="footer-text">SLO creëert samen met het onderwijsveld inzicht en overzicht in curriculum&shy;vraagstukken voor onderwijs en overheid.</div>
+    <nav class="slo-footer-menu">
+        <ul class="slo-nav" data-simply-list="footer-menu" data-simply-sortable>
+            <template>
+                <li><a href="#" data-simply-field="link">Contact</a></li>
+            </template>
+        </ul>
+    </nav>
 </footer>
 
 <template id="deprecatedLinks">
@@ -1118,7 +1134,7 @@
 </template>
 <template id="doelniveau">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a class="slo-relatie" href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
@@ -1181,12 +1197,12 @@
                     <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
                 </template>
             </div>                    
+            <ul data-simply-list="Niveau" class="slo-navbar-inline slo-navbar-small">
+                 <template>
+                     <li><span class="ds-badge ds-badge-mini" data-simply-field="title">niveau</span></li>
+                 </template>
+            </ul>
         </a>
-        <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
-             <template>
-                 <li><span class="ds-badge ds-badge-mini" data-simply-field="title">niveau</span></li>
-             </template>
-        </ul>
     </li>
 </template>
 <template id="refs">
@@ -1197,7 +1213,7 @@
     </li>
 </template>
 <script src="//cdn.simplyedit.io/1/simply-edit.js"
-    data-api-key="localhost"
+    data-api-key="flashy-leather-7944"
     data-simply-images="/img/"
     data-simply-files="/files/"
     data-simply-settings="seSettings"
