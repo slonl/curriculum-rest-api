@@ -3,15 +3,15 @@
 /* Basic styles: Reset */
 
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td {
-    margin:0; 
-    padding:0; 
+	margin:0; 
+	padding:0; 
 }
 img {
     max-width: 100%;
-    display: block;
+	display: block;
 }
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 /* Basic styles: Colors */
@@ -1236,27 +1236,27 @@ input.slo-search {
     --ds-scrollbox-height: calc(8 * var(--ds-line-height));
     max-height: var(--ds-scrollbox-height);
     overflow: auto;
-    background:
-        /* Shadow covers */
-        linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
-        linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
-        
-        /* Shadows */
-        radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
-        radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
-    background:
-        /* Shadow covers */
-        linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
-        linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
-        
-        /* Shadows */
-        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
-        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
-    background-repeat: no-repeat;
-    background-color: white;
-    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+	background:
+		/* Shadow covers */
+		linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
+		linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
+		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+	background:
+		/* Shadow covers */
+		linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
+		linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
+		
+		/* Shadows */
+		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+	background-repeat: no-repeat;
+	background-color: white;
+	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     /* Opera doesn't support this in the shorthand */
-    background-attachment: local, local, scroll, scroll;
+	background-attachment: local, local, scroll, scroll;
 }
 
 
@@ -1749,6 +1749,16 @@ body {
 }
 .slo-submenu-item a {
     padding-left: 1.85em;
+}
+.slo-submenu-extra .slo-submenu-item a {
+    padding-left: 1em;
+}
+.slo-footer-menu ul {
+    list-style: none;
+    margin: 0;
+}
+.slo-footer-menu a {
+    text-decoration: none;
 }
 .slo-content-panel {
     margin-left: 275px;
@@ -2346,6 +2356,12 @@ select {
 .ds-dark-background {
     color: white;
     text-shadow: 0 0 2px var(--ds-black);
+}
+.ds-dark-background a:link,
+.ds-dark-background a:visited,
+.ds-dark-background a:hover,
+.ds-dark-background a:active {
+    color: var(--ds-contrast);
 }
 .ds-light-background {
     color: var(--ds-color);
