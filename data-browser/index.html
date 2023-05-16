@@ -1,205 +1,96 @@
 <title>SLO Curriculum Browser</title>
-<link rel="stylesheet" href="/assets/css/slo.css">
+<link rel="stylesheet" href="/assets/css/slo2.css">
 <style>
-    .slo-tag-mini {
-        display: inline-flex;
-        font-size: 0.7em;
-        height: 1.6em;
-        min-width: 0;
+    a.slo-highlight-box {
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
-    .slo-navbar-nav summary {
-        padding-left: 1em;
-        padding: calc(var(--input-spacing) / 2) var(--input-spacing);
-        cursor: pointer;
+    a.slo-highlight-box:hover {
+        background-color: var(--ds-grey-dark);
     }
-    .slo-navbar-nav summary:hover {
-        background-color: rgba(0,0,0,0.5);
+    :root .contexts {
+        --ds-grid-min-colwidth: 15rem;
     }
-    .slo-search .slo-form-group {
-        --input-border: #666;
+    ul.slo-navbar {
         display: flex;
-        margin-top: 10px;
+        overflow: auto;
+        margin-top: calc(-1 * var(--ds-spacing));
     }
-    .slo-search .slo-button {
-        margin-left: 10px;
+    ul.slo-navbar-small {
+        display: flex;
+        overflow: auto;
+    }
+    ul.slo-navbar-inline {
+        margin: 0;
+        display: inline-flex;
+    }
+    ul.slo-navbar li,
+    ul.slo-navbar-small li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .slo-text-content > article > :first-child {
+        margin-top: 0;
     }
 </style>
-<body data-simply-path="/curriculum/">
+<body>
 <base href="{@NODE_DATA_URL}">
-<header class="slo-navbar">
-    <nav class="slo-navbar-left slo-logo bg-brand">
-        <a href="/"><img src="/assets/img/slo.png"></a>
-    </nav>
-    <div class="slo-navbar-left">
-        OpenData Portal
-    </div>
-    <nav class="slo-navbar-right">
-        <form data-simply-command="search-text" class="slo-search">
-            <div class="slo-form-group">
-                <input type="search" name="text" value="" placeholder="Vul een zoektekst in">
-                <button class="slo-button">Zoek</button>
-            </div>
-        </form>
-    </nav>
-    <nav class="slo-navbar-right">
-        <ul class="slo-navbar-nav slo-paging">
+<div class="slo-header">
+    <img class="slo-logo" src="/img/header-logo-opendata.svg" alt="SLO / opendata">
+    <nav class="ds-align-right">
+        <ul class="ds-navbar-nav ds-paging">
             <li>
                 <button data-simply-command="previousPage"
-                class="slo-button" title="vorige pagina"><svg
-                class="slo-icon slo-icon-feather"><use
-                xlink:href="/files/feather-sprite.svg#chevron-left"></use></svg></button>
+                class="ds-button" title="vorige pagina"><svg
+                class="ds-icon ds-icon-feather"><use
+                xlink:href="/assets/icons/feather-sprite.svg#chevron-left"></use></svg></button>
             </li>
-            <li>
+            <li class="ds-paging-info">
                 <span data-simply-field="page"></span> /
                 <span data-simply-field="max"></span>
             <li>
-                <button data-simply-command="nextPage" class="slo-button"
+                <button data-simply-command="nextPage" class="ds-button"
                 title="volgende pagina"><svg
-                class="slo-icon slo-icon-feather"><use
-                xlink:href="/files/feather-sprite.svg#chevron-right"></use></svg></button>
+                class="ds-icon ds-icon-feather"><use
+                xlink:href="/assets/icons/feather-sprite.svg#chevron-right"></use></svg></button>
             </li>
         </ul>
     </nav>
-</header>
-
-<nav class="slo-navbar slo-navbar-side bg-gray">
-    <ul class="slo-navbar-nav" data-simply-list="menu" data-simply-path="/">
-        <template>
-            <li><i data-icon="ei-tag"></i>
-            <a href="#" class="slo-nav" data-simply-field="link" data-simply-group="menu"
-            data-simply-command="simply-select">link</a>
-            <ul class="slo-navbar-nav" data-simply-list="submenu">
-                <template data-simply-template="default">
-                    <li><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
-                    data-simply-command="simply-select">link</a></li>
-                </template>
-            </ul>
-        </template>
-    </ul>
-    <ul class="slo-navbar-nav">
-        <li><a href="/" class="slo-nav" data-simply-group="menu">API Browser</a>
-            <ul class="slo-navbar-nav">
-                <li><details>
-                    <summary>Curriculum Basis</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="vakleergebied/" class="slo-nav" data-simply-group="menu">Vakleergebied</a></li>
-                        <li><a href="niveau/" class="slo-nav" data-simply-group="menu">Niveau</a></li>
-                        <li><a href="doelniveau/" class="slo-nav" data-simply-group="menu">DoelNiveau</a></li>
-                        <li><a href="doel/" class="slo-nav" data-simply-group="menu">Doel</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Niveauhierarchie</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="nh_categorie/" class="slo-nav" data-simply-group="menu">Niveaucategorie</a></li>
-                        <li><a href="nh_sector/" class="slo-nav" data-simply-group="menu">Sector</a></li>
-                        <li><a href="nh_schoolsoort/" class="slo-nav" data-simply-group="menu">Schoolsoort</a></li>
-                        <li><a href="nh_leerweg/" class="slo-nav" data-simply-group="menu">Leerweg</a></li>
-                        <li><a href="nh_bouw/" class="slo-nav" data-simply-group="menu">Bouw</a></li>
-                        <li><a href="nh_niveau/" class="slo-nav" data-simply-group="menu">Niveau</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Kerndoelen</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="kerndoel_vakleergebied/" class="slo-nav" data-simply-group="menu">KerndoelVakleergebied</a></li>
-                        <li><a href="kerndoel_domein/" class="slo-nav" data-simply-group="menu">KerndoelDomein</a></li>
-                        <li><a href="kerndoel/" class="slo-nav" data-simply-group="menu">Kerndoel</a></li>
-                        <li><a href="kerndoel_uitstroomprofiel/" class="slo-nav" data-simply-group="menu">KerndoelUitstroomprofiel</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Examenprogramma</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="examenprogramma_vakleergebied//" class="slo-nav" data-simply-group="menu">ExamenprogrammaVakleergebied</a></li>
-                        <li><a href="examenprogramma/" class="slo-nav" data-simply-group="menu">Examenprogramma</a></li>
-                        <li><a href="examenprogramma_domein/" class="slo-nav" data-simply-group="menu">ExamenprogrammaDomein</a></li>
-                        <li><a href="examenprogramma_subdomein/" class="slo-nav" data-simply-group="menu">ExamenprogrammaSubdomein</a></li>
-                        <li><a href="examenprogramma_eindterm/" class="slo-nav" data-simply-group="menu">ExamenprogrammaEindterm</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Examenprogramma Beroepsgericht</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="examenprogramma_bg_profiel/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgProfiel</a></li>
-                        <li><a href="examenprogramma_bg_kern/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgKern</a></li>
-                        <li><a href="examenprogramma_bg_kerndeel/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgKerndeel</a></li>
-                        <li><a href="examenprogramma_bg_globale_eindterm/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgGlobaleEindterm</a></li>
-                        <li><a href="examenprogramma_bg_module/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgModule</a></li>
-                        <li><a href="examenprogramma_bg_keuzevak/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgKeuzevak</a></li>
-                        <li><a href="examenprogramma_bg_deeltaak/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgDeeltaak</a></li>
-                        <li><a href="examenprogramma_bg_moduletaak/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgModuletaak</a></li>
-                        <li><a href="examenprogramma_bg_keuzevaktaak/" class="slo-nav" data-simply-group="menu">ExamenprogrammaBgKeuzevaktaak</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Syllabus</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="syllabus_vakleergebied/" class="slo-nav" data-simply-group="menu">SyllabusVakleergebied</a></li>
-                        <li><a href="syllabus/" class="slo-nav" data-simply-group="menu">Syllabus</a></li>
-                        <li><a href="syllabus_specifieke_eindterm/" class="slo-nav" data-simply-group="menu">SyllabusSpecifiekeEindterm</a></li>
-                        <li><a href="syllabus_toelichting/" class="slo-nav" data-simply-group="menu">SyllabusToelichting</a></li>
-                        <li><a href="syllabus_vakbegrip/" class="slo-nav" data-simply-group="menu">SyllabusVakbegrip</a></li>
-                    </ul>
-                </li>
-                <li><details>
-                    <summary>Leerdoelenkaarten</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="ldk_vakleergebied/" class="slo-nav" data-simply-group="menu">LdkVakleergebied</a></li>
-                        <li><a href="ldk_vakkern/" class="slo-nav" data-simply-group="menu">LdkVakkern</a></li>
-                        <li><a href="ldk_vaksubkern/" class="slo-nav" data-simply-group="menu">LdkVaksubkern</a></li>
-                        <li><a href="ldk_vakinhoud/" class="slo-nav" data-simply-group="menu">LdkVakinhoud</a></li>
-                        <li><a href="ldk_vakbegrip/" class="slo-nav" data-simply-group="menu">LdkVakbegrip</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Inhoudslijnen</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="inh_vakleergebied/" class="slo-nav" data-simply-group="menu">InhVakleergebied</a></li>
-                        <li><a href="inh_inhoudslijn/" class="slo-nav" data-simply-group="menu">InhInhoudslijn</a></li>
-                        <li><a href="inh_cluster/" class="slo-nav" data-simply-group="menu">InhCluster</a></li>
-                        <li><a href="inh_subcluster/" class="slo-nav" data-simply-group="menu">InhSubCluster</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Referentiekader</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="ref_vakleergebied/" class="slo-nav" data-simply-group="menu">RefVakleergebied</a></li>
-                        <li><a href="ref_domein/" class="slo-nav" data-simply-group="menu">RefDomein</a></li>
-                        <li><a href="ref_subdomein/" class="slo-nav" data-simply-group="menu">RefSubdomein</a></li>
-                        <li><a href="ref_onderwerp/" class="slo-nav" data-simply-group="menu">RefOnderwerp</a></li>
-                        <li><a href="ref_deelonderwerp/" class="slo-nav" data-simply-group="menu">RefDeelonderwerp</a></li>
-                        <li><a href="ref_tekstkenmerk/" class="slo-nav" data-simply-group="menu">RefTekstkenmerk</a></li>
-                    </ul>
-                    </details>
-                </li>
-                <li><details>
-                    <summary>Europees referentiekader</summary>
-                    <ul class="slo-navbar-nav">
-                        <li><a href="erk_vakleergebied/" class="slo-nav" data-simply-group="menu">ErkVakleergebied</a></li>
-                        <li><a href="erk_gebied/" class="slo-nav" data-simply-group="menu">ErkGebied</a></li>
-                        <li><a href="erk_categorie/" class="slo-nav" data-simply-group="menu">ErkCategorie</a></li>
-                        <li><a href="erk_taalactiviteit/" class="slo-nav" data-simply-group="menu">ErkTaalactiviteit</a></li>
-                        <li><a href="erk_schaal/" class="slo-nav" data-simply-group="menu">ErkSchaal</a></li>
-                        <li><a href="erk_candobeschrijving/" class="slo-nav" data-simply-group="menu">ErkCandobeschrijving</a></li>
-                        <li><a href="erk_voorbeeld/" class="slo-nav" data-simply-group="menu">ErkVoorbeeld</a></li>
-                        <li><a href="erk_lesidee/" class="slo-nav" data-simply-group="menu">ErkLesidee</a></li>
-                    </ul>
-                    </details>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</nav>
+    <input type="checkbox" id="slo-search-state" class="slo-search-state">
+    <label class="slo-search-button" for="slo-search-state"></label>
+    <form class="slo-search-drawer" data-simply-command="search-text">
+        <input class="slo-search" type="search" name="text" value="" placeholder="zoekterm">
+        <button class="ds-button slo-search-button"></button>
+        <label class="ds-button ds-button-naked slo-close-button" for="slo-search-state"></label>
+    </form>
+</div>
 
 <main class="slo-main">
+<nav class="slo-menu" data-simply-path="/">
+    <div data-simply-list="menu" data-simply-sortable>
+        <template>
+            <details>
+                <summary data-simply-field="title"></summary>
+                <ul class="slo-submenu" data-simply-list="submenu">
+                    <template data-simply-template="default">
+                        <li class="slo-submenu-item"><a class="slo-nav" href="#" data-simply-field="link" data-simply-group="menu"
+                        data-simply-command="simply-select">link</a></li>
+                    </template>
+                </ul>
+            </details>
+        </template>
+    </div>
+    <ul class="slo-submenu slo-submenu-extra">
+        <template>
+            <li class="slo-submenu-item"><a href="#"
+            data-simply-field="link" data-simply-group="menu"
+            data-simply-command="select">Data Browser</a></li>
+        </template>
+    </ul>
+</nav>
+<div class="slo-content-panel">
     <div class="error" data-simply-field="error" data-simply-content="template" data-simply-transformer="truthy">
         <template data-simply-template="false"></template>
         <template data-simply-template="true">
@@ -209,8 +100,35 @@
         
     <section class="slo-text-content" data-simply-field="view" data-simply-content="template">
         <template data-simply-template="home">
+            <nav class="ds-crumbs">
+                <ul class="ds-crumbs-list">
+                    <li>API</li>
+                    <li><a href="/curriculum/2022/api/v1/">2022</a></li>
+                </ul>
+            </nav>
             <h1 class="title" data-simply-field="title"></h1>
             <div class="content" data-simply-field="content"></div>
+            <div class="ds-grid contexts" data-simply-list="contexts" data-simply-data="contexts">
+                <template>
+                    <a class="slo-highlight-box" data-simply-field="link"></a>
+                </template>
+            </div>
+        </template>
+        <template data-simply-template="context">
+            <nav class="ds-crumbs">
+                <ul class="ds-crumbs-list">
+                    <li>API</li>
+                    <li><a href="/curriculum/2022/api/v1/">2022</a></li>
+                    <li><a href="" data-simply-field="contextLink"></a></li>
+                </ul>
+            </nav>
+            <h3 class="title" data-simply-field="context"></h3>
+            <div class="content" data-simply-field="content"></div>
+            <div class="ds-grid contexts" data-simply-list="contextdata" data-simply-data="contextdata">
+                <template>
+                    <a class="slo-highlight-box" data-simply-field="link"></a>
+                </template>
+            </div>                
         </template>
         <template data-simply-template="notfound">
             <h1>404: Page Not Found</h1>
@@ -247,19 +165,19 @@
                 <h1>
                     <span data-simply-field="item.title"></span>
                 </h1>
-                <a class="slo-tag" href="#" data-simply-field="item.@id" data-simply-transformer="addTrailingSlash" data-simply-content="fixed">
-                    <label class="slo-tag-label"><svg class="slo-icon slo-icon-feather">
+                <a class="ds-badge" href="#" data-simply-field="item.@id" data-simply-transformer="addTrailingSlash" data-simply-content="fixed">
+                    <label class="ds-badge-label"><svg class="ds-icon ds-icon-feather">
                         <use xlink:href="/assets/icons/feather-sprite.svg#link">
                     </use></svg></label>
                     <span class="slo-id" data-simply-field="item.uuid"></span>
                 </a>
-                <div class="slo-tag">
-                    <label class="slo-tag-label">Type</label>
+                <div class="ds-badge">
+                    <label class="ds-badge-label">Type</label>
                     <span data-simply-field="item.@type"></span>
                 </div>
                 <span data-simply-field="item.unreleased" data-simply-content="template" data-simply-default-template="false">
                     <template data-simply-template="true">
-                        <div class="slo-tag bg-brand">
+                        <div class="ds-badge ds-bg-primary">
                             Unreleased
                         </div>
                     </template>
@@ -268,40 +186,40 @@
                 </span>
                 <span data-simply-field="item.prefix" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <div class="slo-tag">
-                            <span class="slo-tag-label">Prefix</span>
+                        <div class="ds-badge">
+                            <span class="ds-badge-label">Prefix</span>
                             <span data-simply-field="item.prefix"></span>
                         </div>
                     </template>
                 </span>
                 <span data-simply-field="item.ce_se" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <div class="slo-tag">
-                            <span class="slo-tag-label">CE/SE</span>
+                        <div class="ds-badge">
+                            <span class="ds-badge-label">CE/SE</span>
                             <span data-simply-field="item.ce_se"></span>
                         </div>
                     </template>
                 </span>
                 <span data-simply-field="item.bron" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <div class="slo-tag">
-                            <label class="slo-tag-label">Bron</label>
+                        <div class="ds-badge">
+                            <label class="ds-badge-label">Bron</label>
                             <span data-simply-field="item.bron"></span>
                         </div>
                     </template>
                 </span>
                 <span data-simply-field="item.kerndoelLabel" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <div class="slo-tag">
-                            <label class="slo-tag-label">KerndoelLabel</label>
+                        <div class="ds-badge">
+                            <label class="ds-badge-label">KerndoelLabel</label>
                             <span data-simply-field="item.kerndoelLabel"></span>
                         </div>
                     </template>
                 </span>
                 <span data-simply-field="item.deprecated" data-simply-content="template" data-simply-transformer="truthy">
                     <template data-simply-template="true">
-                        <div class="slo-tag"><label class="slo-tag-label"><svg
-                class="slo-icon slo-icon-feather"><use
+                        <div class="ds-badge"><label class="ds-badge-label"><svg
+                class="ds-icon ds-icon-feather"><use
                 xlink:href="/files/feather-sprite.svg#trash-2"></use></svg></label>Deprecated</div>
                     </template>
                 </span>
@@ -771,6 +689,18 @@
         </template>
     </section>
 </main>
+<footer class="slo-footer ds-bg-primary-dark ds-dark-background" data-simply-path="/">
+    <svg class="slo-logo-footer" width="101px" height="56px" viewBox="0 0 101 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin-bottom: 15px;"><title>SLO logo small - white</title><g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Footer-2" transform="translate(-123.000000, -540.000000)" fill="#FFFFFF"><g id="footer" transform="translate(0.000000, 135.000000)"><g id="Logo---White" transform="translate(124.000000, 405.000000)"><g id="Group-8" transform="translate(-0.249370, 0.000000)"><polygon id="Fill-1" points="42.6669061 0.000854237288 39.1851899 2.13106893 39.1851899 55.1183006 52.219732 55.1183006 52.219732 0.000854237288"></polygon><polygon id="Fill-2" points="34.1224131 0.000806779661 26.905564 11.0628633 47.9536552 11.0595412 47.983636 -0.000142372881"></polygon><g id="Group-7" transform="translate(0.000000, 16.558441)"><path d="M1.57793622e-05,33.7890395 L4.89761421,25.9061695 C9.17366356,28.7416045 13.7946498,30.1930169 17.6569642,30.1930169 C19.933295,30.1930169 21.0370614,29.5021921 21.0370614,28.1882486 L21.0370614,28.0496723 C21.0370614,26.528339 18.8991156,25.9061695 14.9672142,24.7996158 C7.58752208,22.8646102 1.72438448,20.3752994 1.72438448,12.9073672 L1.72438448,12.7686328 C1.72438448,4.81710734 8.06973938,0.391683616 16.6914251,0.391683616 C22.1408278,0.391683616 27.7961512,1.98183051 32.0733051,4.74734463 L27.5894416,13.0448362 C23.7269693,10.832678 19.5195602,9.51857627 16.5531979,9.51857627 C14.5533215,9.51857627 13.5192999,10.279322 13.5192999,11.3858757 L13.5192999,11.524452 C13.5192999,12.9760226 15.7258859,13.6679548 19.5882004,14.843322 C26.9688392,16.9180113 32.8308723,19.4759774 32.8308723,26.7357288 L32.8308723,26.8743051 C32.8308723,35.1029831 26.6923848,39.3898305 17.5884818,39.3898305 C11.3116093,39.3898305 5.10448165,37.5236384 1.57793622e-05,33.7890395" id="Fill-3"></path><path d="M58.1480541,19.760391 L58.1480541,19.6218147 C58.1480541,8.9735887 66.8382223,0.0539276836 78.7702603,0.0539276836 C90.7035608,0.0539276836 99.3252465,8.83501243 99.3252465,19.4841876 L99.3252465,19.6218147 C99.3252465,30.271148 90.6339738,39.1906508 78.6331377,39.1906508 C66.7697398,39.1906508 58.1480541,30.4086169 58.1480541,19.760391 M86.6332743,19.760391 L86.6332743,19.6218147 C86.6332743,14.9890011 83.2542817,11.1169333 78.6331377,11.1169333 C73.8739243,11.1169333 70.8389217,14.9203458 70.8389217,19.4841876 L70.8389217,19.6218147 C70.8389217,24.1858147 74.1492741,28.0578825 78.7702603,28.0578825 C83.5297894,28.0578825 86.6332743,24.2546282 86.6332743,19.760391" id="Fill-5"></path></g></g></g></g></g></g></svg>
+    <div class="slo-footer-message" data-simply-field="footer-text">SLO creëert samen met het onderwijsveld inzicht en overzicht in curriculum&shy;vraagstukken voor onderwijs en overheid.</div>
+    <nav class="slo-footer-menu">
+        <ul class="slo-nav" data-simply-list="footer-menu" data-simply-sortable>
+            <template>
+                <li><a href="#" data-simply-field="link">Contact</a></li>
+            </template>
+        </ul>
+    </nav>
+</footer>
+
 <template id="deprecatedLinks">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
@@ -814,7 +744,7 @@
         </span>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                &nbsp;<a class="slo-tag slo-tag-inline" href="#" data-simply-field="$ref"
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
                 data-simply-content="fixed" data-simply-transformer="niveau">
                     Op niveau
                 </a>
@@ -825,39 +755,40 @@
 </template>
 <template id="links">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a class="slo-relatie" href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="deprecated" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label"><svg
-                class="slo-icon slo-icon-feather"><use
-                xlink:href="/files/feather-sprite.svg#trash-2"></use></svg></span>
+                    <span class="ds-badge">
+                        <span class="ds-badge-label"><svg
+                class="ds-icon ds-icon-feather"><use
+                xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
                         <span>Deprecated</span>
                     </span>
                 </template>
             </span>
             <span data-simply-field="bron" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">Bron</span>
+                    <span class="ds-badge">
+                        <span class="ds-badge-label">Bron</span>
                         <span data-simply-field="bron"></span>
                     </span>
                 </template>
             </span>
             <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">Prefix</span>
+                    <span class="ds-badge">
+                        <span class="ds-badge-label">Prefix</span>
                         <span data-simply-field="prefix"></span>
                     </span>
                 </template>
             </span>
             <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
-            </span></a>
+            </span>
+        </a>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                &nbsp;<a class="slo-tag slo-tag-inline" href="#" data-simply-field="$ref"
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
                 data-simply-content="fixed" data-simply-transformer="niveau">
                     Op niveau
                 </a>
@@ -866,16 +797,16 @@
         </span>
         <span data-simply-list="Vakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">Vakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">Vakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="LpibVakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">LpibVakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">LpibVakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -884,8 +815,8 @@
             <template>
                 <span data-simply-list="LpibVakleergebied">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">LpibVakleergebied</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">LpibVakleergebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -898,8 +829,8 @@
                     <template>
                         <span data-simply-list="LpibVakleergebied">
                             <template>
-                                <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">LpibVakleergebied</span>
+                                <span class="ds-badge">
+                                    <span class="ds-badge-label">LpibVakleergebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -910,8 +841,8 @@
         </span>
         <span data-simply-list="LdkVakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">LdkVakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">LdkVakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -920,8 +851,8 @@
             <template>
                 <span data-simply-list="LdkVakleergebied">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">LdkVakleergebied</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">LdkVakleergebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -934,8 +865,8 @@
                     <template>
                         <span data-simply-list="LdkVakleergebied">
                             <template>
-                                <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">LdkVakleergebied</span>
+                                <span class="ds-badge">
+                                    <span class="ds-badge-label">LdkVakleergebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -946,16 +877,16 @@
         </span>
         <span data-simply-list="KerndoelVakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">KerndoelVakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">KerndoelVakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="Examenprogramma">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">Examenprogramma</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">Examenprogramma</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -964,8 +895,8 @@
             <template>
                 <span data-simply-list="Examenprogramma">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">Examenprogramma</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">Examenprogramma</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -974,16 +905,16 @@
         </span>
         <span data-simply-list="ExamenprogrammaBgProfiel">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">ExamenprogrammaBgProfiel</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">ExamenprogrammaBgProfiel</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="Syllabus">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">Syllabus</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">Syllabus</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -992,8 +923,8 @@
             <template>
                 <span data-simply-list="Syllabus">
                     <template>
-                         <span class="slo-tag slo-tag-mini">
-                             <span class="slo-tag-label">Syllabus</span>
+                         <span class="ds-badge">
+                             <span class="ds-badge-label">Syllabus</span>
                              <span data-simply-field="title">title</span>
                          </span>
                     </template>
@@ -1004,8 +935,8 @@
             <template>
                 <span data-simply-list="Syllabus">
                     <template>
-                         <span class="slo-tag slo-tag-mini">
-                             <span class="slo-tag-label">Syllabus</span>
+                         <span class="ds-badge">
+                             <span class="ds-badge-label">Syllabus</span>
                              <span data-simply-field="title">title</span>
                          </span>
                     </template>
@@ -1015,8 +946,8 @@
 
         <span data-simply-list="InhVakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">InhVakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">InhVakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -1025,8 +956,8 @@
             <template>
                 <span data-simply-list="InhVakleergebied">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">InhVakleergebied</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">InhVakleergebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -1039,8 +970,8 @@
                     <template>
                         <span data-simply-list="InhVakleergebied">
                             <template>
-                                <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">InhVakleergebied</span>
+                                <span class="ds-badge">
+                                    <span class="ds-badge-label">InhVakleergebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -1053,8 +984,8 @@
 
         <span data-simply-list="RefVakleergebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">RefVakleergebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">RefVakleergebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -1063,8 +994,8 @@
             <template>
                 <span data-simply-list="RefVakleergebied">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">RefVakleergebied</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">RefVakleergebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -1077,8 +1008,8 @@
                     <template>
                         <span data-simply-list="RefVakleergebied">
                             <template>
-                                <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                <span class="ds-badge">
+                                    <span class="ds-badge-label">RefVakleergebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -1095,8 +1026,8 @@
                             <template>
                                 <span data-simply-list="RefVakleergebied">
                                     <template>
-                                        <span class="slo-tag slo-tag-mini">
-                                            <span class="slo-tag-label">RefVakleergebied</span>
+                                        <span class="ds-badge">
+                                            <span class="ds-badge-label">RefVakleergebied</span>
                                             <span data-simply-field="title">title</span>
                                         </span>
                                     </template>
@@ -1117,8 +1048,8 @@
                                     <template>
                                         <span data-simply-list="RefVakleergebied">
                                             <template>
-                                                <span class="slo-tag slo-tag-mini">
-                                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                                <span class="ds-badge">
+                                                    <span class="ds-badge-label">RefVakleergebied</span>
                                                     <span data-simply-field="title">title</span>
                                                 </span>
                                             </template>
@@ -1141,8 +1072,8 @@
                                     <template>
                                         <span data-simply-list="RefVakleergebied">
                                             <template>
-                                                <span class="slo-tag slo-tag-mini">
-                                                    <span class="slo-tag-label">RefVakleergebied</span>
+                                                <span class="ds-badge">
+                                                    <span class="ds-badge-label">RefVakleergebied</span>
                                                     <span data-simply-field="title">title</span>
                                                 </span>
                                             </template>
@@ -1158,8 +1089,8 @@
 
         <span data-simply-list="ErkGebied">
             <template>
-                <span class="slo-tag slo-tag-mini">
-                    <span class="slo-tag-label">ErkGebied</span>
+                <span class="ds-badge">
+                    <span class="ds-badge-label">ErkGebied</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -1168,8 +1099,8 @@
             <template>
                 <span data-simply-list="ErkGebied">
                     <template>
-                        <span class="slo-tag slo-tag-mini">
-                            <span class="slo-tag-label">ErkGebied</span>
+                        <span class="ds-badge">
+                            <span class="ds-badge-label">ErkGebied</span>
                             <span data-simply-field="title">title</span>
                         </span>
                     </template>
@@ -1182,8 +1113,8 @@
                     <template>
                         <span data-simply-list="ErkGebied">
                             <template>
-                                <span class="slo-tag slo-tag-mini">
-                                    <span class="slo-tag-label">ErkGebied</span>
+                                <span class="ds-badge">
+                                    <span class="ds-badge-label">ErkGebied</span>
                                     <span data-simply-field="title">title</span>
                                 </span>
                             </template>
@@ -1200,8 +1131,8 @@
                             <template>
                                 <span data-simply-list="ErkGebied">
                                     <template>
-                                        <span class="slo-tag slo-tag-mini">
-                                            <span class="slo-tag-label">ErkGebied</span>
+                                        <span class="ds-badge">
+                                            <span class="ds-badge-label">ErkGebied</span>
                                             <span data-simply-field="title">title</span>
                                         </span>
                                     </template>
@@ -1222,8 +1153,8 @@
                                     <template>
                                         <span data-simply-list="ErkGebied">
                                             <template>
-                                                <span class="slo-tag slo-tag-mini">
-                                                    <span class="slo-tag-label">ErkGebied</span>
+                                                <span class="ds-badge">
+                                                    <span class="ds-badge-label">ErkGebied</span>
                                                     <span data-simply-field="title">title</span>
                                                 </span>
                                             </template>
@@ -1239,26 +1170,26 @@
 
         <span data-simply-list="Niveau">
             <template>
-                <span class="slo-tag slo-tag-mini" data-simply-field="title">title</span>
+                <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
             </template>
         </span>
     </li>
 </template>
 <template id="doelniveau">
     <li>
-        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+        <a class="slo-relatie" href="#" data-simply-field="@references" data-simply-content="fixed">
             <span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">Prefix</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Prefix</span>
                         <span data-simply-field="prefix"></span>
                     </span>
                 </template>
             </span>
             <span data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">Doel</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Doel</span>
                         <span data-simply-field="Doel.0.bron"></span>
                     </span>
                     <span data-simply-field="Doel.0.title"></span>
@@ -1266,8 +1197,8 @@
             </span>
             <div data-simply-field="Kerndoel.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">Kerndoel</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Kerndoel</span>
                         <span data-simply-field="Kerndoel.0.prefix"></span>
                     </span>
                     <span data-simply-field="Kerndoel.0.title"></span>
@@ -1275,8 +1206,8 @@
             </div>
             <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">ExamenprogrammaDomein</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaDomein</span>
                         <span data-simply-field="ExamenprogrammaDomein.0.prefix"></span>
                     </span>
                     <span data-simply-field="ExamenprogrammaDomein.0.title"></span>
@@ -1284,8 +1215,8 @@
             </div>
             <div data-simply-field="ExamenprogrammaSubdomein.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">ExamenprogrammaSubdomein</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaSubdomein</span>
                         <span data-simply-field="ExamenprogrammaSubdomein.0.prefix"></span>
                     </span>
                     <span data-simply-field="ExamenprogrammaSubdomein.0.title"></span>
@@ -1293,8 +1224,8 @@
             </div>
             <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">ExamenprogrammaEindterm</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaEindterm</span>
                         <span data-simply-field="ExamenprogrammaEindterm.0.prefix"></span>
                     </span>
                     <span data-simply-field="ExamenprogrammaEindterm.0.title"></span>
@@ -1302,24 +1233,24 @@
             </div>
             <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
                 <template data-simply-template="true">
-                    <span class="slo-tag slo-tag-mini">
-                        <span class="slo-tag-label">ExamenprogrammaBgModule</span>
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaBgModule</span>
                         <span data-simply-field="ExamenprogrammaBgModule.0.prefix"></span>
                     </span>
                     <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
                 </template>
             </div>                    
+            <ul data-simply-list="Niveau" class="slo-navbar-inline slo-navbar-small">
+                 <template>
+                     <li><span class="ds-badge ds-badge-mini" data-simply-field="title">niveau</span></li>
+                 </template>
+            </ul>
         </a>
-        <ul data-simply-list="Niveau" class="slo-navbar slo-navbar-small">
-             <template>
-                 <li><span class="slo-tag slo-tag-mini" data-simply-field="title">niveau</span></li>
-             </template>
-        </ul>
     </li>
 </template>
 <template id="refs">
     <li>
-        <a class="slo-tag" href="#" data-simply-field="$ref" data-simply-content="fixed">
+        <a class="ds-badge" href="#" data-simply-field="$ref" data-simply-content="fixed">
             <span data-simply-field="title">titel</span>
         </a>
     </li>
@@ -1373,7 +1304,7 @@
         };
     })();
     
-    var titles = {
+/*    var titles = {
         'vakleergebied/': 'Vakleergebied',
         'niveau/': 'Niveau',
         'doel/': 'Doel',
@@ -1438,7 +1369,7 @@
                  
         'legacy/': 'Vervangen door:'
     };
-
+*/
     var browser = simply.app({
         container: document.body,
         routes: {
@@ -1767,6 +1698,25 @@
             '/register/': function(params) { 
                 browser.view.view = 'register';
             },
+            '/curriculum-:context/': function(params) {
+                browser.view.context = params.context;
+                browser.view.contextLink = {
+                    href: '/curriculum-'+params.context+'/',
+                    innerHTML: contexts['curriculum-'+params.context].title
+                }
+                browser.view.view = 'context';
+                editor.addDataSource('contextdata', {
+                    load: Object.entries(contexts['curriculum-'+params.context].data).map(([key,value]) => {
+                        return {
+                            link: {
+                                href: key+'/',
+                                innerHTML: value
+                            }
+                        }
+                    })
+                })
+                updateDataSource('contextdata')
+            },
             '/': function(params) {
                 browser.view.view = 'home';
             },
@@ -1919,7 +1869,152 @@
     });
 
     browser.view.pageSize = 100;
-        
+function updateDataSource(name) {
+        window.document.querySelectorAll('[data-simply-data="'+name+'"]').forEach(function(list) {
+            window.editor.list.applyDataSource(list, name);
+        });
+    }
+
+    var contexts = {
+        'curriculum-basis': {
+            title: 'Basis',
+            data: {
+                vakleergebied: 'Vakleergebied',
+                niveau: 'Niveau',
+                doelniveau: 'DoelNiveau',
+                doel: 'Doel'
+            }
+        },
+        'curriculum-kerndoelen': {
+            title: 'Kerndoelen',
+            data: {
+                kerndoel_vakleergebied: 'KerndoelVakleergebied',
+                kerndoel_domein: 'KerndoelDomein',
+                kerndoel: 'Kerndoel',
+                kerndoel_uitstroomprofiel: 'KerndoelUitstroomprofiel'
+            }
+        },
+        'curriculum-examenprogramma': {
+            title: 'Examenprogramma',
+            data: {
+                examenprogramma: 'Examenprogramma',
+                examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
+                examenprogramma_domein: 'ExamenprogrammaDomein',
+                examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
+                examenprogramma_eindterm: 'ExamenprogrammaEindterm'
+            }
+        },
+        'curriculum-examenprogramma-bg': {
+            title: 'Examenprogramma Beroepsgericht',
+            data: {
+                examenprogramma_bg_profiel: 'ExamenprogrammaBgProfiel',
+                examenprogramma_bg_kern: 'ExamenprogrammaBgKern',
+                examenprogramma_bg_kerndeel: 'ExamenprogrammaBgKerndeel',
+                examenprogramma_bg_globale_eindterm: 'ExamenprogrammaBgGlobaleEindterm',
+                examenprogramma_bg_module: 'ExamenprogrammaBgModule',
+                examenprogramma_bg_keuzevak: 'ExamenprogrammaBgKeuzevak',
+                examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
+                examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
+                examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
+            }
+        },
+        'curriculum-syllabus': {
+            title: 'Syllabus',
+            data: {
+                syllabus: 'Syllabus',
+                syllabus_vakleergebied: 'SyllabusVakleergebied',
+                syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
+                syllabus_toelichting: 'SyllabusToelichting',
+                syllabus_vakbegrip: 'SyllabusVakbegrip'
+            }
+        },
+        'curriculum-leerdoelenkaarten': {
+            title: 'Leerdoelenkaarten',
+            data: {
+                ldk_vakleergebied: 'LdkVakleergebied',
+                ldk_vakkern: 'LdkVakkern',
+                ldk_vaksubkern: 'LdkVaksubkern',
+                ldk_vakinhoud: 'LdkVakinhoud',
+                ldk_vakbegrip: 'LdkVakbegrip'
+            }
+        },
+        'curriculum-inhoudslijnen': {
+            title: 'Inhoudslijnen',
+            data: {
+                inh_vakleergebied: 'InhVakleergebied',
+                inh_inhoudslijn: 'InhInhoudslijn',
+                inh_cluster: 'InhCluster',
+                inh_subcluster: 'InhSubcluster'
+            }
+        },
+        'curriculum-referentiekader': {
+            title: 'Referentiekader',
+            data: {
+                ref_vakleergebied: 'RefVakleergebied',
+                ref_domein: 'RefDomein',
+                ref_subdomein: 'RefSubdomein',
+                ref_onderwerp: 'RefOnderwerp',
+                ref_deelonderwerp: 'RefDeelonderwerp',
+                ref_tekstkenmerk: 'RefTekstkenmerk'
+            }
+        },
+        'curriculum-erk': {
+            title: 'Europees referentiekader',
+            data: {
+                erk_vakleergebied: 'ErkVakleergebied',
+                erk_gebied: 'ErkGebied',
+                erk_categorie: 'ErkCategorie',
+                erk_taalactiviteit: 'ErkTaalactiviteit',
+                erk_schaal: 'ErkSchaal',
+                erk_candobeschrijving: 'ErkCandobeschrijving',
+                erk_voorbeeld: 'ErkVoorbeeld',
+                erk_lesidee: 'ErkLesidee'
+            }
+        },
+        'curriculum-niveauhierarchie':{
+            title: 'Niveau Hierarchie',
+            data: {
+                nh_categorie: 'NhCategorie',
+                nh_sector: 'NhSector',
+                nh_schoolsoort: 'NhSchoolsoort',
+                nh_leerweg: 'NhLeerweg',
+                nh_bouw: 'NhBouw',
+                nh_niveau: 'NhNiveau'
+            }
+        }
+    }
+
+    editor.addDataSource('contexts', {
+        load: Object.entries(contexts).map(([key, value]) => {
+            return {
+                link: {
+                    href: key+'/',
+                    innerHTML: value.title
+                }
+            }
+        })
+    })
+
+    let titles = {}
+
+    Object
+        .entries(contexts)
+        .forEach(([path, context]) => {
+            editor.addDataSource(path, {
+                load: Object.entries(context.data).map(([key,value]) => {
+                    return {
+                        link: {
+                            href: key+'/',
+                            innerHTML: value
+                        }
+                    }
+                })
+            })
+            Object.entries(context.data).forEach(([key,value]) => {
+                titles[key+'/'] = value;
+            })
+        }); // leave this ;, otherwise the (function() ) below is parsed incorrectly
+
 //    const baseURL = 'http://curriculum-rest-api.dev.muze.nl';
 //    const apiURL  = 'http://curriculum-rest-api.dev.muze.nl';
 //    const baseURL = 'https://opendata.slo.nl';
