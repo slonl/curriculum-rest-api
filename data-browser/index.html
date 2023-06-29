@@ -684,6 +684,46 @@
                             </ul>
                         </template>
                     </div>
+                    <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Domein</h3>
+                            <ul data-simply-list="item.FoDomein">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoSubdomein" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Subdomein</h3>
+                            <ul data-simply-list="item.FoSubdomein">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoDoelzin" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Doelzin</h3>
+                            <ul data-simply-list="item.FoDoelzin">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoToelichting" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Toelichting</h3>
+                            <ul data-simply-list="item.FoToelichting">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoUitwerking" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Uitwerking</h3>
+                            <ul data-simply-list="item.FoUitwerking">
+                                <template rel="doelniveau"></template>
+                            </ul>
+                        </template>
+                    </div>
                 </article>
             </template>
         </section>
@@ -1125,6 +1165,83 @@
             </template>
         </span>
 
+        <span data-simply-list="FoDomein">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoDomein</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoSubomein">
+            <template>
+                <span data-simply-list="FoDomein">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">FoDomein</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoDoelzin">
+            <template>
+				<span data-simply-list="FoSubomein">
+					<template>
+						<span data-simply-list="FoDomein">
+							<template>
+								<span class="ds-badge ds-badge-mini">
+									<span class="ds-badge-label">FoDomein</span>
+									<span data-simply-field="title">title</span>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+        <span data-simply-list="FoToelichting">
+            <template>
+				<span data-simply-list="FoDoelzin">
+					<template>
+						<span data-simply-list="FoSubomein">
+							<template>
+								<span data-simply-list="FoDomein">
+									<template>
+										<span class="ds-badge ds-badge-mini">
+											<span class="ds-badge-label">FoDomein</span>
+											<span data-simply-field="title">title</span>
+										</span>
+									</template>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+        <span data-simply-list="FoUitwerking">
+            <template>
+				<span data-simply-list="FoDoelzin">
+					<template>
+						<span data-simply-list="FoSubomein">
+							<template>
+								<span data-simply-list="FoDomein">
+									<template>
+										<span class="ds-badge ds-badge-mini">
+											<span class="ds-badge-label">FoDomein</span>
+											<span data-simply-field="title">title</span>
+										</span>
+									</template>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+
         <span data-simply-list="Niveau">
             <template>
                 <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
@@ -1489,6 +1606,22 @@
                 browser.actions.list('nh_niveau/')
             },
             
+            '/fo_domein/': function(params) {
+                browser.actions.list('fo_domein/')
+            },
+            '/fo_subdomein/': function(params) {
+                browser.actions.list('fo_subdomein/')
+            },
+            '/fo_doelzin/': function(params) {
+                browser.actions.list('fo_doelzin/')
+            },
+            '/fo_toelichting/': function(params) {
+                browser.actions.list('fo_toelichting/')
+            },
+            '/fo_uitwerking/': function(params) {
+                browser.actions.list('fo_uitwerking/')
+            },
+            
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
@@ -1764,6 +1897,16 @@
                 nh_leerweg: 'NhLeerweg',
                 nh_bouw: 'NhBouw',
                 nh_niveau: 'NhNiveau'
+            }
+        },
+        'curriculum-fo':{
+            title: 'Curriculum Funderend onderwijs',
+            data: {
+                fo_domein/: 'FoDomein',
+                fo_subdomein/: 'FoSubdomein',
+                fo_doelzin/: 'FoDoelzin',
+                fo_toelichting/: 'FoToelichting',
+                fo_uitwerking/: 'FoUitwerking'
             }
         }
     }

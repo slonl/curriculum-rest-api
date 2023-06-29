@@ -197,6 +197,7 @@ function jsonLD(entry, schema, type) {
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
 		'ErkVakleergebied', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
 		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
+		'FoDomein', 'FoSubomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -498,6 +499,13 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 					case 'NhBouw':
 					case 'NhNiveau':
 						schema = opendata.schemas.niveauhierarchie;
+					break;
+					case 'FoDomein':
+					case 'FoSubomein':
+					case 'FoDoelzin':
+					case 'FoToelichting':
+					case 'FoUitwerking':
+						schema = opendata.schemas.fo;
 					break;
 					case "Vakleergebied":
 					default:
