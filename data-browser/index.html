@@ -676,14 +676,6 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>Doelniveau</h3>
-                            <ul data-simply-list="item.Doelniveau">
-                                <template rel="doelniveau"></template>
-                            </ul>
-                        </template>
-                    </div>
                     <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Domein</h3>
@@ -720,6 +712,30 @@
                         <template data-simply-template="true">
                             <h3>Uitwerking</h3>
                             <ul data-simply-list="item.FoUitwerking">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.ShTag" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Tag</h3>
+                            <ul data-simply-list="item.ShTag">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.ShRelatie" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Relatie</h3>
+                            <ul data-simply-list="item.ShRelatie">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.Doelniveau" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Doelniveau</h3>
+                            <ul data-simply-list="item.Doelniveau">
                                 <template rel="doelniveau"></template>
                             </ul>
                         </template>
@@ -1242,6 +1258,23 @@
             </template>
         </span>
 
+        <span data-simply-list="ShTag">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">ShTag</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ShRelatie">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">ShRelatie</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+
         <span data-simply-list="Niveau">
             <template>
                 <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
@@ -1622,6 +1655,13 @@
                 browser.actions.list('fo_uitwerking/')
             },
             
+            '/sh_tag/': function(params) {
+                browser.actions.list('sh_tag/')
+            },
+            '/sh_relatie/': function(params) {
+                browser.actions.list('sh_relatie/')
+            },
+
             '/curriculum/uuid/:id': function(params) {
                 browser.actions.item(params.id);
             },
@@ -1802,6 +1842,23 @@
                 doel: 'Doel'
             }
         },
+        'curriculum-samenhang': {
+            title: 'Samenhang',
+            data: {
+                sh_tag: 'Begrippen',
+                sh_relatie: 'Relaties'
+            }
+        },
+        'curriculum-fo':{
+            title: 'Curriculum Funderend onderwijs',
+            data: {
+                fo_domein: 'Domein',
+                fo_subdomein: 'Subdomein',
+                fo_doelzin: 'Doelzin',
+                fo_toelichting: 'Toelichting',
+                fo_uitwerking: 'Uitwerking'
+            }
+        },
         'curriculum-kerndoelen': {
             title: 'Kerndoelen',
             data: {
@@ -1897,16 +1954,6 @@
                 nh_leerweg: 'NhLeerweg',
                 nh_bouw: 'NhBouw',
                 nh_niveau: 'NhNiveau'
-            }
-        },
-        'curriculum-fo':{
-            title: 'Curriculum Funderend onderwijs',
-            data: {
-                fo_domein/: 'FoDomein',
-                fo_subdomein/: 'FoSubdomein',
-                fo_doelzin/: 'FoDoelzin',
-                fo_toelichting/: 'FoToelichting',
-                fo_uitwerking/: 'FoUitwerking'
             }
         }
     }

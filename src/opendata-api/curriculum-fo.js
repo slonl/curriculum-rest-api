@@ -8,15 +8,9 @@ module.exports = {
 				id
 				prefix
 				title
+				vakleergebied_id
+				fo_subdomein_id
 				unreleased
-				Vakleergebied {
-					id
-					title
-				}
-				FoSubdomein {
-					id
-					title
-				}
 			}
 			_allFoDomeinMeta {
 				count
@@ -27,8 +21,8 @@ module.exports = {
 				id
 				prefix
 				title
-				fo_doelzin_id
 				unreleased
+				fo_doelzin_id
 			}
 			_allFoSubdomeinMeta {
 				count
@@ -39,9 +33,9 @@ module.exports = {
 				id
 				prefix
 				title
+				unreleased
 				fo_toelichting_id
 				fo_uitwerking_id
-				unreleased
 			}
 			_allFoDoelzinMeta {
 				count
@@ -52,6 +46,7 @@ module.exports = {
 				id
 				prefix
 				title
+				fo_doelzin_id
 				unreleased
 			}
 			_allFoToelichtingMeta {
@@ -63,6 +58,7 @@ module.exports = {
 				id
 				prefix
 				title
+				fo_doelzin_id
 				unreleased
 			}
 			_allFoUitwerkingMeta {
@@ -75,6 +71,10 @@ module.exports = {
 			id
 			prefix
 			title
+			Vakleergebied {
+				id
+				title
+			}
 			FoSubdomein {
 				id
 				title
@@ -110,11 +110,21 @@ module.exports = {
 			id
 			prefix
 			title
+			FoDoelzin {
+				id
+				title
+				deprecated
+			}
 		`,
 		'fo_uitwerking': `
 			id
 			prefix
 			title
+			FoDoelzin {
+				id
+				title
+				deprecated
+			}
 		`
 	},
 	idQuery: `
@@ -122,6 +132,10 @@ module.exports = {
 			id
 			prefix
 			title
+			Vakleergebied {
+				id
+				title
+			}
 			FoSubdomein {
 			  id
 			  title
@@ -153,11 +167,19 @@ module.exports = {
 			id
 			prefix
 			title
+			FoDoelzin {
+			  id
+			  title
+			}
 		}
 		allFoUitwerking(filter:{id:$id}) {
 			id
 			prefix
 			title
+			FoDoelzin {
+			  id
+			  title
+			}
 		}`,
 	routes: {
 		'fo_domein/': (req) =>

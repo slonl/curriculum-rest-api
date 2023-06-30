@@ -21,6 +21,7 @@ var apis = [
 	require('./opendata-api/curriculum-referentiekader.js'),
 	require('./opendata-api/curriculum-erk.js'),
 	require('./opendata-api/curriculum-fo.js'),
+	require('./opendata-api/curriculum-samenhang.js'),
 	require('./opendata-api/curriculum-niveauhierarchie.js'),
 	require('./opendata-api/curriculum-leerdoelenkaarten.js')
 ];
