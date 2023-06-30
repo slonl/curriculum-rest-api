@@ -4,20 +4,24 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-samenhang/context.json',
 	queries: {
 		Tag: `query Tag($page:Int, $perPage:Int) {
-			allTag(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+			allTag(page:$page, perPage:$perPage, filter:{deprecated:null}) {
 				id
 				title
 				unreleased
+				fo_toelichting_id
+				fo_uitwerking_id
 			}
 			_allTagMeta {
 				count
 			}
 		}`,
 		Relatie: `query Relatie($page:Int, $perPage:Int) {
-			allRelatie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+			allRelatie(page:$page, perPage:$perPage, filter:{deprecated:null}) {
 				id
 				title
 				unreleased
+				fo_toelichting_id
+				fo_uitwerking_id
 			}
 			_allRelatieMeta {
 				count
@@ -28,20 +32,60 @@ module.exports = {
 		'tag': `
 			id
 			title
+			FoToelichting {
+				id
+				title
+				deprecated
+			}
+			FoUitwerking {
+				id
+				title
+				deprecated
+			}
 		`,
 		'relatie': `
 			id
 			title
+			FoToelichting {
+				id
+				title
+				deprecated
+			}
+			FoUitwerking {
+				id
+				title
+				deprecated
+			}
 		`
 	},
 	idQuery: `
 		allTag(filter:{id:$id}) {
 			id
 			title
+			FoToelichting {
+				id
+				title
+				deprecated
+			}
+			FoUitwerking {
+				id
+				title
+				deprecated
+			}
 		}
 		allRelatie(filter:{id:$id}) {
 			id
 			title
+			FoToelichting {
+				id
+				title
+				deprecated
+			}
+			FoUitwerking {
+				id
+				title
+				deprecated
+			}
 		}`,
 	routes: {
 		'tag/': (req) =>
