@@ -198,7 +198,7 @@ function jsonLD(entry, schema, type) {
 		'ErkVakleergebied', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
 		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
 		'FoDomein', 'FoSubdomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
-		'ShTag', 'ShRelatie',
+		'Tag', 'Relatie',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
 		if (entry[listName] && Array.isArray(entry[listName])) {
@@ -508,8 +508,8 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 					case 'FoUitwerking':
 						schema = opendata.schemas.fo;
 					break;
-					case 'ShTag':
-					case 'ShRelatie':
+					case 'Tag':
+					case 'Relatie':
 						schema = opendata.schemas.samenhang;
 					break;
 					case "Vakleergebied":

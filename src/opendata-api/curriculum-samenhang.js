@@ -1,71 +1,65 @@
 module.exports = {
-	context: 'fo',
+	context: 'samenhang',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/samenhang.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-samenhang/context.json',
 	queries: {
-		ShTag: `query ShTag($page:Int, $perPage:Int) {
-			allShTag(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+		Tag: `query Tag($page:Int, $perPage:Int) {
+			allTag(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
-				prefix
 				title
 				unreleased
 			}
-			_allShTagMeta {
+			_allTagMeta {
 				count
 			}
 		}`,
-		ShRelatie: `query ShRelatie($page:Int, $perPage:Int) {
-			allShRelatie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+		Relatie: `query Relatie($page:Int, $perPage:Int) {
+			allRelatie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
-				prefix
 				title
 				unreleased
 			}
-			_allShRelatieMeta {
+			_allRelatieMeta {
 				count
 			}
 		}`
 	},
 	typedQueries: {
-		'sh_tag': `
+		'tag': `
 			id
-			prefix
 			title
 		`,
-		'sh_relatie': `
+		'relatie': `
 			id
-			prefix
 			title
 		`
 	},
 	idQuery: `
-		allShTag(filter:{id:$id}) {
+		allTag(filter:{id:$id}) {
 			id
-			prefix
 			title
 		}
-		allShRelatie(filter:{id:$id}) {
+		allRelatie(filter:{id:$id}) {
 			id
-			prefix
 			title
 		}`,
 	routes: {
-		'sh_tag/': (req) =>
-			opendata.api["ShTag"](req.params, req.query)
+		'tag/': (req) =>
+			opendata.api["Tag"](req.params, req.query)
 			.then(function(result) {
 				return { 
-					data: result.data.allShTag, 
-					type: 'ShTag', 
-					meta: result.data._allShTagMeta
+					data: result.data.allTag, 
+					type: 'Tag', 
+					meta: result.data._allTagMeta
 				}
 			}),
-		'sh_relatie/': (req) =>
-			opendata.api["ShRelatie"](req.params, req.query)
+		'relatie/': (req) =>
+			opendata.api["Relatie"](req.params, req.query)
 			.then(function(result) {
 				return { 
-					data: result.data.allShRelatie, 
-					type: 'ShRelatie', 
-					meta: result.data._allShRelatieMeta
+					data: result.data.allRelatie, 
+					type: 'Relatie', 
+					meta: result.data._allRelatieMeta
 				}
 			})
 	}

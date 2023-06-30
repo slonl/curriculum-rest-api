@@ -716,18 +716,18 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.ShTag" data-simply-content="template" data-simply-transformer="truthy">
+                    <div data-simply-field="item.Tag" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Tag</h3>
-                            <ul data-simply-list="item.ShTag">
+                            <ul data-simply-list="item.Tag">
                                 <template rel="links"></template>
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.ShRelatie" data-simply-content="template" data-simply-transformer="truthy">
+                    <div data-simply-field="item.Relatie" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Relatie</h3>
-                            <ul data-simply-list="item.ShRelatie">
+                            <ul data-simply-list="item.Relatie">
                                 <template rel="links"></template>
                             </ul>
                         </template>
@@ -1258,18 +1258,18 @@
             </template>
         </span>
 
-        <span data-simply-list="ShTag">
+        <span data-simply-list="Tag">
             <template>
                 <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">ShTag</span>
+                    <span class="ds-badge-label">Tag</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
-        <span data-simply-list="ShRelatie">
+        <span data-simply-list="Relatie">
             <template>
                 <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">ShRelatie</span>
+                    <span class="ds-badge-label">Relatie</span>
                     <span data-simply-field="title">title</span>
                 </span>
             </template>
@@ -1655,11 +1655,11 @@
                 browser.actions.list('fo_uitwerking/')
             },
             
-            '/sh_tag/': function(params) {
-                browser.actions.list('sh_tag/')
+            '/tag/': function(params) {
+                browser.actions.list('tag/')
             },
-            '/sh_relatie/': function(params) {
-                browser.actions.list('sh_relatie/')
+            '/relatie/': function(params) {
+                browser.actions.list('relatie/')
             },
 
             '/curriculum/uuid/:id': function(params) {
@@ -1845,8 +1845,8 @@
         'curriculum-samenhang': {
             title: 'Samenhang',
             data: {
-                sh_tag: 'Begrippen',
-                sh_relatie: 'Relaties'
+                tag: 'Begrippen',
+                relatie: 'Relaties'
             }
         },
         'curriculum-fo':{
