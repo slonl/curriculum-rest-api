@@ -1833,13 +1833,14 @@
     }
 
     var contexts = {
-        'curriculum-basis': {
-            title: 'Basis',
+        'curriculum-fo':{
+            title: 'Curriculum Funderend onderwijs',
             data: {
-                vakleergebied: 'Vakleergebied',
-                niveau: 'Niveau',
-                doelniveau: 'DoelNiveau',
-                doel: 'Doel'
+                fo_domein: 'Domein',
+                fo_subdomein: 'Subdomein',
+                fo_doelzin: 'Doelzin',
+                fo_toelichting: 'Toelichting',
+                fo_uitwerking: 'Uitwerking'
             }
         },
         'curriculum-samenhang': {
@@ -1849,14 +1850,13 @@
                 relatie: 'Relaties'
             }
         },
-        'curriculum-fo':{
-            title: 'Curriculum Funderend onderwijs',
+        'curriculum-basis': {
+            title: 'Basis',
             data: {
-                fo_domein: 'Domein',
-                fo_subdomein: 'Subdomein',
-                fo_doelzin: 'Doelzin',
-                fo_toelichting: 'Toelichting',
-                fo_uitwerking: 'Uitwerking'
+                vakleergebied: 'Vakleergebied',
+                niveau: 'Niveau',
+                doelniveau: 'DoelNiveau',
+                doel: 'Doel'
             }
         },
         'curriculum-kerndoelen': {
@@ -1878,6 +1878,16 @@
                 examenprogramma_eindterm: 'ExamenprogrammaEindterm'
             }
         },
+        'curriculum-syllabus': {
+            title: 'Syllabus',
+            data: {
+                syllabus: 'Syllabus',
+                syllabus_vakleergebied: 'SyllabusVakleergebied',
+                syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
+                syllabus_toelichting: 'SyllabusToelichting',
+                syllabus_vakbegrip: 'SyllabusVakbegrip'
+            }
+        },
         'curriculum-examenprogramma-bg': {
             title: 'Examenprogramma Beroepsgericht',
             data: {
@@ -1890,35 +1900,6 @@
                 examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
                 examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
                 examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
-            }
-        },
-        'curriculum-syllabus': {
-            title: 'Syllabus',
-            data: {
-                syllabus: 'Syllabus',
-                syllabus_vakleergebied: 'SyllabusVakleergebied',
-                syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
-                syllabus_toelichting: 'SyllabusToelichting',
-                syllabus_vakbegrip: 'SyllabusVakbegrip'
-            }
-        },
-        'curriculum-leerdoelenkaarten': {
-            title: 'Leerdoelenkaarten',
-            data: {
-                ldk_vakleergebied: 'LdkVakleergebied',
-                ldk_vakkern: 'LdkVakkern',
-                ldk_vaksubkern: 'LdkVaksubkern',
-                ldk_vakinhoud: 'LdkVakinhoud',
-                ldk_vakbegrip: 'LdkVakbegrip'
-            }
-        },
-        'curriculum-inhoudslijnen': {
-            title: 'Inhoudslijnen',
-            data: {
-                inh_vakleergebied: 'InhVakleergebied',
-                inh_inhoudslijn: 'InhInhoudslijn',
-                inh_cluster: 'InhCluster',
-                inh_subcluster: 'InhSubcluster'
             }
         },
         'curriculum-referentiekader': {
@@ -1945,16 +1926,35 @@
                 erk_lesidee: 'ErkLesidee'
             }
         },
-        'curriculum-niveauhierarchie':{
-            title: 'Niveau Hierarchie',
+        'curriculum-leerdoelenkaarten': {
+            title: 'Leerdoelenkaarten',
             data: {
-                nh_categorie: 'NhCategorie',
-                nh_sector: 'NhSector',
-                nh_schoolsoort: 'NhSchoolsoort',
-                nh_leerweg: 'NhLeerweg',
-                nh_bouw: 'NhBouw',
-                nh_niveau: 'NhNiveau'
+                ldk_vakleergebied: 'LdkVakleergebied',
+                ldk_vakkern: 'LdkVakkern',
+                ldk_vaksubkern: 'LdkVaksubkern',
+                ldk_vakinhoud: 'LdkVakinhoud',
+                ldk_vakbegrip: 'LdkVakbegrip'
             }
+        },
+        'curriculum-inhoudslijnen': {
+            title: 'Inhoudslijnen',
+            data: {
+                inh_vakleergebied: 'InhVakleergebied',
+                inh_inhoudslijn: 'InhInhoudslijn',
+                inh_cluster: 'InhCluster',
+                inh_subcluster: 'InhSubcluster'
+            }
+//        },
+//        'curriculum-niveauhierarchie':{
+//            title: 'Niveau Hierarchie',
+//            data: {
+//                nh_categorie: 'NhCategorie',
+//                nh_sector: 'NhSector',
+//                nh_schoolsoort: 'NhSchoolsoort',
+//                nh_leerweg: 'NhLeerweg',
+//                nh_bouw: 'NhBouw',
+//                nh_niveau: 'NhNiveau'
+//            }
         }
     }
 
