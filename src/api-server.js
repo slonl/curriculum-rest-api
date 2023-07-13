@@ -22,6 +22,8 @@ const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/cur
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = graphqlUrl;
 
+const SimplyStoreUrl = process.env.NODE_SIMPLYSTORE_URL || 'http://localhost:3502/';
+
 //const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
 //const backendUrl      = 'https://opendata.slo.nl:3500';
 
@@ -49,6 +51,25 @@ var cache = function() {
 		}
 	}
 };
+
+app.route('/status/').get((req, res) => {
+	console.log('status')
+	return request({
+		url : SimplyStoreUrl + '/status/',
+		method : "GET"
+	}).then(function(body) {
+		if (body.errors) {
+			throw new Error(body.errors)
+		}
+		console.log(body)
+		res.set('Content-Type', 'application/json')
+		res.send(body)
+	}).catch(function(error) {
+		res.setHeader('content-type', 'application/json');
+		res.status(500).send({ error: 500, message: error.message });
+		console.log(error)
+	})
+})
 
 app.use(express.static(process.cwd()+'/www'))
 
