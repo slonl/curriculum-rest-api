@@ -407,7 +407,7 @@ module.exports = {
 							deprecated: _,
 					},
 					Doelniveau: {
-						DoelNiveau
+						Doelniveau
 					},
 					/*
 					NiveauIndex {
@@ -416,6 +416,7 @@ module.exports = {
 						}
 					}
 					*/
+				})
 		`,
 		RefDomein: `
 			from(Index(request.query.id))
@@ -439,7 +440,7 @@ module.exports = {
 					deprecated: _,
 				}
 				Doelniveau: {
-					DoelNiveau
+					Doelniveau
 				}
 				NiveauIndex: {
 					Niveau: {
@@ -468,7 +469,7 @@ module.exports = {
 				deprecated: _,
 			}
 			Doelniveau: {
-				DoelNiveau
+				Doelniveau
 			}
 			NiveauIndex: {
 				Niveau {
@@ -503,7 +504,7 @@ module.exports = {
 				deprecated: _,
 			}
 			Doelniveau: {
-				DoelNiveau
+				Doelniveau
 			}
 			NiveauIndex: {
 				Niveau: {
@@ -524,7 +525,7 @@ module.exports = {
 				deprecated: _,
 			}
 			Doelniveau: {
-				DoelNiveau
+				Doelniveau
 			}
 			NiveauIndex: {
 				Niveau: {
@@ -545,7 +546,7 @@ module.exports = {
 				deprecated: _,
 			}
 			Doelniveau: {
-				DoelNiveau
+				Doelniveau
 			}
 			NiveauIndex: {
 				Niveau: {
@@ -713,7 +714,7 @@ module.exports = {
 	`,
 	*/
 	routes: {
-		'refvakleergebied/': (req) => 
+		'ref_vakleergebied/': (req) => 
 		opendata.api["RefVakleergebied"](req.params, req.query)
 		.then(function(result) {
 			return {
@@ -721,7 +722,7 @@ module.exports = {
 				type: 'RefVakleergebied'
 			};
 		}),
-		'refdomein/': (req) => 
+		'ref_domein/': (req) => 
 		opendata.api["RefDomein"](req.params, req.query)
 		.then(function(result) {
 			return {
@@ -772,5 +773,6 @@ module.exports = {
 				}
 			})
 			*/
+		}
 	}
 };
