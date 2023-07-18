@@ -5,10 +5,9 @@ const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
-const mcache    = require('memory-cache');
-const request = require("request-promise-native");
 const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
+
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
@@ -16,46 +15,19 @@ const app       = express();
 const port      = process.env.NODE_PORT || 4800;
 const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2022/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
-const graphqlUrl= process.env.NODE_BACKEND_URL || "http://localhost:3500";
+const storeUrl  = process.env.NODE_SIMPLYSTORE_URL || "http://localhost:3500";
 const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3501";
 const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
-opendata.url    = graphqlUrl;
-
-const SimplyStoreUrl = process.env.NODE_SIMPLYSTORE_URL || 'http://localhost:3502/';
-
-//const baseDatasetURL  = 'https://curriculum-rest-api.dev.muze.nl/curriculum/api-acpt/v1/'; //2019/';
-//const backendUrl      = 'https://opendata.slo.nl:3500';
+opendata.url    = storeUrl;
 
 const niveauURL       = baseDatasetURL + "niveau/";
 const notfound        = { error: "not found"};
 
-var cache = function() {
-	return (req, res, next) => {
-		let key = '__express__' + req.originalUrl || req.url
-		let cachedBody = mcache.get(key)
-		if (cachedBody) {
-			res.send(cachedBody)
-			return
-		} else {
-//			console.log("cache miss for " + key);
-			res.sendResponse = res.send
-			res.send = (body) => {
-				if (!res.statusCode>=200 && res.statusCode<400) { // response is ok
-					// mcache.put(key, body, duration * 1000);
-					mcache.put(key, body);
-				}
-				res.sendResponse(body)
-			}
-			next()
-		}
-	}
-};
-
 app.route('/status/').get((req, res) => {
 	console.log('status')
 	return request({
-		url : SimplyStoreUrl + '/status/',
+		url : opendata.url + '/status/',
 		method : "GET"
 	}).then(function(body) {
 		if (body.errors) {
@@ -390,7 +362,7 @@ function jsonLDList(list, schema, type, meta) {
 Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
 	app.route('/' + route)
-	.get(cache(), (req, res) => {
+	.get((req, res) => {
 		console.log(route);
 		opendata.routes[route](req)
 		.then((result) => {
@@ -544,48 +516,6 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 		throw new Error("404: not found");
 	})
 	.then(function(result) {
-		if (result.replacedBy) {
-			return Promise.all(result.replacedBy.map(function(id) {
-				return opendata.api.Id({id: id})
-				.then(function(result) {
-					return getEntity(result);
-				})
-				.then(function(entity) {
-					return {
-						id: entity.id,
-						title: entity.title
-					}
-				});
-			}))
-			.then(function(replacedBy) {
-				result.replacedBy = replacedBy;
-				return result;
-			});
-		}
-		return result;
-	})
-	.then(function(result) {
-		if (result.replaces) {
-			return Promise.all(result.replaces.map(function(id) {
-				return opendata.api.Id({id: id})
-				.then(function(result) {
-					return getEntity(result);
-				})
-				.then(function(entity) {
-					return {
-						id: entity.id,
-						title: entity.title
-					}
-				});
-			}))
-			.then(function(replaces) {
-				result.replaces = replaces;
-				return result;
-			});
-		}
-		return result;
-	})
-	.then(function(result) {
 		if (entitytype=='Vakleergebied') {
 			var examenprogramma = [];
 			var syllabus = [];
@@ -622,8 +552,6 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 		res.status(code).send({ error: code, message: err.message});
 	});
 });
-
-
 
 function getById(id) {
 	return opendata.api.Id({id: id})
@@ -713,180 +641,14 @@ const flatten = function(arr, result = []) {
 	return result;
 };
 
-app.route('/'+"legacy/vak/:vak/").get((req, res) => {
-	var vak = req.params.vak;
-	getLatestVersions([vak])
-	.then(function(results) {
-		res.send(jsonLDList(results, null, null, {count: results.length}));	
-	});
-});
-
-app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/").get((req, res) => {
-	var vak = req.params.vak;
-	var lpib_vakkern = req.params.lpib_vakkern;
-	var idIndex = {};
-
-	getAllVersions([vak,lpib_vakkern])
-	.then(function(results) {
-		results.forEach(function(entity) {
-			idIndex[entity.id] = entity;
-		});
-		return idIndex;
-	})		
-	.then(function(idIndex) {
-		var vakken = walkReplacedBy(idIndex, [vak]);
-		var lpib_vakkernen = walkReplacedBy(idIndex, [lpib_vakkern]);
-		var matchingVakkernen = lpib_vakkernen.filter(function(entry) {
-			var matchingVakken = vakken.filter(function(vakEntry) {
-				return hasId(vakEntry.LpibVakkern, entry.id);
-			});
-			return matchingVakken.length>0;
-		});
-		if (matchingVakkernen.length) {
-			res.send(jsonLDList(matchingVakkernen, null, null, {count: lpib_vakkernen.length}));
-		} else {
-			res.send(jsonLDList(lpib_vakkernen,null,null,{error: 'not found'}));
-		}
-	});
-});
-
-app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern").get((req, res) => {
-	var vak = req.params.vak;
-	var lpib_vakkern = req.params.lpib_vakkern;
-	var lpib_vaksubkern = req.params.lpib_vaksubkern;
-	var idIndex = {};
-
-	getAllVersions([vak, lpib_vakkern, lpib_vaksubkern])
-	.then(function(results) {
-		results.forEach(function(entry) {
-			idIndex[entry.id] = entry;
-		});
-
-		return idIndex;
-	}).then(function(idIndex) {
-
-		var lpib_vaksubkernen = walkReplacedBy(idIndex, [lpib_vaksubkern]);
-		var lpib_vakkernen    = walkReplacedBy(idIndex, [lpib_vakkern]);
-		var vakken       = walkReplacedBy(idIndex, [vak]);
-
-		lpib_vakkernen = lpib_vakkernen.filter(function(entry) {
-			var matchingVakken = vakken.filter(function(vakEntry) {
-				return hasId(vakEntry.LpibVakkern, entry.id);
-			});
-			return matchingVakken.length>0;
-		});
-		
-		var matchingVaksubkernen = lpib_vaksubkernen.filter(function(entry) {
-			var matchingVakkernen = lpib_vakkernen.filter(function(lpib_vakkernEntry) {
-				return hasId(lpib_vakkernEntry.LpibVaksubkern, entry.id);
-			});
-			return matchingVakkernen.length>0;
-		});
-		if (matchingVaksubkernen.length) {
-			res.send(jsonLDList(matchingVaksubkernen, null, null, {count: lpib_vaksubkernen.length}));
-		} else {
-			res.send(jsonLDList(lpib_vaksubkernen,null,null,{error: 'not found'}));
-		}
-	});
-
-});
-
-app.route('/'+"legacy/vak/:vak/vakkern/:lpib_vakkern/vaksubkern/:lpib_vaksubkern/vakinhoud/:lpib_vakinhoud").get((req, res) => {
-	var vak = req.params.vak;
-	var lpib_vakkern = req.params.lpib_vakkern;
-	var lpib_vaksubkern = req.params.lpib_vaksubkern;
-	var lpib_vakinhoud = req.params.lpib_vakinhoud;
-	var idIndex = {};
-
-	getAllVersions([vak, lpib_vakkern, lpib_vaksubkern, lpib_vakinhoud])
-	.then(function(results) {
-		results.forEach(function(entry) {
-			idIndex[entry.id] = entry;
-		});
-
-		return idIndex;
-	}).then(function(idIndex) {
-
-		var lpib_vakinhouden  = walkReplacedBy(idIndex, [lpib_vakinhoud]);
-		var lpib_vaksubkernen = walkReplacedBy(idIndex, [lpib_vaksubkern]);
-		var lpib_vakkernen    = walkReplacedBy(idIndex, [lpib_vakkern]);
-		var vakken       = walkReplacedBy(idIndex, [vak]);
-		
-		lpib_vakkernen = lpib_vakkernen.filter(function(entry) {
-			var matchingVakken = vakken.filter(function(vakEntry) {
-				return hasId(vakEntry.LpibVakkern, entry.id);
-			});
-			return matchingVakken.length>0;
-		});
-		
-		lpib_vaksubkernen = lpib_vaksubkernen.filter(function(entry) {
-			var matchingVakkernen = lpib_vakkernen.filter(function(lpib_vakkernEntry) {
-				return hasId(lpib_vakkernEntry.LpibVaksubkern, entry.id);
-			});
-			return matchingVakkernen.length>0;
-		});
-		
-		var matchingLpibVakinhouden = lpib_vakinhouden.filter(function(entry) {
-			var matchingVaksubkernen = lpib_vaksubkernen.filter(function(lpib_vaksubkernEntry) {
-				return hasId(lpib_vaksubkernEntry.LpibVakinhoud, entry.id);
-			});
-			return matchingVaksubkernen.length>0;
-		});
-		
-		if (matchingLpibVakinhouden.length) {
-			res.send(jsonLDList(matchingLpibVakinhouden, null, null, {count: lpib_vakinhouden.length}));
-		} else {
-			res.send(jsonLDList(lpib_vakinhouden,null,null,{error: 'not found'}));
-		}
-	});
-
-});
 
 app.route('/' + 'register/').get((req) => {
 	console.log("Register user " + req.param.email);
 });
 
-// old names redirect to the new names
-app.route('/' + 'vakkern/*').get((req,res) => {
-	res.redirect(apiBase + 'lpib_vakkern/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'vaksubkern/*').get((req,res) => {
-	res.redirect(apiBase + 'lpib_vaksubkern/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'vakinhoud/*').get((req,res) => {
-	res.redirect(apiBase + 'lpib_vakinhoud/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'leerlijn/*').get((req,res) => {
-	res.redirect(apiBase + 'lpib_leerlijn/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'vakkencluster/*').get((req,res) => {
-	res.redirect(apiBase + 'lpib_vakkencluster/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/vakkern/*').get((req, res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakkern/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/vaksubkern/*').get((req, res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vaksubkern/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/vakinhoud/*').get((req, res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakinhoud/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/vak/:id/doelen').get((req,res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakleergebied/' + req.params.id + '/doelen');	
-});
-app.route('/' + 'niveau/:niveau/vakkencluster/*').get((req, res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/lpib_vakkencluster/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/vak/*').get((req,res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/vakleergebied/' + req.params[0] ? req.params[0] : '');
-});
-app.route('/' + 'niveau/:niveau/kerndoelvakleergebied/*').get((req, res) => {
-	res.redirect(apiBase + 'niveau/'+ req.params.niveau + '/kerndoel_vakleergebied/' + req.params[0] ? req.params[0] : '');
-});
 // add routes above this line
 app.route('*').get((req,res) => {
 	res.status(404).send(notfound+'('+baseDatasetPath+':'+req.path+')');
 });
-
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
