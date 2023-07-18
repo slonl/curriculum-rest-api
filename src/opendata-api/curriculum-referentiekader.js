@@ -389,8 +389,9 @@ module.exports = {
 		    }
 		  }
 		}`
+		*/
 	},
-	*/
+
 	typedQueries: {
 		RefVakleergebied:`
 			from(Index(request.query.id))
@@ -553,8 +554,7 @@ module.exports = {
 					NiveauShort
 				}
 			}
-		`
-	},
+		`,
 	/*
 	idQuery: `
 		allRefVakleergebied(filter:{id:$id}) {
@@ -713,6 +713,7 @@ module.exports = {
 		}
 	`,
 	*/
+	},
 	routes: {
 		'ref_vakleergebied/': (req) => 
 		opendata.api["RefVakleergebied"](req.params, req.query)
@@ -774,5 +775,4 @@ module.exports = {
 			})
 			*/
 		}
-	}
 };
