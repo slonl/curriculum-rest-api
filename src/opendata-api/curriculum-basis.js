@@ -111,14 +111,10 @@ module.exports = {
 	queries: {
 		Vakleergebied: `
 const results = from(data.Vakleergebied)
-		.where({
-			deprecated: _ => _ !== null
-		})
 		.select({
 			id: _,
 			prefix: _,
 			title: _,
-			prefix: _,
 			Niveau:ShortLink
 		})
 
@@ -130,13 +126,20 @@ const meta = {
 
 meta
 
+`,
+		Niveau: `
+`,
+		Doel: `
+`,
+		Doelniveau: `
 `
 	},
 	typedQueries: {
 		Vakleergebied: `
 from(Index(request.query.id))
 .select({
-  id: _,
+  '@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+  uuid: _.id,
   prefix: _,
   title: _,
   description: _,
@@ -162,7 +165,8 @@ from(Index(request.query.id))
 					data: result, 
 					type: 'Vakleergebied'
 				};
-			})
+			}),
+		'niveau/': '..'
 
 	}
 }
