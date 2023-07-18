@@ -125,24 +125,24 @@ module.exports = {
 	`,
 	queries: {
 		Vakleergebied: `
-const results = from(data.Vakleergebied)
-		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-			Niveau:ShortLink
-		})
+		const results = from(data.Vakleergebied)
+				.select({
+					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					uuid: _.id,
+					prefix: _,
+					title: _,
+					Niveau:ShortLink
+				})
 
-const meta = {
-	data: results.slice(Paging.start,Paging.end),
-	page: Page,
-	count: results.length
-}
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
 
-meta
+		meta
 
-`,
+		`,
 		Niveau: `
 		const results = from(data.Niveau)
 		.select({
@@ -154,54 +154,132 @@ meta
 			type: _
 		})
 
-const meta = {
-	data: results.slice(Paging.start,Paging.end),
-	page: Page,
-	count: results.length
-}
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
 
-meta
+		meta
 
-`,
+		`,
 		Doel: `
+		const results = from(data.Doel)
+		.select({
+			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			uuid: _.id,
+			sloID: _,
+			title: _,
+			description: _,
+			bron: _,
+		})
 
-`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 		Doelniveau: `
-`
+		const results = from(data.Doelniveau)
+		.select({
+			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			uuid: _.id,
+			prefix: _,
+			ce_se: _,
+			Doel: {
+				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				uuid: _.id,
+				title: _,
+				description: _,
+				vakbegrippen: _,
+				bron: _,
+				aanbodid: _,
+				Leerlingtekst: {
+					title: _,
+					description: _
+				}     
+			},
+		})
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 	},
 	typedQueries: {
 		Vakleergebied: `
-from(Index(request.query.id))
-.select({
-  '@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-  uuid: _.id,
-  prefix: _,
-  title: _,
-  description: _,
-  replaces: ShortLink,
-  KerndoelVakleergebied: ShortLink,
-  ExamenprogrammaVakleergebied: ShortLink,
-  SyllabusVakleergebied: ShortLink,
-  ExamenprogrammaBgProfiel: ShortLink,
-  LdkVakleergebied: ShortLink,
-  InhVakleergebied: ShortLink,
-  RefVakleergebied: ShortLink,
-  ErkVakleergebied: ShortLink,
-  Niveau
-})
+		from(Index(request.query.id))
+			.select({
+				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				uuid: _.id,
+				prefix: _,
+				title: _,
+				description: _,
+				replaces: ShortLink,
+				KerndoelVakleergebied: ShortLink,
+				ExamenprogrammaVakleergebied: ShortLink,
+				SyllabusVakleergebied: ShortLink,
+				ExamenprogrammaBgProfiel: ShortLink,
+				LdkVakleergebied: ShortLink,
+				InhVakleergebied: ShortLink,
+				RefVakleergebied: ShortLink,
+				ErkVakleergebied: ShortLink,
+				Niveau
+			})
 
 		`,
 		Niveau: `
-from(Index(request.query.id))
-.select({
-  '@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-  uuid: _.id,
-  prefix: _,
-  title: _,
-  description: _,
-})		
-		`
-
+		from(Index(request.query.id))
+			.select({
+			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			description: _,
+			})		
+		`,
+		Doel: `
+		from(Index(request.query.id))
+		.select({
+			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			uuid: _.id,
+			sloID: _,
+			title: _,
+			description: _,
+			bron: _,
+		})
+		`,
+		Doelniveau:`
+		from(Index(request.query.id))
+		.select({
+			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			uuid: _.id,
+			prefix: _,
+			ce_se: _,
+			Doel: {
+				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				uuid: _.id,
+				title: _,
+				description: _,
+				vakbegrippen: _,
+				bron: _,
+				aanbodid: _,
+				Leerlingtekst: {
+					title: _,
+					description: _
+				}     
+			},
+		})
+		`,
 	},
 	routes: {
 		'vakleergebied/': (req) => 
@@ -218,6 +296,22 @@ from(Index(request.query.id))
 			return {
 				data: result, 
 				type: 'Niveau'
+			};
+		}),
+		'doel/': (req) => 
+		opendata.api["Doel"](req.params, req.query)
+		.then(function(result) {
+			return {
+				data: result, 
+				type: 'Doel'
+			};
+		}),
+		'doelniveau/': (req) => 
+		opendata.api["Doelniveau"](req.params, req.query)
+		.then(function(result) {
+			return {
+				data: result, 
+				type: 'Doelniveau'
 			};
 		}),
 
