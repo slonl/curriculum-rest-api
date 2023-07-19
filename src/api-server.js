@@ -158,133 +158,21 @@ function sendApiKey(email, key) {
 
 readKeys();
 
-function jsonLD(entry, schema, type) {
-	if (!entry || !entry.id) {
-		return entry;
-	}
-	var result = {
-		'@id': baseIdURL + entry.id,
-		'@isPartOf': baseDatasetURL,
-		'@references': baseDatasetURL + 'uuid/'+entry.id,
-		'uuid': entry.id
-	};
-	if (schema) {
-		result['@context'] = schema;
-	}
-	if (type) {
-		result['@type'] = type;
-	}
-
-	delete entry.id;
-	[
-		'ExamenprogrammaBody','ExamenprogrammaKop4','ExamenprogrammaKop3','ExamenprogrammaKop2','ExamenprogrammaKop1',
-		'ExamenprogrammaEindterm','ExamenprogrammaSubdomein','ExamenprogrammaDomein','Examenprogramma','ExamenprogrammaVakleergebied',
-		'ExamenprogrammaBgProfiel','ExamenprogrammaBgKern','ExamenprogrammaBgKerndeel','ExamenprogrammaBgGlobaleEindterm','ExamenprogrammaBgModule',
-		'ExamenprogrammaBgKeuzevak','ExamenprogrammaBgDeeltaak','ExamenprogrammaBgModuletaak','ExamenprogrammaBgKeuzevaktaak',
-		'LdkVakleergebied','LdkVakkern','LdkVaksubkern','LdkVakinhoud',
-		'Kerndoel','KerndoelDomein','KerndoelVakleergebied','KerndoelUitstroomprofiel',
-		'LpibVakleergebied','LpibVakkern','LpibVaksubkern','LpibVakinhoud','LpibVakkencluster','LpibLeerlijn',
-		'Vakleergebied', 'Doelniveau', 'Doel', 'Niveau',
-		'Syllabus','SyllabusVakleergebied','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
-		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
-		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
-		'ErkVakleergebied', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
-		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
-		'FoDomein', 'FoSubdomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
-		'Tag', 'Relatie',
-		'replaces','replacedBy'
-	].forEach(function(listName) {
-		if (entry[listName] && Array.isArray(entry[listName])) {
-			result[listName] = jsonLDList(entry[listName]);
-			if (listName=='Niveau') {
-				result[listName] = result[listName]
-				.sort(function(a,b) {
-					return a.prefix<b.prefix ? -1 : 1;
-				})
-				.map(function(childEntry) {
-					childEntry['$ref'] = niveauURL + childEntry.uuid;
-					if (type=='Vakleergebied') {
-						childEntry['$ref'] += '/vakleergebied/' + result.uuid;
-					}
-					return childEntry;
-				});
-			}
-			delete entry[listName];
-		}
-	});
-	if (entry['NiveauIndex']) {
-		if (type=='Niveau') {
-			let vakleergebiedList = {
-				'LpibVakleergebied': 'vakleergebied',
-				'LdkVakleergebied': 'ldk_vakleergebied',
-				'KerndoelVakleergebied': 'kerndoel_vakleergebied',
-				'InhVakleergebied': 'inh_vakleergebied',
-				'RefVakleergebied': 'ref_vakleergebied',
-				'ErkVakleergebied': 'erk_vakleergebied',
-				'SyllabusVakleergebied': 'syllabus_vakleergebied'
-			};
-			Object.keys(vakleergebiedList).forEach(vlg => {
-				if (entry['NiveauIndex'][0] && entry['NiveauIndex'][0][vlg]) {
-					result[vlg] = entry['NiveauIndex'][0][vlg].map(function(link) {
-						return {
-							'@id': baseIdURL + link.id,
-							'title': link.title,
-							'$ref': niveauURL + result.uuid + vakleergebiedList[vlg] + link.id
-						}
-					});
+function jsonLD(entry) {
+	console.log('jsonLD called')
+	console.log(entry)
+	if (entry.Niveau && Array.isArray(entry.Niveau)) {
+		entry.Niveau
+			.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
+			.map(child => {
+				child['$ref'] = niveauURL + child.uuid;
+				if (entry['@type']=='Vakleergebied') {
+					child['$ref'] += '/vakleergebied/' + entry.uuid;
 				}
+				return child;
 			});
-		} else {
-			var urlType = '';
-			if (type) {
-				if (type.substr(0,3)=='Ldk') {
-					urlType = 'ldk_'+type.substr(3).toLowerCase();
-				} else if (type.substr(0,4)=='Lpib') {
-					urlType = 'lpib_'+type.substr(4).toLowerCase();
-				} else if (type.substr(0,3)=='Inh') {
-					urlType = 'inh_'+type.substr(4).toLowerCase();
-				} else if (type.substr(0,3)=='Ref') {
-					urlType = 'ref_'+type.substr(4).toLowerCase();
-				} else {
-					urlType = type.toLowerCase();
-				}
-			}
-
-			result['Niveau'] = entry['NiveauIndex']
-			.sort(function(a,b) {
-				return (a.Niveau[0].prefix<b.Niveau[0].prefix ? -1 : 1);
-			})
-			.map(function(ni) {
-				let niveau = {
-					'@id': baseIdURL + ni.Niveau[0].id,
-					'title': ni.Niveau[0].title,
-					'prefix': ni.Niveau[0].prefix+'-1'
-				};
-				if (urlType) {
-					niveau['$ref'] = niveauURL + ni.Niveau[0].id + '/' + urlType + '/' + result['uuid'];
-				}
-				return niveau;
-			});
-		}
-		delete entry['NiveauIndex'];
 	}
-/*	['replaces','replacedBy'].forEach(function(listName) {
-		if (!entry[listName]) {
-			return;
-		}
-		result[listName] = entry[listName].map(function(id) {
-			return {
-				'@id': baseIdURL + id,
-				'uuid': id
-			}
-		});
-		delete entry[listName];
-	});
-*/
-	Object.keys(entry).forEach(function(key) {
-		result[key] = entry[key];
-	});
-	return result;
+	return entry;
 }
 
 function jsonLDList(list, schema, type, meta) {
@@ -292,27 +180,14 @@ function jsonLDList(list, schema, type, meta) {
 	// TODO: remove these in the graphql server, they are only there to 
 	// provide access to properties which aren't actually set in the current data, but may be set later
 
-	list = list.filter(link => {
-		if (link.id && parseInt(link.id)<0) {
-			meta.count--;
-			return false;
-		}
-		return true;
-	})
-	.map(function(link) {
+	console.log('jsonLDList called')
+	return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
+/*
+	
+ 	list = list.map(function(link) {
 		var result = {
-			'@id': baseIdURL + link.id,
-			'@references': baseDatasetURL + 'uuid/'+link.id,
-			'uuid': link.id
+			'@references': baseDatasetURL + 'uuid/'+link.uuid,
 		};
-
-		if (schema) {
-			result['@context'] = schema;
-		}
-		if (type) {
-			result['@type'] = type;
-		}
-		delete link.id;
 		Object.keys(link).forEach(function(key) {
 			if (Array.isArray(link[key])) {
 				if (key=='NiveauIndex') {
@@ -357,27 +232,29 @@ function jsonLDList(list, schema, type, meta) {
 	} else {
 		return list;
 	}
+	*/
 }
 
 Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
 	app.route('/' + route)
-	.get((req, res) => {
+	.get(async (req, res) => {
 		console.log(route);
-		opendata.routes[route](req)
-		.then((result) => {
+		try {
+			let result = await opendata.routes[route](req)
+			console.log('result in api-server',result)
 			if (Array.isArray(result.data)) {
-				result = jsonLDList(result.data, result.schema, result.type, result.meta)
+				result.data = jsonLDList(result.data)
+				result['@isPartOf'] = baseDatasetURL;
 			} else {
-				result = jsonLD(result.data, result.schema, result.type);
-			}
+				result = jsonLD(result);
+			} 
 			res.send(result);
-		})
-		.catch((err) => {
+		} catch(err) {
 			res.setHeader('content-type', 'application/json');
 			res.status(500).send({ error: 500, message: err.message });
 			console.log(route, err);
-		});
+		}
 	});
 });
 
@@ -396,178 +273,26 @@ app.route("/" + "search/").get((req, res) => {
   });
 });
 
-app.route('/' + 'uuid/:id').get((req, res) => {
+app.route('/' + 'uuid/:id').get(async (req, res) => {
 	var schema = null;
 	var entitytype = null;
 
-	var getEntity = function(result) {
-		for (var i in result.data) {
-			if (result.data[i].length) {
-				return result.data[i][0];
-			}
-		}
-	};
-	
 	console.log('uuid/:id');
-	opendata.api.Id(req.params)
-	.then(function(result) {
-		for (var i in result.data) {
-			if (result.data[i] && result.data[i].length) {
-				result = result.data[i][0];
-				entitytype = i.replace(/^all/, '');
-				switch(entitytype) {
-					case "LpibVakleergebied":
-					case "LpibVakkern":
-					case "LpibVaksubkern":
-					case "LpibVakinhoud":
-						schema = opendata.schemas.lpib;
-					break;
-					case "LdkVakleergebied":
-					case "LdkVakkern":
-					case "LdkVaksubkern":
-					case "LdkVakinhoud":
-						schema = opendata.schemas.leerdoelenkaarten;
-					break;
-					case "Kerndoel":
-					case "KerndoelDomein":
-					case "KerndoelVakleergebied":
-					case "KerndoelUitstroomprofiel":
-						schema = opendata.schemas.kerndoelen;
-					break;
-					case 'ExamenprogrammaEindterm':
-					case 'ExamenprogrammaSubdomein':
-					case 'ExamenprogrammaDomein':
-					case 'ExamenprogrammaExamenprogramma':
-					case 'ExamenprogrammaVakleergebied':
-					case 'ExamenprogrammaKop1':
-					case 'ExamenprogrammaKop2':
-					case 'ExamenprogrammaKop3':
-					case 'ExamenprogrammaKop4':
-						schema = opendata.schemas.examenprogramma;
-					break;
-					case 'ExamenprogrammaBgProfiel':
-					case 'ExamenprogrammaBgKern':
-					case 'ExamenprogrammaBgKerndeel':
-					case 'ExamenprogrammaBgGlobaleEindterm':
-					case 'ExamenprogrammaBgModule':
-					case 'ExamenprogrammaBgKeuzevak':
-					case 'ExamenprogrammaBgDeeltaak':
-					case 'ExamenprogrammaBgModuletaak':
-					case 'ExamenprogrammaBgKeuzevaktaak':
-						schema = opendata.schemas.examenprogramma_bg;
-					break;
-					case 'Syllabus':
-					case 'SyllabusSpecifiekeEindterm':
-					case 'SyllabusToelichting':
-					case 'SyllabusVakbegrip':
-					case 'SyllabusVakleergebied':
-						schema = opendata.schemas.syllabus;
-					break;
-					case 'InhVakleergebied':
-					case 'InhInhoudslijn':
-					case 'InhCluster':
-						schema = opendata.schemas.inhoudslijnen;
-					break;
-					case 'RefVakleergebied':
-					case 'RefDomein':
-					case 'RefSubdomein':
-					case 'RefOnderwerp':
-					case 'RefDeelonderwerp':
-					case 'RefTekstkenmerk':
-						schema = opendata.schemas.referentiekader;
-					break;
-					case 'ErkVakleergebied':
-					case 'ErkGebied':
-					case 'ErkCategorie':
-					case 'ErkTaalactiviteit':
-					case 'ErkSchaal':
-					case 'ErkCandobeschrijving':
-					case 'ErkVoorbeeld':
-					case 'ErkLesidee':
-						schema = opendata.schemas.erk;
-					break;
-					case 'NhCategorie':
-					case 'NhSector':
-					case 'NhSchoolsoort':
-					case 'NhLeerweg':
-					case 'NhBouw':
-					case 'NhNiveau':
-						schema = opendata.schemas.niveauhierarchie;
-					break;
-					case 'FoDomein':
-					case 'FoSubomein':
-					case 'FoDoelzin':
-					case 'FoToelichting':
-					case 'FoUitwerking':
-						schema = opendata.schemas.fo;
-					break;
-					case 'Tag':
-					case 'Relatie':
-						schema = opendata.schemas.samenhang;
-					break;
-					case "Vakleergebied":
-					default:
-						schema = opendata.schemas.basis;
-					break;
-				}
-				return result;
-			}
+	try {
+		let result = await opendata.api.Id(req.params)
+		if (!result) {
+			throw new Error("404: not found");
 		}
-		throw new Error("404: not found");
-	})
-	.then(function(result) {
-		if (entitytype=='Vakleergebied') {
-			var examenprogramma = [];
-			var syllabus = [];
-			if (result['ExamenprogrammaVakleergebied']) {
-				result['ExamenprogrammaVakleergebied'].forEach(function(vlg) {
-					if (vlg['Examenprogramma']) {
-						vlg['Examenprogramma'].forEach(function(exp) {
-							examenprogramma.push(exp);
-							if (exp['Syllabus']) {
-								syllabus = syllabus.concat(exp['Syllabus']);
-							}
-						});
-					}
-				});
-			}
-			if (examenprogramma.length) {
-				result['Examenprogramma'] = examenprogramma;
-			}
-			if (syllabus.length) {
-				result['Syllabus'] = syllabus;
-			}
-		}
-		return result;
-	})
-	.then(function(result) {
 		res.send(jsonLD(result, schema, entitytype));
-	})
-	.catch(function(err) {
-		var code = err.message.split(':')[0];
-		if (!code) {
-			code = 500;
-		}
+	} catch(err) {
 		res.setHeader('content-type', 'application/json');
-		res.status(code).send({ error: code, message: err.message});
-	});
+		res.status(500).send({ error: 500, message: err.message });
+		console.log('/uuid/'+req.params.id, err);
+	}
 });
 
-function getById(id) {
-	return opendata.api.Id({id: id})
-	.then(function(result) {
-		if (!result || !result.data) {
-			return null;
-		}
-		for (var i in result.data) {
-			if (result.data[i].length) {
-				result = result.data[i][0];
-				result["entitytype"] = i.replace(/^all/, '');
-				return result;
-			}
-		}
-		return null;
-	});
+async function getById(id) {
+	return await opendata.api.Id({id: id})
 }
 
 function getAllVersions(ids, entities) {

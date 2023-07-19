@@ -3,14 +3,19 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/basis.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-basis/context.json',
 	fragments: `
-		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o, 'id')
+		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
+		const Type = o => JSONTag.getType(o)
 		const Doelniveau = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
+			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -23,7 +28,9 @@ module.exports = {
 				}     
 			},
 			Niveau: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -31,7 +38,9 @@ module.exports = {
 				type: _
 			},
 			Kerndoel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -39,37 +48,47 @@ module.exports = {
 				prefix: _
 			},
 			ExamenprogrammaDomein: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_domein',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 			},
 			ExamenprogrammaSubdomein: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_subdomein',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 			},
 			ExamenprogrammaEindterm: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_eindterm',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				prefix: _
 			},
 			LdkVakbegrip: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				ce_se: _
 			}
 		}
 		const Doelen = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld',
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -82,7 +101,9 @@ module.exports = {
 				}     
 			},
 			Kerndoel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -90,14 +111,18 @@ module.exports = {
 				prefix: _,
 			},
 			LdkVakbegrip: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				ce_se: _
 			}
 		}
 		const Niveau = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			 title: _,
 			 description: _,
@@ -105,13 +130,16 @@ module.exports = {
 			 type: _
 		}
 		const NiveauShort = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			title: _,
 			prefix: _
 		}
 		const ShortLink = {
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			title: _,
 			deprecated: _
@@ -129,7 +157,9 @@ module.exports = {
 		Vakleergebied: `
 		const results = from(data.Vakleergebied)
 				.select({
+					'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 					'@id': Id,
+					'@type': Type,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -137,6 +167,7 @@ module.exports = {
 				})
 
 		const meta = {
+			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -148,7 +179,9 @@ module.exports = {
 		Niveau: `
 		const results = from(data.Niveau)
 		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			title: _,
 			description: _,
@@ -168,7 +201,9 @@ module.exports = {
 		Doel: `
 		const results = from(data.Doel)
 		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			sloID: _,
 			title: _,
@@ -188,12 +223,16 @@ module.exports = {
 		Doelniveau: `
 		const results = from(data.Doelniveau)
 		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -208,6 +247,7 @@ module.exports = {
 		})
 
 		const meta = {
+			type: 'Doelniveau',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -221,7 +261,9 @@ module.exports = {
 		Vakleergebied: `
 		from(Index(request.query.id))
 			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				prefix: _,
 				title: _,
@@ -241,8 +283,10 @@ module.exports = {
 		`,
 		Niveau: `
 		from(Index(request.query.id))
-			.select({
+		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			prefix: _,
 			title: _,
@@ -252,7 +296,9 @@ module.exports = {
 		Doel: `
 		from(Index(request.query.id))
 		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			sloID: _,
 			title: _,
@@ -263,12 +309,16 @@ module.exports = {
 		Doelniveau:`
 		from(Index(request.query.id))
 		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
+			'@type': Type,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 				'@id': Id,
+				'@type': Type,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -284,38 +334,9 @@ module.exports = {
 		`,
 	},
 	routes: {
-		'vakleergebied/': (req) => 
-			opendata.api["Vakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result, 
-					type: 'Vakleergebied'
-				};
-			}),
-		'niveau/': (req) => 
-		opendata.api["Niveau"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'Niveau'
-			};
-		}),
-		'doel/': (req) => 
-		opendata.api["Doel"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'Doel'
-			};
-		}),
-		'doelniveau/': (req) => 
-		opendata.api["Doelniveau"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'Doelniveau'
-			};
-		}),
-
+		'vakleergebied/': (req) => opendata.api["Vakleergebied"](req.params, req.query),
+		'niveau/': (req) => opendata.api["Niveau"](req.params, req.query),
+		'doel/': (req) => opendata.api["Doel"](req.params, req.query),
+		'doelniveau/': (req) => opendata.api["Doelniveau"](req.params, req.query),
 	}
 }

@@ -54,14 +54,17 @@ function camelize(str) {
 	return str.replace(/_([a-z])/g, (m, p1) => p1.toUpperCase())
 }
 
-opendata.api.Id = (variables, urlQuery) => 
-	storeQuery(opendata.url, `JSONTag.getType(request.query.id)`, variables, urlQuery)
-	.then(result => {
-		let type = result
-		let typedQuery = opendata.typedQueries[type]
-		if (!typedQuery) {
-			console.error('missing typedquery for '+type)
-		}
-	})
+opendata.api.Id = async (variables, urlQuery) => {
+	let type = await storeQuery(opendata.url+'/query/', `JSONTag.getAttribute(meta.index.id.get('/uuid/${variables.id}')?.deref(),'class')`)
+	console.log('type',type)
+	let typedQuery = opendata.typedQueries[type]
+	if (!typedQuery) {
+		console.error('missing typedquery for '+type)
+	}
+	console.log(typedQuery)
+	let result = await storeQuery(opendata.url+'/query/', opendata.fragments +';'+ typedQuery, variables, urlQuery)
+	console.log(result)
+	return result
+}
 
 module.exports = opendata;

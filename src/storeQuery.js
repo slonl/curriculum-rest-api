@@ -1,16 +1,22 @@
-
 function storeQuery(url, query, variables, urlQuery) {
 	if (!variables) {
 		variables = {};
 	}
 
-   	variables.page = urlQuery.page ? urlQuery.page : 0;
-	variables.perPage = urlQuery.perPage ? urlQuery.perPage : 100;
+   	variables.page = urlQuery?.page ? urlQuery.page : 0;
+	variables.perPage = urlQuery?.perPage ? urlQuery.perPage : 10;
 
     url = new URL(url)
-    url.searchParams.set('page', variables.page || 0)
-    url.searchParams.set('pageSize', variables.perPage || 100)
-    console.log('POSTing to ',url,JSON.stringify(query))
+	if (variables) {
+	    Object.keys(variables).forEach(param => {
+	    	url.searchParams.set(param, variables[param])
+	    })
+	}
+    if (urlQuery) {
+	    Object.keys(urlQuery).forEach(param => {
+	    	url.searchParams.set(param, urlQuery[param])
+	    })
+	}
 	return fetch(url, {
 		method : "POST",
 		body : query,
@@ -21,12 +27,9 @@ function storeQuery(url, query, variables, urlQuery) {
 		if (response.ok) {
 			return response.text()
 		}
-		throw response
-	}).catch(response => {
-		response.text().then(error => {
-			console.log(error)
-			throw new Error(error, response.status)
-		})
+		throw new Error(response, response.status)
+	}).then(json => {
+		return JSON.parse(json)
 	})
 }
 
