@@ -2,127 +2,7 @@ module.exports = {
 	context: 'referentiekader',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/referentiekader.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json',
-	fragments: `
-		const Doelniveau = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,
-			prefix: _,
-			ce_se: _,
-			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				description: _,
-				vakbegrippen: _,
-				bron: _,
-				aanbodid: _,
-				Leerlingtekst: {
-					title: _,
-					description: _
-				}     
-			},
-			Niveau: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				description: _,
-				prefix: _,
-				type: _
-			},
-			Kerndoel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				description: _,
-				kerndoelLabel: _,
-				prefix: _
-			},
-			ExamenprogrammaDomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
-			},
-			ExamenprogrammaSubdomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
-			},
-			ExamenprogrammaEindterm: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				prefix: _
-			},
-			LdkVakbegrip: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				ce_se: _
-			}
-		}
-		const Doelen = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,
-			prefix: _,
-			ce_se: _,
-			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				description: _,
-				bron: _,
-				vakbegrippen: _,
-				aanbodid: _,
-				Leerlingtekst: {
-					title: _,
-					description: _,
-				}     
-			},
-			Kerndoel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				description: _,
-				kerndoelLabel: _,
-				prefix: _,
-			},
-			LdkVakbegrip: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-				uuid: _.id,
-				title: _,
-				ce_se: _
-			}
-		}
-		const Niveau = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,S
-			title: _,
-			description: _,
-			prefix: _,
-			type: _
-		}
-		const NiveauShort = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,
-			title: _,
-			prefix: _
-		}
-		const ShortLink = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-			uuid: _.id,
-			title: _,
-			deprecated: _
-		}
-		const PageSize = request.query.pageSize || 100
-		const Page = request.query.page || 0
-		const Paging = {
-			start: Page*PageSize,
-			end: (Page+1)*PageSize-1
-		}
-		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
-	`,
+	fragments: ``,
 	queries: {
 		RefVakleergebied: `
 			const results = from(data.RefVakleergebied)
@@ -314,9 +194,9 @@ module.exports = {
 				})
 
 				/*
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
+				NiveauIndex: {
+					Niveau: {
+						NiveauShort
 					}
 				}
 				*/
@@ -473,7 +353,7 @@ module.exports = {
 				Doelniveau
 			}
 			NiveauIndex: {
-				Niveau {
+				Niveau: {
 					NiveauShort
 				}
 			}
@@ -555,164 +435,7 @@ module.exports = {
 				}
 			}
 		`,
-	/*
-	idQuery: `
-		allRefVakleergebied(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix: _,
-			title: _,
-			RefDomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefDomein(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix
-			title
-			RefSubdomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			RefVakleergebied {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefSubdomein(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix
-			title
-			RefOnderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			RefDomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefOnderwerp(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix
-			title
-			RefSubdomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			RefDeelonderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			RefTekstkenmerk {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefDeelonderwerp(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix
-			title
-			RefOnderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefTekstkenmerk(filter:{id:$id}) {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-			prefix
-			title
-			RefOnderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
-					uuid: _.id,
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-	`,
-	*/
+	
 	},
 	routes: {
 		'ref_vakleergebied/': (req) => 
@@ -763,7 +486,7 @@ module.exports = {
 				type: 'RefTekstkenmerk'
 			};
 		}),
-		/*
+		/* @TODO
 		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) =>
 			opendata.api["ReferentiekaderVolledig"](req.params)
 			.then(function(result) {

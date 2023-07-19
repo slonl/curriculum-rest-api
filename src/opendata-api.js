@@ -13,6 +13,7 @@ var opendata = {
 
 var apis = [
 	require('./opendata-api/curriculum-basis.js'),
+	require('./opendata-api/curriculum-referentiekader.js'),
 ];
 
 opendata.typedQueries = {}
