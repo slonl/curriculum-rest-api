@@ -24,7 +24,7 @@ module.exports = {
 				aanbodid: _,
 				Leerlingtekst: {
 					title: _,
-					description: _
+					description: _,
 				}     
 			},
 			Niveau: {
@@ -35,7 +35,7 @@ module.exports = {
 				title: _,
 				description: _,
 				prefix: _,
-				type: _
+				type: _,
 			},
 			Kerndoel: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
@@ -45,7 +45,7 @@ module.exports = {
 				title: _,
 				description: _,
 				kerndoelLabel: _,
-				prefix: _
+				prefix: _,
 			},
 			ExamenprogrammaDomein: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_domein',
@@ -69,7 +69,7 @@ module.exports = {
 				'@type': Type,
 				uuid: _.id,
 				title: _,
-				prefix: _
+				prefix: _,
 			},
 			LdkVakbegrip: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
@@ -77,7 +77,7 @@ module.exports = {
 				'@type': Type,
 				uuid: _.id,
 				title: _,
-				ce_se: _
+				ce_se: _,
 			}
 		}
 		const Doelen = {
@@ -116,7 +116,7 @@ module.exports = {
 				'@type': Type,
 				uuid: _.id,
 				title: _,
-				ce_se: _
+				ce_se: _,
 			}
 		}
 		const Niveau = {
@@ -135,14 +135,14 @@ module.exports = {
 			'@type': Type,
 			uuid: _.id,
 			title: _,
-			prefix: _
+			prefix: _,
 		}
 		const ShortLink = {
 			'@id': Id,
 			'@type': Type,
 			uuid: _.id,
 			title: _,
-			deprecated: _
+			deprecated: _,
 		}
 		const PageSize = request.query.pageSize || 100
 		const Page = request.query.page || 0
@@ -241,7 +241,7 @@ module.exports = {
 				aanbodid: _,
 				Leerlingtekst: {
 					title: _,
-					description: _
+					description: _,
 				}     
 			},
 		})
@@ -327,7 +327,7 @@ module.exports = {
 				aanbodid: _,
 				Leerlingtekst: {
 					title: _,
-					description: _
+					description: _,
 				}     
 			},
 		})
