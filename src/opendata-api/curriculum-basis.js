@@ -3,6 +3,7 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/basis.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-basis/context.json',
 	fragments: `
+		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o, 'id')
 		const Doelniveau = {
 			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
 			uuid: _.id,
@@ -22,7 +23,7 @@ module.exports = {
 				}     
 			},
 			Niveau: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -30,7 +31,7 @@ module.exports = {
 				type: _
 			},
 			Kerndoel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -38,37 +39,37 @@ module.exports = {
 				prefix: _
 			},
 			ExamenprogrammaDomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 			},
 			ExamenprogrammaSubdomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 			},
 			ExamenprogrammaEindterm: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _
 			},
 			LdkVakbegrip: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				ce_se: _
 			}
 		}
 		const Doelen = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -81,7 +82,7 @@ module.exports = {
 				}     
 			},
 			Kerndoel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -89,14 +90,14 @@ module.exports = {
 				prefix: _,
 			},
 			LdkVakbegrip: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				ce_se: _
 			}
 		}
 		const Niveau = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			 title: _,
 			 description: _,
@@ -104,13 +105,13 @@ module.exports = {
 			 type: _
 		}
 		const NiveauShort = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			title: _,
 			prefix: _
 		}
 		const ShortLink = {
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			title: _,
 			deprecated: _
@@ -122,7 +123,7 @@ module.exports = {
 			end: (Page+1)*PageSize-1
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
-		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o, 'id')
+		
 	`,
 	queries: {
 		Vakleergebied: `
