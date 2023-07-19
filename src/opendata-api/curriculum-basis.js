@@ -122,12 +122,13 @@ module.exports = {
 			end: (Page+1)*PageSize-1
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
+		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o, 'id')
 	`,
 	queries: {
 		Vakleergebied: `
 		const results = from(data.Vakleergebied)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -146,7 +147,7 @@ module.exports = {
 		Niveau: `
 		const results = from(data.Niveau)
 		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			title: _,
 			description: _,
@@ -166,7 +167,7 @@ module.exports = {
 		Doel: `
 		const results = from(data.Doel)
 		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			sloID: _,
 			title: _,
@@ -186,12 +187,12 @@ module.exports = {
 		Doelniveau: `
 		const results = from(data.Doelniveau)
 		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,
@@ -219,7 +220,7 @@ module.exports = {
 		Vakleergebied: `
 		from(Index(request.query.id))
 			.select({
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
@@ -240,7 +241,7 @@ module.exports = {
 		Niveau: `
 		from(Index(request.query.id))
 			.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
@@ -250,7 +251,7 @@ module.exports = {
 		Doel: `
 		from(Index(request.query.id))
 		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			sloID: _,
 			title: _,
@@ -261,12 +262,12 @@ module.exports = {
 		Doelniveau:`
 		from(Index(request.query.id))
 		.select({
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
 			Doel: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				title: _,
 				description: _,

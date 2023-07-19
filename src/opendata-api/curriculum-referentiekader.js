@@ -7,14 +7,14 @@ module.exports = {
 		RefVakleergebied: `
 			const results = from(data.RefVakleergebied)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
 					unreleased: _,
 					description: _,					
 					Vakleergebied: {
-						'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+						'@id': Id,
 						uuid: _.id,
 						title: _,
 						deprecated: _,
@@ -39,13 +39,13 @@ module.exports = {
 		`,
 		RefDomein: `const results = from(data.RefDomein)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
 					unreleased: _,
 					RefVakleergebied: {
-						'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+						'@id': Id,
 						uuid: _.id,
 						title: _,
 						deprecated: _,
@@ -70,14 +70,14 @@ module.exports = {
 		`,
 		RefSubdomein: `const results = from(data.RefSubdomein)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
 					unreleased: _,
 					RefDomein: { 
 						RefVakleergebied: {
-							'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+							'@id': Id,
 							uuid: _.id,
 							title: _,
 							deprecated: _,
@@ -102,7 +102,7 @@ module.exports = {
 		`,
 		RefOnderwerp: `const results = from(data.RefOnderwerp)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -110,7 +110,7 @@ module.exports = {
 					RefSubdomein: {
 						RefDomein: {
 							RefVakleergebied: {
-								'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+								'@id': Id,
 								uuid: _.id,
 								title: _,
 								deprecated: _,
@@ -137,7 +137,7 @@ module.exports = {
 		`,
 		RefDeelonderwerp: `const results = from(data.RefDeelonderwerp)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -146,7 +146,7 @@ module.exports = {
 						RefSubdomein: {
 							RefDomein: {
 								RefVakleergebied: {
-									'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+									'@id': Id,
 									uuid: _.id,
 									title: _,
 									deprecated: _,
@@ -174,7 +174,7 @@ module.exports = {
 		`,
 		RefTekstkenmerk: `const results = from(data.RefTekstkenmerk)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -183,7 +183,7 @@ module.exports = {
 						RefSubdomein: {
 							RefDomein: {
 								RefVakleergebied: {
-									'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+									'@id': Id,
 									uuid: _.id,
 									title: _,
 									deprecated: _,
@@ -212,7 +212,7 @@ module.exports = {
 		/*
 		ReferentiekaderVolledig: `const results = from(data.ReferentiekaderVolledig)
 				.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 		    		prefix: _,
 		    		title: _,
@@ -225,25 +225,25 @@ module.exports = {
 		      }
 		    }
 		    RefDomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 		      prefix: _,
 		      title: _,
 		      deprecated
 		      RefSubdomein {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 		        prefix: _,
 		        title: _,
 		        deprecated
 		        RefOnderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 		          prefix: _,
 		          title: _,
 		          deprecated
 		          RefDeelonderwerp {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 		            prefix: _,
 		            title: _,
@@ -276,12 +276,12 @@ module.exports = {
 		RefVakleergebied:`
 			from(Index(request.query.id))
 			.select({
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
 					RefDomein: {
-							'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+							'@id': Id,
 							uuid: _.id,
 							prefix: _,
 							title: _,
@@ -302,19 +302,19 @@ module.exports = {
 		RefDomein: `
 			from(Index(request.query.id))
 			.select({
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				RefSubdomein: {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
 					deprecated: _,
 				}
 				RefVakleergebied: {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 					prefix: _,
 					title: _,
@@ -331,19 +331,19 @@ module.exports = {
 			})
 		`,
 		RefSubdomein: `
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
 			RefOnderwerp: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
 			RefDomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
@@ -359,26 +359,26 @@ module.exports = {
 			}
 		`,
 		RefOnderwerp: `
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
 			RefSubdomein: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
 			RefDeelonderwerp: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
 			RefTekstkenmerk: {
-					'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+					'@id': Id,
 					uuid: _.id,
 				prefix: _,
 				title: _,
@@ -394,12 +394,12 @@ module.exports = {
 			}
 		`,
 		RefDeelonderwerp: `
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
 			RefOnderwerp: {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
@@ -415,12 +415,12 @@ module.exports = {
 			}
 		`,
 		RefTekstkenmerk: `
-			'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
 			RefOnderwerp {
-				'@id': o => 'https://opendata.slo.nl/curriculum/uuid/'+o.id,
+				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
