@@ -159,8 +159,6 @@ function sendApiKey(email, key) {
 readKeys();
 
 function jsonLD(entry) {
-	console.log('jsonLD called')
-	console.log(entry)
 	if (entry.Niveau && Array.isArray(entry.Niveau)) {
 		entry.Niveau
 			.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
@@ -176,63 +174,7 @@ function jsonLD(entry) {
 }
 
 function jsonLDList(list, schema, type, meta) {
-	// remove dummy entries from returned list
-	// TODO: remove these in the graphql server, they are only there to 
-	// provide access to properties which aren't actually set in the current data, but may be set later
-
-	console.log('jsonLDList called')
 	return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
-/*
-	
- 	list = list.map(function(link) {
-		var result = {
-			'@references': baseDatasetURL + 'uuid/'+link.uuid,
-		};
-		Object.keys(link).forEach(function(key) {
-			if (Array.isArray(link[key])) {
-				if (key=='NiveauIndex') {
-					result['Niveau'] = link['NiveauIndex']
-					.sort(function(a,b) {
-						return (a.Niveau[0].prefix<b.Niveau[0].prefix ? -1 : 1);
-					})
-					.map(function(ni) {
-						return {
-							'@id': baseIdURL + ni.Niveau[0].id,
-							'title': ni.Niveau[0].title,
-							'prefix': ni.Niveau[0].prefix,
-							'@references': baseDatasetURL + 'uuid/' + ni.Niveau[0].id
-						}
-					});
-				} else if (key=='Niveau') {
-					result['Niveau'] = link['Niveau']
-					.sort(function(a,b) {
-						return (a.prefix<b.prefix ? -1 : 1);
-					})
-					.map(function(ni) {
-						return {
-							'@id': baseIdURL + ni.id,
-							'title': ni.title,
-							'prefix': ni.prefix,
-							'@references': baseDatasetURL + 'uuid/' + ni.id //niveauURL + ni.id + '/'
-						}
-					});
-				} else {
-					result[key] = jsonLDList(link[key]).sort();
-				}
-			} else {
-				result[key] = link[key];
-			}
-		});
-		return result;
-	});
-	if (meta) {
-		meta.data = list;
-		meta['@isPartOf'] = baseDatasetURL;
-		return meta;
-	} else {
-		return list;
-	}
-	*/
 }
 
 Object.keys(opendata.routes).forEach((route) => {
@@ -242,7 +184,6 @@ Object.keys(opendata.routes).forEach((route) => {
 		console.log(route);
 		try {
 			let result = await opendata.routes[route](req)
-			console.log('result in api-server',result)
 			if (Array.isArray(result.data)) {
 				result.data = jsonLDList(result.data)
 				result['@isPartOf'] = baseDatasetURL;
@@ -277,7 +218,6 @@ app.route('/' + 'uuid/:id').get(async (req, res) => {
 	var schema = null;
 	var entitytype = null;
 
-	console.log('uuid/:id');
 	try {
 		let result = await opendata.api.Id(req.params)
 		if (!result) {
