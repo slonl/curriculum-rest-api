@@ -438,54 +438,12 @@ module.exports = {
 	
 	},
 	routes: {
-		'ref_vakleergebied/': (req) => 
-		opendata.api["RefVakleergebied"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefVakleergebied'
-			};
-		}),
-		'ref_domein/': (req) => 
-		opendata.api["RefDomein"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefDomein'
-			};
-		}),
-		'ref_subdomein/': (req) => 
-		opendata.api["RefSubdomein"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefSubdomein'
-			};
-		}),
-		'ref_onderwerp/': (req) => 
-		opendata.api["RefOnderwerp"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefOnderwerp'
-			};
-		}),
-		'ref_deelonderwerp/': (req) => 
-		opendata.api["RefDeelonderwerp"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefDeelonderwerp'
-			};
-		}),
-		'ref_tekstkenmerk': (req) => 
-		opendata.api["RefTekstkenmerk"](req.params, req.query)
-		.then(function(result) {
-			return {
-				data: result, 
-				type: 'RefTekstkenmerk'
-			};
-		}),
+		'ref_vakleergebied/': (req) => opendata.api["RefVakleergebied"](req.params, req.query),
+		'ref_domein/': (req) => opendata.api["RefDomein"](req.params, req.query),
+		'ref_subdomein/': (req) => opendata.api["RefSubdomein"](req.params, req.query),
+		'ref_onderwerp/': (req) => opendata.api["RefOnderwerp"](req.params, req.query),
+		'ref_deelonderwerp/': (req) => opendata.api["RefDeelonderwerp"](req.params, req.query),
+		'ref_tekstkenmerk': (req) => opendata.api["RefTekstkenmerk"](req.params, req.query),
 		/* @TODO
 		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) =>
 			opendata.api["ReferentiekaderVolledig"](req.params)
