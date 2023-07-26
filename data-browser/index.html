@@ -740,6 +740,65 @@
                             </ul>
                         </template>
                     </div>
+
+                    <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>FoDomein</h3>
+                            <ul data-simply-list="item.FoDomein">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoSubdomein" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>FoSubdomein</h3>
+                            <ul data-simply-list="item.FoSubdomein">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoDoelzin" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>FoDoelzin</h3>
+                            <ul data-simply-list="item.FoDoelzin">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoToelichting" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>FoToelichting</h3>
+                            <ul data-simply-list="item.FoToelichting">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoUitwerking" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>FoUitwerking</h3>
+                            <ul data-simply-list="item.FoUitwerking">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+
+                    <div data-simply-field="item.tag" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Tag</h3>
+                            <ul data-simply-list="item.tag">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.relatie" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Relatie</h3>
+                            <ul data-simply-list="item.relatie">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+
                 </article>
             </template>
         </section>
@@ -1638,6 +1697,29 @@
             '/nh_niveau/': function(params) {
                 browser.actions.list('nh_niveau/')
             },
+
+            '/fo_domein/': function(params) {
+                browser.actions.list('fo_domein/')
+            },
+            '/fo_subdomein/': function(params) {
+                browser.actions.list('fo_subdomein/')
+            },
+            '/fo_doelzin/': function(params) {
+                browser.actions.list('fo_doelzin/')
+            },
+            '/fo_toelichting/': function(params) {
+                browser.actions.list('fo_toelichting/')
+            },
+            '/fo_uitwerking/': function(params) {
+                browser.actions.list('fo_uitwerking/')
+            },
+
+            '/tag/': function(params) {
+                browser.actions.list('tag/')
+            },
+            '/relatie/': function(params) {
+                browser.actions.list('relatie/')
+            },
             
             '/fo_domein/': function(params) {
                 browser.actions.list('fo_domein/')
@@ -1955,6 +2037,24 @@
 //                nh_bouw: 'NhBouw',
 //                nh_niveau: 'NhNiveau'
 //            }
+        },
+        'curriculum-fo':{
+            title: 'FO',
+            data: {
+                fo_domein: 'FoDomein',
+                fo_subdomein: 'FoSubdomein',
+                fo_doelzin: 'FoDoelzin',
+                fo_toelichting: 'FoToelichting',
+                fo_uitwerking: 'FoUitwerking'                
+            }
+        },
+        'curriculum-samenhang':{
+            title: 'Samenhang',
+            data: {
+                tag: 'Tag',
+                relatie: 'Relatie'
+            }
+>>>>>>> Stashed changes
         }
     }
 
