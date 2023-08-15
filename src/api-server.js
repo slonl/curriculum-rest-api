@@ -9,6 +9,7 @@ const opendata  = require('./opendata-api.js');
 global.opendata = opendata;
 
 const sgMail = require('@sendgrid/mail');
+const { type } = require('os');
 sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
@@ -170,12 +171,39 @@ function jsonLD(entry) {
 				return child;
 			});
 	}
+	// add a '@references' tot the entry children
+	addReference(entry);
 	return entry;
 }
 
 function jsonLDList(list, schema, type, meta) {
 	return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
 }
+
+function addReference(entry){
+	console.log("adding @reference");
+	if (Array.isArray(entry)){ 
+		entry.forEach(addReference);
+	}
+	else if(isObject(entry)) { 
+		if (entry.uuid) {
+			console.log("found uuid and added @reference");
+			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
+		}
+		console.log("calling addReference()");
+		Object.values(entry).forEach(addReference);	
+	};
+}
+
+function isObject(value){
+	if (value !== null && typeof value == 'object' && typeof value !== 'string' && typeof value !== 'Number' && typeof value !== "Boolean"){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 
 Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
