@@ -172,6 +172,7 @@ function jsonLD(entry) {
 			});
 	}
 	// add a '@references' tot the entry children
+	// this is just some comment to convince git there are changes to commit in a branch
 	addReference(entry);
 	return entry;
 }
@@ -203,7 +204,6 @@ function isObject(value){
 		return false;
 	}
 }
-
 
 Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
