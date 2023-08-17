@@ -213,7 +213,7 @@ Object.keys(opendata.routes).forEach((route) => {
 		try {
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
-				result.data = jsonLDList(result.data)
+				result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
 				result = jsonLD(result);
