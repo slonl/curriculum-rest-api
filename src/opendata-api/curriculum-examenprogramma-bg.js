@@ -15,11 +15,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  /*
-		  _allExamenprogrammaBgProfielMeta {
-			 count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -41,11 +37,7 @@ module.exports = {
 			  deprecated: _,
 			},
 		  })
-		  /*
-		  _allExamenprogrammaBgKernMeta {
-			count
-		  }
-		  */
+	
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -62,11 +54,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
-		  /*
-		  _allExamenprogrammaBgKerndeelMeta {
-			count
-		  }
-		  */
+	
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -83,11 +71,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
-		  /*
-		  _allExamenprogrammaBgGlobaleEindtermMeta {
-			count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -109,11 +93,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  /*
-		  _allExamenprogrammaBgModuleMeta {
-			count
-		  }
-		  */
+	
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -130,11 +110,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
-		  /*
-		  _allExamenprogrammaBgDeeltaakMeta {
-			count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -151,11 +127,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
-		  /*
-		  _allExamenprogrammaBgModuletaakMeta {
-			count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -177,11 +149,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  /*
-		  _allExamenprogrammaBgKeuzevakMeta {
-			count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -198,11 +166,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
-		  /*
-		  _allExamenprogrammaBgKeuzevaktaakMeta {
-			count
-		  }
-		  */
+
 		  const meta = {
 			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
@@ -276,16 +240,7 @@ module.exports = {
 				},
 			  },
 			})
-			
-			const meta = {
-				type: 'Vakleergebied',
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-		  `
+	    `
 	},
 	typedQueries: {
 		'examenprogramma_bg_profiel':`
