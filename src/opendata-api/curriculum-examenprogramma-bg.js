@@ -214,7 +214,7 @@ module.exports = {
 		`,
 		//@TODO double check as it seems to give null
 		ExamenprogrammaBgVolledig: `
-		const results = from(data.ExamenprogrammaBgVolledig)
+		const results = from(Index(request.query.id))
 		.select({
 			'@id': Id,
 			prefix: _,
