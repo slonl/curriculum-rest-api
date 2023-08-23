@@ -2,39 +2,39 @@ module.exports = {
 	context: 'examenprogramma',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
-	fragments: {
-		SyllabusInfo: `fragment SyllabusInfo on SyllabusSpecifiekeEindterm {
-		  '@id': Id,
-		  prefix: _,
-		  title: _,
-		  ce_se: _,
-		  niveau_id: _,
-		  SyllabusVakbegrip {
+	fragments:`
+		const SyllabusInfo = {
 			'@id': Id,
 			prefix: _,
 			title: _,
 			ce_se: _,
-			deprecated: _,
-		  }
-		  SyllabusToelichting {
-			'@id': Id,
-			prefix: _,
-			title: _,
-			ce_se: _,
-			deprecated: _,
-		  }
-		  Syllabus {
-			'@id': Id,
-			title: _,
-			ce_se: _,
-			deprecated: _,
-			examenjaar: _,
-			  Niveau {
-				NiveauShort
+			niveau_id: _,
+			SyllabusVakbegrip: {
+			  '@id': Id,
+			  prefix: _,
+			  title: _,
+			  ce_se: _,
+			  deprecated: _,
+			},
+			SyllabusToelichting: {
+			  '@id': Id,
+			  prefix: _,
+			  title: _,
+			  ce_se: _,
+			  deprecated: _,
+			},
+			Syllabus: {
+			  '@id': Id,
+			  title: _,
+			  ce_se: _,
+			  deprecated: _,
+			  examenjaar: _,
+				Niveau: {
+				  NiveauShort
+			  }
 			}
-		  }
 		}`
-	},
+	,
 	queries: {
 		ExamenprogrammaVakleergebied:`
 		const results = from(data.ExamenprogrammaVakleergebied) 
@@ -226,7 +226,7 @@ module.exports = {
 
 		`,
 		ExamenprogrammaVolledig: `
-		const results = from(data.ExamenprogrammaVolledig)
+		const results = from(Index(request.query.id))
 		.select({
 			'@id': Id,
 			prefix: _,
@@ -385,7 +385,7 @@ module.exports = {
 				  ce_se: _,
 				  deprecated: _,
 		        },
-				Niveau {
+				Niveau: {
 				  NiveauShort
 				}
 			  },
@@ -403,12 +403,12 @@ module.exports = {
 		'examenprogramma_vakleergebied':`
 			'@id': Id,
 			title: _,
-			Vakleergebied {
+			Vakleergebied: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
@@ -418,24 +418,24 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaVakleergebied {
+			ExamenprogrammaVakleergebied: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaDomein {
-				'@id': Id,
-				prefix: _,
-				title: _,
-				deprecated: _,
-			}
-			ExamenprogrammaKop1 {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			Syllabus {
+			ExamenprogrammaKop1: {
+				'@id': Id,
+				prefix: _,
+				title: _,
+				deprecated: _,
+			}
+			Syllabus: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
@@ -449,44 +449,44 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			Tag {
+			Tag: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaSubdomein {
+			ExamenprogrammaSubdomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaEindterm {
+			ExamenprogrammaEindterm: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau {
+				Niveau: {
 					NiveauShort
 				}
 			}
-			SyllabusToelichting {
+			SyllabusToelichting: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			SyllabusSpecifiekeEindterm {
+			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			NiveauIndex {
-				Niveau {
+			NiveauIndex: {
+				Niveau: {
 					NiveauShort
 				}
 			}
@@ -496,36 +496,36 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			Tag {
+			Tag: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaDomein {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 					deprecated: _,
 				}
 			}
-			ExamenprogrammaEindterm {
+			ExamenprogrammaEindterm: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau {
+				Niveau: {
 					NiveauShort
 				}
 			}
-			Doelniveau {
+			Doelniveau: {
 				DoelNiveau
 			}
-			NiveauIndex {
-				Niveau {
+			NiveauIndex: {
+				Niveau: {
 					NiveauShort
 				}
 			}
@@ -535,49 +535,49 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			ExamenprogrammaSubdomein {
+			ExamenprogrammaSubdomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				ExamenprogrammaDomein {
+				ExamenprogrammaDomein: {
 					'@id': Id,
 					title: _,
 					deprecated: _,
-					Examenprogramma {
+					Examenprogramma: {
 						'@id': Id,
 						title: _,
 						deprecated: _,
 					}
 				}
 			}
-			ExamenprogrammaDomein {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 					deprecated: _,
 				}
 			}
-			SyllabusSpecifiekeEindterm {
+			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			SyllabusToelichting {
+			SyllabusToelichting: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			SyllabusVakbegrip {
+			SyllabusVakbegrip: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
 			}
-			Niveau {
+			Niveau: {
 				'@id': Id,
 				title: _,
 				deprecated: _,
@@ -588,19 +588,19 @@ module.exports = {
 			prefix: _,
 			title: _,
 			deprecated: _,
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaKop2 {	  
+			ExamenprogrammaKop2: {	  
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -611,24 +611,24 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop1 {
+			ExamenprogrammaKop1: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 					deprecated: _,
 				}
 			}
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -639,19 +639,19 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop2 {
+			ExamenprogrammaKop2: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaKop4 {
+			ExamenprogrammaKop4: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -662,13 +662,13 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -679,30 +679,30 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop1 {
+			ExamenprogrammaKop1: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 					deprecated: _,
 				}
 			}
-			ExamenprogrammaKop2 {
+			ExamenprogrammaKop2: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			ExamenprogrammaKop4 {
+			ExamenprogrammaKop4: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -714,11 +714,11 @@ module.exports = {
 		allExamenprogrammaVakleergebied(filter:{id:$id}) {
 			'@id': Id,
 			title: _,
-			Vakleergebied {
+			Vakleergebied: {
 				'@id': Id,
 				title: _,
 			}
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				title: _,
 			} 
@@ -727,25 +727,25 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,	
-			ExamenprogrammaVakleergebied {
+			ExamenprogrammaVakleergebied: {
 				'@id': Id,
 				title: _,
 			}
-			ExamenprogrammaDomein {
-				'@id': Id,
-				prefix: _,
-				title: _,
-			}
-			ExamenprogrammaKop1 {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			Syllabus {
+			ExamenprogrammaKop1: {
+				'@id': Id,
+				prefix: _,
+				title: _,
+			}
+			Syllabus: {
 				'@id': Id,
 				title: _,
 			}
-			Niveau {
+			Niveau: {
 				NiveauShort
 			}
 		}
@@ -754,38 +754,38 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			Tag {
+			Tag: {
 				'@id': Id,
 				title: _,
 			}
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaSubdomein {
+			ExamenprogrammaSubdomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaEindterm {
+			ExamenprogrammaEindterm: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				Niveau {
+				Niveau: {
 					NiveauShort
 				}
 			}
-			SyllabusToelichting {
+			SyllabusToelichting: {
 				'@id': Id,
 				title: _,
 			}
-			SyllabusSpecifiekeEindterm {
+			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				title: _,
 			}
-			NiveauIndex {
-				Niveau {
+			NiveauIndex: {
+				Niveau: {
 					NiveauShort
 				}
 			}
@@ -795,29 +795,29 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			Tag {
+			Tag: {
 				'@id': Id,
 				title: _,
 			}
-			ExamenprogrammaDomein {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 				}
 			}
-			ExamenprogrammaEindterm {
+			ExamenprogrammaEindterm: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				Niveau {
+				Niveau: {
 					NiveauShort
 				}
 			}
-			NiveauIndex {
-				Niveau {
+			NiveauIndex: {
+				Niveau: {
 					NiveauShort
 				}
 			}
@@ -827,20 +827,20 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ce_se: _,
-			ExamenprogrammaSubdomein {
+			ExamenprogrammaSubdomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				ExamenprogrammaDomein {
+				ExamenprogrammaDomein: {
 					'@id': Id,
 					title: _,
-					Examenprogramma {
+					Examenprogramma: {
 						'@id': Id,
 						title: _,
 					}
 				}
 			}
-			ExamenprogrammaDomein {
+			ExamenprogrammaDomein: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -849,19 +849,19 @@ module.exports = {
 					title: _,
 				}
 			}
-			SyllabusSpecifiekeEindterm {
+			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				title: _,
 			}
-			SyllabusToelichting {
+			SyllabusToelichting: {
 				'@id': Id,
 				title: _,
 			}
-			SyllabusVakbegrip {
+			SyllabusVakbegrip: {
 				'@id': Id,
 				title: _,
 			}
-			Niveau {
+			Niveau: {
 				'@id': Id,
 				title: _,
 			}
@@ -870,17 +870,17 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			Examenprogramma {
+			Examenprogramma: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaKop2 {	  
+			ExamenprogrammaKop2: {	  
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -890,21 +890,21 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop1 {
+			ExamenprogrammaKop1: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 				}
 			}
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -914,17 +914,17 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop2 {
+			ExamenprogrammaKop2: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaKop4 {
+			ExamenprogrammaKop4: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -934,12 +934,12 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaBody {
+			ExamenprogrammaBody: {
 				'@id': Id,
 				prefix: _,
 				title: _,
@@ -949,26 +949,26 @@ module.exports = {
 			'@id': Id,
 			prefix: _,
 			title: _,
-			ExamenprogrammaKop1 {
+			ExamenprogrammaKop1: {
 				'@id': Id,
 				prefix: _,
 				title: _,
-				Examenprogramma {
+				Examenprogramma: {
 					'@id': Id,
 					title: _,
 				}
 			}
-			ExamenprogrammaKop2 {
+			ExamenprogrammaKop2: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaKop3 {
+			ExamenprogrammaKop3: {
 				'@id': Id,
 				prefix: _,
 				title: _,
 			}
-			ExamenprogrammaKop4 {
+			ExamenprogrammaKop4: {
 				'@id': Id,
 				prefix: _,
 				title: _,
