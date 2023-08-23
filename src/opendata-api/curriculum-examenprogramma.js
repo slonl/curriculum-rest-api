@@ -441,7 +441,7 @@ module.exports = {
 		`
 	},
 	typedQueries: {
-		'examenprogramma_vakleergebied':`
+		ExamenprogrammaVakleergebied:`
 			'@id': Id,
 			uuid: _.id,
 			title: _,
@@ -458,7 +458,7 @@ module.exports = {
 				deprecated: _,
 			} 
 		`,
-		'examenprogramma':`
+		Examenprogramma:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -493,7 +493,7 @@ module.exports = {
 				NiveauShort
 			}
 		`,
-		'examenprogramma_domein':`
+		ExamenprogrammaDomein:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -547,7 +547,7 @@ module.exports = {
 				}
 			}
 		`,
-		'examenprogramma_subdomein':`
+		ExamenprogrammaSubdomein:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -591,7 +591,7 @@ module.exports = {
 				}
 			}
 		`,
-		'examenprogramma_eindterm':`
+		ExamenprogrammaEindterm:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -654,7 +654,7 @@ module.exports = {
 				deprecated: _,
 			}
 		`,
-		'examenprogramma_kop1':`
+		ExamenprogrammaKop1:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -682,7 +682,7 @@ module.exports = {
 				deprecated: _,
 			}
 		`,
-		'examenprogramma_kop2':`
+		ExamenprogrammaKop2:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -715,7 +715,7 @@ module.exports = {
 				deprecated: _,
 			}
 		`,
-		'examenprogramma_kop3':`
+		ExamenprogrammaKop3:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -742,7 +742,7 @@ module.exports = {
 				deprecated: _,
 			}
 		`,
-		'examenprogramma_kop4':`
+		ExamenprogrammaKop4:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -762,7 +762,7 @@ module.exports = {
 				deprecated: _,
 			}
 		`,
-		'examenprogramma_body':`
+		ExamenprogrammaBody:`
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
