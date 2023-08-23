@@ -16,18 +16,12 @@ module.exports = {
 						'@id': Id,
 						uuid: _.id,
 						title: _,
-				}
-			})
-				/*
-				Niveau {
+				},
+				Niveau: {
 					NiveauShort
-								} 
-				*/
-			/*
-			_allErkVakleergebiedMeta: {
-				count: _,
-			}
-			*/
+				} 
+			})
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -49,11 +43,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			/*
-			_allErkGebiedMeta: {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -74,11 +64,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			/*
-			_allErkCategorieMeta: {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -98,11 +84,6 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			/*
-			_allErkTaalactiviteitMeta {
-				count: _,
-			}
-			*/
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -123,11 +104,7 @@ module.exports = {
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
-			/*
-			_allErkSchaalMeta {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -149,11 +126,7 @@ module.exports = {
 				erk_voorbeeld_id: _,
 				erk_lesidee_id: _,
 			})
-			/*
-			_allErkCandobeschrijvingMeta {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -172,11 +145,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
-			/*
-			_allErkVoorbeeldMeta {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -195,11 +164,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
-			/*
-			_allErkLesideeMeta {
-				count: _,
-			}
-			*/
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -210,7 +175,7 @@ module.exports = {
 		`,
 		// @TODO ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
-		const results = from(data.ErkVolledig)
+		const results = from(Index(request.query.id))
 			.select({
 			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',	
 		    '@id': Id,
@@ -221,6 +186,7 @@ module.exports = {
 			  NiveauShort: _,
 			}
 		  })
+
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
