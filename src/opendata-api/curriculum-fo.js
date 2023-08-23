@@ -3,229 +3,230 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-fo/context.json',
 	queries: {
-		FoDomein: `query FoDomein($page:Int, $perPage:Int) {
-			allFoDomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				vakleergebied_id
-				fo_subdomein_id
-				unreleased
+		FoDomein: `
+		const results = from(data.FoDomein)
+		.select({
+				'@id": Id,
+				prefix: _,
+				title: _,
+				vakleergebied_id: _,
+				fo_subdomein_id: _,
+				unreleased: _,
+			})
+
+			const meta = {
+				type: 'Doelniveau',
+				data: results.slice(Paging.start,Paging.end),
+				page: Page,
+				count: results.length
 			}
-			_allFoDomeinMeta {
-				count
-			}
-		}`,
-		FoSubdomein: `query FoSubdomein($page:Int, $perPage:Int) {
-			allFoSubdomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
+	
+			meta
+	
+			`,
+		FoSubdomein: `
+		const results = from(data.FoSubdomein)
+		.select({
+				'@id": Id,
+				prefix: _,
+				title: _,
+				unreleased: _,
 				fo_doelzin_id
+			})
+	
+			const meta = {
+				type: 'Doelniveau',
+				data: results.slice(Paging.start,Paging.end),
+				page: Page,
+				count: results.length
 			}
-			_allFoSubdomeinMeta {
-				count
-			}
-		}`,
-		FoDoelzin: `query FoDoelzin($page:Int, $perPage:Int) {
-			allFoDoelzin(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
+	
+			meta
+	
+			`,
+		FoDoelzin: `
+		const results = from(data.FoDoelzin)
+		.select({
+				'@id": Id,
+				prefix: _,
+				title: _,
+				unreleased: _,
 				fo_toelichting_id
 				fo_uitwerking_id
+			})
+
+			const meta = {
+				type: 'Doelniveau',
+				data: results.slice(Paging.start,Paging.end),
+				page: Page,
+				count: results.length
 			}
-			_allFoDoelzinMeta {
-				count
-			}
-		}`,
-		FoToelichting: `query FoToelichting($page:Int, $perPage:Int) {
-			allFoToelichting(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
+	
+			meta
+	
+			`,
+		FoToelichting: `
+		const results = from(data.FoToelichting)
+		.select({
+				'@id": Id,
+				prefix: _,
+				title: _,
 				fo_doelzin_id
-				unreleased
+				unreleased: _,
+			})
+
+			const meta = {
+				type: 'Doelniveau',
+				data: results.slice(Paging.start,Paging.end),
+				page: Page,
+				count: results.length
 			}
-			_allFoToelichtingMeta {
-				count
-			}
-		}`,
-		FoUitwerking: `query FoUitwerking($page:Int, $perPage:Int) {
-			allFoUitwerking(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
+	
+			meta
+	
+			`,
+		FoUitwerking: `
+		const results = from(data.FoUitwerking)
+		.select({
+				'@id": Id,
+				prefix: _,
+				title: _,
 				fo_doelzin_id
-				unreleased
+				unreleased: _,
+			})
+	
+			const meta = {
+				type: 'Doelniveau',
+				data: results.slice(Paging.start,Paging.end),
+				page: Page,
+				count: results.length
 			}
-			_allFoUitwerkingMeta {
-				count
-			}
-		}`
+	
+			meta
+	
+			`
 	},
 	typedQueries: {
 		'fo_domein': `
-			id
-			prefix
-			title
+			'@id": Id,
+			prefix: _,
+			title: _,
 			Vakleergebied {
-				id
-				title
+				'@id": Id,
+				title: _,
 			}
 			FoSubdomein {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 		`,
 		'fo_subdomein': `
-			id
-			prefix
-			title
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 		`,
 		'fo_doelzin': `
-			id
-			prefix
-			title
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoToelichting {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 			FoUitwerking {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 		`,
 		'fo_toelichting': `
-			id
-			prefix
-			title
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 		`,
 		'fo_uitwerking': `
-			id
-			prefix
-			title
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-				id
-				title
+				'@id": Id,
+				title: _,
 				deprecated
 			}
 		`
 	},
 	idQuery: `
-		allFoDomein(filter:{id:$id}) {
-			id
-			prefix
-			title
+		allFoDomein(filter:{'@id": Id,:$'@id": Id,}) {
+			'@id": Id,
+			prefix: _,
+			title: _,
 			Vakleergebied {
-				id
-				title
+				'@id": Id,
+				title: _,
 			}
 			FoSubdomein {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 		}
-		allFoSubdomein(filter:{id:$id}) {
-			id
-			prefix
-			title
+		allFoSubdomein(filter:{'@id": Id,:$'@id": Id,}) {
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 		}
-		allFoDoelzin(filter:{id:$id}) {
-			id
-			prefix
-			title
+		allFoDoelzin(filter:{'@id": Id,:$'@id": Id,}) {
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoToelichting {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 			FoUitwerking {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 		}
-		allFoToelichting(filter:{id:$id}) {
-			id
-			prefix
-			title
+		allFoToelichting(filter:{'@id": Id,:$'@id": Id,}) {
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 		}
-		allFoUitwerking(filter:{id:$id}) {
-			id
-			prefix
-			title
+		allFoUitwerking(filter:{'@id": Id,:$'@id": Id,}) {
+			'@id": Id,
+			prefix: _,
+			title: _,
 			FoDoelzin {
-			  id
-			  title
+			  '@id": Id,
+			  title: _,
 			}
 		}`,
 	routes: {
-		'fo_domein/': (req) =>
-			opendata.api["FoDomein"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allFoDomein, 
-					type: 'FoDomein', 
-					meta: result.data._allFoDomeinMeta
-				}
-			}),
-		'fo_subdomein/': (req) =>
-			opendata.api["FoSubdomein"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allFoSubdomein, 
-					type: 'FoSubdomein', 
-					meta: result.data._allFoSubdomeinMeta
-				}
-			}),
-		'fo_doelzin/': (req) =>
-			opendata.api["FoDoelzin"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allFoDoelzin, 
-					type: 'FoDoelzin', 
-					meta: result.data._allFoDoelzinMeta
-				}
-			}),
-		'fo_toelichting/': (req) =>
-			opendata.api["FoToelichting"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allFoToelichting, 
-					type: 'FoToelichting', 
-					meta: result.data._allFoToelichtingMeta
-				}
-			}),
-		'fo_uitwerking/': (req) =>
-			opendata.api["FoUitwerking"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allFoUitwerking, 
-					type: 'FoUitwerking', 
-					meta: result.data._allFoUitwerkingMeta
-				}
-			})
+		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
+		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
+		'fo_doelzin/': (req) => opendata.api["FoDoelzin"](req.params, req.query),
+		'fo_toelichting/': (req) => opendata.api["FoToelichting"](req.params, req.query),
+		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query)
+		
 	}
 };
