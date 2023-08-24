@@ -17,7 +17,8 @@ var apis = [
 	require('./opendata-api/curriculum-referentiekader.js'),
 	require('./opendata-api/curriculum-erk.js'),
 	require('./opendata-api/curriculum-examenprogramma-bg.js'),
-	require('./opendata-api/curriculum-examenprogramma.js')
+	require('./opendata-api/curriculum-examenprogramma.js'),
+	require('./opendata-api/curriculum-syllabus.js')
 ];
 
 opendata.typedQueries = {}
