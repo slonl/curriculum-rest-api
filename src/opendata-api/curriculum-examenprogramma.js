@@ -442,6 +442,8 @@ module.exports = {
 	},
 	typedQueries: {
 		ExamenprogrammaVakleergebied:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			title: _,
@@ -450,15 +452,18 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			Examenprogramma: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			} 
+			}
+		})
 		`,
 		Examenprogramma:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -468,32 +473,35 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaDomein: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaKop1: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			Syllabus: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			Niveau: {
 				NiveauShort
 			}
+		})
 		`,
 		ExamenprogrammaDomein:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -504,21 +512,21 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			Examenprogramma: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaSubdomein: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaEindterm: {
 				'@id': Id,
 				uuid: _.id,
@@ -528,26 +536,29 @@ module.exports = {
 				Niveau: {
 					NiveauShort
 				}
-			}
+			},
 			SyllabusToelichting: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			NiveauIndex: {
 				Niveau: {
 					NiveauShort
 				}
 			}
+		})
 		`,
 		ExamenprogrammaSubdomein:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -558,7 +569,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaDomein: {
 				'@id': Id,
 				uuid: _.id,
@@ -571,7 +582,7 @@ module.exports = {
 					title: _,
 					deprecated: _,
 				}
-			}
+			},
 			ExamenprogrammaEindterm: {
 				'@id': Id,
 				uuid: _.id,
@@ -581,17 +592,20 @@ module.exports = {
 				Niveau: {
 					NiveauShort
 				}
-			}
+			},
 			Doelniveau: {
 				DoelNiveau
-			}
+			},
 			NiveauIndex: {
 				Niveau: {
 					NiveauShort
 				}
 			}
+		})
 		`,
 		ExamenprogrammaEindterm:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -615,7 +629,7 @@ module.exports = {
 						deprecated: _,
 					}
 				}
-			}
+			},
 			ExamenprogrammaDomein: {
 				'@id': Id,
 				uuid: _.id,
@@ -628,33 +642,36 @@ module.exports = {
 					title: _,
 					deprecated: _,
 				}
-			}
+			},
 			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			SyllabusToelichting: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			SyllabusVakbegrip: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			Niveau: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
 			}
+		})
 		`,
 		ExamenprogrammaKop1:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -666,14 +683,14 @@ module.exports = {
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaKop2: {	  
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaBody: {
 				'@id': Id,
 				uuid: _.id,
@@ -681,8 +698,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
+		})
 		`,
 		ExamenprogrammaKop2:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -699,14 +719,14 @@ module.exports = {
 					title: _,
 					deprecated: _,
 				}
-			}
+			},
 			ExamenprogrammaKop3: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaBody: {
 				'@id': Id,
 				uuid: _.id,
@@ -714,8 +734,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
+		})
 		`,
 		ExamenprogrammaKop3:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -726,14 +749,14 @@ module.exports = {
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaKop4: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaBody: {
 				'@id': Id,
 				uuid: _.id,
@@ -741,8 +764,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
+		})
 		`,
 		ExamenprogrammaKop4:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -753,7 +779,7 @@ module.exports = {
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaBody: {
 				'@id': Id,
 				uuid: _.id,
@@ -761,8 +787,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
+		})
 		`,
 		ExamenprogrammaBody:`
+		from(Index(request.query.id))
+			.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -779,21 +808,21 @@ module.exports = {
 					title: _,
 					deprecated: _,
 				}
-			}
+			},
 			ExamenprogrammaKop2: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaKop3: {
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
-			}
+			},
 			ExamenprogrammaKop4: {
 				'@id': Id,
 				uuid: _.id,
@@ -801,6 +830,7 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
+		})
 		`
 	},
 	routes: {
