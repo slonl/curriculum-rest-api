@@ -7,17 +7,18 @@ module.exports = {
 			const results = from(data.ExamenprogrammaBgProfiel)
 			.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			Vakleergebied: {
 			  '@id': Id,
+			  uuid: _.id,
 			  title: _,
 			  deprecated: _,
 			}
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -29,17 +30,18 @@ module.exports = {
 			const results = from(data.ExamenprogrammaBgKern)
 			.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
 			  '@id': Id,
+			  uuid: _.id,
 			  title: _,
 			  deprecated: _,
 			},
 		  })
 	
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -51,12 +53,12 @@ module.exports = {
 			const results = from(data.ExamenprogrammaBgKerndeel)
 			.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 		  })
 	
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -68,12 +70,12 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgGlobaleEindterm)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -85,6 +87,7 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgModule)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
@@ -95,7 +98,6 @@ module.exports = {
 		  })
 	
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -107,12 +109,12 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgDeeltaak)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -124,12 +126,12 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgModuletaak)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -141,17 +143,18 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgKeuzevak)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
 			  '@id': Id,
+			  uuid: _.id,
 			  title: _,
 			  deprecated: _,
 			}
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -163,12 +166,12 @@ module.exports = {
 		const results = from(data.ExamenprogrammaBgKeuzevaktaak)
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 		  })
 
 		  const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -176,24 +179,28 @@ module.exports = {
 
 		meta
 		`,
-		//@TODO double check as it seems to give null
+
 		ExamenprogrammaBgVolledig: `
 		const results = from(Index(request.query.id))
 		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			deprecated: _,
 			  ExamenprogrammaBgKern: {
 				'@id': Id,
+				uuid: _.id,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgKerndeel: {
 				  '@id': Id,
+				  uuid: _.id,
 				  title: _,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				  },
@@ -201,40 +208,48 @@ module.exports = {
 			  },
 			  ExamenprogrammaBgModule: {
 				'@id': Id,
+				uuid: _.id,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgDeeltaak: {
 				  '@id': Id,
+				  uuid: _.id,
 				  title: _,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				  },
 				},
 				ExamenprogrammaBgModuletaak: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
 			  },
 			  ExamenprogrammaBgKeuzevak: {
 				'@id': Id,
+				uuid: _.id,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgDeeltaak: {
 				  '@id': Id,
+				  uuid: _.id,
 				  title: _,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				  },
 				},
 				ExamenprogrammaBgKeuzevaktaak: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
@@ -243,77 +258,101 @@ module.exports = {
 	    `
 	},
 	typedQueries: {
-		'examenprogramma_bg_profiel':`
+		ExamenprogrammaBgProfiel:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			replaces: _,
 			Vakleergebied: {
 			  '@id': Id,
+			  uuid: _.id,
 			  title: _,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgKern: {
 			  '@id': Id,
+			  uuid: _.id,
 			  prefix: _,
 			  title: _,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgModule: {
 			  '@id': Id,
+			  uuid: _.id,
 			  prefix: _,
 			  title: _,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgKeuzevak: {
 			  '@id': Id,
+			  uuid: _.id,
 			  prefix: _,
 			  title: _,
 			  deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_kern':`
+		ExamenprogrammaBgKern:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			replaces: _,
 			ExamenprogrammaBgProfiel: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgKerndeel: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_kerndeel':`
+		ExamenprogrammaBgKerndeel:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgKern: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
 			},
 			ExamenprogrammaBgGlobaleEindterm: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_globale_eindterm':`
+		ExamenprogrammaBgGlobaleEindterm:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			Niveau: {
@@ -321,84 +360,108 @@ module.exports = {
 			},
 			ExamenprogrammaBgKerndeel: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_module':`
+		ExamenprogrammaNgModule:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgModuletaak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_deeltaak':`
+		ExamenprogrammaBgDeeltaak:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgGlobaleEindterm: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgModule: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
 			},
 			ExamenprogrammaBgKeuzevak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
 			},
+		})
 		`,
-		'examenprogramma_bg_moduletaak':`
+		ExamenprogrammaBgModuletaak:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgModule: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
@@ -406,41 +469,54 @@ module.exports = {
 			Niveau: {
 				NiveauShort
 			}
+		})
 		`,
-		'examenprogramma_bg_keuzevak':`
+		ExamenprogrammaBgKeuzevak:`
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
 			ExamenprogrammaBgKeuzevaktaak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'examenprogramma_bg_keuzevaktaak': `
+		ExamenprogrammaBgKeuzevaktaak: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
+			uuid: _.id,
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgKeuzevak: {
 				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
 					'@id': Id,
+					uuid: _.id,
 					title: _,
 					deprecated: _,
 				},
@@ -448,6 +524,7 @@ module.exports = {
 			Niveau: {
 				NiveauShort
 			},
+		})
 		`
 	},
 	routes: {

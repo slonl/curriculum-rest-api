@@ -167,7 +167,6 @@ module.exports = {
 				})
 
 		const meta = {
-			type: 'Vakleergebied',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length

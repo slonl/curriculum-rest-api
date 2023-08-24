@@ -103,7 +103,7 @@ module.exports = {
 	},
 	typedQueries: {
 		Kerndoel: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 			'@id': Id,
 			uuid: _.id,
@@ -136,7 +136,7 @@ module.exports = {
 
 		`,
 		KerndoelDomein: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 			'@id': Id,
 			uuid: _.id,
@@ -161,7 +161,7 @@ module.exports = {
 		})
 		`,
 		KerndoelVakleergebied: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 			'@id': Id,
 			uuid: _.id,
@@ -198,7 +198,7 @@ module.exports = {
 		})
 		`,
 		KerndoelUitstroomprofiel: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 			'@id': Id,
 			uuid: _.id,
