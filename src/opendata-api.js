@@ -12,6 +12,7 @@ var opendata = {
 };
 
 var apis = [
+	require('./opendata-api/curriculum-kerndoelen.js'),
 	require('./opendata-api/curriculum-basis.js'),
 	require('./opendata-api/curriculum-referentiekader.js'),
 	require('./opendata-api/curriculum-erk.js'),
@@ -30,7 +31,7 @@ apis.forEach(api => {
 
 		Object.keys(api.queries).forEach(operationName => {
 			var query = opendata.queries[operationName];
-
+			console.log(query); //TODO remove as it is for debugging purposes
 			opendata.api[operationName] = (variables, urlQuery) => {
 
 				return storeQuery(opendata.url+'/query/', opendata.fragments +';'+ query, variables, urlQuery)
@@ -63,6 +64,7 @@ opendata.api.Id = async (variables, urlQuery) => {
 	if (!typedQuery) {
 		console.error('missing typedquery for '+type)
 	}
+	console.log(typedQuery); //Todo: remove as it is for debugging purposes
 	let result = await storeQuery(opendata.url+'/query/', opendata.fragments +';'+ typedQuery, variables, urlQuery)
 	return result
 }
