@@ -198,7 +198,7 @@ module.exports = {
 
 		//@TODO Check if this exists
 		ErkSchalen: `
-		const results = from(data.ErkSchalen)
+		const results = from(data.ErkGebied)
 			.select({
 				'@id': Id,
 				uuid: _.id,
@@ -261,7 +261,9 @@ module.exports = {
 			meta`,
 	},
 	typedQueries: {
-		'erk_vakleergebied': `
+		ErkVakleergebied: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -278,8 +280,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'erk_gebied': `
+		ErkGebied: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -302,8 +307,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
+		})	
 		`,
-		'erk_categorie': `
+		ErkCategorie: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -320,8 +328,11 @@ module.exports = {
 				title: _,
 				deprecated
 			},
+		})
 		`,
-		'erk_taalactiviteit': `
+		ErkTaalactiviteit: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -332,8 +343,11 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'erk_schaal': `
+		ErkSchaal: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -351,8 +365,11 @@ module.exports = {
 					deprecated: _,
 				},
 			},
+		})
 		`,
-		'erk_candobeschrijving': `
+		ErkCandobeschrijving: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
@@ -376,18 +393,25 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
+		})
 		`,
-		'erk_voorbeeld': `
+		ErkVoorbeeld: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
+		})	
 		`,
-		'erk_lesidee': `
+		ErkLesidee: `
+		from(Index(request.query.id))
+		.select({
 			'@id': Id,
 			uuid: _.id,
 			prefix: _,
 			title: _,
+		})
 		`
 	},
 	routes: {
