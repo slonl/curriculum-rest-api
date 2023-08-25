@@ -123,7 +123,7 @@ module.exports = {
 	
 			`,
 		InhoudslijnVolledig: `
-		const results = from(data.InhoudslijnVolledig)
+		const results = from(data.InhVakleergebied)
 		.select({
 			'@id': Id,
 			uuid: _.id,
