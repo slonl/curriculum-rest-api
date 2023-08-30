@@ -172,6 +172,7 @@ function jsonLD(entry) {
 			});
 	}
 	// add a '@references' tot the entry children
+	// this is just some comment to convince git there are changes to commit in a branch
 	addReference(entry);
 	return entry;
 }
@@ -204,7 +205,6 @@ function isObject(value){
 	}
 }
 
-
 Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
 	app.route('/' + route)
@@ -213,7 +213,7 @@ Object.keys(opendata.routes).forEach((route) => {
 		try {
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
-				result.data = jsonLDList(result.data)
+				result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
 				result = jsonLD(result);

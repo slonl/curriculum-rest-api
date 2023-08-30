@@ -18,592 +18,506 @@ function FilterEmptyDoelniveau(ent) {
 
 module.exports = {
 	context: 'leerdoelenkaarten',
-	fragments: {
-		LdkVakkern: `fragment LdkVakkern on LdkVakkern {
-			id
-			title
-			prefix
-			deprecated
-		}`,
-		LdkVaksubkern: `fragment LdkVaksubkern on LdkVaksubkern {
-			id
-			title
-			prefix
-			deprecated
-		}`,
-		LdkVakinhoud: `fragment LdkVakinhoud on LdkVakinhoud {
-			id
-			title
-			prefix
-			deprecated
-		}`
-	},
+	fragments:``,
 	queries: {
-		LdkVakleergebied: `query LdkVakleergebied($page:Int,$perPage:Int) {
-		  allLdkVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			id
-			title
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
+		LdkVakleergebied: `
+		const results = from(data.LdkVakleergebied)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			NiveauIndex: {
+			  Niveau: {
+				NiveauShort
 			  }
 			}
-		  }
-		  _allLdkVakleergebiedMeta {
-			count
-		  }
-		}`,
-		LdkVakkern: `query LdkVakkern($page:Int,$perPage:Int) {
-		  allLdkVakkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			...LdkVakkern
-			LdkVakleergebied {
-			  id
-			  title
-			  deprecated
-			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
+		  })
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		LdkVakkern: `
+		const results = from(data.LdkVakkern)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			deprecated: _,
+			LdkVakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			},
+			NiveauIndex: {
+			  Niveau: {
+				NiveauShort
 			  }
 			}
-		  }
-		  _allLdkVakkernMeta {
-			count
-		  }
-		}`,
-		LdkVaksubkern: `query LdkVaksubkern($page:Int,$perPage:Int) {
-		  allLdkVaksubkern(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			...LdkVaksubkern
-			LdkVakkern {
-			  LdkVakleergebied {
-				id
-				title
-				deprecated
+		  })
+
+		  const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		LdkVaksubkern: `
+		const results = from(data.LdkVaksubkern)
+		.select({		
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			deprecated: _,
+			LdkVakkern: {
+			  LdkVakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			  }
+			},
+			NiveauIndex: {
+			  Niveau: {
+				NiveauShort
 			  }
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
-		  }
-		  _allLdkVaksubkernMeta {
-			count
-		  }
-		}`,
-		LdkVakinhoud: `query LdkVakinhoud($page:Int,$perPage:Int) {
-		  allLdkVakinhoud(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			...LdkVakinhoud
-			LdkVaksubkern {
-			  LdkVakkern {
-				LdkVakleergebied {
-				  id
-				  title
-				  deprecated
+		  })
+
+		  const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		LdkVakinhoud: `
+		const results = from(data.LdkVakinhoud)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			deprecated: _,
+			LdkVaksubkern: {
+			  LdkVakkern: {
+				LdkVakleergebied: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					deprecated: _,
 				}
 			  }
-			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
+			},
+			NiveauIndex: {
+			  Niveau: {
+				NiveauShort
 			  }
 			}
-		  }
-		  _allLdkVakinhoudMeta {
-			count
-		  }
-		}`,
-		LdkVakbegrip: `query LdkVakbegrip($page:Int,$perPage:Int) {
-		  allLdkVakbegrip(page:$page, perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			id
-			title
-			ce_se
-			Doelniveau {
-			  ...DoelNiveau
-			}
-		  }
-		  _allLdkVakbegripMeta {
-			count
-		  }
-		}`,
+		})
 
-		DoelenOpNiveauByLdkVakleergebiedById: `query DoelenOpNiveauByLdkVakleergebiedById($id:ID, $niveau:ID) {
-		  LdkVakleergebied(id:$id) {
-			id
-			title
+		  const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		LdkVakbegrip: `
+		const results = from(data.LdkVakbegrip)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			ce_se: _,
+			Doelniveau: {
+			  DoelNiveau
+			}
+		  })
+
+		  const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+
+		DoelenOpNiveauByLdkVakleergebiedById: `
+		const results = from(data.DoelenOpNiveauByLdkVakleergebiedById)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
 			NiveauIndex(filter:{niveau_id:[$niveau]}) {
-			  Niveau {
-				...NiveauShort
+			  Niveau: {
+				NiveauShort
 			  }
-			}
-			LdkVakkern {
-			  id
-			  title
-			  LdkVaksubkern {
-				id
-				title
-				LdkVakinhoud {
-				  id
-				  title
+			},
+			LdkVakkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+			  LdkVaksubkern: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+				LdkVakinhoud: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
 				  Doelniveau(filter:{niveau_id:[$niveau]}) {
-					...Doelen
+						Doelen
 				  }
-				}
+				},
 				Doelniveau(filter:{niveau_id:[$niveau]}) {
-				  ...Doelen
-				}
-			  }
+						Doelen
+				},
+			  },
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-				...Doelen
+					Doelen
 			  }
+			}
+		  }
+		})
+		`,
+
+
+		LdkVakleergebiedOpNiveau: `
+		const results = from(data.LdkVakleergebiedOpNiveau)
+		.select({
+			LdkVakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			}
+		  }
+		}`,
+		LdkVakleergebiedByIdOpNiveau: `
+		const results = from(data.LdkVakleergebiedByIdOpNiveau)
+		.select({
+			LdkVakleergebied(filter:{id:$id}): {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+				Doelniveau(filter:{niveau_id:[$niveau]}): {
+					DoelNiveau
+				} 
+			},
+			LdkVakkern(filter:{ldk_vakleergebied_id:[$id]}): {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+			},
+			Niveau: {
+					NiveauShort
 			}
 		  }
 		}`,
 
-
-		LdkVakleergebiedOpNiveau: `query LdkVakleergebiedOpNiveau($niveau:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVakleergebied {
-			  id
-			  title
-			  deprecated
+		LdkVakkernOpNiveau: `
+		const results = from(data.LdkVakkernOpNiveau)
+		.select({
+			LdkVakkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
 			}
 		  }
 		}`,
-		LdkVakleergebiedByIdOpNiveau: `query LdkVakleergebiedByIdOpNiveau($niveau:ID, $id:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVakleergebied(filter:{id:$id}) {
-			  id
-			  title
-			  deprecated
+		LdkVakkernByIdOpNiveau: `
+		const results = from(data.LdkVakkernByIdOpNiveau
+		.select({
+			LdkVakkern(filter:{id:$id}): {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+			  LdkVakleergebied: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					deprecated: _,
+			  }
 			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-				...DoelNiveau
+					DoelNiveau
 			  } 
-			}
-			LdkVakkern(filter:{ldk_vakleergebied_id:[$id]}) {
-			  ...LdkVakkern
-			}
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}`,
-
-		LdkVakkernOpNiveau: `query LdkVakkernOpNiveau($niveau:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVakkern {
-			  ...LdkVakkern
-			}
-		  }
-		}`,
-		LdkVakkernByIdOpNiveau: `query LdkVakkernByIdOpNiveau($niveau:ID, $id:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVakkern(filter:{id:$id}) {
-			  ...LdkVakkern
-			  LdkVakleergebied {
-				id
-				title
-				deprecated
-			  }
-			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-				...DoelNiveau
-			  } 
-			}
+			},
 			LdkVaksubkern(filter:{ldk_vakkern_id:[$id]}) {
-			  ...LdkVaksubkern
-			}
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+			},
 			Niveau {
-			  ...NiveauShort
+					NiveauShort
 			}
 		  }
-		}`,
-		LdkVaksubkernOpNiveau: `query LdkVaksubkernOpNiveau($niveau:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVaksubkern {
-			  ...LdkVaksubkern
+		})
+		`,
+		LdkVaksubkernOpNiveau: `
+		const results = from(data.LdkVaksubkernOpNiveau)
+		.select({
+			LdkVaksubkern :{
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
 			}
 		  }
-		}`,
-		LdkVaksubkernByIdOpNiveau: `query LdkVaksubkernByIdOpNiveau($niveau:ID, $id:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
+		})
+		`,
+		LdkVaksubkernByIdOpNiveau: `
+		const results = from(data.LdkVaksubkernByIdOpNiveau)
+		.select({
 			LdkVaksubkern(filter:{id:$id}) {
-			  id
-			  title
-			  deprecated
-			  LdkVakkern {
-				...LdkVakkern
-			  }
-			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-				...DoelNiveau
-			  } 
-			}
-			LdkVakinhoud(filter:{ldk_vaksubkern_id:[$id]}) {
-			  ...LdkVakinhoud
-			}
-			Niveau {
-			  ...NiveauShort
-			}
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+				LdkVakkern: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					prefix: _,
+					deprecated: _,
+				}
+				Doelniveau(filter:{niveau_id:[$niveau]}): {
+					DoelNiveau
+				} 
+				}
+				LdkVakinhoud(filter:{ldk_vaksubkern_id:[$id]}): {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					prefix: _,
+					deprecated: _,
+				}
+				Niveau: {
+					NiveauShort
+				}
 		  }
-		}`,
+		})
+		`,
 
-		LdkVakinhoudOpNiveau: `query LdkVakinhoudOpNiveau($niveau:ID) {
-		  allNiveauIndex(filter:{niveau_id:[$niveau]}) {
-			LdkVakinhoud {
-			  ...LdkVakinhoud
+		LdkVakinhoudOpNiveau: `
+		const results = from(data.LdkVakinhoudOpNiveau)
+		.select({
+			LdkVakinhoud: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
 			}
-		  }
-		}`
-	},
-	typedQueries: {
-		'ldk_vakleergebied': `
-			id
-			title
-			LdkVakkern {
-				...LdkVakkern
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
-		`,
-		'ldk_vakkern': `
-			id
-			title
-			prefix
-			LdkVaksubkern {
-				...LdkVaksubkern
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ldk_vaksubkern': `
-			...LdkVaksubkern
-			LdkVakinhoud {
-				...LdkVakinhoud
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVakkern {
-				...LdkVakkern
-				LdkVakleergebied {
-					id
-					title
-					deprecated
-				}
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ldk_vakinhoud': `
-			id
-			title
-			prefix
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVaksubkern {
-				...LdkVaksubkern
-				LdkVakkern {
-					...LdkVakkern
-					LdkVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ldk_vakbegrip': `
-			id
-			title
-			ce_se
-			Doelniveau {
-				...Doelen
-			}
+		})
 		`
 	},
-	idQuery: `
-		allLdkVakleergebied(filter:{id:$id}) {
-			id
-			title
-			LdkVakkern {
-				...LdkVakkern
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
+	typedQueries: {
+		LdkVakleergebied: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			LdkVakkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+				NiveauIndex: {
+					Niveau: {
+						NiveauShort
+					}
+				}
+			},
+			Doelniveau: {
+				Doelniveau
+			},
+			NiveauIndex: {
+				Niveau: {
+					NiveauShort
+				}
+			},
+			Vakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			}
+		})
+		`,
+		LdkVakkern: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			LdkVaksubkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+				NiveauIndex: {
+					Niveau: {
+						NiveauShort
 					}
 				}
 			}
-			Doelniveau {
-				...DoelNiveau
+			Doelniveau: {
+				DoelNiveau
 			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
+			LdkVakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			}
+			NiveauIndex: {
+				Niveau: {
+					NiveauShort
 				}
 			}
-			Vakleergebied {
-				id
-				title
-			}
-		}
-		allLdkVakkern(filter:{id:$id}) {
-			id
-			title
-			prefix
-			LdkVaksubkern {
-				...LdkVaksubkern
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
+		})
+		`,
+		LdkVaksubkern: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			deprecated: _,
+			LdkVakinhoud: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+				NiveauIndex: {
+					Niveau: {
+						NiveauShort
 					}
 				}
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVakleergebied {
-				id
-				title
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
+			},
+			Doelniveau: {
+				DoelNiveau
+			},
+			LdkVakkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+				LdkVakleergebied: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					deprecated: _,
+				}
+			},
+			NiveauIndex: {
+				Niveau: {
+					NiveauShort
 				}
 			}
-		}
-		allLdkVaksubkern(filter:{id:$id}) {
-			...LdkVaksubkern
-			LdkVakinhoud {
-				...LdkVakinhoud
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
+		})
+		`,
+		LdkVakinhoud: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			prefix: _,
+			Doelniveau: {
+				DoelNiveau
+			},
+			LdkVaksubkern: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				deprecated: _,
+				LdkVakkern: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					prefix: _,
+					deprecated: _,
+					LdkVakleergebied: {
+						'@id': Id,
+						uuid: _.id,
+						title: _,
+						deprecated: _,
 					}
 				}
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVakkern {
-				...LdkVakkern
-				LdkVakleergebied {
-					id
-					title
+			},
+			NiveauIndex: {
+				Niveau: {
+					NiveauShort
 				}
 			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
+		})	
+		`,
+		LdkVakbegrip: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			ce_se: _,
+			Doelniveau: {
+				Doelen
 			}
-		}
-		allLdkVakinhoud(filter:{id:$id}) {
-			id
-			title
-			prefix
-			Doelniveau {
-				...DoelNiveau
-			}
-			LdkVaksubkern {
-				...LdkVaksubkern
-				LdkVakkern {
-					...LdkVakkern
-					LdkVakleergebied {
-						id
-						title
-					}
-				}
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allLdkVakbegrip(filter:{id:$id}) {
-			id
-			title
-			ce_se
-			Doelniveau {
-				...Doelen
-			}
-		}
-	`,
+		})
+		`
+	},
 	routes: {
-		'ldk_vakleergebied/': (req) =>
-			opendata.api["LdkVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allLdkVakleergebied,
-					meta: result.data._allLdkVakleergebiedMeta
-				}
-			}),
-		'ldk_vakkern/': (req) =>
-			opendata.api["LdkVakkern"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allLdkVakkern,
-					meta: result.data._allLdkVakkernMeta
-				}
-			}),
-		'ldk_vaksubkern/': (req) =>
-			opendata.api["LdkVaksubkern"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allLdkVaksubkern,
-					meta: result.data._allLdkVaksubkernMeta
-				}
-			}),
-		'ldk_vakinhoud/': (req) =>
-			opendata.api["LdkVakinhoud"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allLdkVakinhoud, 
-					meta: result.data._allLdkVakinhoudMeta
-				}
-			}),
-		'ldk_vakbegrip/': (req) =>
-			opendata.api["LdkVakbegrip"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allLdkVakbegrip,
-					meta: result.data._allLdkVakbegripMeta
-				}
-			}),
-		'niveau/:niveau/ldk_vakleergebied': (req) =>
-			opendata.api["LdkVakleergebiedOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakleergebied,
-					type: 'LdkVakleergebied'
-				};
-			}),
-		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) =>
-			opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params)
-			.then(function(result) {
-				if (!result.data.LdkVakleergebied) {
-					throw new Error('LdkVakleergebied not found: '+req.params.id, 404);
-				}
-				result.data.LdkVakleergebied.Niveau = result.data.LdkVakleergebied.NiveauIndex[0].Niveau;
-				FilterEmptyDoelniveau(result.data.LdkVakleergebied);
-				return {
-					data: result.data.LdkVakleergebied,
-					type: 'LdkVakleergebied'
-				}
-			}),
-		'niveau/:niveau/ldk_vakleergebied/:id/': (req) =>
-			opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params)
-			.then(function(result) {
-				if (!result.data.allNiveauIndex[0]) {
-					throw new Error('Niveau not found: '+req.params.niveau, 404);
-				}
-				if (!result.data.allNiveauIndex[0].LdkVakleergebied[0]) {
-					throw new Error('LdkVakleergebied not found: '+req.params.id, 404);
-				}
-				result.data.allNiveauIndex[0].LdkVakleergebied[0].LdkVakkern = result.data.allNiveauIndex[0].LdkVakkern;
-				result.data.allNiveauIndex[0].LdkVakleergebied[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakleergebied[0],
-					type: 'LdkVakleergebied'
-				}
-			}),
-		'niveau/:niveau/ldk_vakkern': (req) =>
-			opendata.api["LdkVakkernOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakkern,
-					type: 'LdkVakkern'
-				};
-			}),
-		'niveau/:niveau/ldk_vakkern/:id': (req) =>
-			opendata.api["LdkVakkernByIdOpNiveau"](req.params)
-			.then(function(result) {
-				result.data.allNiveauIndex[0].LdkVakkern[0].LdkVaksubkern = result.data.allNiveauIndex[0].LdkVaksubkern;
-				result.data.allNiveauIndex[0].LdkVakkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakkern[0], 
-					type: 'LdkVakkern'
-				};
-			}),
-		'niveau/:niveau/ldk_vaksubkern': (req) =>
-			opendata.api["LdkVaksubkernOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].LdkVaksubkern,
-					type: 'LdkVaksubkern'
-				};
-			}),
-		'niveau/:niveau/ldk_vaksubkern/:id': (req) =>
-			opendata.api["LdkVaksubkernByIdOpNiveau"](req.params)
-			.then(function(result) {
-				result.data.allNiveauIndex[0].LdkVaksubkern[0].LdkVakinhoud = result.data.allNiveauIndex[0].LdkVakinhoud;
-				result.data.allNiveauIndex[0].LdkVaksubkern[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].LdkVaksubkern[0],
-					type: 'LdkVaksubkern'
-				};
-			}),
-		'niveau/:niveau/ldk_vakinhoud': (req) =>
-			opendata.api["LdkVakinhoudOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakinhoud,
-					type: 'LdkVakinhoud'
-				};
-			}),
-		'niveau/:niveau/ldk_vakinhoud/:id': (req) =>
-			opendata.api["LdkVakinhoudByIdOpNiveau"](req.params)
-			.then(function(result) {
-				result.data.allNiveauIndex[0].LdkVakinhoud[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].LdkVakinhoud[0],
-					type: 'LdkVakinhoud'
-				};
-			})
+		'ldk_vakleergebied/': (req) => opendata.api["LdkVakleergebied"](req.params, req.query),
+		'ldk_vakkern/': (req) => opendata.api["LdkVakkern"](req.params, req.query),
+		'ldk_vaksubkern/': (req) => opendata.api["LdkVaksubkern"](req.params, req.query),
+		'ldk_vakinhoud/': (req) => opendata.api["LdkVakinhoud"](req.params, req.query),
+		'ldk_vakbegrip/': (req) => opendata.api["LdkVakbegrip"](req.params, req.query),
+
+		//TODO check why som have req.query and some do not
+		'niveau/:niveau/ldk_vakleergebied': (req) => opendata.api["LdkVakleergebiedOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) => opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params),
+		'niveau/:niveau/ldk_vakleergebied/:id/': (req) => opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakkern': (req) => opendata.api["LdkVakkernOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakkern/:id': (req) => opendata.api["LdkVakkernByIdOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vaksubkern': (req) => opendata.api["LdkVaksubkernOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vaksubkern/:id': (req) => opendata.api["LdkVaksubkernByIdOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakinhoud': (req) => opendata.api["LdkVakinhoudOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakinhoud/:id': (req) => opendata.api["LdkVakinhoudByIdOpNiveau"](req.params),
 	}
 };
