@@ -152,6 +152,24 @@ module.exports = {
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
 		
+		function sortByTitle(a,b) {
+			if (a.title<b.title) {
+			  return -1
+			} else if (a.title>b.title) {
+			  return 1
+			}
+			return 0
+		  }
+
+		function sortByPrefix(a,b) {
+		if (a.title<b.title) {
+			return -1
+		} else if (a.prefix>b.prefix) {
+			return 1
+		}
+		return 0
+		}
+		
 	`,
 	queries: {
 		Vakleergebied: `
@@ -165,6 +183,7 @@ module.exports = {
 					title: _,
 					Niveau:ShortLink
 				})
+				.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -187,6 +206,7 @@ module.exports = {
 			prefix: _,
 			type: _
 		})
+		.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -204,11 +224,9 @@ module.exports = {
 			'@id': Id,
 			'@type': Type,
 			uuid: _.id,
-			sloID: _,
 			title: _,
-			description: _,
-			bron: _,
 		})
+		.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -277,6 +295,7 @@ module.exports = {
 				ErkVakleergebied: ShortLink,
 				Niveau
 			})
+			.sort(sortByTitle)
 
 		`,
 		Niveau: `
@@ -289,7 +308,8 @@ module.exports = {
 			prefix: _,
 			title: _,
 			description: _,
-			})		
+			})
+			.sort(sortByTitle)		
 		`,
 		Doel: `
 		from(Index(request.query.id))
@@ -303,6 +323,7 @@ module.exports = {
 			description: _,
 			bron: _,
 		})
+		.sort(sortByTitle)
 		`,
 		Doelniveau:`
 		from(Index(request.query.id))

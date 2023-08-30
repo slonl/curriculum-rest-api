@@ -4,8 +4,8 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
 		ErkVakleergebied: `
-				const results = from(data.ErkVakleergebied)
-				.select({
+			const results = from(data.ErkVakleergebied)
+			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
 				'@id': Id,
 				uuid: _.id,
@@ -21,6 +21,7 @@ module.exports = {
 					NiveauShort
 				} 
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -43,6 +44,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -64,6 +66,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -84,6 +87,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -104,6 +108,7 @@ module.exports = {
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -126,6 +131,7 @@ module.exports = {
 				erk_voorbeeld_id: _,
 				erk_lesidee_id: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -145,6 +151,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -164,6 +171,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -198,7 +206,7 @@ module.exports = {
 
 		//@TODO Check if this exists
 		ErkSchalen: `
-		const results = from(data.ErkGebied)
+		const results = from(data.ErkSchaal)
 			.select({
 				'@id': Id,
 				uuid: _.id,
@@ -251,7 +259,8 @@ module.exports = {
 					algemeen: _,
 				},
 			})
-			
+			.sort(sortByPrefix)
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
