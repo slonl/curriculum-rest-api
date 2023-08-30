@@ -4,7 +4,7 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-basis/context.json',
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
-		const Type = o => JSONTag.getType(o)
+		const Type = o => JSONTag.getAttribute(o,"class")
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
@@ -246,7 +246,6 @@ module.exports = {
 		})
 
 		const meta = {
-			type: 'Doelniveau',
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
