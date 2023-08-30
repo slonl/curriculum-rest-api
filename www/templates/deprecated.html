@@ -1,0 +1,52 @@
+<template id="deprecatedLinks">
+    <li>
+        <a href="#" data-simply-field="@references" data-simply-content="fixed">
+            <span data-simply-field="title">titel</span>
+        </a>
+        <span data-simply-field="Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                <label>Vakleergebied:
+                    <ul data-simply-list="Vakleergebied">
+                        <template rel="links"></template>
+                    </ul>
+                </label>
+            </template>
+        </span>
+        <span data-simply-field="LpibVakkern" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                <label>LpibVakkern:
+                <ul data-simply-list="LpibVakkern">
+                    <template rel="links"></template>
+                </ul>
+                </label>
+            </template>
+        </span>
+        <span data-simply-field="LpibVaksubkern" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                <label>LpibVaksubkern:
+                <ul data-simply-list="LpibVaksubkern">
+                    <template rel="links"></template>
+                </ul>
+                </label>
+            </template>
+        </span>
+        <span data-simply-field="LpibVakinhoud" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                <label>LpibVakinhoud: 
+                <ul data-simply-list="LpibVakinhoud">
+                    <template rel="links"></template>
+                </ul>
+                </label>
+            </template>
+        </span>
+        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
+                data-simply-content="fixed" data-simply-transformer="niveau">
+                    Op niveau
+                </a>
+            </template>
+            <template data-simply-template="false">false</template>
+        </span>
+    </li>
+</template>

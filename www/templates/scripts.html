@@ -1,0 +1,60 @@
+<script src="//cdn.simplyedit.io/1/simply-edit.js"
+    data-api-key="flashy-leather-7944"
+    data-simply-images="/img/"
+    data-simply-files="/files/"
+    data-simply-settings="seSettings"
+    data-storage-get-post-only
+></script>
+<script>
+
+    (function() {
+        var goto = simply.route.goto;
+        simply.route.goto = function(path) {
+            let uuidPath = '/curriculum/uuid/';
+            if (path.substr(0, uuidPath.length)===uuidPath) {
+                history.pushState({}, '', path);
+                return simply.route.match(path);
+            }
+            return goto(path);
+        };
+    })();
+
+</script>
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/databrowser.js"></script>
+<script src="/assets/js/datasources.js"></script>
+<script>
+
+</script>
+<script src="/assets/js/transformers.js"></script>
+<script>
+    
+    document.addEventListener('simply-content-loaded', function(evt) {
+        var menu = editor.currentData['/'].menu;
+        if (menu && menu[1]) {
+            var api = menu[1].submenu[0]['data-simply-template'] = 'api';
+        }
+    });
+    
+    var parseQueryString = function( queryString ) {
+        var params = {}, queries, temp, i, l;
+        if (queryString) {
+            // Split into key/value pairs
+            queries = queryString.split("&");
+            // Convert the array of strings into an object
+            for ( i = 0, l = queries.length; i < l; i++ ) {
+                temp = queries[i].split('=');
+                params[temp[0]] = temp[1];
+            }
+        }
+        return params;
+    };
+    
+    var args = parseQueryString(window.location.search.substring(1, window.location.search.length));
+    if (!args.page) {
+        args.page = 0;
+    }
+    browser.view.page = parseInt(args.page)+1;
+    browser.view.params = args;
+
+</script>
