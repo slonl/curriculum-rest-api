@@ -242,7 +242,7 @@ module.exports = {
 
 		`,
 		ExamenprogrammaVolledig: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 		.select({
 			'@id': Id,
 			uuid: _.id,
@@ -358,9 +358,7 @@ module.exports = {
 			  title: _,
 			  ce_se: _,
 			  deprecated: _,
-			  SyllabusSpecifiekeEindterm: {
-				SyllabusInfo
-			  },
+			  SyllabusSpecifiekeEindterm: SyllabusInfo,
 			  SyllabusToelichting: {
 				'@id': Id,
 				uuid: _.id,
@@ -392,13 +390,9 @@ module.exports = {
 					ce_se: _,
 					deprecated: _,
 				  },
-				  Niveau: {
-				    NiveauShort
-				  },
+				  Niveau: NiveauShort,
 				},
-				SyllabusSpecifiekeEindterm: {
-					SyllabusInfo
-				},
+				SyllabusSpecifiekeEindterm: SyllabusInfo,
 				SyllabusToelichting: {
 				  '@id': Id,
 				  uuid: _.id,

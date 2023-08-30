@@ -17,6 +17,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
+		  .sort(sortByPrefix)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -40,6 +41,7 @@ module.exports = {
 			  deprecated: _,
 			},
 		  })
+		  .sort(sortByPrefix)
 	
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -57,6 +59,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
+		  .sort(sortByPrefix)
 	
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -74,6 +77,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		  })
+		  .sort(sortByPrefix)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -96,8 +100,9 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
+		  .sort(sortByPrefix)
 	
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -112,9 +117,10 @@ module.exports = {
 			uuid: _.id,
 			prefix: _,
 			title: _,
-		  })
+		})
+		.sort(sortByPrefix)
 
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -129,9 +135,10 @@ module.exports = {
 			uuid: _.id,
 			prefix: _,
 			title: _,
-		  })
+		})
+		.sort(sortByPrefix)
 
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -147,12 +154,13 @@ module.exports = {
 			prefix: _,
 			title: _,
 			ExamenprogrammaBgProfiel: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  deprecated: _,
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
-		  })
+		})
+		.sort(sortByPrefix)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -169,7 +177,8 @@ module.exports = {
 			uuid: _.id,
 			prefix: _,
 			title: _,
-		  })
+		})
+		.sort(sortByPrefix)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -181,7 +190,7 @@ module.exports = {
 		`,
 
 		ExamenprogrammaBgVolledig: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 		.select({
 			'@id': Id,
 			uuid: _.id,
