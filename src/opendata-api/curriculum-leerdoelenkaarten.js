@@ -141,7 +141,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			ce_se: _,
-			Doelniveau: DoelNiveau
+			Doelniveau: Doelniveau,
 		  })
 		  .sort(sortByTitle)
 
@@ -154,7 +154,7 @@ module.exports = {
 		meta
 
 		`,
-
+		// @ TODO : Check why the from(data.DoelenOpNiveauByLdkVakleergebiedById) doesn't exist
 		DoelenOpNiveauByLdkVakleergebiedById: `
 		const results = from(data.DoelenOpNiveauByLdkVakleergebiedById)
 		.select({
@@ -184,7 +184,7 @@ module.exports = {
 			}
 		})
 		`,
-
+		// @ TODO : Check why the from(data.LdkVakleergebiedOpNiveau) doesn't exist
 		LdkVakleergebiedOpNiveau: `
 		const results = from(data.LdkVakleergebiedOpNiveau)
 		.select({
@@ -194,9 +194,9 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-		  }
-		}`,
+		})`,
 
+		// @ TODO : Check why the from(data.LdkVakleergebiedByIdOpNiveau) doesn't exist
 		LdkVakleergebiedByIdOpNiveau: `
 		const results = from(data.LdkVakleergebiedByIdOpNiveau)
 		.select({
@@ -215,9 +215,9 @@ module.exports = {
 				deprecated: _,
 			},
 			Niveau: NiveauShort
-		  }
-		}`,
+		})`,
 
+		// @ TODO : Check why the from(data.LdkVakkernOpNiveau) doesn't exist
 		LdkVakkernOpNiveau: `
 		const results = from(data.LdkVakkernOpNiveau)
 		.select({
@@ -232,7 +232,7 @@ module.exports = {
 		}`,
 
 		LdkVakkernByIdOpNiveau: `
-		const results = from(data.LdkVakkernByIdOpNiveau
+		const results = from(data.LdkVakkernByIdOpNiveau)
 		.select({
 			LdkVakkern: {
 				'@id': Id,
@@ -270,7 +270,6 @@ module.exports = {
 				prefix: _,
 				deprecated: _,
 			}
-		  }
 		})
 		`,
 
