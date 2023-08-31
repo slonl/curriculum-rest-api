@@ -1,0 +1,472 @@
+<template id="links">
+    <li>
+        <a class="slo-relatie" href="#" data-simply-field="@references" data-simply-content="fixed">
+            <span data-simply-field="deprecated" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label"><svg
+                class="ds-icon ds-icon-feather"><use
+                xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
+                        <span>Deprecated</span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="bron" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Bron</span>
+                        <span data-simply-field="bron"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Prefix</span>
+                        <span data-simply-field="prefix"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
+            </span>
+        </a>
+        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
+                data-simply-content="fixed" data-simply-transformer="niveau">
+                    Op niveau
+                </a>
+            </template>
+            <template data-simply-template="false">false</template>
+        </span>
+        <span data-simply-list="Vakleergebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Vakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="LdkVakkern">
+            <template>
+                <span data-simply-list="LdkVakleergebied">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">LdkVakleergebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="LdkVaksubkern">
+            <template>
+                <span data-simply-list="LdkVakkern">
+                    <template>
+                        <span data-simply-list="LdkVakleergebied">
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">LdkVakleergebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="KerndoelVakleergebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">KerndoelVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Examenprogramma">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Examenprogramma</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ExamenprogrammaDomein">
+            <template>
+                <span data-simply-list="Examenprogramma">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">Examenprogramma</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ExamenprogrammaBgProfiel">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">ExamenprogrammaBgProfiel</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Syllabus">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Syllabus</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="SyllabusVakleergebied">
+            <template>
+                <span data-simply-list="Syllabus">
+                    <template>
+                         <span class="ds-badge ds-badge-mini">
+                             <span class="ds-badge-label">Syllabus</span>
+                             <span data-simply-field="title">title</span>
+                         </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="SyllabusSpecifiekeEindterm">
+            <template>
+                <span data-simply-list="Syllabus">
+                    <template>
+                         <span class="ds-badge ds-badge-mini">
+                             <span class="ds-badge-label">Syllabus</span>
+                             <span data-simply-field="title">title</span>
+                         </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="InhVakleergebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">InhVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="InhInhoudslijn">
+            <template>
+                <span data-simply-list="InhVakleergebied">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">InhVakleergebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="InhCluster">
+            <template>
+                <span data-simply-list="InhInhoudslijn">
+                    <template>
+                        <span data-simply-list="InhVakleergebied">
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">InhVakleergebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+
+        <span data-simply-list="RefVakleergebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">RefVakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefDomein">
+            <template>
+                <span data-simply-list="RefVakleergebied">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">RefVakleergebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefSubdomein">
+            <template>
+                <span data-simply-list="RefDomein">
+                    <template>
+                        <span data-simply-list="RefVakleergebied">
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">RefVakleergebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefOnderwerp">
+            <template>
+                <span data-simply-list="RefSubdomein">
+                    <template>
+                        <span data-simply-list="RefDomein">
+                            <template>
+                                <span data-simply-list="RefVakleergebied">
+                                    <template>
+                                        <span class="ds-badge ds-badge-mini">
+                                            <span class="ds-badge-label">RefVakleergebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefDeelonderwerp">
+            <template>
+                <span data-simply-list="RefOnderwerp">
+                    <template>
+                        <span data-simply-list="RefSubdomein">
+                            <template>
+                                <span data-simply-list="RefDomein">
+                                    <template>
+                                        <span data-simply-list="RefVakleergebied">
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="RefTekstkenmerk">
+            <template>
+                <span data-simply-list="RefOnderwerp">
+                    <template>
+                        <span data-simply-list="RefSubdomein">
+                            <template>
+                                <span data-simply-list="RefDomein">
+                                    <template>
+                                        <span data-simply-list="RefVakleergebied">
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">RefVakleergebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="ErkGebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">ErkGebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCategorie">
+            <template>
+                <span data-simply-list="ErkGebied">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">ErkGebied</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkTaalactiviteit">
+            <template>
+                <span data-simply-list="ErkCategorie">
+                    <template>
+                        <span data-simply-list="ErkGebied">
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">ErkGebied</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkSchaal">
+            <template>
+                <span data-simply-list="ErkTaalactiviteit">
+                    <template>
+                        <span data-simply-list="ErkCategorie">
+                            <template>
+                                <span data-simply-list="ErkGebied">
+                                    <template>
+                                        <span class="ds-badge ds-badge-mini">
+                                            <span class="ds-badge-label">ErkGebied</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="ErkCandobeschrijving">
+            <template>
+                <span data-simply-list="ErkSchaal">
+                    <template>
+                        <span data-simply-list="ErkTaalactiviteit">
+                            <template>
+                                <span data-simply-list="ErkCategorie">
+                                    <template>
+                                        <span data-simply-list="ErkGebied">
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">ErkGebied</span>
+                                                    <span data-simply-field="title">title</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="FoDomein">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoDomein</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoSubomein">
+            <template>
+                <span data-simply-list="FoDomein">
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">FoDomein</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoDoelzin">
+            <template>
+				<span data-simply-list="FoSubomein">
+					<template>
+						<span data-simply-list="FoDomein">
+							<template>
+								<span class="ds-badge ds-badge-mini">
+									<span class="ds-badge-label">FoDomein</span>
+									<span data-simply-field="title">title</span>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+        <span data-simply-list="FoToelichting">
+            <template>
+				<span data-simply-list="FoDoelzin">
+					<template>
+						<span data-simply-list="FoSubomein">
+							<template>
+								<span data-simply-list="FoDomein">
+									<template>
+										<span class="ds-badge ds-badge-mini">
+											<span class="ds-badge-label">FoDomein</span>
+											<span data-simply-field="title">title</span>
+										</span>
+									</template>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+        <span data-simply-list="FoUitwerking">
+            <template>
+				<span data-simply-list="FoDoelzin">
+					<template>
+						<span data-simply-list="FoSubomein">
+							<template>
+								<span data-simply-list="FoDomein">
+									<template>
+										<span class="ds-badge ds-badge-mini">
+											<span class="ds-badge-label">FoDomein</span>
+											<span data-simply-field="title">title</span>
+										</span>
+									</template>
+								</span>
+							</template>
+						</span>
+					</template>
+				</span>
+            </template>
+        </span>
+
+        <span data-simply-list="Tag">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Tag</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Relatie">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Relatie</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+
+        <span data-simply-list="Niveau">
+            <template>
+                <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
+            </template>
+        </span>
+    </li>
+</template>

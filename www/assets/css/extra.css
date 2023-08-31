@@ -1,0 +1,33 @@
+    a.slo-highlight-box {
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    a.slo-highlight-box:hover {
+        background-color: var(--ds-grey-dark);
+    }
+    :root .contexts {
+        --ds-grid-min-colwidth: 15rem;
+    }
+    ul.slo-navbar {
+        display: flex;
+        overflow: auto;
+        margin-top: calc(-1 * var(--ds-spacing));
+    }
+    ul.slo-navbar-small {
+        display: flex;
+        overflow: auto;
+    }
+    ul.slo-navbar-inline {
+        margin: 0;
+        display: inline-flex;
+    }
+    ul.slo-navbar li,
+    ul.slo-navbar-small li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .slo-text-content > article > :first-child {
+        margin-top: 0;
+    }

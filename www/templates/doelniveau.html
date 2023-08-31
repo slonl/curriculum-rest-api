@@ -1,0 +1,73 @@
+<template id="doelniveau">
+    <li>
+        <a class="slo-relatie" href="#" data-simply-field="@references" data-simply-content="fixed">
+            <span data-simply-field="prefix" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Prefix</span>
+                        <span data-simply-field="prefix"></span>
+                    </span>
+                </template>
+            </span>
+            <span data-simply-field="Doel.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Doel</span>
+                        <span data-simply-field="Doel.0.bron"></span>
+                    </span>
+                    <span data-simply-field="Doel.0.title"></span>
+                </template>
+            </span>
+            <div data-simply-field="Kerndoel.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">Kerndoel</span>
+                        <span data-simply-field="Kerndoel.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="Kerndoel.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaDomein</span>
+                        <span data-simply-field="ExamenprogrammaDomein.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaDomein.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaSubdomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaSubdomein</span>
+                        <span data-simply-field="ExamenprogrammaSubdomein.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaSubdomein.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaEindterm</span>
+                        <span data-simply-field="ExamenprogrammaEindterm.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaEindterm.0.title"></span>
+                </template>
+            </div>
+            <div data-simply-field="ExamenprogrammaDomein.0" data-simply-transformer="truthy" data-simply-content="template">
+                <template data-simply-template="true">
+                    <span class="ds-badge ds-badge-mini">
+                        <span class="ds-badge-label">ExamenprogrammaBgModule</span>
+                        <span data-simply-field="ExamenprogrammaBgModule.0.prefix"></span>
+                    </span>
+                    <span data-simply-field="ExamenprogrammaBgModule.0.title"></span>
+                </template>
+            </div>                    
+            <ul data-simply-list="Niveau" class="slo-navbar-inline slo-navbar-small">
+                 <template>
+                     <li><span class="ds-badge ds-badge-mini" data-simply-field="title">niveau</span></li>
+                 </template>
+            </ul>
+        </a>
+    </li>
+</template>
