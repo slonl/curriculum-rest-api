@@ -6,11 +6,12 @@ module.exports = {
 		Tag: `
 		const results = from(data.Tag)
 		.select({
-				id
-				title
-				unreleased
-				fo_toelichting_id
-				fo_uitwerking_id
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			unreleased: _,
+			fo_toelichting_id: _,
+			fo_uitwerking_id: _,
 		})
 
 		const meta = {
@@ -23,13 +24,14 @@ module.exports = {
 
 		`,
 		Relatie: `
-		const results = from(data.Relatie)
+		const results = from(data.Syllabus)
 		.select({
-				id
-				title
-				unreleased
-				fo_toelichting_id
-				fo_uitwerking_id
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			unreleased: _,
+			fo_toelichting_id: _,
+			fo_uitwerking_id: _,
 		})
 
 		const meta = {
@@ -43,33 +45,45 @@ module.exports = {
 			`
 	},
 	typedQueries: {
-		'tag': `
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
+		tag: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			FoToelichting: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
-			FoUitwerking {
-				id
-				title
-				deprecated
+			FoUitwerking: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
+		})
 		`,
-		'relatie': `
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
+		relatie: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			FoToelichting: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
-			FoUitwerking {
-				id
-				title
-				deprecated
+			FoUitwerking: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
+		})
 		`
 	},
 	routes: {
