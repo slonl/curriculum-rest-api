@@ -181,7 +181,7 @@ module.exports = {
 					uuid: _.id,
 					prefix: _,
 					title: _,
-					Niveau:ShortLink
+					Niveau: ShortLink
 				})
 				.sort(sortByTitle)
 

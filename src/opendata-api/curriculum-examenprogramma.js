@@ -33,9 +33,7 @@ module.exports = {
 			  ce_se: _,
 			  deprecated: _,
 			  examenjaar: _,
-				Niveau: {
-				  NiveauShort
-			  }
+				Niveau: NiveauShort
 			}
 		}`
 	,
@@ -259,9 +257,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 			NiveauIndex: {
-			  Niveau: {
-				NiveauShort
-			  }
+			  Niveau: NiveauShort
 			},
 			Syllabus: {
 			  '@id': Id,
@@ -389,9 +385,7 @@ module.exports = {
 				  title: _,
 				  ce_se: _,
 				  deprecated: _,
-				  SyllabusSpecifiekeEindterm: {
-					SyllabusInfo
-				  },
+				  SyllabusSpecifiekeEindterm: SyllabusInfo,
 				  SyllabusVakbegrip: {
 					'@id': Id,
 					uuid: _.id,
@@ -418,9 +412,7 @@ module.exports = {
 				title: _,
 				ce_se: _,
 				deprecated: _,
-				SyllabusSpecifiekeEindterm: {
-					SyllabusInfo
-			 	},
+				SyllabusSpecifiekeEindterm: SyllabusInfo,
 			    SyllabusVakbegrip: {
 		          '@id': Id,
 				  uuid: _.id,
@@ -429,10 +421,7 @@ module.exports = {
 				  ce_se: _,
 				  deprecated: _,
 		        },
-				Niveau: {
-				  NiveauShort
-				}
-			  },
+				Niveau: NiveauShort,
 			},
 			ExamenprogrammaVakleergebied: {
 			  '@id': Id,
@@ -498,9 +487,7 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
-			Niveau: {
-				NiveauShort
-			}
+			Niveau: NiveauShort
 		})
 		`,
 		ExamenprogrammaDomein:`
@@ -537,9 +524,7 @@ module.exports = {
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort,
 			},
 			SyllabusToelichting: {
 				'@id': Id,
@@ -554,9 +539,7 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -593,18 +576,12 @@ module.exports = {
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort,
 			},
-			Doelniveau: {
-				DoelNiveau
-			},
+			Doelniveau: DoelNiveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
-			}
+				Niveau: NiveauShort
+			},
 		})
 		`,
 		ExamenprogrammaEindterm:`

@@ -17,9 +17,7 @@ module.exports = {
 						uuid: _.id,
 						title: _,
 				},
-				Niveau: {
-					NiveauShort
-				} 
+				Niveau: NiveauShort 
 			})
 			.sort(sortByPrefix)
 
@@ -190,9 +188,7 @@ module.exports = {
 			uuid: _.id,
 		    prefix: _,
 		    title: _,
-			Niveau: {
-			  NiveauShort: _,
-			}
+			Niveau: NiveauShort
 		  })
 
 		  const meta = {

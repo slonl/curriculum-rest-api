@@ -364,9 +364,7 @@ module.exports = {
 			uuid: _.id,
 			prefix: _,
 			title: _,
-			Niveau: {
-				NiveauShort
-			},
+			Niveau: NiveauShort,
 			ExamenprogrammaBgKerndeel: {
 				'@id': Id,
 				uuid: _.id,
@@ -475,9 +473,7 @@ module.exports = {
 					deprecated: _,
 				},
 			},
-			Niveau: {
-				NiveauShort
-			}
+			Niveau: NiveauShort
 		})
 		`,
 		ExamenprogrammaBgKeuzevak:`
@@ -530,9 +526,7 @@ module.exports = {
 					deprecated: _,
 				},
 			},
-			Niveau: {
-				NiveauShort
-			},
+			Niveau: NiveauShort
 		})
 		`
 	},
