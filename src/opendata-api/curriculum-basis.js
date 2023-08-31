@@ -162,12 +162,21 @@ module.exports = {
 		  }
 
 		function sortByPrefix(a,b) {
-		if (a.prefix<b.prefix) {
-			return -1
-		} else if (a.prefix>b.prefix) {
-			return 1
+			if (a.prefix<b.prefix) {
+				return -1
+			} else if (a.prefix>b.prefix) {
+				return 1
+			}
+			return 0
 		}
-		return 0
+
+		function sortByNiveau(a,b) {
+			if (a.Niveau<b.Niveau) {
+				return -1
+			} else if (a.Niveau>b.Niveau) {
+				return 1
+			}
+			return 0
 		}
 		
 	`,
