@@ -6,128 +6,134 @@ module.exports = {
 		NhCategorie: `
 		const results = from(data.NhCategorie)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				nh_sector_id: _,
-				nh_niveau_id: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			nh_sector_id: _,
+			nh_niveau_id: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 		NhSector: `
 		const results = from(data.NhSector)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				nh_schoolsoort_id: _,
-				nh_bouw_id: _,
-				nh_niveau_id: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			nh_schoolsoort_id: _,
+			nh_bouw_id: _,
+			nh_niveau_id: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 		NhSchoolsoort: `
 		const results = from(data.NhSchoolsoort)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				nh_leerweg_id: _,
-				nh_bouw_id: _,
-				nh_niveau_id: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			nh_leerweg_id: _,
+			nh_bouw_id: _,
+			nh_niveau_id: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 		NhLeerweg: `
 		const results = from(data.NhLeerweg)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				nh_bouw_id: _,
-				nh_niveau_id: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			nh_bouw_id: _,
+			nh_niveau_id: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
 			`,
 		NhBouw: `
 		const results = from(data.NhBouw)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				nh_niveau_id: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			nh_niveau_id: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 		NhNiveau: `
 		const results = from(data.NhNiveau)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				unreleased: _,
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+		})
+		.sort(sortByPrefix)
 
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
 	},
 	typedQueries: {
 		NhCategorie: `
