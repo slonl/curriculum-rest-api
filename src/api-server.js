@@ -60,7 +60,7 @@ app.use(function(req, res, next) {
 		process.env.NODE_PORT = port;
 		process.env.NODE_BASE = apiBase;	
 		process.env.NODE_ID_URL = baseIdURL;
-//		process.env.NODE_BACKEND_URL = backendUrl;
+		//process.env.NODE_BACKEND_URL = backendUrl;
 		process.env.NODE_DATA_URL = baseDatasetURL;
 		file = file.replace(/\{@(.*)\}/gm, (match, p1) => process.env[p1] || '');
 		res.send(file);

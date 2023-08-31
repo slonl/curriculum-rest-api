@@ -181,11 +181,11 @@ module.exports = {
 	
 			meta
 		`,
-		// @TODO ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
+		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
 		const results = from(Index(request.query.id))
 			.select({
-			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',	
+			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
 		    '@id': Id,
 			uuid: _.id,
 		    prefix: _,
@@ -203,11 +203,11 @@ module.exports = {
 
 		meta
 		`,
-
-		//@TODO Check if this exists
+		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
-		const results = from(data.ErkSchaal)
+		const results = from(data.ErkSchalen)
 			.select({
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
