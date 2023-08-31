@@ -205,7 +205,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-				Doelniveau: DoelNiveau
+				Doelniveau: Doelniveau
 			},
 			LdkVakkern: {
 				'@id': Id,
@@ -246,7 +246,7 @@ module.exports = {
 						title: _,
 						deprecated: _,
 				}
-				Doelniveau: DoelNiveau,
+				Doelniveau: Doelniveau,
 			},
 			LdkVaksubkern: {
 				'@id': Id,
@@ -288,7 +288,7 @@ module.exports = {
 					prefix: _,
 					deprecated: _,
 				},
-				Doelniveau:	DoelNiveau
+				Doelniveau:	Doelniveau
 				},
 				LdkVakinhoud: {
 					'@id': Id,
@@ -361,7 +361,7 @@ module.exports = {
 					Niveau: NiveauShort
 				}
 			},
-			Doelniveau: DoelNiveau,
+			Doelniveau: Doelniveau,
 			LdkVakleergebied: {
 				'@id': Id,
 				uuid: _.id,
@@ -391,7 +391,7 @@ module.exports = {
 					Niveau: NiveauShort
 				}
 			},
-			Doelniveau: DoelNiveau,
+			Doelniveau: Doelniveau,
 			LdkVakkern: {
 				'@id': Id,
 				uuid: _.id,
@@ -417,7 +417,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			prefix: _,
-			Doelniveau: DoelNiveau,
+			Doelniveau: Doelniveau,
 			LdkVaksubkern: {
 				'@id': Id,
 				uuid: _.id,

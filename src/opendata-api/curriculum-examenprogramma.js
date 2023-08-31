@@ -578,7 +578,7 @@ module.exports = {
 				deprecated: _,
 				Niveau: NiveauShort,
 			},
-			Doelniveau: DoelNiveau,
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort
 			},
