@@ -3,30 +3,44 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/samenhang.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-samenhang/context.json',
 	queries: {
-		Tag: `query Tag($page:Int, $perPage:Int) {
-			allTag(page:$page, perPage:$perPage, filter:{deprecated:null}) {
+		Tag: `
+		const results = from(data.Tag)
+		.select({
 				id
 				title
 				unreleased
 				fo_toelichting_id
 				fo_uitwerking_id
-			}
-			_allTagMeta {
-				count
-			}
-		}`,
-		Relatie: `query Relatie($page:Int, $perPage:Int) {
-			allRelatie(page:$page, perPage:$perPage, filter:{deprecated:null}) {
+		})
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		Relatie: `
+		const results = from(data.Relatie)
+		.select({
 				id
 				title
 				unreleased
 				fo_toelichting_id
 				fo_uitwerking_id
-			}
-			_allRelatieMeta {
-				count
-			}
-		}`
+		})
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+			`
 	},
 	typedQueries: {
 		'tag': `
@@ -58,53 +72,8 @@ module.exports = {
 			}
 		`
 	},
-	idQuery: `
-		allTag(filter:{id:$id}) {
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
-			}
-			FoUitwerking {
-				id
-				title
-				deprecated
-			}
-		}
-		allRelatie(filter:{id:$id}) {
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
-			}
-			FoUitwerking {
-				id
-				title
-				deprecated
-			}
-		}`,
 	routes: {
-		'tag/': (req) =>
-			opendata.api["Tag"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allTag, 
-					type: 'Tag', 
-					meta: result.data._allTagMeta
-				}
-			}),
-		'relatie/': (req) =>
-			opendata.api["Relatie"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allRelatie, 
-					type: 'Relatie', 
-					meta: result.data._allRelatieMeta
-				}
-			})
+		'tag/': (req) => opendata.api["Tag"](req.params, req.query),
+		'relatie/': (req) => opendata.api["Relatie"](req.params, req.query)
 	}
 };
