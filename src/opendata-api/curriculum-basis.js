@@ -162,7 +162,7 @@ module.exports = {
 		  }
 
 		function sortByPrefix(a,b) {
-		if (a.title<b.title) {
+		if (a.prefix<b.prefix) {
 			return -1
 		} else if (a.prefix>b.prefix) {
 			return 1
