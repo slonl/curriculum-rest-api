@@ -182,16 +182,13 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 function addReference(entry){
-	console.log("adding @reference");
 	if (Array.isArray(entry)){ 
 		entry.forEach(addReference);
 	}
 	else if(isObject(entry)) { 
 		if (entry.uuid) {
-			console.log("found uuid and added @reference");
 			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
 		}
-		console.log("calling addReference()");
 		Object.values(entry).forEach(addReference);	
 	};
 }
