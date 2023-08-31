@@ -17,11 +17,10 @@ module.exports = {
 					deprecated: _,
 				},
 				NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
+					Niveau: NiveauShort	
 				}
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -46,11 +45,10 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
-				}
-			})
+				Niveau: NiveauShort
+			}
+		})
+		.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -78,11 +76,10 @@ module.exports = {
 				}
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
+		.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -112,6 +109,7 @@ module.exports = {
 					}
 				}
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -129,10 +127,8 @@ module.exports = {
 			uuid: _.id,
 		    prefix: _,
 		    title: _,
-		    NiveauIndex(filter:{niveau_id:[$niveau]}): {
-		 		Niveau: {
-		        	NiveauShort
-		      	}
+		    NiveauIndex:{
+		 		Niveau: NiveauShort
 		    },
 		    InhInhoudslijn: {
 				'@id': Id,
@@ -152,22 +148,13 @@ module.exports = {
 						prefix: _,
 						title: _,
 						deprecated: _,
-						Doelniveau(filter:{niveau_id:[$niveau]}): {
-							Doelen
-						}
+						Doelniveau: Doelen,
 		        	},
-					Doelniveau(filter:{niveau_id:[$niveau]}): {
-						Doelen
-					}
+					Doelniveau: Doelen,
 		      	},
-				Doelniveau(filter:{niveau_id:[$niveau]}): {
-						Doelen
-				}
+				Doelniveau:	Doelen,
 		    },
-		    Doelniveau(filter:{niveau_id:[$niveau]}): {
-		     	Doelen
-		    }
-		  }
+		    Doelniveau: Doelen,
 		})`
 	},
 	typedQueries: {
