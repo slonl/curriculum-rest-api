@@ -47,6 +47,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 		})
+		.sort(sortByTitle)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -65,13 +66,14 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
+		.sort(sortByTitle)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
 		}
-
+		
 		meta
 
 		`,
@@ -88,6 +90,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		})
+		.sort(sortByTitle)
 		  		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -118,6 +121,7 @@ module.exports = {
 			  }
 			}
 		})
+		.sort(sortByTitle)
 		  		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -136,6 +140,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
+		.sort(sortByPrefix)
 		 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -159,6 +164,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		})
+		.sort(sortByPrefix)
 				
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -177,7 +183,8 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
-		
+		.sort(sortByPrefix)
+
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -195,6 +202,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
+		.sort(sortByPrefix)
 		
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -213,6 +221,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
+		.sort(sortByPrefix)
 		
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -231,6 +240,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 		})
+		.sort(sortByPrefix)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
