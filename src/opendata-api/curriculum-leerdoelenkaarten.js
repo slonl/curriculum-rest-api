@@ -27,11 +27,10 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			NiveauIndex: {
-			  Niveau: {
-				NiveauShort
-			  }
+			  Niveau: NiveauShort
 			}
 		  })
+		  .sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -57,11 +56,10 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-			  Niveau: {
-				NiveauShort
-			  }
+				Niveau: NiveauShort
 			}
 		  })
+		  .sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -89,11 +87,10 @@ module.exports = {
 			  }
 			},
 			NiveauIndex: {
-			  Niveau: {
-				NiveauShort
-			  }
+				Niveau: NiveauShort
 			}
 		  })
+		  .sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -123,11 +120,10 @@ module.exports = {
 			  }
 			},
 			NiveauIndex: {
-			  Niveau: {
-				NiveauShort
-			  }
+				Niveau: NiveauShort
 			}
 		})
+		.sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -145,10 +141,9 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			ce_se: _,
-			Doelniveau: {
-			  DoelNiveau
-			}
+			Doelniveau: DoelNiveau
 		  })
+		  .sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -166,39 +161,29 @@ module.exports = {
 			'@id': Id,
 			uuid: _.id,
 			title: _,
-			NiveauIndex(filter:{niveau_id:[$niveau]}) {
-			  Niveau: {
-				NiveauShort
-			  }
+			NiveauIndex:{
+			  Niveau: NiveauShort
 			},
 			LdkVakkern: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
-			  LdkVaksubkern: {
+				LdkVaksubkern: {
 					'@id': Id,
 					uuid: _.id,
 					title: _,
-				LdkVakinhoud: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-				  Doelniveau(filter:{niveau_id:[$niveau]}) {
-						Doelen
-				  }
+					LdkVakinhoud: {
+						'@id': Id,
+						uuid: _.id,
+						title: _,
+						Doelniveau: Doelen,
+					},
+					Doelniveau:	Doelen,
 				},
-				Doelniveau(filter:{niveau_id:[$niveau]}) {
-						Doelen
-				},
-			  },
-			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-					Doelen
-			  }
+				Doelniveau: Doelen,
 			}
-		  }
 		})
 		`,
-
 
 		LdkVakleergebiedOpNiveau: `
 		const results = from(data.LdkVakleergebiedOpNiveau)
@@ -211,28 +196,25 @@ module.exports = {
 			}
 		  }
 		}`,
+
 		LdkVakleergebiedByIdOpNiveau: `
 		const results = from(data.LdkVakleergebiedByIdOpNiveau)
 		.select({
-			LdkVakleergebied(filter:{id:$id}): {
+			LdkVakleergebied: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-				Doelniveau(filter:{niveau_id:[$niveau]}): {
-					DoelNiveau
-				} 
+				Doelniveau: DoelNiveau
 			},
-			LdkVakkern(filter:{ldk_vakleergebied_id:[$id]}): {
+			LdkVakkern: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 				deprecated: _,
 			},
-			Niveau: {
-					NiveauShort
-			}
+			Niveau: NiveauShort
 		  }
 		}`,
 
@@ -248,38 +230,36 @@ module.exports = {
 			}
 		  }
 		}`,
+
 		LdkVakkernByIdOpNiveau: `
 		const results = from(data.LdkVakkernByIdOpNiveau
 		.select({
-			LdkVakkern(filter:{id:$id}): {
+			LdkVakkern: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 				deprecated: _,
-			  LdkVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					deprecated: _,
-			  }
-			  Doelniveau(filter:{niveau_id:[$niveau]}) {
-					DoelNiveau
-			  } 
+				LdkVakleergebied: {
+						'@id': Id,
+						uuid: _.id,
+						title: _,
+						deprecated: _,
+				}
+				Doelniveau: DoelNiveau,
 			},
-			LdkVaksubkern(filter:{ldk_vakkern_id:[$id]}) {
+			LdkVaksubkern: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				prefix: _,
 				deprecated: _,
 			},
-			Niveau {
-					NiveauShort
-			}
+			Niveau NiveauShort,
 		  }
 		})
 		`,
+
 		LdkVaksubkernOpNiveau: `
 		const results = from(data.LdkVaksubkernOpNiveau)
 		.select({
@@ -293,10 +273,11 @@ module.exports = {
 		  }
 		})
 		`,
+
 		LdkVaksubkernByIdOpNiveau: `
 		const results = from(data.LdkVaksubkernByIdOpNiveau)
 		.select({
-			LdkVaksubkern(filter:{id:$id}) {
+			LdkVaksubkern: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
@@ -307,22 +288,18 @@ module.exports = {
 					title: _,
 					prefix: _,
 					deprecated: _,
-				}
-				Doelniveau(filter:{niveau_id:[$niveau]}): {
-					DoelNiveau
-				} 
-				}
-				LdkVakinhoud(filter:{ldk_vaksubkern_id:[$id]}): {
+				},
+				Doelniveau:	DoelNiveau
+				},
+				LdkVakinhoud: {
 					'@id': Id,
 					uuid: _.id,
 					title: _,
 					prefix: _,
 					deprecated: _,
-				}
-				Niveau: {
-					NiveauShort
-				}
-		  }
+				},
+				Niveau: NiveauShort
+		  	}
 		})
 		`,
 
@@ -353,18 +330,12 @@ module.exports = {
 				prefix: _,
 				deprecated: _,
 				NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
+					Niveau: NiveauShort
 				}
 			},
-			Doelniveau: {
-				Doelniveau
-			},
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			},
 			Vakleergebied: {
 				'@id': Id,
@@ -388,24 +359,18 @@ module.exports = {
 				prefix: _,
 				deprecated: _,
 				NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
+					Niveau: NiveauShort
 				}
-			}
-			Doelniveau: {
-				DoelNiveau
-			}
+			},
+			Doelniveau: DoelNiveau,
 			LdkVakleergebied: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
 				deprecated: _,
-			}
+			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -424,14 +389,10 @@ module.exports = {
 				prefix: _,
 				deprecated: _,
 				NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
+					Niveau: NiveauShort
 				}
 			},
-			Doelniveau: {
-				DoelNiveau
-			},
+			Doelniveau: DoelNiveau,
 			LdkVakkern: {
 				'@id': Id,
 				uuid: _.id,
@@ -446,9 +407,7 @@ module.exports = {
 				}
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -459,9 +418,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			prefix: _,
-			Doelniveau: {
-				DoelNiveau
-			},
+			Doelniveau: DoelNiveau,
 			LdkVaksubkern: {
 				'@id': Id,
 				uuid: _.id,
@@ -483,9 +440,7 @@ module.exports = {
 				}
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})	
 		`,
@@ -496,9 +451,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 			ce_se: _,
-			Doelniveau: {
-				Doelen
-			}
+			Doelniveau: Doelen
 		})
 		`
 	},
@@ -508,16 +461,14 @@ module.exports = {
 		'ldk_vaksubkern/': (req) => opendata.api["LdkVaksubkern"](req.params, req.query),
 		'ldk_vakinhoud/': (req) => opendata.api["LdkVakinhoud"](req.params, req.query),
 		'ldk_vakbegrip/': (req) => opendata.api["LdkVakbegrip"](req.params, req.query),
-
-		//TODO check why som have req.query and some do not
-		'niveau/:niveau/ldk_vakleergebied': (req) => opendata.api["LdkVakleergebiedOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) => opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params),
-		'niveau/:niveau/ldk_vakleergebied/:id/': (req) => opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vakkern': (req) => opendata.api["LdkVakkernOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vakkern/:id': (req) => opendata.api["LdkVakkernByIdOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vaksubkern': (req) => opendata.api["LdkVaksubkernOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vaksubkern/:id': (req) => opendata.api["LdkVaksubkernByIdOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vakinhoud': (req) => opendata.api["LdkVakinhoudOpNiveau"](req.params),
-		'niveau/:niveau/ldk_vakinhoud/:id': (req) => opendata.api["LdkVakinhoudByIdOpNiveau"](req.params),
+		'niveau/:niveau/ldk_vakleergebied': (req) => opendata.api["LdkVakleergebiedOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) => opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params, req.query),
+		'niveau/:niveau/ldk_vakleergebied/:id/': (req) => opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakkern': (req) => opendata.api["LdkVakkernOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakkern/:id': (req) => opendata.api["LdkVakkernByIdOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vaksubkern': (req) => opendata.api["LdkVaksubkernOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vaksubkern/:id': (req) => opendata.api["LdkVaksubkernByIdOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakinhoud': (req) => opendata.api["LdkVakinhoudOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakinhoud/:id': (req) => opendata.api["LdkVakinhoudByIdOpNiveau"](req.params, req.query),
 	}
 };
