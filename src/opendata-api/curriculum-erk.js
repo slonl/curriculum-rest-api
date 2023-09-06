@@ -331,7 +331,7 @@ module.exports = {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
-				deprecated
+				deprecated: _,
 			},
 		})
 		`,
