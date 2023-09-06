@@ -318,7 +318,6 @@ module.exports = {
 			title: _,
 			description: _,
 			})
-			.sort(sortByTitle)		
 		`,
 		Doel: `
 		from(Index(request.query.id))
@@ -332,7 +331,6 @@ module.exports = {
 			description: _,
 			bron: _,
 		})
-		.sort(sortByTitle)
 		`,
 		Doelniveau:`
 		from(Index(request.query.id))
