@@ -381,7 +381,7 @@ module.exports = {
 			},
 		})
 		`,
-		ExamenprogrammaNgModule:`
+		ExamenprogrammaBgModule:`
 		from(Index(request.query.id))
 		.select({
 			'@id': Id,
