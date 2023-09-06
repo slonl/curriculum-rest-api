@@ -144,7 +144,7 @@ module.exports = {
 				deprecated: _,
 				Niveau: NiveauShort
 			},
-			KerndoelVakleergebied {
+			KerndoelVakleergebied: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
