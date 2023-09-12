@@ -88,7 +88,7 @@ from(Index('${variables.id}')?.root)
 	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+query, variables, urlQuery)
 }
 
-const treeQuery = fs.readFileSync('./tree-query.js')
+const treeQuery = fs.readFileSync(__dirname+'/tree-query.js')
 opendata.api.Tree = async (variables, urlQuery) => {
 	// variables.id naar request.query.id?
 	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+treeQuery, variables, urlQuery)
