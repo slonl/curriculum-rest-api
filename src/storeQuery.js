@@ -9,12 +9,20 @@ function storeQuery(url, query, variables, urlQuery) {
     url = new URL(url)
 	if (variables) {
 	    Object.keys(variables).forEach(param => {
-	    	url.searchParams.set(param, variables[param])
+	    	if (Array.isArray(variables[param])) {
+		    	variables[param].forEach(v => url.searchParams.append(param, v))
+		    } else {
+		    	url.searchParams.set(param, variables[param])
+		    }
 	    })
 	}
     if (urlQuery) {
 	    Object.keys(urlQuery).forEach(param => {
-	    	url.searchParams.set(param, urlQuery[param])
+	    	if (Array.isArray(urlQuery[param])) {
+		    	urlQuery[param].forEach(v => url.searchParams.append(param, v))
+		    } else {
+		    	url.searchParams.set(param, urlQuery[param])
+		    }
 	    })
 	}
 	return fetch(url, {

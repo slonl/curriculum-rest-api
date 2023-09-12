@@ -16,8 +16,8 @@
                 <li><a href="" data-simply-field="contextLink"></a></li>
             </ul>
         </nav>
-        <div class="ds-scrollbox">
-            <table class="slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers">
+        <div class="ds-scrollbox" data-simply-activate="spreadsheet" style="overflow-anchor: none;">
+            <table style="position: sticky; top: 0; width: 100%; z-index: 10" class="slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers">
                 <col class="ds-datatable-col-1">
                 <col class="ds-datatable-col-2">
                 <col class="ds-datatable-col-3">
@@ -154,19 +154,19 @@
                         </nav>
                     </label></th>
                 </thead>
-                <tbody data-simply-list="items">
+                <tbody data-simply-list="items" data-simply-data="items">
                     <template>
                         <tr class="slo-entity">
                             <td><svg class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
                             </svg></td>
                             <td><a href="#" data-simply-field="@references" data-simply-content="attributes" data-simply-attributes="href">#</a></td>
-                            <td><span class="slo-indent-1" data-simply-field="prefix">ak/1</span>
-                            <td data-simply-field="title">Burgerschap</td>
-                            <td data-simply-field="@type">ldk_vakkern</td>
-                            <td data-simply-list="Niveau">
+                            <td><span class="slo-indent-1" data-simply-field="indent" data-simply-content="attributes" data-simply-attributes="class"></span><span data-simply-field="prefix"></span>
+                            <td data-simply-field="title"></td>
+                            <td data-simply-field="@type"></td>
+                            <td data-simply-list="Niveaus">
                                 <template>
-                                    <span data-simply-field="title">ob vmbo bb</span>
+                                    <span data-simply-field="title"></span>
                                 </template>
                             </td>
                             <td><svg class="slo-delete ds-icon ds-icon-feather">
@@ -176,6 +176,7 @@
                     </template>
                 </tbody>
             </table>
+            <div class="scrollbar" style="height: 800px;"></div>
         </div>
     </div>
 </template>

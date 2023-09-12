@@ -378,6 +378,14 @@
                 .catch(function(error) {
                 });
             },
+            spreadsheet: function(root, niveaus, contexts) {
+                browser.view.items = []
+                return window.slo.api.get(window.release.apiPath+'examenprogramma/'+root)
+                .then(function(json) {
+                    browser.view.view = 'spreadsheet';
+                    window.slo.spreadsheet('items',json)
+                })
+            },
             doelniveauList: function(type) {
                 browser.view['listTitle'] = titles[type];
                 browser.view.list = [];

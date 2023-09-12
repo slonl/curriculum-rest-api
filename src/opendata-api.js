@@ -1,4 +1,5 @@
-const storeQuery = require('./storeQuery.js');
+const storeQuery = require('./storeQuery.js')
+const fs = require('fs')
 
 var opendata = {
 	url: '',
@@ -72,6 +73,25 @@ opendata.api.Id = async (variables, urlQuery) => {
 	console.log(typedQuery); //Todo: remove as it is for debugging purposes
 	let result = await storeQuery(opendata.url+'/query/', opendata.fragments +';'+ typedQuery, variables, urlQuery)
 	return result
+}
+
+opendata.api.Roots = async (variables, urlQuery) => {
+	let query = `
+from(Index('${variables.id}')?.root)
+.select({
+	id: _,
+	'@type': Type,
+	prefix: _,
+	title: _
+})
+`	
+	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+query, variables, urlQuery)
+}
+
+const treeQuery = fs.readFileSync('./tree-query.js')
+opendata.api.Tree = async (variables, urlQuery) => {
+	// variables.id naar request.query.id?
+	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+treeQuery, variables, urlQuery)
 }
 
 module.exports = opendata;

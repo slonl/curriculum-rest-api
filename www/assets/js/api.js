@@ -1,3 +1,4 @@
+    let dataModels = {}
     window.slo = {
         api: {
             get: function(path, params) {
@@ -37,6 +38,65 @@
                     browser.view.errorMessage = error.message;
                 });
             }
+        },
+        spreadsheet: function(name, data) {
+            const walk = (node, indent, f) => {
+                if (!node) return;
+                if (node['@type']==='Niveau') {
+                    return
+                }
+                if (Array.isArray(node)) {
+                    node.forEach(n => walk(n,indent,f))
+                } else if (typeof node === 'object' ) {
+                    indent = f(node, indent)
+                    Object.entries(node)
+                    .filter((v,k) => (v && typeof v === 'object'))
+                    .forEach(n => walk(n,indent,f))
+                }
+            }
+            let allRows = []
+            let lastIndent = 0
+            walk(data, 0, (n,indent) => {
+                if (n.uuid) {
+                    let row = {}
+                    row.indent = 'slo-indent-'+indent;
+                    let prevIndent = allRows[allRows.length-1]?.indent || 0
+                    Object.keys(n).filter(k => /[a-z@]/.test(k[0])).forEach(k => {
+                        row[k] = n[k]
+                    })
+                    if (n.NiveauIndex) {
+                        row.Niveaus = n.NiveauIndex.map(ni => ni.Niveau)
+                    } else if (n.Niveau) {
+                        row.Niveaus = n.Niveau
+                    }
+
+                    if (Object.keys(row).length) {
+                        allRows.push(row)
+                    }
+                    return indent+1
+                }
+                return indent;
+            })
+            let datamodel = simply.viewmodel.create(name, allRows, {
+              offset: 0,
+              rows: 15,
+              rowHeight: 27
+            });
+            datamodel.addPlugin('render', function(params) {
+              start = this.options.offset
+              end = start + this.options.rows
+              if (end>this.view.data.length) {
+                end = this.view.data.length;
+                start = end - this.options.rows;
+              }
+              this.view.data = this.view.data.slice(start, end)
+            });
+            dataModels[name] = datamodel
+            datamodel.update()
+            return datamodel;
+        },
+        getDataModel(name) {
+            return dataModels[name]
         }
     }
 
