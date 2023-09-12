@@ -55,6 +55,7 @@
                 }
             }
             let allRows = []
+            let allColumns = {}
             let lastIndent = 0
             walk(data, 0, (n,indent) => {
                 if (n.uuid) {
@@ -69,18 +70,36 @@
                     } else if (n.Niveau) {
                         row.Niveaus = n.Niveau
                     }
-
+                    if (row.Niveaus) {
+                        row.Niveaus = row.Niveaus.map(n => n.title)
+                    }
                     if (Object.keys(row).length) {
                         allRows.push(row)
+                        Object.keys(row).forEach(c => {
+                            if (!allColumns[c]) {
+                                allColumns[c] = new Set()
+                            }
+                            if (allColumns[c].size<16) {
+                                if (Array.isArray(row[c])) {
+                                    row[c].forEach(v => allColumns[c].add(v))
+                                } else {
+                                    allColumns[c].add(row[c])
+                                }
+                            }
+                        })
                     }
                     return indent+1
                 }
                 return indent;
             })
+            Object.keys(allColumns).forEach(c => {
+                allColumns[c] = Array.from(allColumns[c])
+            })
             let datamodel = simply.viewmodel.create(name, allRows, {
               offset: 0,
               rows: 15,
               rowHeight: 27,
+              columns: allColumns,
               closed: {}
             });
             datamodel.addPlugin('render', function(params) {

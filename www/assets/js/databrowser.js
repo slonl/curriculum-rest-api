@@ -326,6 +326,11 @@
                 })
                 el.closest('tr').classList.toggle('closed')
             },
+            openTree: function(el, value) {
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.options.closed = {}
+                datamodel.update()
+            },
             sortTree: function(el, value) {
                 let column = el.closest('th').querySelector('label.slo-column-name').innerText.trim()
                 let datamodel = window.slo.getDataModel('items')
