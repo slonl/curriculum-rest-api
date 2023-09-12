@@ -118,7 +118,31 @@
                 }
                 return true
               })
-            })
+            });
+            const sortNames = {
+                Titel: 'title',
+                Prefix: 'prefix',
+                Type: '@type'
+            }
+            datamodel.addPlugin('start', simply.viewmodel.createSort({
+                name: 'propSort',
+                sortBy: 'prefix',
+                sortDirection: 'ascending',
+                getSort: function(params) {
+                    if (!params.sortBy || params.sortBy=='Prefix') {
+                        return (a,b) => 0
+                    }
+                    if (params.sortDirection=='ascending') {
+                        return (a,b) => {
+                            return (a[sortNames[params.sortBy]]<b[sortNames[params.sortBy]])
+                        }
+                    } else {
+                        return (a,b) => {
+                            return (a[sortNames[params.sortBy]]>b[sortNames[params.sortBy]])
+                        }
+                    }
+                }
+            }));
             dataModels[name] = datamodel
             datamodel.update()
             return datamodel;

@@ -28,7 +28,8 @@
                 <thead>
                     <td class="ds-datatable-disable-sort slo-minwidth"></th>
                     <th class="ds-datatable-disable-sort slo-minwidth">#</th>
-                    <th class="ds-datatable-sorted-descending">Prefix
+                    <th class="ds-datatable-sorted-descending">
+                        <label class="slo-column-name">Prefix</label>
                         <label class="slo-filter ds-dropdown">
                         <svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
@@ -37,11 +38,8 @@
                         <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
                             <div class="ds-dropdown-content slo-dropdown-buttons">
                                 <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-primary  ds-button-naked ds-icon-button" title="sorteer aflopend"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
+                                    <a class="ds-button ds-button-naked ds-icon-button" title="Boomweergave" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
+                                        <use xlink:href="/assets/icons/feather-sprite.svg#columns"></use>
                                     </svg></a>
                                     <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
@@ -56,7 +54,9 @@
                                 </div>
                         </nav>
                     </label></th>
-                    <th class="slo-larger-width">Titel <label class="slo-filter ds-dropdown">
+                    <th class="slo-larger-width">
+                        <label class="slo-column-name">Titel</label>
+                        <label class="slo-filter ds-dropdown">
                         <svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
                         </svg>
@@ -64,10 +64,10 @@
                         <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
                             <div class="ds-dropdown-content slo-dropdown-buttons">
                                 <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend"><svg class="ds-icon ds-icon-feather">
+                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
                                     </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend"><svg class="ds-icon ds-icon-feather">
+                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend" data-simply-command="sortTree" data-simply-value="ascending"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
                                     </svg></a>
                                     <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
@@ -83,7 +83,9 @@
                             </div>
                         </nav>
                     </label></th>
-                    <th>Type <label class="slo-filter ds-dropdown">
+                    <th>
+                        <label class="slo-column-name">Type</label>
+                        <label class="slo-filter ds-dropdown">
                         <svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
                         </svg>
@@ -91,10 +93,10 @@
                         <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
                             <div class="ds-dropdown-content slo-dropdown-buttons">
                                 <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend"><svg class="ds-icon ds-icon-feather">
+                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
                                     </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend"><svg class="ds-icon ds-icon-feather">
+                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend" data-simply-command="sortTree" data-simply-value="ascending"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
                                     </svg></a>
                                     <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
@@ -111,7 +113,9 @@
                             </ul>
                         </nav>
                     </label></th>
-                    <th>Niveaus <label class="slo-filter ds-dropdown">
+                    <th class="ds-datatable-disable-sort">
+                        <label class="slo-column-name">Niveaus</label>
+                        <label class="slo-filter ds-dropdown">
                         <svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
                         </svg>
@@ -119,12 +123,6 @@
                         <nav class="ds-dropdown-nav ds-dropdown-right ds-align-left">
                             <div class="ds-dropdown-content slo-dropdown-buttons">
                                 <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
-                                    </svg></a>
                                     <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
                                         <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
                                     </svg></a>

@@ -34,3 +34,21 @@
     .slo-tree-table .closed [data-simply-field="indent"]::before {
         content: "\25B8";
     }
+    .slo-tree-table.sorted [data-simply-field="indent"] {
+        display: none;
+    }
+    label.slo-column-name {
+        display: inline;
+    }
+    .slo-tree-table .ds-datatable-sorted-ascending a[data-simply-command="sortTree"][data-simply-value="ascending"] {
+        color: var(--ds-white);
+        background: var(--ds-primary);
+    }
+    .slo-tree-table .ds-datatable-sorted-descending a[data-simply-command="sortTree"][data-simply-value="descending"] {
+        color: var(--ds-white);
+        background: var(--ds-primary);
+    }
+    .slo-spreadsheet .ds-scrollbox {
+        --ds-scrollbox-height: calc(100vh - 340px);
+        min-height: 400px;
+    }

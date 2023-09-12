@@ -326,6 +326,29 @@
                 })
                 el.closest('tr').classList.toggle('closed')
             },
+            sortTree: function(el, value) {
+                let column = el.closest('th').querySelector('label.slo-column-name').innerText.trim()
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.update({
+                    propSort: {
+                        sortBy: column,
+                        sortDirection: value
+                    }
+                })
+                el.closest('tr')
+                .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
+                .forEach(e => {
+                    e.classList.remove('ds-datatable-sorted-descending')
+                    e.classList.remove('ds-datatable-sorted-ascending')
+                })
+                if (column=='Prefix') {
+                    el.closest('table').classList.remove('sorted')
+                    el.closest('th').classList.add('ds-datatable-sorted-descending')
+                } else {
+                    el.closest('table').classList.add('sorted')
+                    el.closest('th').classList.add('ds-datatable-sorted-'+value)
+                }
+            },
             nextPage: function(el,value) {
                 page = Math.min(browser.view.max-1, parseInt(browser.view.page));
                 browser.actions.updatePage(page);
