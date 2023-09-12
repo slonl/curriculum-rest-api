@@ -80,7 +80,8 @@
             let datamodel = simply.viewmodel.create(name, allRows, {
               offset: 0,
               rows: 15,
-              rowHeight: 27
+              rowHeight: 27,
+              closed: {}
             });
             datamodel.addPlugin('render', function(params) {
               start = this.options.offset
@@ -91,6 +92,33 @@
               }
               this.view.data = this.view.data.slice(start, end)
             });
+            datamodel.addPlugin('select', function(params) {
+              // open/close objects as a tree
+              if (params.toggle) {
+                if (this.options.closed[params.toggle]) {
+                  delete this.options.closed[params.toggle]
+                } else {
+                  this.options.closed[params.toggle]=true
+                }
+              }
+              let closedSubtree = []
+              this.view.data = this.view.data.filter(r => {
+                let closed = closedSubtree.length?closedSubtree[closedSubtree.length-1]:0
+                if (closed && closed<r.indent) {
+                    return false
+                }
+                if (closed && closed>=r.indent) {
+                    closedSubtree.pop()
+                }
+                if (this.options.closed[r.uuid]) {
+                    r.closed = 'closed'
+                    closedSubtree.push(r.indent)
+                } else {
+                    r.closed = ''
+                }
+                return true
+              })
+            })
             dataModels[name] = datamodel
             datamodel.update()
             return datamodel;

@@ -317,6 +317,15 @@
             }
         },
         commands: {
+            toggleTree: function(el,value) {
+                let id = el.closest('tr').querySelector('[data-simply-field="@references"]').pathname
+                id = id.split('/').pop()
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.update({
+                    toggle: id
+                })
+                el.closest('tr').classList.toggle('closed')
+            },
             nextPage: function(el,value) {
                 page = Math.min(browser.view.max-1, parseInt(browser.view.page));
                 browser.actions.updatePage(page);

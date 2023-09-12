@@ -31,3 +31,6 @@
     .slo-text-content > article > :first-child {
         margin-top: 0;
     }
+    .slo-tree-table .closed [data-simply-field="indent"]::before {
+        content: "\25B8";
+    }
