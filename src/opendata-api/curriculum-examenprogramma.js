@@ -34,6 +34,7 @@ module.exports = {
 		ExamenprogrammaVakleergebied:`
 		const results = from(data.ExamenprogrammaVakleergebied) 
 		.select(shortInfo)
+		.sort(sortByTitle)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -47,6 +48,7 @@ module.exports = {
 		Examenprogramma: `
 		const results = from(data.Examenprogramma) 
 		.select(shortInfo)
+		.sort(sortByTitle)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -192,108 +194,108 @@ module.exports = {
 
 		`,
 		ExamenprogrammaVolledig: `
-from(Index(request.query.id))
-    .select({
-		...shortInfo,
-        NiveauIndex: {
-            Niveau: NiveauShort
-        },
-        Syllabus: {
+		from(Index(request.query.id))
+		.select({
 			...shortInfo,
-            ce_se: _,
-            examenjaar: _,
-        },
-        ExamenprogrammaKop1: {
-			...shortInfo,
-            ExamenprogrammaKop2: {
+			NiveauIndex: {
+				Niveau: NiveauShort
+			},
+			Syllabus: {
 				...shortInfo,
-                ExamenprogrammaKop3: {
+				ce_se: _,
+				examenjaar: _,
+			},
+			ExamenprogrammaKop1: {
+				...shortInfo,
+				ExamenprogrammaKop2: {
 					...shortInfo,
-                    ExamenprogrammaKop4: {
+					ExamenprogrammaKop3: {
 						...shortInfo,
-                        ExamenprogrammaBody: {
+						ExamenprogrammaKop4: {
 							...shortInfo,
-                            ce_se: _,
-                        }
-                    },
-                    ExamenprogrammaBody: {
+							ExamenprogrammaBody: {
+								...shortInfo,
+								ce_se: _,
+							}
+						},
+						ExamenprogrammaBody: {
+							...shortInfo,
+							ce_se: _,
+						}
+					},
+					ExamenprogrammaKop4: {
 						...shortInfo,
-                        ce_se: _,
-                    }
-                },
-                ExamenprogrammaKop4: {
-					...shortInfo,
-                    ExamenprogrammaBody: {
+						ExamenprogrammaBody: {
+							...shortInfo,
+							ce_se: _,
+						}
+					},
+					ExamenprogrammaBody: {
 						...shortInfo,
-                        ce_se: _,
-                    }
-                },
-                ExamenprogrammaBody: {
+						ce_se: _,
+					}
+				},
+				ExamenprogrammaKop3: {
 					...shortInfo,
-                    ce_se: _,
-                }
-            },
-            ExamenprogrammaKop3: {
-				...shortInfo,
-                ExamenprogrammaKop4: {
-					...shortInfo,
-                    ExamenprogrammaBody: {
+					ExamenprogrammaKop4: {
 						...shortInfo,
-                        ce_se: _,
-                    }
-                },
-                ExamenprogrammaBody: {
-					...shortInfo,
-                    ce_se: _,
-                }
-            },
-            ExamenprogrammaBody: {
-				...shortInfo,
-                ce_se: _,
-            }
-        },
-        ExamenprogrammaDomein: {
-			...shortInfo,
-            ce_se: _,
-            SyllabusSpecifiekeEindterm: SyllabusInfo,
-            SyllabusToelichting: {
-				...shortInfo,
-                ce_se: _,
-            },
-            ExamenprogrammaSubdomein: {
-				...shortInfo,
-                ce_se: _,
-                ExamenprogrammaEindterm: {
-					...shortInfo,
-                    ce_se: _,
-                    SyllabusSpecifiekeEindterm: SyllabusInfo,
-                    SyllabusVakbegrip: {
+						ExamenprogrammaBody: {
+							...shortInfo,
+							ce_se: _,
+						}
+					},
+					ExamenprogrammaBody: {
 						...shortInfo,
-                        ce_se: _,
-                    },
-                    Niveau: NiveauShort,
-                },
-                SyllabusSpecifiekeEindterm: SyllabusInfo,
-                SyllabusToelichting: {
+						ce_se: _,
+					}
+				},
+				ExamenprogrammaBody: {
 					...shortInfo,
-                    ce_se: _,
-                }
-            },
-            ExamenprogrammaEindterm: {
+					ce_se: _,
+				}
+			},
+			ExamenprogrammaDomein: {
 				...shortInfo,
-                ce_se: _,
-                SyllabusSpecifiekeEindterm: SyllabusInfo,
-                SyllabusVakbegrip: {
-	    			...shortInfo,
-                    ce_se: _,
-                },
-                Niveau: NiveauShort
-            },
-        },
-        ExamenprogrammaVakleergebied: {
-			...shortInfo,
-        }
-    })`
+				ce_se: _,
+				SyllabusSpecifiekeEindterm: SyllabusInfo,
+				SyllabusToelichting: {
+					...shortInfo,
+					ce_se: _,
+				},
+				ExamenprogrammaSubdomein: {
+					...shortInfo,
+					ce_se: _,
+					ExamenprogrammaEindterm: {
+						...shortInfo,
+						ce_se: _,
+						SyllabusSpecifiekeEindterm: SyllabusInfo,
+						SyllabusVakbegrip: {
+							...shortInfo,
+							ce_se: _,
+						},
+						Niveau: NiveauShort,
+					},
+					SyllabusSpecifiekeEindterm: SyllabusInfo,
+					SyllabusToelichting: {
+						...shortInfo,
+						ce_se: _,
+					}
+				},
+				ExamenprogrammaEindterm: {
+					...shortInfo,
+					ce_se: _,
+					SyllabusSpecifiekeEindterm: SyllabusInfo,
+					SyllabusVakbegrip: {
+						...shortInfo,
+						ce_se: _,
+					},
+					Niveau: NiveauShort
+				},
+			},
+			ExamenprogrammaVakleergebied: {
+				...shortInfo,
+			}
+		})`
 	},
 	typedQueries: {
 		ExamenprogrammaVakleergebied:`
