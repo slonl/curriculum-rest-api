@@ -9,9 +9,10 @@ module.exports = {
 			'@id': Id,
 			uuid: _.id,
 			title: _,   
-		  })
+		})
+		.sort(sortByTitle)
 
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -33,7 +34,8 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-		  })
+		})
+		.sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -62,7 +64,8 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-		  })
+		})
+		.sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -86,14 +89,15 @@ module.exports = {
 				deprecated: _,
 			},
 			SyllabusSpecifiekeEindterm: {
-			  Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				deprecated: _,
+			  	Syllabus: {
+					'@id': Id,
+					uuid: _.id,
+					title: _,
+					deprecated: _,
 			  }
 			}
-		  })
+		})
+		.sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -116,9 +120,10 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-		  })
+		})
+		.sort(sortByTitle)
 
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -140,9 +145,7 @@ module.exports = {
 			status: _,
 			ce_se: _,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-			  }
+				Niveau: NiveauShort
 			},
 			SyllabusSpecifiekeEindterm: {
 				'@id': Id,
@@ -229,7 +232,8 @@ module.exports = {
 				}
 			}
 		  }
-		}`
+		})
+		`
 	},
 	typedQueries: {
 		Syllabus: `
@@ -273,9 +277,7 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -326,9 +328,7 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -371,9 +371,7 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -422,9 +420,7 @@ module.exports = {
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`

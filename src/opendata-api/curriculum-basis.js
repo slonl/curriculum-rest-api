@@ -152,6 +152,33 @@ module.exports = {
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
 		
+		function sortByTitle(a,b) {
+			if (a.title<b.title) {
+			  return -1
+			} else if (a.title>b.title) {
+			  return 1
+			}
+			return 0
+		  }
+
+		function sortByPrefix(a,b) {
+			if (a.prefix<b.prefix) {
+				return -1
+			} else if (a.prefix>b.prefix) {
+				return 1
+			}
+			return 0
+		}
+
+		function sortByNiveau(a,b) {
+			if (a.Niveau<b.Niveau) {
+				return -1
+			} else if (a.Niveau>b.Niveau) {
+				return 1
+			}
+			return 0
+		}
+		
 	`,
 	queries: {
 		Vakleergebied: `
@@ -163,8 +190,9 @@ module.exports = {
 					uuid: _.id,
 					prefix: _,
 					title: _,
-					Niveau:ShortLink
+					Niveau: ShortLink
 				})
+				.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -187,6 +215,7 @@ module.exports = {
 			prefix: _,
 			type: _
 		})
+		.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -204,11 +233,9 @@ module.exports = {
 			'@id': Id,
 			'@type': Type,
 			uuid: _.id,
-			sloID: _,
 			title: _,
-			description: _,
-			bron: _,
 		})
+		.sort(sortByTitle)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -277,6 +304,7 @@ module.exports = {
 				ErkVakleergebied: ShortLink,
 				Niveau
 			})
+			.sort(sortByTitle)
 
 		`,
 		Niveau: `
@@ -289,7 +317,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 			description: _,
-			})		
+			})
 		`,
 		Doel: `
 		from(Index(request.query.id))

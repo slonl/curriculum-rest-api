@@ -4,8 +4,8 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
 		ErkVakleergebied: `
-				const results = from(data.ErkVakleergebied)
-				.select({
+			const results = from(data.ErkVakleergebied)
+			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
 				'@id': Id,
 				uuid: _.id,
@@ -17,10 +17,9 @@ module.exports = {
 						uuid: _.id,
 						title: _,
 				},
-				Niveau: {
-					NiveauShort
-				} 
+				Niveau: NiveauShort 
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -43,6 +42,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -64,6 +64,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -84,6 +85,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -104,6 +106,7 @@ module.exports = {
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -126,6 +129,7 @@ module.exports = {
 				erk_voorbeeld_id: _,
 				erk_lesidee_id: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -145,6 +149,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -164,6 +169,7 @@ module.exports = {
 				title: _,
 				unreleased: _,
 			})
+			.sort(sortByPrefix)
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -173,18 +179,16 @@ module.exports = {
 	
 			meta
 		`,
-		// @TODO ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
+		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
 		const results = from(Index(request.query.id))
 			.select({
-			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',	
+			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
 		    '@id': Id,
 			uuid: _.id,
 		    prefix: _,
 		    title: _,
-			Niveau: {
-			  NiveauShort: _,
-			}
+			Niveau: NiveauShort
 		  })
 
 		  const meta = {
@@ -195,11 +199,11 @@ module.exports = {
 
 		meta
 		`,
-
-		//@TODO Check if this exists
+		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
-		const results = from(data.ErkGebied)
+		const results = from(data.ErkSchalen)
 			.select({
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,
@@ -251,7 +255,8 @@ module.exports = {
 					algemeen: _,
 				},
 			})
-			
+			.sort(sortByPrefix)
+
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
 				page: Page,
@@ -326,7 +331,7 @@ module.exports = {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
-				deprecated
+				deprecated: _,
 			},
 		})
 		`,

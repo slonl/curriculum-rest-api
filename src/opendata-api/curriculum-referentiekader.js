@@ -5,213 +5,211 @@ module.exports = {
 	fragments: ``,
 	queries: {
 		RefVakleergebied: `
-			const results = from(data.RefVakleergebied)
-				.select({
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
-					unreleased: _,
-					description: _,					
-					Vakleergebied: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
-						deprecated: _,
-					},
-					NiveauIndex: {
-						Niveau: {
-							NiveauShort
-						}
-					}
-				})
-					
-				const meta = {
-					data: results.slice(Paging.start,Paging.end),
-					page: Page,
-					count: results.length
-				}
+		const results = from(data.RefVakleergebied)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			description: _,					
+			Vakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
+			}
+		})
+		.sort(sortByPrefix)
+			
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
 
-				meta
+		meta
 
 		`,
 		RefDomein: `
 		const results = from(data.RefDomein)
-				.select({
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			RefVakleergebied: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
+			}
+		})
+		.sort(sortByPrefix)
+				
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+		`,
+		RefSubdomein: `
+		const results = from(data.RefSubdomein)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			RefDomein: { 
+				RefVakleergebied: {
 					'@id': Id,
 					uuid: _.id,
-					prefix: _,
 					title: _,
-					unreleased: _,
+					deprecated: _,
+				}
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
+			}				
+		})
+		.sort(sortByPrefix)
+		
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+		`,
+		RefOnderwerp: `
+		const results = from(data.RefOnderwerp)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			RefSubdomein: {
+				RefDomein: {
 					RefVakleergebied: {
 						'@id': Id,
 						uuid: _.id,
 						title: _,
 						deprecated: _,
-					},
-					NiveauIndex: {
-						Niveau: {
-							NiveauShort
-						}
 					}
-				})
-				
-				const meta = {
-					data: results.slice(Paging.start,Paging.end),
-					page: Page,
-					count: results.length
 				}
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
+			}
+		})
+		.sort(sortByPrefix)
 	
-				meta
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
 		`,
-		RefSubdomein: `
-		const results = from(data.RefSubdomein)
-				.select({
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
-					unreleased: _,
-					RefDomein: { 
+		RefDeelonderwerp: `
+		const results = from(data.RefDeelonderwerp)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			RefOnderwerp: {
+				RefSubdomein: {
+					RefDomein: {
 						RefVakleergebied: {
 							'@id': Id,
 							uuid: _.id,
 							title: _,
 							deprecated: _,
 						}
-					},
-					NiveauIndex: {
-						Niveau: {
-							NiveauShort
-						}
-					}				
-				})
-				
-				const meta = {
-					data: results.slice(Paging.start,Paging.end),
-					page: Page,
-					count: results.length
-				}
-
-				meta
-		`,
-		RefOnderwerp: `const results = from(data.RefOnderwerp)
-				.select({
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
-					unreleased: _,
-					RefSubdomein: {
-						RefDomein: {
-							RefVakleergebied: {
-								'@id': Id,
-								uuid: _.id,
-								title: _,
-								deprecated: _,
-							}
-						}
-					},
-					NiveauIndex: {
-						Niveau: {
-							NiveauShort
-						}
-					}
-				})
-			
-				const meta = {
-					data: results.slice(Paging.start,Paging.end),
-					page: Page,
-					count: results.length
-				}
-
-				meta
-		`,
-		RefDeelonderwerp: `const results = from(data.RefDeelonderwerp)
-				.select({
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
-					unreleased: _,
-					RefOnderwerp: {
-						RefSubdomein: {
-							RefDomein: {
-								RefVakleergebied: {
-									'@id': Id,
-									uuid: _.id,
-									title: _,
-									deprecated: _,
-								}
-							}
-						}
-					},
-					NiveauIndex: {
-						Niveau: {
-							NiveauShort
-						}
-					}
-				})
-				
-				const meta = {
-					data: results.slice(Paging.start,Paging.end),
-					page: Page,
-					count: results.length
-				}
-
-				meta
-		`,
-		RefTekstkenmerk: `const results = from(data.RefTekstkenmerk)
-			.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				unreleased: _,
-				RefOnderwerp: {
-					RefSubdomein: {
-						RefDomein: {
-							RefVakleergebied: {
-								'@id': Id,
-								uuid: _.id,
-								title: _,
-								deprecated: _,
-							}
-						}
-					}
-				},
-				NiveauIndex: {
-					Niveau: {
-						NiveauShort
 					}
 				}
-			})
-
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
 			}
+		})
+		.sort(sortByPrefix)
+		
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
 
-			meta
+		meta
+		`,
+
+		// @TODO : Check if RefTekstkenmerk is indeed empty
+		RefTekstkenmerk: `
+		const results = from(data.RefTekstkenmerk)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			unreleased: _,
+			RefOnderwerp: {
+				RefSubdomein: {
+					RefDomein: {
+						RefVakleergebied: {
+							'@id': Id,
+							uuid: _.id,
+							title: _,
+							deprecated: _,
+						}
+					}
+				}
+			},
+			NiveauIndex: {
+				Niveau: NiveauShort
+			}
+		})
+		.sort(sortByPrefix)
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
 		`,
 		/*
+		// @TODO : Check if ReferentiekaderVolledig is a word
 		ReferentiekaderVolledig: `
 		const results = from(data.ReferentiekaderVolledig)
-			.select({
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			deprecated: _,
+			NiveauIndex: {
+				Niveau: NiveauShort
+			},
+			RefDomein {
 				'@id': Id,
 				uuid: _.id,
-				prefix: _,
-				title: _,
-				deprecated: _,
-				NiveauIndex: {
-					Niveau: {
-						NiveauShort
-					}
-				},
-				RefDomein {
-					'@id': Id,
-					uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
@@ -228,30 +226,20 @@ module.exports = {
 						title: _,
 						deprecated: _,
 						RefDeelonderwerp: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
-						deprecated: _,
-						Doelniveau(filter:{niveau_id:[$niveau]}) {
-							Doelen
-						}
+							'@id': Id,
+							uuid: _.id,
+							prefix: _,
+							title: _,
+							deprecated: _,
+							Doelniveau:	Doelen,
+						},
+						Doelniveau: Doelen,
 					},
-					Doelniveau(filter:{niveau_id:[$niveau]}) {
-						Doelen
-					}
+					Doelniveau:	Doelen,
 				},
-				Doelniveau(filter:{niveau_id:[$niveau]}) {
-						Doelen
-					}
-				},
-				Doelniveau(filter:{niveau_id:[$niveau]}) {
-					Doelen
-				}
+				Doelniveau: Doelen
 			},
-			Doelniveau(filter:{niveau_id:[$niveau]}) {
-				Doelen
-			}
+			Doelniveau: Doelen,
 		}
 	})`
 		*/
@@ -261,28 +249,22 @@ module.exports = {
 		RefVakleergebied:`
 		from(Index(request.query.id))
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				RefDomein: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
-						deprecated: _,
-				},
-				Doelniveau: {
-					Doelniveau
-				},
-				/*
-				NiveauIndex {
-					Niveau: {
-						NiveauShort
-					}
-				}
-				*/
-			})
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			RefDomein: {
+					'@id': Id,
+					uuid: _.id,
+					prefix: _,
+					title: _,
+					deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			NiveauIndex {
+				Niveau: NiveauShort
+			},
+		})
 		`,
 		RefDomein: `
 		from(Index(request.query.id))
@@ -305,13 +287,9 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort,
 			}
 		})
 		`,
@@ -336,13 +314,9 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -368,19 +342,15 @@ module.exports = {
 				deprecated: _,
 			}
 			RefTekstkenmerk: {
-					'@id': Id,
-					uuid: _.id,
+				'@id': Id,
+				uuid: _.id,
 				prefix: _,
 				title: _,
 				deprecated: _,
 			}
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -398,13 +368,9 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -422,13 +388,9 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			}
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})	
 		`,

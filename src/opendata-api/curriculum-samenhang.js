@@ -3,108 +3,91 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/samenhang.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-samenhang/context.json',
 	queries: {
-		Tag: `query Tag($page:Int, $perPage:Int) {
-			allTag(page:$page, perPage:$perPage, filter:{deprecated:null}) {
-				id
-				title
-				unreleased
-				fo_toelichting_id
-				fo_uitwerking_id
-			}
-			_allTagMeta {
-				count
-			}
-		}`,
-		Relatie: `query Relatie($page:Int, $perPage:Int) {
-			allRelatie(page:$page, perPage:$perPage, filter:{deprecated:null}) {
-				id
-				title
-				unreleased
-				fo_toelichting_id
-				fo_uitwerking_id
-			}
-			_allRelatieMeta {
-				count
-			}
-		}`
+		Tag: `
+		const results = from(data.Tag)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			unreleased: _,
+			fo_toelichting_id: _,
+			fo_uitwerking_id: _,
+		})
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+		`,
+		Relatie: `
+		const results = from(data.Syllabus)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			unreleased: _,
+			fo_toelichting_id: _,
+			fo_uitwerking_id: _,
+		})
+
+		const meta = {
+			data: results.slice(Paging.start,Paging.end),
+			page: Page,
+			count: results.length
+		}
+
+		meta
+
+			`
 	},
 	typedQueries: {
-		'tag': `
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
+		tag: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			FoToelichting: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
-			FoUitwerking {
-				id
-				title
-				deprecated
+			FoUitwerking: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
+		})
 		`,
-		'relatie': `
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
+		relatie: `
+		from(Index(request.query.id))
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			title: _,
+			FoToelichting: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
-			FoUitwerking {
-				id
-				title
-				deprecated
+			FoUitwerking: {
+				'@id': Id,
+				uuid: _.id,
+				title: _,
+				deprecated: _,
 			}
+		})
 		`
 	},
-	idQuery: `
-		allTag(filter:{id:$id}) {
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
-			}
-			FoUitwerking {
-				id
-				title
-				deprecated
-			}
-		}
-		allRelatie(filter:{id:$id}) {
-			id
-			title
-			FoToelichting {
-				id
-				title
-				deprecated
-			}
-			FoUitwerking {
-				id
-				title
-				deprecated
-			}
-		}`,
 	routes: {
-		'tag/': (req) =>
-			opendata.api["Tag"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allTag, 
-					type: 'Tag', 
-					meta: result.data._allTagMeta
-				}
-			}),
-		'relatie/': (req) =>
-			opendata.api["Relatie"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allRelatie, 
-					type: 'Relatie', 
-					meta: result.data._allRelatieMeta
-				}
-			})
+		'tag/': (req) => opendata.api["Tag"](req.params, req.query),
+		'relatie/': (req) => opendata.api["Relatie"](req.params, req.query)
 	}
 };

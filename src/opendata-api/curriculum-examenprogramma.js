@@ -53,7 +53,7 @@ module.exports = {
 			page: Page,
 			count: results.length
 		}
-
+		
 		meta
 
 		`,
@@ -66,7 +66,8 @@ module.exports = {
 				title: _,
 			}
 		})
-					
+		.sort(sortByTitle)
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -87,7 +88,8 @@ module.exports = {
 				}
 			}
 		})
-					
+		.sort(sortByTitle)
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -100,7 +102,8 @@ module.exports = {
 		ExamenprogrammaEindterm: `
 		const results = from(data.ExamenprogrammaEindterm) 
 		.select(shortInfo)
-		 		
+		.sort(sortByPrefix)
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -120,6 +123,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
+		.sort(sortByPrefix)
 				
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -133,8 +137,10 @@ module.exports = {
 		ExamenprogrammaKop2: `
 		const results = from(data.ExamenprogrammaKop2) 
 		.select(shortInfo)
+		.sort(sortByPrefix)
 		
 		const meta = {
+
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -146,6 +152,7 @@ module.exports = {
 		ExamenprogrammaKop3: `
 		const results = from(data.ExamenprogrammaKop3) 
 		.select(shortInfo)
+		.sort(sortByPrefix)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -159,7 +166,8 @@ module.exports = {
 		ExamenprogrammaKop4: `
 		const results = from(data.ExamenprogrammaKop4) 
 		.select(shortInfo)
-		
+		.sort(sortByPrefix)
+				
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -172,6 +180,7 @@ module.exports = {
 		ExamenprogrammaBody: `
 		const results = from(data.ExamenprogrammaBody) 
 		.select(shortInfo)
+		.sort(sortByPrefix)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -340,9 +349,7 @@ from(Index(request.query.id))
 				title: _,
 				deprecated: _,
 			},
-			Niveau: {
-				NiveauShort
-			}
+			Niveau: NiveauShort
 		})
 		`,
 		ExamenprogrammaDomein:`
@@ -379,9 +386,7 @@ from(Index(request.query.id))
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort,
 			},
 			SyllabusToelichting: {
 				'@id': Id,
@@ -396,9 +401,7 @@ from(Index(request.query.id))
 				deprecated: _,
 			},
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			}
 		})
 		`,
@@ -435,18 +438,12 @@ from(Index(request.query.id))
 				prefix: _,
 				title: _,
 				deprecated: _,
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort,
 			},
-			Doelniveau: {
-				DoelNiveau
-			},
+			Doelniveau: Doelniveau,
 			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
-			}
+				Niveau: NiveauShort
+			},
 		})
 		`,
 		ExamenprogrammaEindterm:`

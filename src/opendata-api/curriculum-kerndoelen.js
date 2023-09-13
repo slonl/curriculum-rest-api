@@ -12,10 +12,9 @@ module.exports = {
 			title: _,
 			description: _,
 			kerndoelLabel: _,
-			Niveau: {
-			  NiveauShort
-			}
+			Niveau: NiveauShort,
 		})
+		.sort(sortByPrefix)
 
 		const meta = {
 		data: results.slice(Paging.start,Paging.end),
@@ -32,9 +31,7 @@ module.exports = {
 			'@id': Id,
 			uuid: _.id,
 			title: _,
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau: Doelniveau
 		})
 		`,
 		KerndoelDomein: `
@@ -50,6 +47,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
+		.sort(sortByTitle)
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -73,6 +71,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		})
+		.sort(sortByPrefix)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -90,6 +89,7 @@ module.exports = {
 			uuid: _.id,
 			title: _,
 		})
+		.sort(sortByPrefix)
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -123,15 +123,9 @@ module.exports = {
 					deprecated: _,
 				}
 			},
-			Niveau: {
-				NiveauShort
-			},
-			Doelniveau: {
-				Doelniveau
-			},
-			Niveau: {
-				Niveau
-			},
+			Niveau: NiveauShort,
+			Doelniveau: Doelniveau,
+			Niveau: Niveau,
 		})
 
 		`,
@@ -148,11 +142,9 @@ module.exports = {
 				prefix: _,
 				kerndoelLabel: _,
 				deprecated: _,
-				Niveau: {
-					NiveauShort
-				}
+				Niveau: NiveauShort
 			},
-			KerndoelVakleergebied {
+			KerndoelVakleergebied: {
 				'@id': Id,
 				uuid: _.id,
 				title: _,
@@ -191,9 +183,7 @@ module.exports = {
 				prefix: _,
 				kerndoelLabel: _,
 				deprecated: _,
-				Niveau: {
-					
-				}
+				Niveau: NiveauShort,
 			}
 		})
 		`,
