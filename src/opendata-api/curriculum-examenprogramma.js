@@ -3,36 +3,29 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 	fragments:`
+		const shortInfo = {
+		    '@id': Id,
+		    '@type': Type,
+		    uuid: _.id,
+		    prefix: _,
+		    title: _,
+		};
 		const SyllabusInfo = {
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			niveau_id: _,
 			SyllabusVakbegrip: {
-			  '@id': Id,
-			  uuid: _.id,
-			  prefix: _,
-			  title: _,
-			  ce_se: _,
-			  deprecated: _,
+				...shortInfo,
+				ce_se: _,
 			},
 			SyllabusToelichting: {
-			  '@id': Id,
-			  uuid: _.id,
-			  prefix: _,
-			  title: _,
-			  ce_se: _,
-			  deprecated: _,
+				...shortInfo,
+				ce_se: _,
 			},
 			Syllabus: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  ce_se: _,
-			  deprecated: _,
-			  examenjaar: _,
+				...shortInfo,
+				ce_se: _,
+				examenjaar: _,
 				Niveau: NiveauShort
 			}
 		}`
@@ -40,12 +33,7 @@ module.exports = {
 	queries: {
 		ExamenprogrammaVakleergebied:`
 		const results = from(data.ExamenprogrammaVakleergebied) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-		})
-		.sort(sortByTitle)
+		.select(shortInfo)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -58,13 +46,7 @@ module.exports = {
 		`,
 		Examenprogramma: `
 		const results = from(data.Examenprogramma) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
-		.sort(sortByTitle)
+		.select(shortInfo)
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -78,18 +60,14 @@ module.exports = {
 		ExamenprogrammaDomein: `
 		const results = from(data.ExamenprogrammaDomein) 
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Examenprogramma: {
-			  '@id': Id,
-			  title: _,
-			  deprecated: _,
+				'@id': Id,
+				title: _,
 			}
 		})
 		.sort(sortByTitle)
-		  		
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -102,25 +80,16 @@ module.exports = {
 		ExamenprogrammaSubdomein: `
 		const results = from(data.ExamenprogrammaSubdomein) 
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaDomein: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  deprecated: _,
-			  Examenprogramma: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				deprecated: _,
-			  }
+				...shortInfo,
+				Examenprogramma: {
+					...shortInfo
+				}
 			}
 		})
 		.sort(sortByTitle)
-		  		
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -132,14 +101,9 @@ module.exports = {
 		`,
 		ExamenprogrammaEindterm: `
 		const results = from(data.ExamenprogrammaEindterm) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
+		.select(shortInfo)
 		.sort(sortByPrefix)
-		 		
+
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
@@ -152,19 +116,16 @@ module.exports = {
 		ExamenprogrammaKop1: `
 		const results = from(data.ExamenprogrammaKop1) 
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Examenprogramma:{
-			  '@id': Id,
-			  title: _,
-			  deprecated: _,
+				'@id': Id,
+				title: _,
+				deprecated: _,
 			}
 		})
 		.sort(sortByPrefix)
 				
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -175,15 +136,11 @@ module.exports = {
 		`,
 		ExamenprogrammaKop2: `
 		const results = from(data.ExamenprogrammaKop2) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
+		.select(shortInfo)
 		.sort(sortByPrefix)
+		
+		const meta = {
 
-		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -194,15 +151,10 @@ module.exports = {
 		`,
 		ExamenprogrammaKop3: `
 		const results = from(data.ExamenprogrammaKop3) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
+		.select(shortInfo)
 		.sort(sortByPrefix)
 		
-		  const meta = {
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -213,15 +165,10 @@ module.exports = {
 		`,
 		ExamenprogrammaKop4: `
 		const results = from(data.ExamenprogrammaKop4) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
+		.select(shortInfo)
 		.sort(sortByPrefix)
-		
-		  const meta = {
+				
+		const meta = {
 			data: results.slice(Paging.start,Paging.end),
 			page: Page,
 			count: results.length
@@ -232,12 +179,7 @@ module.exports = {
 		`,
 		ExamenprogrammaBody: `
 		const results = from(data.ExamenprogrammaBody) 
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-		})
+		.select(shortInfo)
 		.sort(sortByPrefix)
 		
 		const meta = {
@@ -250,188 +192,108 @@ module.exports = {
 
 		`,
 		ExamenprogrammaVolledig: `
-		from(Index(request.query.id))
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-			NiveauIndex: {
-			  Niveau: NiveauShort
-			},
-			Syllabus: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  ce_se: _,
-			  deprecated: _,
-			  examenjaar: _,
-			},
-			ExamenprogrammaKop1: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  deprecated: _,
-			  ExamenprogrammaKop2: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				deprecated: _,
-				ExamenprogrammaKop3: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  deprecated: _,
-				  ExamenprogrammaKop4: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					deprecated: _,
-					ExamenprogrammaBody: {
-					  '@id': Id,
-					  uuid: _.id,
-					  title: _,
-					  ce_se: _,
-					  deprecated: _,
-					}
-				  },
-				  ExamenprogrammaBody: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					ce_se: _,
-					deprecated: _,
-				  }
-				},
-				ExamenprogrammaKop4: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  deprecated: _,
-				  ExamenprogrammaBody: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					ce_se: _,
-					deprecated: _,
-				  }
-				},
-				ExamenprogrammaBody: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  ce_se: _,
-				  deprecated: _,
-				}
-			},
-			  ExamenprogrammaKop3: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				deprecated: _,
-				ExamenprogrammaKop4: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  deprecated: _,
-				  ExamenprogrammaBody: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					ce_se: _,
-					deprecated: _,
-				  }
-				},
-				ExamenprogrammaBody: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  ce_se: _,
-				  deprecated: _,
-				}
-			  },
-			  ExamenprogrammaBody: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				ce_se: _,
-				deprecated: _,
-			  }
-			},
-			ExamenprogrammaDomein: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  ce_se: _,
-			  deprecated: _,
-			  SyllabusSpecifiekeEindterm: SyllabusInfo,
-			  SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				ce_se: _,
-				deprecated: _,
-			  },
-			  ExamenprogrammaSubdomein: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				ce_se: _,
-				deprecated: _,
-				ExamenprogrammaEindterm: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
-				  ce_se: _,
-				  deprecated: _,
-				  SyllabusSpecifiekeEindterm: SyllabusInfo,
-				  SyllabusVakbegrip: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
-					ce_se: _,
-					deprecated: _,
-				  },
-				  Niveau: NiveauShort,
-				},
-				SyllabusSpecifiekeEindterm: SyllabusInfo,
-				SyllabusToelichting: {
-				  '@id': Id,
-				  uuid: _.id,
-				  prefix: _,
-				  title: _,
-				  ce_se: _,
-				  deprecated: _,
-				}
-			  },
-			  ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				ce_se: _,
-				deprecated: _,
-				SyllabusSpecifiekeEindterm: SyllabusInfo,
-			    SyllabusVakbegrip: {
-		          '@id': Id,
-				  uuid: _.id,
-		          prefix: _,
-		          title: _,
-				  ce_se: _,
-				  deprecated: _,
-		        },
-				Niveau: NiveauShort,
-			},
-			ExamenprogrammaVakleergebied: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
-			  deprecated: _,
-			}
-		})
-		
-		`
+from(Index(request.query.id))
+    .select({
+		...shortInfo,
+        NiveauIndex: {
+            Niveau: NiveauShort
+        },
+        Syllabus: {
+			...shortInfo,
+            ce_se: _,
+            examenjaar: _,
+        },
+        ExamenprogrammaKop1: {
+			...shortInfo,
+            ExamenprogrammaKop2: {
+				...shortInfo,
+                ExamenprogrammaKop3: {
+					...shortInfo,
+                    ExamenprogrammaKop4: {
+						...shortInfo,
+                        ExamenprogrammaBody: {
+							...shortInfo,
+                            ce_se: _,
+                        }
+                    },
+                    ExamenprogrammaBody: {
+						...shortInfo,
+                        ce_se: _,
+                    }
+                },
+                ExamenprogrammaKop4: {
+					...shortInfo,
+                    ExamenprogrammaBody: {
+						...shortInfo,
+                        ce_se: _,
+                    }
+                },
+                ExamenprogrammaBody: {
+					...shortInfo,
+                    ce_se: _,
+                }
+            },
+            ExamenprogrammaKop3: {
+				...shortInfo,
+                ExamenprogrammaKop4: {
+					...shortInfo,
+                    ExamenprogrammaBody: {
+						...shortInfo,
+                        ce_se: _,
+                    }
+                },
+                ExamenprogrammaBody: {
+					...shortInfo,
+                    ce_se: _,
+                }
+            },
+            ExamenprogrammaBody: {
+				...shortInfo,
+                ce_se: _,
+            }
+        },
+        ExamenprogrammaDomein: {
+			...shortInfo,
+            ce_se: _,
+            SyllabusSpecifiekeEindterm: SyllabusInfo,
+            SyllabusToelichting: {
+				...shortInfo,
+                ce_se: _,
+            },
+            ExamenprogrammaSubdomein: {
+				...shortInfo,
+                ce_se: _,
+                ExamenprogrammaEindterm: {
+					...shortInfo,
+                    ce_se: _,
+                    SyllabusSpecifiekeEindterm: SyllabusInfo,
+                    SyllabusVakbegrip: {
+						...shortInfo,
+                        ce_se: _,
+                    },
+                    Niveau: NiveauShort,
+                },
+                SyllabusSpecifiekeEindterm: SyllabusInfo,
+                SyllabusToelichting: {
+					...shortInfo,
+                    ce_se: _,
+                }
+            },
+            ExamenprogrammaEindterm: {
+				...shortInfo,
+                ce_se: _,
+                SyllabusSpecifiekeEindterm: SyllabusInfo,
+                SyllabusVakbegrip: {
+	    			...shortInfo,
+                    ce_se: _,
+                },
+                Niveau: NiveauShort
+            },
+        },
+        ExamenprogrammaVakleergebied: {
+			...shortInfo,
+        }
+    })`
 	},
 	typedQueries: {
 		ExamenprogrammaVakleergebied:`
@@ -665,7 +527,7 @@ module.exports = {
 				title: _,
 				deprecated: _,
 			},
-			ExamenprogrammaKop2: {	  
+			ExamenprogrammaKop2: {		
 				'@id': Id,
 				uuid: _.id,
 				prefix: _,

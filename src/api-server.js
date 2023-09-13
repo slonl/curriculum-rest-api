@@ -22,8 +22,8 @@ const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/cur
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = storeUrl;
 
-const niveauURL       = baseDatasetURL + "niveau/";
-const notfound        = { error: "not found"};
+const niveauURL = baseDatasetURL + "niveau/";
+const notfound  = { error: "not found"};
 
 app.route('/status/').get((req, res) => {
 	console.log('status')
@@ -182,16 +182,13 @@ function jsonLDList(list, schema, type, meta) {
 }
 
 function addReference(entry){
-	console.log("adding @reference");
 	if (Array.isArray(entry)){ 
 		entry.forEach(addReference);
 	}
 	else if(isObject(entry)) { 
 		if (entry.uuid) {
-			console.log("found uuid and added @reference");
 			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
 		}
-		console.log("calling addReference()");
 		Object.values(entry).forEach(addReference);	
 	};
 }
@@ -243,21 +240,49 @@ app.route("/" + "search/").get((req, res) => {
 });
 
 app.route('/' + 'uuid/:id').get(async (req, res) => {
-	var schema = null;
-	var entitytype = null;
-
 	try {
 		let result = await opendata.api.Id(req.params)
-		if (!result) {
-			throw new Error("404: not found");
-		}
-		res.send(jsonLD(result, schema, entitytype));
+    if (!result) {
+  		res.status(404).send({ error: 404, message: '404: not found' });
+		} else {
+      res.send(jsonLD(result));
+    }
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
 		res.status(500).send({ error: 500, message: err.message });
 		console.log('/uuid/'+req.params.id, err);
 	}
 });
+
+app.route('/roots/:id').get(async (req,res) => {
+	try {
+		let result = await opendata.api.Roots(req.params)
+		if (!result) {
+  		res.status(404).send({ error: 404, message: '404: not found' });
+		} else {
+      res.send(jsonLDList(result));
+    }
+	} catch(err) {
+		res.setHeader('content-type', 'application/json');
+		res.status(500).send({ error: 500, message: err.message });
+		console.log('/roots/'+req.params.id, err);
+	}
+})
+
+app.route('/tree/:id').get(async (req, res) => {
+	try {
+		let result = await opendata.api.Tree(req.params, req.query)
+		if (!result) {
+  		res.status(404).send({ error: 404, message: '404: not found' });
+		} else {
+      res.send(jsonLD(result));
+    }
+	} catch(err) {
+		res.setHeader('content-type', 'application/json');
+		res.status(500).send({ error: 500, message: err.message });
+		console.log('/roots/'+req.params.id, err);
+	}
+})
 
 async function getById(id) {
 	return await opendata.api.Id({id: id})

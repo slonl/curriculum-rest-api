@@ -1675,7 +1675,7 @@ ul.ds-navbar {
     color: var(--ds-black);
 }
 .slo-submenu-item a:active,
-.slo-submenu-item a.slo-active {
+.slo-submenu-item.slo-active a {
     background: var(--ds-grey-light);
     color: var(--ds-black);
 }

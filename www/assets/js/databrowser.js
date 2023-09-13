@@ -317,6 +317,43 @@
             }
         },
         commands: {
+            toggleTree: function(el,value) {
+                let id = el.closest('tr').querySelector('[data-simply-field="@references"]').pathname
+                id = id.split('/').pop()
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.update({
+                    toggle: id
+                })
+                el.closest('tr').classList.toggle('closed')
+            },
+            openTree: function(el, value) {
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.options.closed = {}
+                datamodel.update()
+            },
+            sortTree: function(el, value) {
+                let column = el.closest('th').querySelector('label.slo-column-name').innerText.trim()
+                let datamodel = window.slo.getDataModel('items')
+                datamodel.update({
+                    propSort: {
+                        sortBy: column,
+                        sortDirection: value
+                    }
+                })
+                el.closest('tr')
+                .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
+                .forEach(e => {
+                    e.classList.remove('ds-datatable-sorted-descending')
+                    e.classList.remove('ds-datatable-sorted-ascending')
+                })
+                if (column=='Prefix') {
+                    el.closest('table').classList.remove('sorted')
+                    el.closest('th').classList.add('ds-datatable-sorted-descending')
+                } else {
+                    el.closest('table').classList.add('sorted')
+                    el.closest('th').classList.add('ds-datatable-sorted-'+value)
+                }
+            },
             nextPage: function(el,value) {
                 page = Math.min(browser.view.max-1, parseInt(browser.view.page));
                 browser.actions.updatePage(page);
@@ -377,6 +414,14 @@
                 })
                 .catch(function(error) {
                 });
+            },
+            spreadsheet: function(root, niveaus, contexts) {
+                browser.view.items = []
+                return window.slo.api.get(window.release.apiPath+'examenprogramma/'+root)
+                .then(function(json) {
+                    browser.view.view = 'spreadsheet';
+                    window.slo.spreadsheet('items',json)
+                })
             },
             doelniveauList: function(type) {
                 browser.view['listTitle'] = titles[type];

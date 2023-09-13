@@ -126,6 +126,7 @@
                 </ul>
             </template>
             <link rel="simply-include" href="/templates/item.html">
+            <link rel="simply-include" href="/templates/spreadsheet.html">
         </section>
     </div>
 </main>
@@ -179,5 +180,29 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<script>
+    let throttlePause;
+
+    const throttle = (callback, time) => {
+      if (throttlePause) return;
+      throttlePause = true;
+      setTimeout(() => {
+        callback();
+        throttlePause = false;
+      }, time);
+    };
+
+    simply.activate.addListener('spreadsheet', function() {
+        let datasource = this.querySelector('tbody').dataset.simplyData
+        let datamodel = slo.getDataModel(datasource)
+        let scrollbar = this.querySelector('.scrollbar')
+        scrollbar.style.height = (datamodel.options.rowHeight * (datamodel.data.length+1))+'px'
+        this.addEventListener('scroll', (evt) => {
+            datamodel.options.offset = Math.floor(this.scrollTop/datamodel.options.rowHeight)
+            datamodel.update()
+            simply.viewmodel.updateDataSource(datasource)
+        })
+    })
 </script>
 </body>
