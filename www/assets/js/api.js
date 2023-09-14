@@ -8,8 +8,12 @@
                 }
                 if (params) {
                     var args = Object.keys(params).map(function(param) {
-                        return encodeURIComponent(param)+'='+encodeURIComponent(params[param]);
-                    }).join('&');
+                        if (Array.isArray(params[param])) {
+                            return params[param].map(value => encodeURIComponent(param)+'='+encodeURIComponent(value)).join('&')
+                        } else {
+                            return encodeURIComponent(param)+'='+encodeURIComponent(params[param]);
+                        }
+                    }).filter(Boolean).join('&');
                     url = url + '?' + args;
                 }
                 return fetch(url, {
@@ -58,7 +62,7 @@
             let allColumns = {}
             let lastIndent = 0
             walk(data, 0, (n,indent) => {
-                if (n.uuid) {
+                if (n.id || n.uuid) {
                     let row = {}
                     row.indent = 'slo-indent-'+indent;
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
@@ -109,8 +113,12 @@
                 end = this.view.data.length;
                 start = end - this.options.rows;
               }
-              this.view.data = this.view.data.slice(start, end)
+              if (start>0) {
+                  this.view.data = this.view.data.slice(start, end)
+              }
             });
+            //@FIXME: this doesn't work on a sorted table
+            //only if the sort is 'prefix'
             datamodel.addPlugin('select', function(params) {
               // open/close objects as a tree
               if (params.toggle) {
@@ -137,12 +145,17 @@
                 }
                 return true
               })
+              this.options.visibleRows = this.view.data.length;
             });
             const sortNames = {
                 Titel: 'title',
                 Prefix: 'prefix',
                 Type: '@type'
             }
+            //@FIXME: sort and toggle tree don't work together
+            //toggle should come first, sort the remainder
+            //@FIXME: this is wastefull, memoize sorted data so 
+            //we dont have to sort for each update
             datamodel.addPlugin('start', simply.viewmodel.createSort({
                 name: 'propSort',
                 sortBy: 'prefix',
@@ -163,7 +176,7 @@
                 }
             }));
             dataModels[name] = datamodel
-            datamodel.update()
+            datamodel.update();
             return datamodel;
         },
         getDataModel(name) {
