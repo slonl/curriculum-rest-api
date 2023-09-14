@@ -162,14 +162,14 @@ readKeys();
 function jsonLD(entry) {
 	if (entry.Niveau && Array.isArray(entry.Niveau)) {
 		entry.Niveau
-			.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
-			.map(child => {
-				child['$ref'] = niveauURL + child.uuid;
-				if (entry['@type']=='Vakleergebied') {
-					child['$ref'] += '/vakleergebied/' + entry.uuid;
-				}
-				return child;
-			});
+		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
+		.map(child => {
+			child['$ref'] = niveauURL + child.uuid;
+			if (entry['@type']=='Vakleergebied') {
+				child['$ref'] += '/vakleergebied/' + entry.uuid;
+			}
+			return child;
+		});
 	}
 	// add a '@references' tot the entry children
 	// this is just some comment to convince git there are changes to commit in a branch
@@ -226,27 +226,27 @@ Object.keys(opendata.routes).forEach((route) => {
 
 app.route("/" + "search/").get((req, res) => {
 	console.log('search for '+req.query.text)
-  request({
-    url: searchUrl + "/search?text=" + req.query.text,
-  }).then((data) => {
-    try {
-      data = JSON.parse(data);
-      res.setHeader("Content-Type", "application/json");
-      res.send(jsonLDList(data));
-    } catch (e) {
-      res.error(e);
-    }
-  });
+	request({
+		url: searchUrl + "/search?text=" + req.query.text,
+	}).then((data) => {
+		try {
+			data = JSON.parse(data);
+			res.setHeader("Content-Type", "application/json");
+			res.send(jsonLDList(data));
+		} catch (e) {
+			res.error(e);
+		}
+	});
 });
 
 app.route('/' + 'uuid/:id').get(async (req, res) => {
 	try {
 		let result = await opendata.api.Id(req.params)
-    if (!result) {
-  		res.status(404).send({ error: 404, message: '404: not found' });
+		if (!result) {
+			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-      res.send(jsonLD(result));
-    }
+			res.send(jsonLD(result));
+		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
 		res.status(500).send({ error: 500, message: err.message });
@@ -258,10 +258,10 @@ app.route('/roots/:id').get(async (req,res) => {
 	try {
 		let result = await opendata.api.Roots(req.params)
 		if (!result) {
-  		res.status(404).send({ error: 404, message: '404: not found' });
+	  		res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-      res.send(jsonLDList(result));
-    }
+			res.send(jsonLDList(result));
+		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
 		res.status(500).send({ error: 500, message: err.message });
@@ -273,10 +273,11 @@ app.route('/tree/:id').get(async (req, res) => {
 	try {
 		let result = await opendata.api.Tree(req.params, req.query)
 		if (!result) {
-  		res.status(404).send({ error: 404, message: '404: not found' });
+			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-      res.send(jsonLD(result));
-    }
+			addReference(result);
+			res.send(jsonLD(result));
+		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
 		res.status(500).send({ error: 500, message: err.message });
@@ -349,12 +350,12 @@ function walkReplacedBy(idIndex, ids) {
 
 const flatten = function(arr, result = []) {
 	for (let i = 0, length = arr.length; i < length; i++) {
-	const value = arr[i];
-	if (Array.isArray(value)) {
-		flatten(value, result);
-	} else {
-		result.push(value);
-	}
+		const value = arr[i];
+		if (Array.isArray(value)) {
+			flatten(value, result);
+		} else {
+			result.push(value);
+		}
 	}
 	return result;
 };
