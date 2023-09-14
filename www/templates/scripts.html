@@ -24,6 +24,7 @@
 <script src="/assets/js/databrowser.js"></script>
 <script src="/assets/js/datasources.js"></script>
 <script src="/assets/js/transformers.js"></script>
+<script src="/assets/js/vanillaSelectBox.js"></script>
 <script>
     
     document.addEventListener('simply-content-loaded', function(evt) {
@@ -53,5 +54,21 @@
     }
     browser.view.page = parseInt(args.page)+1;
     browser.view.params = args;
+
+    var treeviewNiveaus, treeviewSchemas;
+    simply.activate.addListener('niveaus-select', function() {
+        treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus'});
+    });
+    simply.activate.addListener('contexts-select', function() {
+        treeviewSchemas = new vanillaSelectBox('.slo-contexts-select', {'placeHolder':'Selecteer contexten'});
+    });
+
+    simply.collect.addListener('niveaus-contexts', function(elements) {
+        browser.view.niveaus = Array.from(elements['niveaus'].options).filter(o => o.selected).map(o => o.value)
+        browser.view.contexts = Array.from(elements['contexts'].options).filter(o => o.selected).map(o => o.value)
+        if (browser.view.view=='spreadsheet') {
+            browser.actions.switchView('spreadsheet')
+        }
+    })
 
 </script>
