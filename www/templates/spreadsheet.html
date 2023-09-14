@@ -1,8 +1,20 @@
 <template data-simply-template="spreadsheet">
     <div class="slo-spreadsheet">
-        <div class="slo-form-inline slo-context-filter">
-            <select><option>ob vmbo bb, ob vmbo kb</option></select>
-            <select><option>Contexten</option></select>
+        <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
+            <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
+            data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
+            data-simply-activate="niveaus-select" data-simply-element="niveaus">
+                <template>
+                    <option data-simply-field="title"></option>
+                </template>
+            </select>
+            <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
+            data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
+            data-simply-activate="contexts-select" data-simply-element="contexts">
+                <template>
+                    <option data-simply-field="context"></option>
+                </template>
+            </select>
             <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
                 <svg class="ds-icon ds-icon-feather">
                     <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
