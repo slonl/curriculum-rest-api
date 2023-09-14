@@ -17,6 +17,12 @@
 
     var browser = simply.app({
         container: document.body,
+        spreadsheet: {
+            focus: {
+                row: 0,
+                column: 0
+            }
+        },
         routes: {
             '/niveau/:niveau/vakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakleergebied/', params.vakid);
@@ -316,7 +322,50 @@
                 }
             }
         },
+        keyboard: {
+            spreadsheet: {
+                "ArrowDown": () => {
+                    let d = window.slo.getDataModel('items')
+                    if (this.spreadsheet.focus.row<d.data.length) {
+                        this.spreadsheet.focus.row++
+                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    }
+                },
+                "ArrowUp": () => {
+                    let d = window.slo.getDataModel('items')
+                    if (this.spreadsheet.focus.row>0) {
+                        this.spreadsheet.focus.row--
+                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    }
+                },
+                "ArrowLeft": () => {
+                    let d = window.slo.getDataModel('items')
+                    if (this.spreadsheet.focus.column<d.options.columns.length) {
+                        this.spreadsheet.focus.column++
+                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    }
+                },
+                "ArrowRight": () => {
+                    let d = window.slo.getDataModel('items')
+                    if (this.spreadsheet.focus.column>0) {
+                        this.spreadsheet.focus.column--
+                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    }                    
+                }
+            }
+        },
         commands: {
+            switchView: function(el, value) {
+                this.app.view.preferedView = value;
+                let current = el.closest('.slo-weergave-switch').querySelector('.ds-button-primary')
+                if (current!=el) {
+                    current.classList.remove('ds-button-primary')
+                    current.classList.add('ds-button-naked')
+                    el.classList.remove('ds-button-naked')
+                    el.classList.add('ds-button-primary')
+                }
+                this.app.actions.switchView(value)
+            },
             toggleTree: function(el,value) {
                 let id = el.closest('tr').querySelector('[data-simply-field="@references"]').pathname
                 id = id.split('/').pop()
@@ -380,6 +429,30 @@
             }
         },
         actions: {
+            switchView: async function(view){
+                let currentView = this.app.view.view;
+                switch(view) {
+                    case 'item':
+                        // get focused item
+                        return this.app.actions.item(this.app.view.item.uuid)
+                        // switch to that
+                    break;
+                    case 'spreadsheet':
+                        let currentItem = this.app.view.item.uuid
+                        let currentId = this.app.view.item['@id']
+                        // get roots of current item
+                        let roots = await window.slo.api.get('/roots/'+currentItem)
+                        // pick one
+                        // FIXME: remember which one was picked last
+                        // switch to spreadsheet of that root
+                        await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        // focus current item
+//                        let model = window.slo.getDataModel('items')
+  //                      let row = model.data.find(r => r['@id']==currentId)
+//                        this.app.actions.focusCell(row,2)
+                    break;
+                }
+            },
             search: function(text) {
                 document.body.classList.remove('ds-paging');
                 return window.slo.api.get(window.release.apiPath+'search', {text: text}).then(data => {
@@ -415,9 +488,11 @@
                 .catch(function(error) {
                 });
             },
-            spreadsheet: function(root, niveaus, contexts) {
+            spreadsheet: function(root, context, niveau) {
                 browser.view.items = []
-                return window.slo.api.get(window.release.apiPath+'examenprogramma/'+root)
+                return window.slo.api.get(window.release.apiPath+'tree/'+root, {
+                    niveau, context
+                })
                 .then(function(json) {
                     browser.view.view = 'spreadsheet';
                     window.slo.spreadsheet('items',json)
@@ -481,6 +556,13 @@
             register : function(email) {
                 var url = window.release.apiPath+'register/';
                 window.slo.api.get(url + "?email=" + email);
+            },
+            focusCell: function(row, column) {
+                // check if the cell is visible 
+                //      what is the scroll row offset
+                //      how many rows are visible
+                // if not, scroll to the cell
+                // then highlight the cell (hide previous highlight)
             }
         }
     });
