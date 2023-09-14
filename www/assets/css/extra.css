@@ -52,3 +52,9 @@
         --ds-scrollbox-height: calc(100vh - 340px);
         min-height: 400px;
     }
+    .vsb-menu {
+        left: auto !important;
+    }
+    .slo-contexts-select ~ .vsb-main .vsb-menu {
+        right: 0 !important;
+    }
