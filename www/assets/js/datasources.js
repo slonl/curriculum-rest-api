@@ -141,6 +141,11 @@
             }
         })
     })
+
+    editor.addDataSource('contexts-select', {
+        load: Object.keys(contexts)
+    })
+
     let titles = {}
 
     Object
@@ -160,3 +165,12 @@
                 titles[key+'/'] = value;
             })
         }); // leave this ;, otherwise the (function() ) below is parsed incorrectly
+
+    let niveaus = []
+    window.slo.api.get('/niveau/')
+    .then(niveaus => {
+        niveaus = niveaus.data.map(n => n.title)
+        editor.addDataSource('niveaus', {
+            load: niveaus
+        })
+    })
