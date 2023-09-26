@@ -700,18 +700,18 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.FoToelichting" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>Toelichting</h3>
-                            <ul data-simply-list="item.FoToelichting">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
                     <div data-simply-field="item.FoUitwerking" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Uitwerking</h3>
                             <ul data-simply-list="item.FoUitwerking">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.FoToelichting" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Toelichting</h3>
+                            <ul data-simply-list="item.FoToelichting">
                                 <template rel="links"></template>
                             </ul>
                         </template>
@@ -741,63 +741,6 @@
                         </template>
                     </div>
 
-                    <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>FoDomein</h3>
-                            <ul data-simply-list="item.FoDomein">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-                    <div data-simply-field="item.FoSubdomein" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>FoSubdomein</h3>
-                            <ul data-simply-list="item.FoSubdomein">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-                    <div data-simply-field="item.FoDoelzin" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>FoDoelzin</h3>
-                            <ul data-simply-list="item.FoDoelzin">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-                    <div data-simply-field="item.FoToelichting" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>FoToelichting</h3>
-                            <ul data-simply-list="item.FoToelichting">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-                    <div data-simply-field="item.FoUitwerking" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>FoUitwerking</h3>
-                            <ul data-simply-list="item.FoUitwerking">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-
-                    <div data-simply-field="item.tag" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>Tag</h3>
-                            <ul data-simply-list="item.tag">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
-                    <div data-simply-field="item.relatie" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>Relatie</h3>
-                            <ul data-simply-list="item.relatie">
-                                <template rel="links"></template>
-                            </ul>
-                        </template>
-                    </div>
 
                 </article>
             </template>
@@ -890,6 +833,14 @@
                     </span>
                 </template>
             </span>
+			<span data-simply-list="Vakleergebied">
+				<template>
+					<span class="ds-badge ds-badge-mini">
+						<span class="ds-badge-label">Vakleergebied</span>
+						<span data-simply-field="title">title</span>
+					</span>
+				</template>
+			</span>
             <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
@@ -911,7 +862,7 @@
             </template>
             <template data-simply-template="false">false</template>
         </span>
-        <span data-simply-list="Vakleergebied">
+<!--        <span data-simply-list="Vakleergebied">
             <template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">Vakleergebied</span>
@@ -919,7 +870,7 @@
                 </span>
             </template>
         </span>
-        <span data-simply-list="LdkVakkern">
+-->        <span data-simply-list="LdkVakkern">
             <template>
                 <span data-simply-list="LdkVakleergebied">
                     <template>
@@ -1244,7 +1195,7 @@
             <template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">FoDomein</span>
-                    <span data-simply-field="title">title</span>
+					<span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
@@ -1276,7 +1227,7 @@
 				</span>
             </template>
         </span>
-        <span data-simply-list="FoToelichting">
+        <span data-simply-list="FoUitwerking">
             <template>
 				<span data-simply-list="FoDoelzin">
 					<template>
@@ -1296,7 +1247,7 @@
 				</span>
             </template>
         </span>
-        <span data-simply-list="FoUitwerking">
+        <span data-simply-list="FoToelichting">
             <template>
 				<span data-simply-list="FoDoelzin">
 					<template>
@@ -1707,34 +1658,11 @@
             '/fo_doelzin/': function(params) {
                 browser.actions.list('fo_doelzin/')
             },
-            '/fo_toelichting/': function(params) {
-                browser.actions.list('fo_toelichting/')
-            },
             '/fo_uitwerking/': function(params) {
                 browser.actions.list('fo_uitwerking/')
             },
-
-            '/tag/': function(params) {
-                browser.actions.list('tag/')
-            },
-            '/relatie/': function(params) {
-                browser.actions.list('relatie/')
-            },
-            
-            '/fo_domein/': function(params) {
-                browser.actions.list('fo_domein/')
-            },
-            '/fo_subdomein/': function(params) {
-                browser.actions.list('fo_subdomein/')
-            },
-            '/fo_doelzin/': function(params) {
-                browser.actions.list('fo_doelzin/')
-            },
             '/fo_toelichting/': function(params) {
                 browser.actions.list('fo_toelichting/')
-            },
-            '/fo_uitwerking/': function(params) {
-                browser.actions.list('fo_uitwerking/')
             },
             
             '/tag/': function(params) {
@@ -1921,8 +1849,8 @@
                 fo_domein: 'Domein',
                 fo_subdomein: 'Subdomein',
                 fo_doelzin: 'Doelzin',
-                fo_toelichting: 'Toelichting',
-                fo_uitwerking: 'Uitwerking'
+                fo_uitwerking: 'Uitwerking',
+                fo_toelichting: 'Toelichting'
             }
         },
         'curriculum-samenhang': {
@@ -1999,6 +1927,8 @@
             title: 'Europees referentiekader',
             data: {
                 erk_vakleergebied: 'ErkVakleergebied',
+                erk_taalprofiel: 'ErkTaalprofiel',
+                erk_taalprofieltekst: 'ErkTaalprofieltekst',
                 erk_gebied: 'ErkGebied',
                 erk_categorie: 'ErkCategorie',
                 erk_taalactiviteit: 'ErkTaalactiviteit',
@@ -2037,23 +1967,6 @@
 //                nh_bouw: 'NhBouw',
 //                nh_niveau: 'NhNiveau'
 //            }
-        },
-        'curriculum-fo':{
-            title: 'FO',
-            data: {
-                fo_domein: 'FoDomein',
-                fo_subdomein: 'FoSubdomein',
-                fo_doelzin: 'FoDoelzin',
-                fo_toelichting: 'FoToelichting',
-                fo_uitwerking: 'FoUitwerking'                
-            }
-        },
-        'curriculum-samenhang':{
-            title: 'Samenhang',
-            data: {
-                tag: 'Tag',
-                relatie: 'Relatie'
-            }
         }
     }
 
