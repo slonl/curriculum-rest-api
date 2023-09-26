@@ -7,13 +7,11 @@ module.exports = {
 			const results = from(data.ErkVakleergebied)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				unreleased: _,
 				Vakleergebied: {
 						'@id': Id,
+						'@type': Type,
 						uuid: _.id,
 						title: _,
 				},
@@ -33,10 +31,7 @@ module.exports = {
 		const results = from(data.ErkGebied)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_gebied',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				erk_categorie_id: _,
 				erk_taalactiviteit_id: _,
 				erk_schaal_id: _,
@@ -56,10 +51,7 @@ module.exports = {
 		const results = from(data.ErkCategorie)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_categorie',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				erk_taalactiviteit_id: _,
 				erk_schaal_id: _,
 				unreleased: _,
@@ -78,10 +70,7 @@ module.exports = {
 		const results = from(data.ErkTaalactiviteit)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalactiviteit',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				erk_schaal_id: _,
 				unreleased: _,
 			})
@@ -99,10 +88,7 @@ module.exports = {
 			const results = from(data.ErkSchaal)
 				.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_schaal',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
@@ -120,10 +106,7 @@ module.exports = {
 			const results = from(data.ErkCandobeschrijving)
 				.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_candobeschrijving',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				unreleased: _,
 				niveau_id: _,
 				erk_voorbeeld_id: _,
@@ -143,10 +126,7 @@ module.exports = {
 		const results = from(data.ErkVoorbeeld)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_voorbeeld',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				unreleased: _,
 			})
 			.sort(sortByPrefix)
@@ -163,10 +143,7 @@ module.exports = {
 		const results = from(data.ErkLesidee)
 		.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_lesidee',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				unreleased: _,
 			})
 			.sort(sortByPrefix)
@@ -184,10 +161,7 @@ module.exports = {
 		const results = from(Index(request.query.id))
 			.select({
 			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
-		    '@id': Id,
-			uuid: _.id,
-		    prefix: _,
-		    title: _,
+			...shortInfo,
 			Niveau: NiveauShort
 		  })
 
@@ -204,54 +178,30 @@ module.exports = {
 		const results = from(data.ErkSchalen)
 			.select({
 				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				ErkCategorie: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+					...shortInfo,
 					ErkTaalactiviteit: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
+						...shortInfo,
 						ErkSchaal: {
-							'@id': Id,
-							uuid: _.id,
-							prefix: _,
-							title: _,
+							...shortInfo,
 							algemeen: _,
 						},
 					},
 					ErkSchaal: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
+						...shortInfo,
 						algemeen: _,
 					},
 				},
 				ErkTaalactiviteit: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+					...shortInfo,
 					ErkSchaal: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
+						...shortInfo,
 						algemeen: _,
 					},
 				},
 				ErkSchaal: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+					...shortInfo,
 					algemeen: _,
 				},
 			})
@@ -269,20 +219,13 @@ module.exports = {
 		ErkVakleergebied: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Niveau: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -290,26 +233,17 @@ module.exports = {
 		ErkGebied: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ErkCategorie: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ErkTaalactiviteit: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ErkSchaal: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})	
@@ -317,20 +251,13 @@ module.exports = {
 		ErkCategorie: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ErkTaalactiviteit: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ErkSchaal: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -338,14 +265,9 @@ module.exports = {
 		ErkTaalactiviteit: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ErkSchaal: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -353,20 +275,13 @@ module.exports = {
 		ErkSchaal: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ErkCandobeschrijving: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				isempty: _,
 				deprecated: _,
 				Niveau: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
@@ -375,27 +290,18 @@ module.exports = {
 		ErkCandobeschrijving: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			isempty: _,
 			Niveau: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ErkVoorbeeld: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ErkLesidee: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -403,19 +309,13 @@ module.exports = {
 		ErkVoorbeeld: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})	
 		`,
 		ErkLesidee: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`
 	},

@@ -6,9 +6,7 @@ module.exports = {
 		Syllabus: `
 		const results = from(data.Syllabus)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,   
+			...shortInfo,  
 		})
 		.sort(sortByTitle)
 
@@ -24,14 +22,9 @@ module.exports = {
 		SyllabusVakbegrip: `
 		const results = from(data.SyllabusVakbegrip)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -49,19 +42,13 @@ module.exports = {
 		SyllabusVakleergebied: `
 		const results = from(data.SyllabusVakleergebied)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -79,20 +66,14 @@ module.exports = {
 		SyllabusToelichting: `
 		const results = from(data.SyllabusToelichting)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusSpecifiekeEindterm: {
 			  	Syllabus: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 			  }
 			}
@@ -111,13 +92,9 @@ module.exports = {
 		SyllabusSpecifiekeEindterm: `
 		const results = from(data.SyllabusSpecifiekeEindterm)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -135,9 +112,7 @@ module.exports = {
 		SyllabusVolledig: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			ingangsdatum: _,
 			versie: _,
 			url: _,
@@ -148,86 +123,57 @@ module.exports = {
 				Niveau: NiveauShort
 			},
 			SyllabusSpecifiekeEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				ce_se: _,
 				deprecated: _,
 				Tag {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				ExamenprogrammaEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				ExamenprogrammaDomein: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
 			SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				ce_se: _,
 				deprecated: _,
 				Tag: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				ExamenprogrammaEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				ExamenprogrammaDomein: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				Examenprogramma: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				SyllabusSpecifiekeEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}	  
 			},
 			SyllabusVakbegrip: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				ce_se: _,
 				deprecated: _,
 				Tag: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				ExamenprogrammaEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			}
@@ -239,9 +185,7 @@ module.exports = {
 		Syllabus: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,	
-			title: _,
+			...shortInfo,
 			ingangsdatum: _,
 			versie: _,
 			url: _,
@@ -249,31 +193,19 @@ module.exports = {
 			status: _,
 			ce_se: _,
 			Examenprogramma: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusSpecifiekeEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusVakbegrip: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -284,19 +216,13 @@ module.exports = {
 		SyllabusVakleergebied: `
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -304,27 +230,18 @@ module.exports = {
 		SyllabusVakbegrip: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			Tag: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -335,39 +252,26 @@ module.exports = {
 		SyllabusToelichting: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			Tag: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaDomein: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusSpecifiekeEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -378,45 +282,30 @@ module.exports = {
 		SyllabusSpecifiekeEindterm: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			Tag: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaDomein: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusVakbegrip: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {

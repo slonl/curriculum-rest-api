@@ -6,10 +6,7 @@ module.exports = {
 		NhCategorie: `
 		const results = from(data.NhCategorie)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			nh_sector_id: _,
 			nh_niveau_id: _,
 			unreleased: _,
@@ -28,10 +25,7 @@ module.exports = {
 		NhSector: `
 		const results = from(data.NhSector)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			nh_schoolsoort_id: _,
 			nh_bouw_id: _,
 			nh_niveau_id: _,
@@ -51,10 +45,7 @@ module.exports = {
 		NhSchoolsoort: `
 		const results = from(data.NhSchoolsoort)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			nh_leerweg_id: _,
 			nh_bouw_id: _,
 			nh_niveau_id: _,
@@ -74,10 +65,7 @@ module.exports = {
 		NhLeerweg: `
 		const results = from(data.NhLeerweg)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			nh_bouw_id: _,
 			nh_niveau_id: _,
 			unreleased: _,
@@ -96,10 +84,7 @@ module.exports = {
 		NhBouw: `
 		const results = from(data.NhBouw)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			nh_niveau_id: _,
 			unreleased: _,
 		})
@@ -117,10 +102,7 @@ module.exports = {
 		NhNiveau: `
 		const results = from(data.NhNiveau)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 		})
 		.sort(sortByPrefix)
@@ -139,55 +121,37 @@ module.exports = {
 		NhCategorie: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`,
 		NhSector: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`,
 		NhSchoolsoort: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`,
 		NhLeerweg: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`,
 		NhBouw: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`,
 		NhNiveau: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		`
 	},
