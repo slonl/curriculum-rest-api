@@ -204,10 +204,8 @@ module.exports = {
 				title
 				deprecated
 			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
+			Niveau {
+				...NiveauShort
 			}
 		`,
 		'syllabus_vakleergebied': `
