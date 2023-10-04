@@ -17,10 +17,12 @@
 
     var browser = simply.app({
         container: document.body,
-        spreadsheet: {
-            focus: {
-                row: 0,
-                column: 0
+        view: {
+            spreadsheet: {
+                focus: {
+                    row: 0,
+                    column: 0
+                }
             }
         },
         routes: {
@@ -445,11 +447,24 @@
                         // pick one
                         // FIXME: remember which one was picked last
                         // switch to spreadsheet of that root
+                        let currentType = this.app.view.item['@type']
+                        let currentContext = window.slo.getContextByType(currentType)
+                        if (!this.app.view.contexts) {
+                            this.app.view.contexts = ['curriculum-basis'];
+                        }
+                        if (currentContext && !this.app.view.contexts.includes(currentContext)) {
+                            this.app.view.contexts.push(currentContext)
+                        }
+                        if (!this.app.view.niveaus) {
+                            this.app.view.niveaus = [];
+                        }
                         await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // focus current item
-//                        let model = window.slo.getDataModel('items')
-  //                      let row = model.data.find(r => r['@id']==currentId)
-//                        this.app.actions.focusCell(row,2)
+                        let model = window.slo.getDataModel('items')
+                        let row = model.data.findIndex(r => r['@id']==currentId)
+                        this.app.view.spreadsheet.focus.row = row;
+                        this.app.view.spreadsheet.focus.column = 2;
+                        this.app.actions.focusCell(row,2)
                     break;
                 }
             },
@@ -558,11 +573,25 @@
                 window.slo.api.get(url + "?email=" + email);
             },
             focusCell: function(row, column) {
-                // check if the cell is visible 
-                //      what is the scroll row offset
-                //      how many rows are visible
-                // if not, scroll to the cell
+                let d = window.slo.getDataModel('items')
+                // check if the cell is visible
+                // FIXME: check that row is not collapsed 
+                // TODO: focus cell/column as well
+                if (d.options.offset>row || (d.options.offset+d.options.rows)<row) { 
+                    let offset = row - Math.floor(d.options.rows/2)
+                    d.update({
+                        offset: offset
+                    })
+                    row = row - offset
+                }
                 // then highlight the cell (hide previous highlight)
+                window.setTimeout(() => {
+                    Array.from(document.querySelectorAll('.slo-spreadsheet tbody tr.focus'))
+                    .forEach(r => {
+                        r.classList.remove('focus')
+                    })
+                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')').classList.add('focus')
+                },100)
             }
         }
     });
