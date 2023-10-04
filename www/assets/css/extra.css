@@ -58,3 +58,6 @@
     .slo-contexts-select ~ .vsb-main .vsb-menu {
         right: 0 !important;
     }
+    .slo-spreadsheet tr.focus td {
+        background-color: var(--ds-grey-20);
+    }
