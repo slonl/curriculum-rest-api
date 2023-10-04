@@ -60,6 +60,13 @@
         treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus'});
     });
     simply.activate.addListener('contexts-select', function() {
+        if (browser.view.contexts) {
+            Array.from(this.options).forEach(option => {
+                if (browser.view.contexts.includes(option.value)) {
+                    option.setAttribute('selected','selected');
+                }
+            })
+        }
         treeviewSchemas = new vanillaSelectBox('.slo-contexts-select', {'placeHolder':'Selecteer contexten'});
     });
 
