@@ -9,113 +9,113 @@
         'curriculum-fo':{
             title: 'Curriculum Funderend onderwijs',
             data: {
-                fo_domein: 'Domein',
-                fo_subdomein: 'Subdomein',
-                fo_doelzin: 'Doelzin',
-                fo_toelichting: 'Toelichting',
-                fo_uitwerking: 'Uitwerking'
+                FoDomein: 'Domein',
+                FoSubdomein: 'Subdomein',
+                FoDoelzin: 'Doelzin',
+                FoToelichting: 'Toelichting',
+                FoUitwerking: 'Uitwerking'
             }
         },
         'curriculum-samenhang': {
             title: 'Samenhang',
             data: {
-                tag: 'Begrippen',
-                relatie: 'Relaties'
+                Tag: 'Begrippen',
+                Relatie: 'Relaties'
             }
         },
         'curriculum-basis': {
             title: 'Basis',
             data: {
-                vakleergebied: 'Vakleergebied',
-                niveau: 'Niveau',
-                doelniveau: 'DoelNiveau',
-                doel: 'Doel'
+                Vakleergebied: 'Vakleergebied',
+                Niveau: 'Niveau',
+                Doelniveau: 'DoelNiveau',
+                Doel: 'Doel'
             }
         },
         'curriculum-kerndoelen': {
             title: 'Kerndoelen',
             data: {
-                kerndoel_vakleergebied: 'KerndoelVakleergebied',
-                kerndoel_domein: 'KerndoelDomein',
-                kerndoel: 'Kerndoel',
-                kerndoel_uitstroomprofiel: 'KerndoelUitstroomprofiel'
+                KerndoelVakleergebied: 'KerndoelVakleergebied',
+                KerndoelDomein: 'KerndoelDomein',
+                Kerndoel: 'Kerndoel',
+                KerndoelUitstroomprofiel: 'KerndoelUitstroomprofiel'
             }
         },
         'curriculum-examenprogramma': {
             title: 'Examenprogramma',
             data: {
-                examenprogramma: 'Examenprogramma',
-                examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
-                examenprogramma_domein: 'ExamenprogrammaDomein',
-                examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
-                examenprogramma_eindterm: 'ExamenprogrammaEindterm'
+                Examenprogramma: 'Examenprogramma',
+                ExamenprogrammaVakleergebied: 'ExamenprogrammaVakleergebied',
+                ExamenprogrammaDomein: 'ExamenprogrammaDomein',
+                ExamenprogrammaSubdomein: 'ExamenprogrammaSubdomein',
+                ExamenprogrammaEindterm: 'ExamenprogrammaEindterm'
             }
         },
         'curriculum-syllabus': {
             title: 'Syllabus',
             data: {
-                syllabus: 'Syllabus',
-                syllabus_vakleergebied: 'SyllabusVakleergebied',
-                syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
-                syllabus_toelichting: 'SyllabusToelichting',
-                syllabus_vakbegrip: 'SyllabusVakbegrip'
+                Syllabus: 'Syllabus',
+                SyllabusVakleergebied: 'SyllabusVakleergebied',
+                SyllabusSpecifiekeEindterm: 'SyllabusSpecifiekeEindterm',
+                SyllabusToelichting: 'SyllabusToelichting',
+                SyllabusVakbegrip: 'SyllabusVakbegrip'
             }
         },
         'curriculum-examenprogramma-bg': {
             title: 'Examenprogramma Beroepsgericht',
             data: {
-                examenprogramma_bg_profiel: 'ExamenprogrammaBgProfiel',
-                examenprogramma_bg_kern: 'ExamenprogrammaBgKern',
-                examenprogramma_bg_kerndeel: 'ExamenprogrammaBgKerndeel',
-                examenprogramma_bg_globale_eindterm: 'ExamenprogrammaBgGlobaleEindterm',
-                examenprogramma_bg_module: 'ExamenprogrammaBgModule',
-                examenprogramma_bg_keuzevak: 'ExamenprogrammaBgKeuzevak',
-                examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
-                examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
-                examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
+                ExamenprogrammaBgProfiel: 'ExamenprogrammaBgProfiel',
+                ExamenprogrammaBgKern: 'ExamenprogrammaBgKern',
+                ExamenprogrammaBgKerndeel: 'ExamenprogrammaBgKerndeel',
+                ExamenprogrammaBgGlobaleEindterm: 'ExamenprogrammaBgGlobaleEindterm',
+                ExamenprogrammaBgModule: 'ExamenprogrammaBgModule',
+                ExamenprogrammaBgKeuzevak: 'ExamenprogrammaBgKeuzevak',
+                ExamenprogrammaBgDeeltaak: 'ExamenprogrammaBgDeeltaak',
+                ExamenprogrammaBgModuletaak: 'ExamenprogrammaBgModuletaak',
+                ExamenprogrammaBgKeuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
             }
         },
         'curriculum-referentiekader': {
             title: 'Referentiekader',
             data: {
-                ref_vakleergebied: 'RefVakleergebied',
-                ref_domein: 'RefDomein',
-                ref_subdomein: 'RefSubdomein',
-                ref_onderwerp: 'RefOnderwerp',
-                ref_deelonderwerp: 'RefDeelonderwerp',
-                ref_tekstkenmerk: 'RefTekstkenmerk'
+                RefVakleergebied: 'RefVakleergebied',
+                RefDomein: 'RefDomein',
+                RefSubdomein: 'RefSubdomein',
+                RefOnderwerp: 'RefOnderwerp',
+                RefDeelonderwerp: 'RefDeelonderwerp',
+                RefTekstkenmerk: 'RefTekstkenmerk'
             }
         },
         'curriculum-erk': {
             title: 'Europees referentiekader',
             data: {
-                erk_vakleergebied: 'ErkVakleergebied',
-                erk_gebied: 'ErkGebied',
-                erk_categorie: 'ErkCategorie',
-                erk_taalactiviteit: 'ErkTaalactiviteit',
-                erk_schaal: 'ErkSchaal',
-                erk_candobeschrijving: 'ErkCandobeschrijving',
-                erk_voorbeeld: 'ErkVoorbeeld',
-                erk_lesidee: 'ErkLesidee'
+                ErkVakleergebied: 'ErkVakleergebied',
+                ErkGebied: 'ErkGebied',
+                ErkCategorie: 'ErkCategorie',
+                ErkTaalactiviteit: 'ErkTaalactiviteit',
+                ErkSchaal: 'ErkSchaal',
+                ErkCandobeschrijving: 'ErkCandobeschrijving',
+                ErkVoorbeeld: 'ErkVoorbeeld',
+                ErkLesidee: 'ErkLesidee'
             }
         },
         'curriculum-leerdoelenkaarten': {
             title: 'Leerdoelenkaarten',
             data: {
-                ldk_vakleergebied: 'LdkVakleergebied',
-                ldk_vakkern: 'LdkVakkern',
-                ldk_vaksubkern: 'LdkVaksubkern',
-                ldk_vakinhoud: 'LdkVakinhoud',
-                ldk_vakbegrip: 'LdkVakbegrip'
+                LdkVakleergebied: 'LdkVakleergebied',
+                LdkVakkern: 'LdkVakkern',
+                LdkVaksubkern: 'LdkVaksubkern',
+                LdkVakinhoud: 'LdkVakinhoud',
+                LdkVakbegrip: 'LdkVakbegrip'
             }
         },
         'curriculum-inhoudslijnen': {
             title: 'Inhoudslijnen',
             data: {
-                inh_vakleergebied: 'InhVakleergebied',
-                inh_inhoudslijn: 'InhInhoudslijn',
-                inh_cluster: 'InhCluster',
-                inh_subcluster: 'InhSubcluster'
+                InhVakleergebied: 'InhVakleergebied',
+                InhInhoudslijn: 'InhInhoudslijn',
+                InhCluster: 'InhCluster',
+                InhSubcluster: 'InhSubcluster'
             }
 //        },
 //        'curriculum-niveauhierarchie':{
