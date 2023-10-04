@@ -107,6 +107,12 @@
               closed: {}
             });
             datamodel.addPlugin('render', function(params) {
+              if (params.offset) {
+                this.options.offset = params.offset
+              }
+              if (params.rows) {
+                this.options.rows = params.rows
+              }
               start = this.options.offset
               end = start + this.options.rows
               if (end>this.view.data.length) {
@@ -181,6 +187,11 @@
         },
         getDataModel(name) {
             return dataModels[name]
+        },
+        getContextByType(type) {
+            return Object.keys(contexts)
+            .filter(c => typeof contexts[c].data[type]!=='undefined')
+            .pop()
         }
     }
 
