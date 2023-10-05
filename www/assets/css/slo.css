@@ -3,15 +3,15 @@
 /* Basic styles: Reset */
 
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td {
-	margin:0; 
-	padding:0; 
+    margin:0; 
+    padding:0; 
 }
 img {
     max-width: 100%;
-	display: block;
+    display: block;
 }
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 /* Basic styles: Colors */
@@ -1236,27 +1236,27 @@ input.slo-search {
     --ds-scrollbox-height: calc(8 * var(--ds-line-height));
     max-height: var(--ds-scrollbox-height);
     overflow: auto;
-	background:
-		/* Shadow covers */
-		linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
-		linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
-		radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
-	background:
-		/* Shadow covers */
-		linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
-		linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
-		
-		/* Shadows */
-		radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
-		radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
-	background-repeat: no-repeat;
-	background-color: white;
-	background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background:
+        /* Shadow covers */
+        linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
+        linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
+        
+        /* Shadows */
+        radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
+        radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+    background:
+        /* Shadow covers */
+        linear-gradient(var(--ds-background) 30%, var(--ds-background-transparent)),
+        linear-gradient(var(--ds-background-transparent), var(--ds-background) 70%) 0 100%,
+        
+        /* Shadows */
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     /* Opera doesn't support this in the shorthand */
-	background-attachment: local, local, scroll, scroll;
+    background-attachment: local, local, scroll, scroll;
 }
 
 
@@ -2000,6 +2000,9 @@ select {
 .slo-minwidth {
     width: 2em;
 }
+.slo-smallwidth {
+    width: 4em;
+}
 .slo-larger-width {
     width: 20em;
     max-width: 30%;
@@ -2019,6 +2022,16 @@ select {
 .slo-indent-4 {
     margin-left: 3em;
 }
+.slo-indent-5 {
+    margin-left: 3.5em;
+}
+.slo-indent-6 {
+    margin-left: 4em;
+}
+.slo-indent-7 {
+    margin-left: 4.5em;
+}
+
 .slo-tree-table th {
     position: relative;
 }
@@ -2142,14 +2155,14 @@ select {
 .slo-indent-1::before,
 .slo-indent-2::before,
 .slo-indent-3::before,
-.slo-indent-4::before {
+.slo-indent-4::before,
+.slo-indent-5::before,
+.slo-indent-6::before,
+.slo-indent-7::before {
     content: "\25BE";
     display: inline-block;
     position: absolute;
     margin-left: -1em;
-}
-.slo-indent-4::before {
-    content: "\25B8";
 }
 
 /* Utility: Alignment */
