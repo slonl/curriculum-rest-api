@@ -38,7 +38,7 @@
                 <col class="ds-datatable-col-6">
                 <col class="ds-datatable-col-7">
                 <thead>
-                    <td class="ds-datatable-disable-sort slo-smallwidth"></th>
+                    <td class="ds-datatable-disable-sort slo-rownumbers slo-smallwidth"></th>
                     <th class="ds-datatable-disable-sort slo-minwidth">#</th>
                     <th class="ds-datatable-sorted-descending">
                         <label class="slo-column-name">Prefix</label>
@@ -172,15 +172,15 @@
                             </svg>
                             <span class="slo-index" data-simply-field="index"></span>
                             </td>
-                            <td><a href="#" data-simply-field="@references" data-simply-content="attributes" data-simply-attributes="href">#</a></td>
-                            <td data-simply-command="toggleTree"><span class="slo-indent-1" data-simply-field="indent" data-simply-content="attributes" data-simply-attributes="class"></span><span data-simply-field="prefix"></span>
-                            <td data-simply-field="title"></td>
-                            <td data-simply-field="@type"></td>
-                            <td data-simply-list="Niveaus" data-simply-entry="title">
+                            <td><div class="slo-cell"><a href="#" data-simply-field="@references" data-simply-content="attributes" data-simply-attributes="href">#</a></div></td>
+                            <td data-simply-command="toggleTree"><div class="slo-cell"><span class="slo-indent-1" data-simply-field="indent" data-simply-content="attributes" data-simply-attributes="class"></span><span data-simply-field="prefix"></span></div></td>
+                            <td><div class="slo-cell" data-simply-field="title"></div></td>
+                            <td><div class="slo-cell" data-simply-field="@type"></div></td>
+                            <td><div class="slo-cell" data-simply-list="Niveaus" data-simply-entry="title">
                                 <template>
                                     <span data-simply-field="title"></span>
                                 </template>
-                            </td>
+                            </div></td>
                             <td><svg class="slo-delete ds-icon ds-icon-feather">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
                             </svg></td>
