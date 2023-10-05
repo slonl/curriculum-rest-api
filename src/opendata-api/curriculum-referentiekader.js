@@ -7,16 +7,11 @@ module.exports = {
 		RefVakleergebied: `
 		const results = from(data.RefVakleergebied)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			description: _,					
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -37,15 +32,10 @@ module.exports = {
 		RefDomein: `
 		const results = from(data.RefDomein)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			RefVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -65,16 +55,11 @@ module.exports = {
 		RefSubdomein: `
 		const results = from(data.RefSubdomein)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			RefDomein: { 
 				RefVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
@@ -95,17 +80,12 @@ module.exports = {
 		RefOnderwerp: `
 		const results = from(data.RefOnderwerp)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			RefSubdomein: {
 				RefDomein: {
 					RefVakleergebied: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+						...shortInfo,
 						deprecated: _,
 					}
 				}
@@ -127,18 +107,13 @@ module.exports = {
 		RefDeelonderwerp: `
 		const results = from(data.RefDeelonderwerp)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			RefOnderwerp: {
 				RefSubdomein: {
 					RefDomein: {
 						RefVakleergebied: {
-							'@id': Id,
-							uuid: _.id,
-							title: _,
+							...shortInfo,
 							deprecated: _,
 						}
 					}
@@ -163,18 +138,13 @@ module.exports = {
 		RefTekstkenmerk: `
 		const results = from(data.RefTekstkenmerk)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			RefOnderwerp: {
 				RefSubdomein: {
 					RefDomein: {
 						RefVakleergebied: {
-							'@id': Id,
-							uuid: _.id,
-							title: _,
+							...shortInfo,
 							deprecated: _,
 						}
 					}
@@ -249,19 +219,13 @@ module.exports = {
 		RefVakleergebied:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefDomein: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+				...shortInfo,
 					deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex {
+			NiveauIndex: {
 				Niveau: NiveauShort
 			},
 		})
@@ -269,22 +233,13 @@ module.exports = {
 		RefDomein: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefSubdomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			RefVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			Doelniveau: Doelniveau,
@@ -296,22 +251,13 @@ module.exports = {
 		RefSubdomein: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefOnderwerp: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			RefDomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			Doelniveau: Doelniveau,
@@ -323,29 +269,17 @@ module.exports = {
 		RefOnderwerp: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefSubdomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			RefDeelonderwerp: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			RefTekstkenmerk: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			Doelniveau: Doelniveau,
@@ -357,15 +291,9 @@ module.exports = {
 		RefDeelonderwerp: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefOnderwerp: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			Doelniveau: Doelniveau,
@@ -377,15 +305,9 @@ module.exports = {
 		RefTekstkenmerk: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			RefOnderwerp {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			Doelniveau: Doelniveau,

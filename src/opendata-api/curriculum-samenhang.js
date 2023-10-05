@@ -6,9 +6,7 @@ module.exports = {
 		Tag: `
 		const results = from(data.Tag)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			fo_toelichting_id: _,
 			fo_uitwerking_id: _,
@@ -26,9 +24,7 @@ module.exports = {
 		Relatie: `
 		const results = from(data.Syllabus)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			fo_toelichting_id: _,
 			fo_uitwerking_id: _,
@@ -48,19 +44,13 @@ module.exports = {
 		tag: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			FoToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			FoUitwerking: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -68,19 +58,13 @@ module.exports = {
 		relatie: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			FoToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 			FoUitwerking: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})

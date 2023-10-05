@@ -23,9 +23,7 @@ module.exports = {
 		LdkVakleergebied: `
 		const results = from(data.LdkVakleergebied)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			NiveauIndex: {
 			  Niveau: NiveauShort
 			}
@@ -44,15 +42,10 @@ module.exports = {
 		LdkVakkern: `
 		const results = from(data.LdkVakkern)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			deprecated: _,
 			LdkVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -73,16 +66,11 @@ module.exports = {
 		LdkVaksubkern: `
 		const results = from(data.LdkVaksubkern)
 		.select({		
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			deprecated: _,
 			LdkVakkern: {
 			  LdkVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			  }
 			},
@@ -104,17 +92,12 @@ module.exports = {
 		LdkVakinhoud: `
 		const results = from(data.LdkVakinhoud)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			deprecated: _,
 			LdkVaksubkern: {
 			  LdkVakkern: {
 				LdkVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			  }
@@ -137,9 +120,7 @@ module.exports = {
 		LdkVakbegrip: `
 		const results = from(data.LdkVakbegrip)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			Doelniveau: Doelniveau,
 		  })
@@ -158,24 +139,16 @@ module.exports = {
 		DoelenOpNiveauByLdkVakleergebiedById: `
 		const results = from(data.DoelenOpNiveauByLdkVakleergebiedById)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			NiveauIndex:{
 			  Niveau: NiveauShort
 			},
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				LdkVaksubkern: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					LdkVakinhoud: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+						...shortInfo,
 						Doelniveau: Doelen,
 					},
 					Doelniveau:	Doelen,
@@ -189,9 +162,7 @@ module.exports = {
 		const results = from(data.LdkVakleergebiedOpNiveau)
 		.select({
 			LdkVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})`,
@@ -201,17 +172,12 @@ module.exports = {
 		const results = from(data.LdkVakleergebiedByIdOpNiveau)
 		.select({
 			LdkVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Doelniveau: Doelniveau
 			},
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Niveau: NiveauShort
@@ -222,10 +188,7 @@ module.exports = {
 		const results = from(data.LdkVakkernOpNiveau)
 		.select({
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		  }
@@ -235,24 +198,16 @@ module.exports = {
 		const results = from(data.LdkVakkernByIdOpNiveau)
 		.select({
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				LdkVakleergebied: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+					...shortInfo,
 						deprecated: _,
 				}
 				Doelniveau: Doelniveau,
 			},
 			LdkVaksubkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Niveau NiveauShort,
@@ -264,10 +219,7 @@ module.exports = {
 		const results = from(data.LdkVaksubkernOpNiveau)
 		.select({
 			LdkVaksubkern :{
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -277,24 +229,16 @@ module.exports = {
 		const results = from(data.LdkVaksubkernByIdOpNiveau)
 		.select({
 			LdkVaksubkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				LdkVakkern: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					prefix: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				Doelniveau:	Doelniveau
 				},
 				LdkVakinhoud: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					prefix: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				Niveau: NiveauShort
@@ -306,10 +250,7 @@ module.exports = {
 		const results = from(data.LdkVakinhoudOpNiveau)
 		.select({
 			LdkVakinhoud: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -319,14 +260,9 @@ module.exports = {
 		LdkVakleergebied: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				NiveauIndex: {
 					Niveau: NiveauShort
@@ -337,9 +273,7 @@ module.exports = {
 				Niveau: NiveauShort
 			},
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -347,15 +281,9 @@ module.exports = {
 		LdkVakkern: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			LdkVaksubkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				NiveauIndex: {
 					Niveau: NiveauShort
@@ -363,9 +291,7 @@ module.exports = {
 			},
 			Doelniveau: Doelniveau,
 			LdkVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -376,16 +302,10 @@ module.exports = {
 		LdkVaksubkern: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			deprecated: _,
 			LdkVakinhoud: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				NiveauIndex: {
 					Niveau: NiveauShort
@@ -393,15 +313,10 @@ module.exports = {
 			},
 			Doelniveau: Doelniveau,
 			LdkVakkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				LdkVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
@@ -413,27 +328,16 @@ module.exports = {
 		LdkVakinhoud: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
-			prefix: _,
+			...shortInfo,
 			Doelniveau: Doelniveau,
 			LdkVaksubkern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				deprecated: _,
 				LdkVakkern: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
-					prefix: _,
+					...shortInfo,
 					deprecated: _,
 					LdkVakleergebied: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+						...shortInfo,
 						deprecated: _,
 					}
 				}
@@ -446,9 +350,7 @@ module.exports = {
 		LdkVakbegrip: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			ce_se: _,
 			Doelniveau: Doelen
 		})

@@ -6,10 +6,7 @@ module.exports = {
 		Kerndoel: `
 		const results = from(data.Kerndoel)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			description: _,
 			kerndoelLabel: _,
 			Niveau: NiveauShort,
@@ -28,22 +25,16 @@ module.exports = {
 		KerndoelById: `
 		const results = from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			Doelniveau: Doelniveau
 		})
 		`,
 		KerndoelDomein: `
 		const results = from(data.KerndoelDomein)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			KerndoelVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -61,13 +52,9 @@ module.exports = {
 		KerndoelUitstroomprofiel: `
 		const results = from(data.KerndoelUitstroomprofiel)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 			KerndoelVakleergebied: {
-			  '@id': Id,
-			uuid: _.id,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			}
 		})
@@ -85,9 +72,7 @@ module.exports = {
 		KerndoelVakleergebied: `
 		const results = from(data.KerndoelVakleergebied)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+			...shortInfo,
 		})
 		.sort(sortByPrefix)
 
@@ -105,21 +90,14 @@ module.exports = {
 		Kerndoel: `
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			description: _,
 			kerndoelLabel: _,
-			prefix: _,
 			KerndoelDomein: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				KerndoelVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
@@ -132,22 +110,15 @@ module.exports = {
 		KerndoelDomein: `
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			Kerndoel: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				kerndoelLabel: _,
 				deprecated: _,
 				Niveau: NiveauShort
 			},
 			KerndoelVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -155,32 +126,21 @@ module.exports = {
 		KerndoelVakleergebied: `
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			KerndoelDomein: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			KerndoelUitstroomprofiel: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Kerndoel: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
-				prefix: _,
+				...shortInfo,
 				kerndoelLabel: _,
 				deprecated: _,
 				Niveau: NiveauShort,
@@ -190,13 +150,9 @@ module.exports = {
 		KerndoelUitstroomprofiel: `
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			KerndoelVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})

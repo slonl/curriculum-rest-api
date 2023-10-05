@@ -6,14 +6,9 @@ module.exports = {
 		InhVakleergebied: `
 		const results = from(data.InhVakleergebied)
 		.select({
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+			...shortInfo,
 				Vakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 				NiveauIndex: {
@@ -34,14 +29,9 @@ module.exports = {
 		InhInhoudslijn: `
 		const results = from(data.InhInhoudslijn)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			InhVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -62,16 +52,11 @@ module.exports = {
 		InhCluster: `
 		const results = from(data.InhCluster)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			InhInhoudslijn: {
 				InhVakleergebied: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
@@ -93,17 +78,12 @@ module.exports = {
 		InhSubcluster: `
 		const results = from(data.InhSubcluster)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			unreleased: _,
 			InhCluster: {
 				InhInhoudslijn: {
 					InhVakleergebied: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+						...shortInfo,
 						deprecated: _,
 						}
 					}
@@ -123,30 +103,18 @@ module.exports = {
 		InhoudslijnVolledig: `
 		const results = from(data.InhVakleergebied)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-		    prefix: _,
-		    title: _,
+			...shortInfo,
 		    NiveauIndex:{
 		 		Niveau: NiveauShort
 		    },
 		    InhInhoudslijn: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				InhCluster: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 					InhSubcluster: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
+						...shortInfo,
 						deprecated: _,
 						Doelniveau: Doelen,
 		        	},
@@ -161,21 +129,13 @@ module.exports = {
 		InhVakleergebied: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			InhInhoudslijn: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _, 
 			},
 			Doelniveau: {
@@ -191,15 +151,9 @@ module.exports = {
 		InhInhoudslijn: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			InhCluster: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Doelniveau: {
@@ -215,15 +169,9 @@ module.exports = {
 		InhCluster: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			InhSubcluster: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Doelniveau: {
@@ -239,15 +187,9 @@ module.exports = {
 		InhSubcluster: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			InhCluster: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Doelniveau: {
