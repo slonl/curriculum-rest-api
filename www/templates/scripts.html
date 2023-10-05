@@ -78,4 +78,18 @@
         }
     })
 
+    document.body.addEventListener('click', (e) => {
+        let cell = e.target.closest('.slo-cell')
+        if (cell) {
+            let td = cell.closest('td')
+            let tr = cell.closest('tr')
+            let index = tr.querySelector('.slo-index')
+            if (index) {
+                let row = parseInt(index.innerText.trim())
+                let columns = tr.querySelectorAll('td')
+                let column = Array.from(columns).findIndex(c => c===td)
+                browser.actions.focusCell(row-1, column)
+            }
+        }
+    })
 </script>
