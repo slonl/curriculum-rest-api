@@ -6,14 +6,9 @@ module.exports = {
 		ExamenprogrammaBgProfiel: `
 			const results = from(data.ExamenprogrammaBgProfiel)
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			Vakleergebied: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			}
 		  })
@@ -30,14 +25,9 @@ module.exports = {
 		ExamenprogrammaBgKern: `
 			const results = from(data.ExamenprogrammaBgKern)
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaBgProfiel: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			},
 		  })
@@ -54,10 +44,7 @@ module.exports = {
 		ExamenprogrammaBgKerndeel: `
 			const results = from(data.ExamenprogrammaBgKerndeel)
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 		  })
 		  .sort(sortByPrefix)
 	
@@ -72,10 +59,7 @@ module.exports = {
 		ExamenprogrammaBgGlobaleEindterm: `
 		const results = from(data.ExamenprogrammaBgGlobaleEindterm)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		  })
 		  .sort(sortByPrefix)
 
@@ -90,13 +74,9 @@ module.exports = {
 		ExamenprogrammaBgModule: `
 		const results = from(data.ExamenprogrammaBgModule)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgProfiel: {
-			  '@id': Id,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			}
 		  })
@@ -113,10 +93,7 @@ module.exports = {
 		ExamenprogrammaBgDeeltaak: `
 		const results = from(data.ExamenprogrammaBgDeeltaak)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		.sort(sortByPrefix)
 
@@ -131,10 +108,7 @@ module.exports = {
 		ExamenprogrammaBgModuletaak: `
 		const results = from(data.ExamenprogrammaBgModuletaak)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		.sort(sortByPrefix)
 
@@ -149,14 +123,9 @@ module.exports = {
 		ExamenprogrammaBgKeuzevak: `
 		const results = from(data.ExamenprogrammaBgKeuzevak)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgProfiel: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -173,10 +142,7 @@ module.exports = {
 		ExamenprogrammaBgKeuzevaktaak: `
 		const results = from(data.ExamenprogrammaBgKeuzevaktaak)
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 		})
 		.sort(sortByPrefix)
 
@@ -192,74 +158,49 @@ module.exports = {
 		ExamenprogrammaBgVolledig: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			deprecated: _,
 			  ExamenprogrammaBgKern: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgKerndeel: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
+					...shortInfo,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				  },
 				},
 			  },
 			  ExamenprogrammaBgModule: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgDeeltaak: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
+					...shortInfo,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				  },
 				},
 				ExamenprogrammaBgModuletaak: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			  },
 			  ExamenprogrammaBgKeuzevak: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgDeeltaak: {
-				  '@id': Id,
-				  uuid: _.id,
-				  title: _,
+					...shortInfo,
 				  deprecated: _,
 				  ExamenprogrammaBgGlobaleEindterm: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				  },
 				},
 				ExamenprogrammaBgKeuzevaktaak: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			  },
@@ -270,36 +211,22 @@ module.exports = {
 		ExamenprogrammaBgProfiel:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			replaces: _,
 			Vakleergebied: {
-			  '@id': Id,
-			  uuid: _.id,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgKern: {
-			  '@id': Id,
-			  uuid: _.id,
-			  prefix: _,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgModule: {
-			  '@id': Id,
-			  uuid: _.id,
-			  prefix: _,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			},
 			ExamenprogrammaBgKeuzevak: {
-			  '@id': Id,
-			  uuid: _.id,
-			  prefix: _,
-			  title: _,
+				...shortInfo,
 			  deprecated: _,
 			},
 		})
@@ -307,23 +234,14 @@ module.exports = {
 		ExamenprogrammaBgKern:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			replaces: _,
 			ExamenprogrammaBgProfiel: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgKerndeel: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -331,28 +249,17 @@ module.exports = {
 		ExamenprogrammaBgKerndeel:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgKern: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
 			ExamenprogrammaBgGlobaleEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -360,23 +267,14 @@ module.exports = {
 		ExamenprogrammaBgGlobaleEindterm:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			Niveau: NiveauShort,
 			ExamenprogrammaBgKerndeel: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -384,29 +282,17 @@ module.exports = {
 		ExamenprogrammaBgModule:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgProfiel: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgModuletaak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -414,40 +300,24 @@ module.exports = {
 		ExamenprogrammaBgDeeltaak:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgGlobaleEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgModule: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
 			ExamenprogrammaBgKeuzevak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
@@ -456,20 +326,12 @@ module.exports = {
 		ExamenprogrammaBgModuletaak:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgModule: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},
@@ -479,29 +341,17 @@ module.exports = {
 		ExamenprogrammaBgKeuzevak:`
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgProfiel: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgDeeltaak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBgKeuzevaktaak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 		})
@@ -509,20 +359,12 @@ module.exports = {
 		ExamenprogrammaBgKeuzevaktaak: `
 		from(Index(request.query.id))
 		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+			...shortInfo,
 			ExamenprogrammaBgKeuzevak: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaBgProfiel: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				},
 			},

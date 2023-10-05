@@ -3,13 +3,6 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 	fragments:`
-		const shortInfo = {
-		    '@id': Id,
-		    '@type': Type,
-		    uuid: _.id,
-		    prefix: _,
-		    title: _,
-		};
 		const SyllabusInfo = {
 			...shortInfo,
 			ce_se: _,
@@ -64,8 +57,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 			Examenprogramma: {
-				'@id': Id,
-				title: _,
+				...shortInfo,
 			}
 		})
 		.sort(sortByTitle)
@@ -120,8 +112,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 			Examenprogramma:{
-				'@id': Id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -301,19 +292,13 @@ module.exports = {
 		ExamenprogrammaVakleergebied:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			title: _,
+				...shortInfo,
 			Vakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Examenprogramma: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -321,34 +306,21 @@ module.exports = {
 		Examenprogramma:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaVakleergebied: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaDomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaKop1: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Syllabus: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Niveau: NiveauShort
@@ -357,49 +329,31 @@ module.exports = {
 		ExamenprogrammaDomein:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ce_se: _,
 			Tag: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Examenprogramma: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaSubdomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Niveau: NiveauShort,
 			},
 			SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusSpecifiekeEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			NiveauIndex: {
@@ -410,35 +364,22 @@ module.exports = {
 		ExamenprogrammaSubdomein:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ce_se: _,
 			Tag: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaDomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Examenprogramma: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
 			ExamenprogrammaEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Niveau: NiveauShort,
 			},
@@ -451,65 +392,42 @@ module.exports = {
 		ExamenprogrammaEindterm:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ce_se: _,
 			ExamenprogrammaSubdomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				ExamenprogrammaDomein: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 					Examenprogramma: {
-						'@id': Id,
-						uuid: _.id,
-						title: _,
+						...shortInfo,
 						deprecated: _,
 					}
 				}
 			},
 			ExamenprogrammaDomein: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Examenprogramma: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
 			SyllabusSpecifiekeEindterm: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusToelichting: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			SyllabusVakbegrip: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			Niveau: {
-				'@id': Id,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -517,30 +435,18 @@ module.exports = {
 		ExamenprogrammaKop1:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			deprecated: _,
 			Examenprogramma: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaKop2: {		
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBody: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -548,35 +454,21 @@ module.exports = {
 		ExamenprogrammaKop2:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaKop1: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Examenprogramma: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
 			ExamenprogrammaKop3: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBody: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -584,29 +476,17 @@ module.exports = {
 		ExamenprogrammaKop3:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaKop2: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaKop4: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBody: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -614,22 +494,13 @@ module.exports = {
 		ExamenprogrammaKop4:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaKop3: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaBody: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
@@ -637,42 +508,25 @@ module.exports = {
 		ExamenprogrammaBody:`
 		from(Index(request.query.id))
 			.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
+				...shortInfo,
 			ExamenprogrammaKop1: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 				Examenprogramma: {
-					'@id': Id,
-					uuid: _.id,
-					title: _,
+					...shortInfo,
 					deprecated: _,
 				}
 			},
 			ExamenprogrammaKop2: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaKop3: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			},
 			ExamenprogrammaKop4: {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
+				...shortInfo,
 				deprecated: _,
 			}
 		})
