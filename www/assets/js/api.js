@@ -61,9 +61,12 @@
             let allRows = []
             let allColumns = {}
             let lastIndent = 0
+            let count = 0
             walk(data, 0, (n,indent) => {
                 if (n.id || n.uuid) {
+                    count++
                     let row = {}
+                    row.index = count
                     row.indent = 'slo-indent-'+indent;
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     Object.keys(n).filter(k => /[a-z@]/.test(k[0])).forEach(k => {
@@ -119,7 +122,7 @@
                 end = this.view.data.length;
                 start = end - this.options.rows;
               }
-              if (start>0) {
+              if (start>0 || end<this.data.length) {
                   this.view.data = this.view.data.slice(start, end)
               }
             });
