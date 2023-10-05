@@ -64,14 +64,17 @@
     .slo-spreadsheet tr.focus td.focus {
         background-color: var(--ds-grey-30);
         position: relative;
+        white-space: break-spaces;
+        overflow: visible;
     }
-    .slo-spreadsheet tr.focus td.focus::before {
-        content: "";
+
+    .slo-spreadsheet tr.focus td.focus .slo-cell {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        min-height: 100%;
+        background-color: var(--ds-grey-30);
         border: 2px solid var(--ds-primary);
-        box-sizing: border-box;
+        z-index: 100;
     }
