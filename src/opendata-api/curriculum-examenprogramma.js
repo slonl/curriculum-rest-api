@@ -291,10 +291,11 @@ module.exports = {
 	typedQueries: {
 		ExamenprogrammaVakleergebied:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			Vakleergebied: {
-				...shortInfo,
+				...shortInfo
 				deprecated: _,
 			},
 			Examenprogramma: {
@@ -305,8 +306,9 @@ module.exports = {
 		`,
 		Examenprogramma:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ExamenprogrammaVakleergebied: {
 				...shortInfo,
 				deprecated: _,
@@ -328,8 +330,9 @@ module.exports = {
 		`,
 		ExamenprogrammaDomein:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ce_se: _,
 			Tag: {
 				...shortInfo,
@@ -363,8 +366,9 @@ module.exports = {
 		`,
 		ExamenprogrammaSubdomein:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ce_se: _,
 			Tag: {
 				...shortInfo,
@@ -391,8 +395,9 @@ module.exports = {
 		`,
 		ExamenprogrammaEindterm:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ce_se: _,
 			ExamenprogrammaSubdomein: {
 				...shortInfo,
@@ -434,8 +439,9 @@ module.exports = {
 		`,
 		ExamenprogrammaKop1:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			deprecated: _,
 			Examenprogramma: {
 				...shortInfo,
@@ -453,8 +459,9 @@ module.exports = {
 		`,
 		ExamenprogrammaKop2:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ExamenprogrammaKop1: {
 				...shortInfo,
 				deprecated: _,
@@ -475,8 +482,9 @@ module.exports = {
 		`,
 		ExamenprogrammaKop3:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ExamenprogrammaKop2: {
 				...shortInfo,
 				deprecated: _,
@@ -493,8 +501,9 @@ module.exports = {
 		`,
 		ExamenprogrammaKop4:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ExamenprogrammaKop3: {
 				...shortInfo,
 				deprecated: _,
@@ -507,8 +516,9 @@ module.exports = {
 		`,
 		ExamenprogrammaBody:`
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			ExamenprogrammaKop1: {
 				...shortInfo,
 				deprecated: _,
