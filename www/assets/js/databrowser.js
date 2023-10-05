@@ -326,34 +326,47 @@
         },
         keyboard: {
             spreadsheet: {
-                "ArrowDown": () => {
+                //TODO: calculate prev/next row while skipping over
+                //closed trees. So find the prev/next visible row.
+                "ArrowDown": (e) => {
                     let d = window.slo.getDataModel('items')
-                    if (this.spreadsheet.focus.row<d.data.length) {
-                        this.spreadsheet.focus.row++
-                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    let focus = browser.view.spreadsheet.focus
+                    console.log('up',focus)
+                    if (focus.row<d.data.length) {
+                        focus.row++
+                        browser.actions.focusCell(focus.row, focus.column)
                     }
+                    e.preventDefault()
                 },
-                "ArrowUp": () => {
+                "ArrowUp": (e) => {
                     let d = window.slo.getDataModel('items')
-                    if (this.spreadsheet.focus.row>0) {
-                        this.spreadsheet.focus.row--
-                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    let focus = browser.view.spreadsheet.focus
+                    console.log('down',focus)
+                    if (focus.row>0) {
+                        focus.row--
+                        browser.actions.focusCell(focus.row, focus.column)
                     }
+                    e.preventDefault()
                 },
-                "ArrowLeft": () => {
+                "ArrowLeft": (e) => {
                     let d = window.slo.getDataModel('items')
-                    if (this.spreadsheet.focus.column<d.options.columns.length) {
-                        this.spreadsheet.focus.column++
-                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
+                    let focus = browser.view.spreadsheet.focus
+                    if (focus.column>0) {
+                        focus.column--
+                        browser.actions.focusCell(focus.row, focus.column)
                     }
+                    e.preventDefault()
                 },
-                "ArrowRight": () => {
+                "ArrowRight": (e) => {
                     let d = window.slo.getDataModel('items')
-                    if (this.spreadsheet.focus.column>0) {
-                        this.spreadsheet.focus.column--
-                        browser.actions.focusCell(this.spreadsheat.focus.row, this.spreadsheet.focus.column)
-                    }                    
+                    let focus = browser.view.spreadsheet.focus
+                    if (focus.column<Object.keys(d.options.columns).length) {
+                        focus.column++
+                        browser.actions.focusCell(focus.row, focus.column)
+                    }
+                    e.preventDefault()
                 }
+                // Space -> open/close subtree
             }
         },
         commands: {
@@ -435,11 +448,13 @@
                 let currentView = this.app.view.view;
                 switch(view) {
                     case 'item':
+                        document.body.setAttribute('data-simply-keyboard','item')
                         // get focused item
                         return this.app.actions.item(this.app.view.item.uuid)
                         // switch to that
                     break;
                     case 'spreadsheet':
+                        document.body.setAttribute('data-simply-keyboard','spreadsheet')
                         let currentItem = this.app.view.item.uuid
                         let currentId = this.app.view.item['@id']
                         // get roots of current item
@@ -576,22 +591,27 @@
                 let d = window.slo.getDataModel('items')
                 // check if the cell is visible
                 // FIXME: check that row is not collapsed 
-                // TODO: focus cell/column as well
-                if (d.options.offset>row || (d.options.offset+d.options.rows)<row) { 
-                    let offset = row - Math.floor(d.options.rows/2)
+                // TODO: move scrollbar down appropriately
+                // instead of setting offset directly - move scrollbar and let it update
+                // the offset
+                if (d.options.offset>0 || (d.options.offset+(d.options.rows/2))<row) { 
+                    let offset = Math.min(Math.max(row - Math.floor(d.options.rows/2), 0), d.data.length-d.options.rows)
                     d.update({
                         offset: offset
                     })
                     row = row - offset
                 }
+                // FIXME: keep column within limits of the visible data
                 // then highlight the cell (hide previous highlight)
+                // throttle this to prevent trailing renders
                 window.setTimeout(() => {
-                    Array.from(document.querySelectorAll('.slo-spreadsheet tbody tr.focus'))
+                    Array.from(document.querySelectorAll('.slo-spreadsheet .focus'))
                     .forEach(r => {
                         r.classList.remove('focus')
                     })
                     document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')').classList.add('focus')
-                },100)
+                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')').classList.add('focus')
+                },10)
             }
         }
     });
