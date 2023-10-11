@@ -1,3 +1,9 @@
+let JSONTag;
+
+import('@muze-nl/jsontag').then(module => {
+	JSONTag=module.default
+})
+
 function storeQuery(url, query, variables, urlQuery) {
 	if (!variables) {
 		variables = {};
@@ -37,7 +43,7 @@ function storeQuery(url, query, variables, urlQuery) {
 		}
 		throw new Error(response, response.status)
 	}).then(json => {
-		return JSON.parse(json)
+		return JSONTag.parse(json)
 	})
 }
 
