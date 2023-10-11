@@ -68,6 +68,12 @@
         overflow: visible;
     }
 
+    .slo-spreadsheet .slo-cell {
+        padding: 0 0.5em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
     .slo-spreadsheet tr.focus td.focus .slo-cell {
         position: absolute;
         top: 0;
@@ -77,4 +83,6 @@
         background-color: var(--ds-grey-30);
         border: 2px solid var(--ds-primary);
         z-index: 100;
+        white-space: break-spaces;
+        overflow: visible;
     }
