@@ -1994,6 +1994,15 @@ select {
     margin-left: 0;
     width: auto;
 }
+.slo-spreadsheet .ds-scrollbox {
+    position: relative;
+    overflow: auto;
+}
+.slo-spreadsheet .slo-scrollbar {
+    position: absolute;
+    width: 10px;
+    top: 0;
+}
 .slo-tree-table {
     min-width: 720px;
 }
