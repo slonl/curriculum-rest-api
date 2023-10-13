@@ -67,6 +67,7 @@
                     count++
                     let row = {}
                     row.index = count
+                    row['data-simply-template'] = 'entity'
                     row.indent = 'slo-indent-'+indent;
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     Object.keys(n).filter(k => /[a-z@]/.test(k[0])).forEach(k => {
@@ -109,11 +110,13 @@
               columns: allColumns,
               closed: {}
             });
+            document.querySelector('.slo-spreadsheet table').style.height
+            =(datamodel.options.rows+1)*datamodel.options.rowHeight+'px'
             datamodel.addPlugin('render', function(params) {
-              if (params.offset) {
+              if (typeof params.offset != 'undefined') {
                 this.options.offset = params.offset
               }
-              if (params.rows) {
+              if (typeof params.rows!='undefined') {
                 this.options.rows = params.rows
               }
               start = this.options.offset
@@ -122,7 +125,7 @@
                 end = this.view.data.length;
                 start = end - this.options.rows;
               }
-              if (start>0 || end<this.data.length) {
+              if (start>0 || end<this.view.data.length) {
                   this.view.data = this.view.data.slice(start, end)
               }
             });
@@ -184,6 +187,49 @@
                     }
                 }
             }));
+
+            let view,scrollListener=false;
+            datamodel.addPlugin('finish', function() {
+                if (this.view.data.length<this.options.rows) {
+                    let size = this.options.rows - this.view.data.length;
+                    this.view.data = this.view.data.concat(new Array(size).fill({
+                        'data-simply-template':'empty'
+                    }))
+                }
+                view = document.querySelector('[data-simply-data="'+name+'"]')
+                let scrollbar = view.closest('.slo-spreadsheet').querySelector('.slo-scrollbar')
+                let scrollbox = view.closest('.slo-spreadsheet').querySelector('.ds-scrollbox')
+                let height = (datamodel.options.rowHeight * (datamodel.options.visibleRows+1))+'px'
+                if (height != scrollbar.style.height) {
+                    scrollbar.style.height = height;
+                }
+                if (!scrollListener) {
+                    scrollListener = true;
+                    let timer = null
+                    scrollbox.addEventListener('scroll', (e) => {
+                        if (timer) {
+                            return
+                        }
+                        if (!e.target.closest('.slo-spreadsheet')) {
+                            return
+                        }
+                        timer = window.setTimeout(() => {
+                            view = document.querySelector('[data-simply-data="'+name+'"]')
+                            scrollbar = view.closest('.slo-spreadsheet').querySelector('.slo-scrollbar')
+                            let scrollbox = view.closest('.slo-spreadsheet').querySelector('.ds-scrollbox')
+                            let datamodel = window.slo.getDataModel(name); // important, another datamodel can be loaded, so make sure we use the latest one
+                            let offset = Math.ceil(scrollbox.scrollTop/datamodel.options.rowHeight)
+                            if (offset!=datamodel.options.offset) {
+                                datamodel.update({
+                                    offset: offset
+                                })
+                                simply.viewmodel.updateDataSource(name)
+                            }
+                            timer = null
+                        },50)
+                    })
+                }
+            })
             dataModels[name] = datamodel
             datamodel.update();
             return datamodel;
@@ -197,4 +243,3 @@
             .pop()
         }
     }
-
