@@ -6,11 +6,9 @@ module.exports = {
 		FoDomein: `
 		const results = from(data.FoDomein)
 		.select({
-				'@id": Id,
-				prefix: _,
-				title: _,
-				vakleergebied_id: _,
-				fo_subdomein_id: _,
+				...shortInfo,
+				Vakleergebied: _,
+				FoSubdomein: _,
 				unreleased: _,
 			})
 
@@ -27,11 +25,8 @@ module.exports = {
 		FoSubdomein: `
 		const results = from(data.FoSubdomein)
 		.select({
-				'@id": Id,
-				prefix: _,
-				title: _,
-				unreleased: _,
-				fo_doelzin_id
+				...shortInfo,
+				FoDoelzin: _
 			})
 	
 			const meta = {
@@ -47,12 +42,9 @@ module.exports = {
 		FoDoelzin: `
 		const results = from(data.FoDoelzin)
 		.select({
-				'@id": Id,
-				prefix: _,
-				title: _,
-				unreleased: _,
-				fo_toelichting_id
-				fo_uitwerking_id
+				...shortInfo,
+				FoToelichting: _,
+				FoUitwerking: _
 			})
 
 			const meta = {
@@ -68,11 +60,9 @@ module.exports = {
 		FoToelichting: `
 		const results = from(data.FoToelichting)
 		.select({
-				'@id": Id,
-				prefix: _,
-				title: _,
-				fo_doelzin_id
-				unreleased: _,
+				...shortInfo,
+				FoDoelzin: _,
+				unreleased: _
 			})
 
 			const meta = {
@@ -88,10 +78,8 @@ module.exports = {
 		FoUitwerking: `
 		const results = from(data.FoUitwerking)
 		.select({
-				'@id": Id,
-				prefix: _,
-				title: _,
-				fo_doelzin_id
+				...shortInfo,
+				FoDoelzin: _,
 				unreleased: _,
 			})
 	
@@ -107,120 +95,58 @@ module.exports = {
 			`
 	},
 	typedQueries: {
-		'fo_domein': `
-			'@id": Id,
-			prefix: _,
-			title: _,
-			Vakleergebied {
-				'@id": Id,
-				title: _,
-			}
-			FoSubdomein {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
+		FoDomein: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoDomein',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoSubdomein: shortInfo
+			})
 		`,
-		'fo_subdomein': `
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
+		FoSubdomein: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoSubdomein',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoDoelzin: shortInfo
+			})
 		`,
-		'fo_doelzin': `
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoToelichting {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
-			FoUitwerking {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
+		FoDoelzin: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoDoelzin',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoToelichting: shortInfo,
+				FoUitwerking: shortInfo
+			})
 		`,
-		'fo_toelichting': `
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
+		FoToelichting: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoToelichting',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoDoelzin: shortInfo
+			})
 		`,
-		'fo_uitwerking': `
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-				'@id": Id,
-				title: _,
-				deprecated
-			}
+		FoUitwerking: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoUitwerking',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoDoelzin: shortInfo
+			})
 		`
 	},
-	idQuery: `
-		allFoDomein(filter:{'@id": Id,:$'@id": Id,}) {
-			'@id": Id,
-			prefix: _,
-			title: _,
-			Vakleergebied {
-				'@id": Id,
-				title: _,
-			}
-			FoSubdomein {
-			  '@id": Id,
-			  title: _,
-			}
-		}
-		allFoSubdomein(filter:{'@id": Id,:$'@id": Id,}) {
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-			  '@id": Id,
-			  title: _,
-			}
-		}
-		allFoDoelzin(filter:{'@id": Id,:$'@id": Id,}) {
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoToelichting {
-			  '@id": Id,
-			  title: _,
-			}
-			FoUitwerking {
-			  '@id": Id,
-			  title: _,
-			}
-		}
-		allFoToelichting(filter:{'@id": Id,:$'@id": Id,}) {
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-			  '@id": Id,
-			  title: _,
-			}
-		}
-		allFoUitwerking(filter:{'@id": Id,:$'@id": Id,}) {
-			'@id": Id,
-			prefix: _,
-			title: _,
-			FoDoelzin {
-			  '@id": Id,
-			  title: _,
-			}
-		}`,
 	routes: {
 		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
