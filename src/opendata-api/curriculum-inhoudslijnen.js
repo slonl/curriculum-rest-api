@@ -203,6 +203,6 @@ module.exports = {
 		'inh_inhoudslijn/': (req) => opendata.api["InhInhoudslijn"](req.params, req.query),
 		'inh_cluster/': (req) => opendata.api["InhCluster"](req.params, req.query),
 		'inh_subcluster/': (req) => opendata.api["InhSubcluster"](req.params, req.query),
-		'niveau/:niveau/inh_vakleergebied/:id/doelen': (req) => opendata.api['InhoudslijnVolledig'](req.params)
+		'niveau/:niveau/inh_vakleergebied/:id/doelen': (req) => opendata.api['InhoudslijnVolledig'](req.params, req.query)
 	}
 };

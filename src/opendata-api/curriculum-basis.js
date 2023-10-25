@@ -291,8 +291,6 @@ module.exports = {
 				ErkVakleergebied: ShortLink,
 				Niveau
 			})
-			.sort(sortByTitle)
-
 		`,
 		Niveau: `
 		from(Index(request.query.id))
