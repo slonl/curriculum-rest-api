@@ -193,30 +193,4 @@ MathJax.Hub.Config({
 <script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
-<script>
-    let throttlePause;
-
-    const throttle = (callback, time) => {
-      if (throttlePause) return;
-      throttlePause = true;
-      setTimeout(() => {
-        callback();
-        throttlePause = false;
-      }, time);
-    };
-
-    simply.activate.addListener('spreadsheet', function() {
-        let datasource = this.querySelector('tbody').dataset.simplyData
-        let scrollbar = this.querySelector('.scrollbar')
-        let datamodel = slo.getDataModel(datasource)
-        scrollbar.style.height = (datamodel.options.rowHeight * (datamodel.data.length+1))+'px'
-        this.addEventListener('scroll', (evt) => {
-            datamodel = slo.getDataModel(datasource) // important, otherwise you work with older versions of the datamodel
-            scrollbar.style.height = (datamodel.options.rowHeight * (datamodel.options.visibleRows+1))+'px'
-            datamodel.options.offset = Math.ceil(this.scrollTop/datamodel.options.rowHeight)
-            datamodel.update()
-            simply.viewmodel.updateDataSource(datasource)
-        })
-    })
-</script>
 </body>
