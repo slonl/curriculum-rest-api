@@ -332,7 +332,7 @@
                     let d = window.slo.getDataModel('items')
                     let focus = browser.view.spreadsheet.focus
                     console.log('up',focus)
-                    if (focus.row<d.data.length) {
+                    if (focus.row<(d.data.length-1)) {
                         focus.row++
                         browser.actions.focusCell(focus.row, focus.column)
                     }
@@ -589,18 +589,22 @@
             },
             focusCell: function(row, column) {
                 let d = window.slo.getDataModel('items')
+                browser.view.spreadsheet.focus.row = row;
+                browser.view.spreadsheet.focus.column = column;
                 // check if the cell is visible
                 // FIXME: check that row is not collapsed 
                 // TODO: move scrollbar down appropriately
                 // instead of setting offset directly - move scrollbar and let it update
                 // the offset
-                if (d.options.offset>0 || (d.options.offset+(d.options.rows/2))<row) { 
+                if (d.options.offset>row || (d.options.offset+d.options.rows)<=row) { 
                     let offset = Math.min(Math.max(row - Math.floor(d.options.rows/2), 0), d.data.length-d.options.rows)
-                    d.update({
-                        offset: offset
-                    })
-                    row = row - offset
+                    if (offset!=d.options.offset) {
+                        d.update({
+                            offset: offset
+                        })
+                    }
                 }
+                row = row - d.options.offset
                 // FIXME: keep column within limits of the visible data
                 // then highlight the cell (hide previous highlight)
                 // throttle this to prevent trailing renders
