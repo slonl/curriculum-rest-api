@@ -325,6 +325,6 @@ module.exports = {
 		'ref_onderwerp/': (req) => opendata.api["RefOnderwerp"](req.params, req.query),
 		'ref_deelonderwerp/': (req) => opendata.api["RefDeelonderwerp"](req.params, req.query),
 		'ref_tekstkenmerk': (req) => opendata.api["RefTekstkenmerk"](req.params, req.query),
-		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) => opendata.api["ReferentiekaderVolledig"](req.params)
+		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) => opendata.api["ReferentiekaderVolledig"](req.params, req.query)
 		}
 };
