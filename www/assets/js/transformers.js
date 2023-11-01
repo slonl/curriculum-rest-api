@@ -1,3 +1,17 @@
+    editor.transformers.option = {
+        render: function(data) {
+            this.originalValue = data
+            if (!!data) {
+                return "some"
+            } else {
+                return "none"
+            }
+        },
+        extract: function(data) {
+            return this.originalValue
+        }
+    }
+
     editor.transformers.replaces = {
         render: function(data) {
             this.originalValue = data;

@@ -17,6 +17,22 @@
             <use xlink:href="/assets/icons/feather-sprite.svg#grid"></use>
         </svg></button>
     </div>
+    <nav class="ds-align-right" data-simply-field="user" data-simply-content="template" data-simply-transformer="option" data-simply-default-template="none">
+        <template data-simply-template="none"></template>
+        <template data-simply-template="some">
+            <ul class="ds-navbar-nav">
+                <li>
+                    <button data-simply-command="logoff"
+                    class="ds-button ds-button-naked" title="Afmelden"><svg
+                    class="ds-icon ds-icon-feather"><use
+                    xlink:href="/assets/icons/feather-sprite.svg#log-out"></use></svg></button>
+                </li>
+                <li class="slo-username">
+                    <span data-simply-field="user"></span>
+                </li>
+            </ul>
+        </template>
+    </nav>
     <nav class="ds-align-right">
         <ul class="ds-navbar-nav ds-paging">
             <li>
@@ -164,6 +180,7 @@
         </a>
     </li>
 </template>
+<link rel="simply-include" href="/templates/login.html">
 <script src="//unpkg.com/simplyview@2.0.3/dist/simply.everything.js"></script>
 <script>
     function getPath(url) {
@@ -174,15 +191,15 @@
 
     var release = {
         basePath: getPath('{@NODE_BASE}'),
-        apiPath: getPath('{@NODE_DATA_URL}')
-    };
-
-       
-    const baseURL = '{@NODE_BASE}';
-    var apiURL  = '{@NODE_DATA_URL}';
-    if (apiURL[apiURL.length-1]=='/') {
-        apiURL = apiURL.substr(0,-1);
+        apiPath: getPath('{@NODE_DATA_URL}'),
+        baseURL: '{@NODE_BASE}',
+        apiURL: '{@NODE_DATA_URL}'
     }
+    if (release.apiURL[release.apiURL.length-1]=='/') {
+        release.apiURL = release.apiURL.substring(0,release.apiURL.length-1);
+    }
+    var apiURL = release.apiURL
+    var baseURL = release.baseURL
 </script>
 <link rel="simply-include" href="/templates/scripts.html">
 <script type="text/x-mathjax-config">

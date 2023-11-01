@@ -1,10 +1,25 @@
     let dataModels = {}
     window.slo = {
         api: {
+            token: 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ==',
+            login: async function(email,key) {
+                let token = btoa(email+':'+key)
+                let result = await fetch(window.apiURL + '/login/', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Basic '+token
+                    }
+                })
+                return result.ok
+            },
+            logout: function() {
+                slo.api.token = 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ=='
+                return true
+            },
             get: function(path, params) {
-                var url = window.apiURL + path;
+                var url = new URL(window.apiURL + path);
                 if (!params && window.location.search) {
-                    url = url + window.location.search;
+                    url.search = window.location.search;
                 }
                 if (params) {
                     var args = Object.keys(params).map(function(param) {
@@ -14,12 +29,12 @@
                             return encodeURIComponent(param)+'='+encodeURIComponent(params[param]);
                         }
                     }).filter(Boolean).join('&');
-                    url = url + '?' + args;
+                    url.search = '?' + args;
                 }
                 return fetch(url, {
                     headers: {
                         'Accept': 'application/json',
-                        'Authorization': 'Basic b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ=='
+                        'Authorization': 'Basic '+slo.api.token
                     }
                 })
                 .then(function(response) {

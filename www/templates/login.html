@@ -1,0 +1,41 @@
+    <dialog id="login" class="ds-dialog ds-dialog-narrow">
+        <header class="ds-dialog-header">
+            <div class="ds-space">
+                <button data-simply-command="close" class="ds-button ds-button-light ds-button-close">
+                    <svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
+                    </use></svg>
+                </button>
+                <h2>Aanmelden</h2>
+            </div>
+        </header>
+        <div class="ds-dialog-content">
+            <div data-simply-field="error" data-simply-content="template" data-simply-default="none" data-simply-transformer="option">
+                <template data-simply-template="none"></template>
+                <template data-simply-template="some">
+                    <div class="ds-alert ds-alert-warning">
+                        <div class="ds-space">
+                            <button data-simply-command="hideError" class="ds-button ds-button-light ds-button-close">
+                                <svg class="ds-icon ds-icon-feather">
+                                    <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
+                                </use></svg>
+                            </button>
+                            <span data-simply-field="error"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <form class="ds-space" data-simply-command="login">
+                <label>
+                    E-mail
+                    <input type="text" name="username" data-simply-field="username" data-simply-element="username">
+                </label>
+                <label>
+                    API-key
+                    <input type="text" name="password" data-simply-field="password" data-simply-element="password">
+                </label>
+                <button type="submit" class="ds-button ds-button-primary">Login</button>
+            </form>
+        </div>
+    </dialog>
+    <div class="ds-dialog-overlay"></div>

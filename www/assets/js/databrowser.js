@@ -26,6 +26,9 @@
             }
         },
         routes: {
+            '/login/': function() {
+                document.getElementById('login').setAttribute('open','open')
+            },
             '/niveau/:niveau/vakleergebied/:vakid': function(params) {
                 browser.actions.itemOpNiveau(params.niveau, 'vakleergebied/', params.vakid);
             },
@@ -60,7 +63,6 @@
             '/niveau/:niveau/ldk_vakinhoud/': function(params) {
                 browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
             },
-
             '/niveau/:niveau': function(params) {
                 browser.actions.item(params.niveau);
             },
@@ -370,6 +372,34 @@
             }
         },
         commands: {
+            close: function(el,value) {
+                let dialog = el.closest('dialog')
+                if (dialog) {
+                    dialog.removeAttribute('open')
+                    window.location.pathname='/'
+                }
+            },
+            login: async function(form,values) {
+                if (!values.username || !values.password) {
+                    browser.view.error = 'Vul a.u.b. uw email en API-key in'
+                    return
+                }
+                let result = await this.app.actions.login(values.username, values.password)
+                if (result===true) {
+                    this.app.commands.close(form)
+                } else {
+                    browser.view.error = result
+                }
+            },
+            logoff: async function(el, value) {
+                slo.api.logout()
+                localStorage.setItem('username','')
+                localStorage.setItem('key','')
+                window.location.reload()
+            },
+            hideError: function(el, value) {
+                browser.view.error = ''
+            },
             switchView: function(el, value) {
                 this.app.view.preferedView = value;
                 let current = el.closest('.slo-weergave-switch').querySelector('.ds-button-primary')
@@ -444,6 +474,16 @@
             }
         },
         actions: {
+            login: async function(email, key) {
+                // check if email/key are valid
+                if (!await slo.api.login(email, key)) {
+                    return 'Ongeldig email en/of API-key'
+                }
+                browser.view.user = email
+                localStorage.setItem('username',email)
+                localStorage.setItem('key',key)
+                return true
+            },
             switchView: async function(view){
                 let currentView = this.app.view.view;
                 switch(view) {
@@ -621,3 +661,11 @@
     });
 
     browser.view.pageSize = 100;
+    document.addEventListener('simply-content-loaded', () => {
+        let user = localStorage.getItem('username')
+        let key = localStorage.getItem('key')
+        if (user && key) {
+            browser.view.user = user
+            slo.api.token = btoa(user+':'+key)
+        }
+    })

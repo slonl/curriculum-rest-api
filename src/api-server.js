@@ -69,7 +69,6 @@ app.use(function(req, res, next) {
 	next();
 });
 
-
 app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
 	console.log("Register " + user);
@@ -122,10 +121,35 @@ function readKeys() {
 	apiKeys = keyData;
 }
 
+var editors = {}
+
+function readEditors() {
+	var editorsData = fs.readFileSync("editors.json", "utf8");
+	try {
+		editors = JSON.parse(editorsData);
+	} catch (e) {
+		console.log("Invalid JSON in editors.json");
+		console.log(e);
+	}
+}
+
+app.route('/login/').get((req,res) => {
+	let auth = req.header('Authorization')
+	let token = atob(auth.split(' ')[1])
+	let user = token.split(':')[0]
+	if (editors[user]) {
+		res.send('OK')
+	} else {
+		res.status(401)
+		res.send('Forbidden')
+	}
+})
+
 watch.createMonitor('.', function(monitor) {
-	monitor.files['./apikeys.json']
+	monitor.files['./apikeys.json','./editors.json']
 	monitor.on('changed', function() { 
 		readKeys();
+		readEditors();
 	});
 });
 
@@ -158,6 +182,7 @@ function sendApiKey(email, key) {
 }
 
 readKeys();
+readEditors();
 
 function jsonLD(entry) {
 	if (entry.Niveau && Array.isArray(entry.Niveau)) {

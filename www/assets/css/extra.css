@@ -86,3 +86,7 @@
         white-space: break-spaces;
         overflow: visible;
     }
+    .slo-username span {
+        line-height: var(--ds-button-line-height);
+        padding-left: 1em;
+    }
