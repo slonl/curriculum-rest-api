@@ -1,0 +1,79 @@
+<template data-simply-template="document">
+    <div class="slo-document">
+
+
+        <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
+            <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
+            data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
+            data-simply-activate="niveaus-select" data-simply-element="niveaus">
+                <template>
+                    <option data-simply-field="title"></option>
+                </template>
+            </select>
+            <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
+            data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
+            data-simply-activate="contexts-select" data-simply-element="contexts">
+                <template>
+                    <option data-simply-field="context"></option>
+                </template>
+            </select>
+            <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
+                <svg class="ds-icon ds-icon-feather">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
+                </svg>
+            </button>
+        </div>
+        <nav class="ds-crumbs">
+            <ul class="ds-crumbs-list">
+                <li>API</li>
+                <li><a href="/">2023</a></li>
+                <li><a href="" data-simply-field="contextLink"></a></li>
+            </ul>
+        </nav>
+
+        <div>
+
+            <h1 data-simply-field="document.title"> Hier komt een document </h1>
+
+            <!-- Templates-->
+            <!--  <template> id="item" -->
+                    <ul data-simply-list="document.ExamenprogrammaDomein"> <!-- parent  -->
+                        <!-- Recursive template-->
+                        <template>
+                        <section>
+                            <li>
+                                <div>
+                                <p class="ds-space ds-light-background" data-simply-field="prefix"></p>
+                                <h1 data-simply-field="title"></h1>
+                                </div>
+                                <span data-simply-field="@id"></span>
+                                <span data-simply-field="type"></span>
+                                <summary data-simply-field="description"></summary>
+                
+                            <!-- /Recursive template-->
+                                <!-- <template rel="item"></template> -->
+                                    <!-- child -->
+                                        <section>
+                                            <ul data-simply-list="document.ExamenprogrammaDomein.ExamenprogrammaSubdomein">
+                                                <li>
+                                                    <div>
+                                                    <p class="ds-space ds-light-background" data-simply-field="prefix"></p>
+                                                    <h1 data-simply-field="title"></h1>
+                                                    </div>
+                                                    <span data-simply-field="@id"></span>
+                                                    <span data-simply-field="@type"></span>
+                                                    <summary data-simply-field="description"></summary>
+                                                </li>
+                                            </ul>
+                                        </section>
+
+                                    <!-- /child -->
+                            </li>
+                        </section>
+                        </template>
+                    </ul>
+            
+            <!-- </template> /Templates -->
+        </div>
+    </div>
+</template>
