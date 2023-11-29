@@ -295,7 +295,7 @@ module.exports = {
 			...shortInfo,
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma/context.json',
 			Vakleergebied: {
-				...shortInfo
+				...shortInfo,
 				deprecated: _,
 			},
 			Examenprogramma: {
