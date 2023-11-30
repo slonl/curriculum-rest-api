@@ -18,20 +18,6 @@
     var browser = simply.app({
         container: document.body,
         view: {
-            spreadsheet: {
-                focus: {
-                    row: 0,
-                    column: 0
-                },
-                columns: [
-                    false,
-                    "id",
-                    "prefix",
-                    "titel",
-                    "type",
-                    "levels"
-                ]
-            }
         },
         routes: {
             '/login/': function() {
@@ -339,25 +325,25 @@
                 //TODO: calculate prev/next row while skipping over
                 //closed trees. So find the prev/next visible row.
                 "ArrowDown": (e) => {
-                    table.moveDown()
+                    browser.view.sloSpreadsheet.moveDown()
                     e.preventDefault()
                 },
                 "ArrowUp": (e) => {
-                    table.moveUp()
+                    browser.view.sloSpreadsheet.moveUp()
                     e.preventDefault()
                 },
                 "ArrowLeft": (e) => {
-                    table.moveLeft()
+                    browser.view.sloSpreadsheet.moveLeft()
                     e.preventDefault()
                 },
                 "ArrowRight": (e) => {
-                    table.moveRight()
+                    browser.view.sloSpreadsheet.moveRight()
                     e.preventDefault()
                 },
                 "Enter": (e) => {
                     e.preventDefault()
                     if (browser.view.user) {
-                        table.startEditor()
+                        browser.view.sloSpreadsheet.startEditor()
                     }
                 }
                 // Space -> open/close subtree
@@ -365,19 +351,51 @@
             "spreadsheet-edit": {
                 "Escape": (e) => {
                     e.preventDefault()
-                    table.stopEditor()
+                    browser.view.sloSpreadsheet.stopEditor()
                 },
                 "Tab": (e) => {
                     e.preventDefault()
-                    table.moveNextCell()
+                    browser.view.sloSpreadsheet.moveNext()
                 },
                 "Shift+Tab": (e) => {
                     e.preventDefault()
-                    table.movePrevCell()
+                    browser.view.sloSpreadsheet.movePrev()
                 }
             }
         },
         commands: {
+            toggleColumn: (el, value) => {
+              let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
+              column.checked = el.checked
+              browser.view.sloSpreadsheet.render()
+            },
+            filterValue: (el, value) => {
+              let column = browser.view.sloSpreadsheet.options.columns.find(c => c.value==el.name)
+              let state = !column.filteredValues[value]
+              column.filteredValues[value] = state
+              let columnFilter = Object.entries(column.filteredValues)
+                .filter(([name,value]) => value)
+                .map(([name,value]) => name)
+              let filter = {}
+              filter[el.name] = columnFilter
+              browser.view.sloSpreadsheet.update({
+                filter
+              })
+            },
+            filterText: (el, value) => {
+              let filter = {}
+              if (value.length>2) {
+                filter[el.name] = value
+                browser.view.sloSpreadsheet.update({
+                  filter
+                })
+              } else {
+                filter[el.name] = ''
+                browser.view.sloSpreadsheet.update({filter})
+              }
+            },
+
+
             close: function(el,value) {
                 let dialog = el.closest('dialog')
                 if (dialog) {
@@ -418,41 +436,36 @@
                 this.app.actions.switchView(value)
             },
             toggleTree: function(el,value) {
-                let id = el.closest('tr').querySelector('[data-simply-field="@references"]').pathname
-                id = id.split('/').pop()
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.update({
+                let id = el.closest('tr').id
+                browser.view.sloSpreadsheet.update({
                     toggle: id
                 })
                 el.closest('tr').classList.toggle('closed')
             },
             openTree: function(el, value) {
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.options.closed = {}
-                datamodel.update()
+                browser.view.sloSpreadsheet.options.closed = {}
+                browser.view.sloSpreadsheet.update()
             },
-            sortTree: function(el, value) {
-                let column = el.closest('th').querySelector('label.slo-column-name').innerText.trim()
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.update({
-                    propSort: {
-                        sortBy: column,
-                        sortDirection: value
-                    }
-                })
-                el.closest('tr')
-                .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
-                .forEach(e => {
-                    e.classList.remove('ds-datatable-sorted-descending')
-                    e.classList.remove('ds-datatable-sorted-ascending')
-                })
-                if (column=='Prefix') {
-                    el.closest('table').classList.remove('sorted')
-                    el.closest('th').classList.add('ds-datatable-sorted-descending')
-                } else {
-                    el.closest('table').classList.add('sorted')
-                    el.closest('th').classList.add('ds-datatable-sorted-'+value)
+            sort: (el,value) => {
+              browser.view.sloSpreadsheet.update({
+                sort: {
+                  sortBy: el.dataset.name,
+                  sortDirection: value
                 }
+              })
+              el.closest('tr')
+              .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
+              .forEach(e => {
+                  e.classList.remove('ds-datatable-sorted-descending')
+                  e.classList.remove('ds-datatable-sorted-ascending')
+              })
+              if (el.dataset.name=='prefix') {
+                  el.closest('table').classList.remove('sorted')
+                  el.closest('th').classList.add('ds-datatable-sorted-descending')
+              } else {
+                  el.closest('table').classList.add('sorted')
+                  el.closest('th').classList.add('ds-datatable-sorted-'+value)
+              }
             },
             nextPage: function(el,value) {
                 page = Math.min(browser.view.max-1, parseInt(browser.view.page));
@@ -584,11 +597,7 @@
                         }
                         await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // focus current item
-                        let model = window.slo.getDataModel('items')
-                        let row = model.data.findIndex(r => r['@id']==currentId)
-                        this.app.view.spreadsheet.focus.row = row;
-                        this.app.view.spreadsheet.focus.column = 2;
-                        this.app.actions.focusCell(row,2)
+                        this.app.view.sloSpreadsheet.gotoId(currentId)
                     break;
                 }
             },
@@ -633,12 +642,18 @@
                     niveau, context
                 })
                 .then(function(json) {
+                    let defs = slo.treeToRows(json)
                     if (browser.view.user) {
                         browser.view.view = 'spreadsheet-edit';
                     } else {
                         browser.view.view = 'spreadsheet';
                     }
-                    window.slo.spreadsheet('items',json)
+                    browser.view.sloSpreadsheet = spreadsheet({
+                        container: document.getElementById('slo-spreadsheet'),
+                        columns: defs.columns,
+                        icons: '/assets/icons/feather-sprite.svg'
+                    }, defs.rows)
+                    browser.view.sloSpreadsheet.render()
                 })
             },
             doelniveauList: function(type) {
