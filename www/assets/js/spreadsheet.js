@@ -118,6 +118,8 @@ const spreadsheet = (function() {
         return true
       })
     })
+
+    // adds caching of sorted list
     function createSort(options) {
         var defaultOptions = {
             name: 'sort',
@@ -152,7 +154,8 @@ const spreadsheet = (function() {
           return (a,b) => (a.columns[params.sortBy]>b.columns[params.sortBy])
         }
       }
-    }))    
+    }))
+
     datamodel.addPlugin('render', function(params) {
       if (typeof params.offset != 'undefined') {
         this.options.offset = Math.min(params.offset, this.data.length-1)
@@ -161,9 +164,10 @@ const spreadsheet = (function() {
       end = start + this.options.rows
       if (end>this.view.data.length) {
         end = this.view.data.length;
-        start = end - this.options.rows;
+        start = Math.max(0, end - this.options.rows);
       }
       this.view.data = this.view.data.slice(start, end)
+      // add row numbers
       let count = 0
       for (let row of this.view.data) {
         row.id = start+count
@@ -192,7 +196,6 @@ const spreadsheet = (function() {
     selector.classList.add('slo-helper')
     selector.classList.add('slo-cell-selector')
     helpers.appendChild(selector)
-    options.container.appendChild(helpers)
 
     function columnsSelectWidget() {      
       let checked, name, disabled, list = ''
@@ -389,6 +392,7 @@ const spreadsheet = (function() {
       }
       heading += `<th class="slo-minwidth slo-columns-select ds-datatable-disable-sort">${columnsSelectWidget()}</th></tr>`
       head.innerHTML = heading
+      head.querySelector('th:first-child').appendChild(helpers) // here so it flow below the dropdowns, but above cell content
       datamodel.options.visibleColumns = visible
     }
 
@@ -488,9 +492,10 @@ const spreadsheet = (function() {
           spreadsheet.goto(row,2)
       },
       selector: (el) => {
+        let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
-        selector.style.top = rect.top+'px'
-        selector.style.left = rect.left+'px'
+        selector.style.top = (rect.top - offset.top)+'px'
+        selector.style.left = (rect.left - offset.left)+'px'
         selector.style.width = rect.width+'px'
         selector.style.height = rect.height+'px'
       },
