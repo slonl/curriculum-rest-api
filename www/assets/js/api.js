@@ -147,6 +147,34 @@
                     filterable: false,
                     className: 'slo-minwidth',
                     type: 'id'
+                },
+                prefix: {
+                    name: 'Prefix',
+                    value: 'prefix',
+                    checked: true,
+                    disabled: false,
+                    sortable: true,
+                    filterable: true,
+                    className: 'slo-small',
+                    type: 'tree'
+                },
+                title: {
+                    name: 'Title',
+                    value: 'title',
+                    checked: true,
+                    disabled: false,
+                    sortable: true,
+                    filterable: true,
+                    type: 'text'
+                },
+                type: {
+                    name: 'Type',
+                    value: 'type',
+                    checked: true,
+                    disabled: false,
+                    sortable: true,
+                    filterable: true,
+                    type: 'list'
                 }
             }
             Object.keys(allColumns).forEach(c => {
@@ -160,11 +188,6 @@
                     sortable: true,
                     filterable: true
                 }
-                if (c == 'prefix') {
-                    columnDefinition.type = 'tree'
-                } else if (c == 'id') {
-                    return // ignore id, is already set
-                }
                 if (columnValues.length<=15) {
                     columnDefinition.type = 'list'
                     columnDefinition.values = Object.keys(allColumns[c]).map(name => {
@@ -174,7 +197,11 @@
                         }
                     })
                 }
-                columnDefinitions[c] = columnDefinition
+                if (columnDefinitions[c]) {
+                    columnDefinitions[c].values = columnDefinition.values
+                } else {
+                    columnDefinitions[c] = columnDefinition
+                }
             })
             for( column of selectedColumns) {
                 if (columnDefinitions[column]) {
@@ -191,7 +218,10 @@
         },
         getContextByType(type) {
             return Object.keys(contexts)
-            .filter(c => typeof contexts[c].data[type]!=='undefined')
+            .filter(c => {
+                let types = Object.values(contexts[c].data)
+                return types.includes(type)
+            })
             .pop()
         },
         editor: {

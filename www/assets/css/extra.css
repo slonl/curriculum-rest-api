@@ -109,3 +109,16 @@
         z-index: 100;
         border: 2px solid red;
     }
+    .slo-spreadsheet .ds-dropdown-nav {
+        min-width: var(--ds-dropdown-width);
+        width: auto;
+    }
+    .slo-cell-selector {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        outline: 2px solid blue;
+        z-index: 100;
+    }
