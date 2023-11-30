@@ -110,7 +110,10 @@
 
             function getColumns(n) {
                 let validColumns = Object.keys(n).filter(c => c[0].match(/[a-z]/))
-                let columns = {}
+                let columns = {
+                    id: n['@id'],
+                    type: n['@type']
+                }
                 validColumns.forEach(column => { columns[column] = n[column]})
                 //TODO: add niveaus
                 return columns
@@ -159,6 +162,8 @@
                 }
                 if (c == 'prefix') {
                     columnDefinition.type = 'tree'
+                } else if (c == 'id') {
+                    return // ignore id, is already set
                 }
                 if (columnValues.length<=15) {
                     columnDefinition.type = 'list'
