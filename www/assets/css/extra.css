@@ -64,8 +64,6 @@
     .slo-spreadsheet tr.focus td.focus {
         background-color: var(--ds-grey-30);
         position: relative;
-        white-space: break-spaces;
-        overflow: visible;
     }
 
     .slo-spreadsheet .slo-cell {
