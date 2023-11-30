@@ -231,7 +231,7 @@ const spreadsheet = (function() {
       if (!column.filterable) {
         return ''
       }
-      if (!column.values || Object.keys(column.values).length>15) {
+      if (!column.values || column.values.length>15) {
         return `
 <div class="slo-form-inline slo-dropdown-filter">
     <input type="text" name="${column.value}" placeholder="filter" 
@@ -243,11 +243,17 @@ const spreadsheet = (function() {
 </div>`
       } else {
         let html = `<ul class="ds-dropdown-list">`
-        for (value in column.values) {
+        let name, count
+        for (value of column.values) {
+          name = value.name
+          count = value.count
+          if (!name) {
+            continue
+          }
           html += `
 <li class="ds-dropdown-item">
-    <label><input type="checkbox" name="${column.value}" value="${value}" data-simply-command="filterValue" ${valueChecked(column, value)}>
-    ${value} (${column.values[value]})</label>
+    <label><input type="checkbox" name="${column.value}" value="${name}" data-simply-command="filterValue" ${valueChecked(column, value)}>
+    ${name} (${count})</label>
 </li>`
         }
         html +=`</ul>`
