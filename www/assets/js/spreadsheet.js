@@ -37,6 +37,8 @@ const spreadsheet = (function() {
         column: 1
       }
     })
+
+    // tree toggle filter
     datamodel.addPlugin('select', function(params) {
       if (params.toggle) {
         if (this.options.closed[params.toggle]) {
@@ -72,6 +74,8 @@ const spreadsheet = (function() {
       })
       this.view.visibleData = this.view.data.slice()
     })
+
+    // cell value filter
     datamodel.addPlugin('select', function(params) {
       if (!this.options.filter) {
         this.options.filter = {}
@@ -99,12 +103,13 @@ const spreadsheet = (function() {
               }
             }
           } else {
+            filter = filter.toLowerCase()
             if (Array.isArray(row.columns[name])) {
-              if (!row.columns[name].filter(value => value.search(filter)>-1).length) {
+              if (!row.columns[name] || row.columns[name].filter(value => value.toLowerCase().search(filter)>-1).length) {
                 return false
               }
             } else {
-              if (row.columns[name].search(filter)==-1) {
+              if (!row.columns[name] || row.columns[name].toLowerCase().search(filter)==-1) {
                 return false
               }
             }
