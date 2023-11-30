@@ -1,4 +1,6 @@
+(function() {
     let dataModels = {}
+    let editor = null
     window.slo = {
         api: {
             token: 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ==',
@@ -59,6 +61,17 @@
             }
         },
         spreadsheet: function(name, data) {
+            let allRows = []
+            let allColumns = {}
+            let lastIndent = 0
+            let count = 0
+            let selectedColumns = localStorage.getItem('selectedColumns')
+            if (!selectedColumns) {
+                selectedColumns = ['id','prefix','title','type','niveaus']
+            } else {
+                selectedColumns = JSON.parse(selectedColumns)
+            }
+
             const walk = (node, indent, f) => {
                 if (!node) return;
                 if (node['@type']==='Niveau') {
@@ -73,10 +86,29 @@
                     .forEach(n => walk(n,indent,f))
                 }
             }
-            let allRows = []
-            let allColumns = {}
-            let lastIndent = 0
-            let count = 0
+
+            const countColumnValues = (columns) => {
+                columns.forEach(c => {
+                    let name = c.name
+                    if (!allColumns[name]) {
+                        allColumns[name] = {}
+                    }
+                    if (Array.isArray(c.data)) {
+                        c.data.forEach(v => {
+                            if (!allColumns[name][v]) {
+                                allColumns[name][v] = 0;
+                            }
+                            allColumns[name][v]++
+                        })
+                    } else {
+                        if (!allColumns[name][c.data]) {
+                            allColumns[name][c.data] = 0
+                        }
+                        allColumns[name][c.data]++
+                    }
+                })
+            }
+
             walk(data, 0, (n,indent) => {
                 if (n.id || n.uuid) {
                     count++
@@ -84,40 +116,96 @@
                     row.index = count
                     row['data-simply-template'] = 'entity'
                     row.indent = 'slo-indent-'+indent;
+                    row.columns = []
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
-                    Object.keys(n).filter(k => /[a-z@]/.test(k[0])).forEach(k => {
-                        row[k] = n[k]
+                    selectedColumns.forEach(column => {
+                        if (typeof n[column] !== 'undefined') {
+                            row.columns.push({
+                                name: column,
+                                data: ''+n[column],
+                                type: column=='prefix' ? 'tree' : 'text'
+                                //@FIXME: type tree calculated after walking all rows
+                                //so editor type should be defined by the column definitions
+                                //not in each row seperately
+                            })
+                        } else if (column == 'niveaus') {
+                            let Niveaus = []
+                            if (n.Niveau) {
+                                Niveaus = n.Niveau
+                            } else if (n.NiveauIndex) {
+                                Niveaus = n.NiveauIndex.map(ni => ni.Niveau)
+                            }
+                            row.columns.push({
+                                name: 'Niveaus',
+                                data: Niveaus.map(n => ''+n.title),
+                                type: 'list'
+                            })
+                        } else if (column == 'id') {
+                            row.columns.push({
+                                name: 'ID',
+                                data: ''+n['@references'],
+                                type: 'id'
+                            })                            
+                        } else {
+                            row.columns.push({
+                                name: column,
+                                type: 'text',
+                                data: ''
+                            })
+                        }
                     })
-                    if (n.NiveauIndex) {
-                        row.Niveaus = n.NiveauIndex.map(ni => ni.Niveau)
-                    } else if (n.Niveau) {
-                        row.Niveaus = n.Niveau
-                    }
-                    if (row.Niveaus) {
-                        row.Niveaus = row.Niveaus.map(n => n.title)
-                    }
-                    if (Object.keys(row).length) {
+                    if (row.columns.length) {
                         allRows.push(row)
-                        Object.keys(row).forEach(c => {
-                            if (!allColumns[c]) {
-                                allColumns[c] = new Set()
-                            }
-                            if (allColumns[c].size<16) {
-                                if (Array.isArray(row[c])) {
-                                    row[c].forEach(v => allColumns[c].add(v))
-                                } else {
-                                    allColumns[c].add(row[c])
-                                }
-                            }
-                        })
+                        countColumnValues(row.columns)
                     }
                     return indent+1
                 }
                 return indent;
             })
-            Object.keys(allColumns).forEach(c => {
-                allColumns[c] = Array.from(allColumns[c])
+
+            let columnDefinitions = []
+            columnDefinitions.push({
+                'data-simply-template': 'index'
             })
+            columnDefinitions.push({
+                'data-simply-template': 'id'
+            })
+            Object.keys(allColumns).forEach(c => {
+                let columnValues = Object.keys(allColumns[c])
+                let columnDefinition = {
+                    'data-simply-template': 'text',
+                    name: c
+                }
+                if (c == 'prefix') {
+                    columnDefinition['data-simply-template'] = 'tree'
+                }
+                if (columnValues.length>15) {
+                    columnDefinition['data-simply-template'] = 'list'
+                    columnDefinition.data = Object.keys(allColumns[c]).map(name => {
+                        return {
+                            name,
+                            count: allColumns[c][name]
+                        }
+                    })
+                }
+                columnDefinitions.push(columnDefinition)
+            })
+            columnDefinitions.push({
+                'data-simply-template': 'last',
+                data: Object.keys(allColumns).map(name => {
+                    return {
+                        name,
+                        checked: selectedColumns.includes(name) ? 1 : 0
+                    }
+                })
+            })
+            window.setTimeout(() => {
+                window.editor.addDataSource('columns', {
+                    load: columnDefinitions
+                })
+                console.log('columns',columnDefinitions)
+            },500)
+
             let datamodel = simply.viewmodel.create(name, allRows, {
               offset: 0,
               rows: 15,
@@ -125,8 +213,10 @@
               columns: allColumns,
               closed: {}
             });
+
             document.querySelector('.slo-spreadsheet table').style.height
             =(datamodel.options.rows+1)*datamodel.options.rowHeight+'px'
+
             datamodel.addPlugin('render', function(params) {
               if (typeof params.offset != 'undefined') {
                 this.options.offset = params.offset
@@ -144,6 +234,7 @@
                   this.view.data = this.view.data.slice(start, end)
               }
             });
+
             //@FIXME: this doesn't work on a sorted table
             //only if the sort is 'prefix'
             datamodel.addPlugin('select', function(params) {
@@ -174,6 +265,7 @@
               })
               this.options.visibleRows = this.view.data.length;
             });
+
             const sortNames = {
                 Titel: 'title',
                 Prefix: 'prefix',
@@ -256,5 +348,39 @@
             return Object.keys(contexts)
             .filter(c => typeof contexts[c].data[type]!=='undefined')
             .pop()
+        },
+        editor: {
+            textarea: function(field) {
+                if (editor) {
+                    editor.textarea.remove()
+                }
+                let cell = field.closest('td')
+                let textarea = document.createElement('textarea')
+                textarea.className = 'slo-editor slo-textarea'
+//              let fieldName = field.dataset.simplyField
+//              let value = field.dataBinding.config.data[fieldName]
+                textarea.innerText = field.innerText
+                cell.appendChild(textarea)
+                cell.classList.add('slo-edit')
+                textarea.style.height = field.offsetHeight+'px'
+                textarea.focus()
+                editor = {
+                    cell,
+                    field,
+                    type: 'textarea',
+                    textarea
+                }
+            },
+            close: function() {
+                if (editor) {
+                    editor.cell.classList.remove('slo-edit')
+                    editor.cell.removeChild(editor.textarea)
+                    editor = null
+                }
+            },
+            next: function() {
+
+            }
         }
     }
+})()

@@ -1,5 +1,5 @@
-<template data-simply-template="spreadsheet">
-    <div class="slo-spreadsheet">
+<template data-simply-template="spreadsheet-edit">
+    <div class="slo-spreadsheet slo-editmode">
         <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
             <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
             data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
@@ -30,6 +30,7 @@
         </nav>
         <div class="ds-scrollbox" style="overflow-anchor: none;">
             <table style="position: sticky; top: 0; width: 100%; z-index: 10" class="slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers">
+                <col>
                 <col class="ds-datatable-col-1">
                 <col class="ds-datatable-col-2">
                 <col class="ds-datatable-col-3">
@@ -37,6 +38,7 @@
                 <col class="ds-datatable-col-5">
                 <col class="ds-datatable-col-6">
                 <col class="ds-datatable-col-7">
+                <col>
                 <thead>
                     <td class="ds-datatable-disable-sort slo-rownumbers slo-smallwidth"></th>
                     <th class="ds-datatable-disable-sort slo-minwidth">#</th>
@@ -167,7 +169,10 @@
                 <tbody data-simply-list="items" data-simply-data="items">
                     <template data-simply-template="entity">
                         <tr class="slo-entity" data-simply-field="closed" data-simply-content="attributes" data-simply-attributes="class">
-                            <td><span class="slo-index" data-simply-field="index"></span>
+                            <td><svg data-simply-command="addRelation" class="slo-add ds-icon ds-icon-feather" title="Voeg relatie toe">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                            <span class="slo-index" data-simply-field="index"></span>
                             </td>
                             <td><div class="slo-cell"><a href="#" data-simply-field="@references" data-simply-content="attributes" data-simply-attributes="href">#</a></div></td>
                             <td data-simply-command="toggleTree"><div class="slo-cell"><span class="slo-indent-1" data-simply-field="indent" data-simply-content="attributes" data-simply-attributes="class"></span><span data-simply-field="prefix"></span></div></td>
@@ -178,6 +183,9 @@
                                     <span data-simply-field="title"></span>
                                 </template>
                             </div></td>
+                            <td><svg data-simply-command="delRelation" class="slo-delete ds-icon ds-icon-feather">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
+                            </svg></td>
                         </tr>
                     </template>
                     <template data-simply-template="empty">

@@ -90,3 +90,24 @@
         line-height: var(--ds-button-line-height);
         padding-left: 1em;
     }
+    .slo-editmode .slo-index {
+        margin-left: 1em;
+    }
+    .slo-delete, .slo-add {
+        visibility: hidden;
+        cursor: pointer;
+    }
+    .slo-editmode tr.focus .slo-delete,
+    .slo-editmode tr:hover .slo-delete,
+    .slo-editmode tr.focus .slo-add,
+    .slo-editmode tr:hover .slo-add {
+        visibility: visible;
+        top: 0;
+    }
+    .slo-textarea {
+        position: absolute;
+        top: 0;
+        background-color: white;
+        z-index: 100;
+        border: 2px solid red;
+    }

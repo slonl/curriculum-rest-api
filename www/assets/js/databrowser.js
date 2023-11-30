@@ -22,7 +22,15 @@
                 focus: {
                     row: 0,
                     column: 0
-                }
+                },
+                columns: [
+                    false,
+                    "id",
+                    "prefix",
+                    "titel",
+                    "type",
+                    "levels"
+                ]
             }
         },
         routes: {
@@ -331,44 +339,42 @@
                 //TODO: calculate prev/next row while skipping over
                 //closed trees. So find the prev/next visible row.
                 "ArrowDown": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    console.log('up',focus)
-                    if (focus.row<(d.data.length-1)) {
-                        focus.row++
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    table.moveDown()
                     e.preventDefault()
                 },
                 "ArrowUp": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    console.log('down',focus)
-                    if (focus.row>0) {
-                        focus.row--
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    table.moveUp()
                     e.preventDefault()
                 },
                 "ArrowLeft": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    if (focus.column>0) {
-                        focus.column--
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    table.moveLeft()
                     e.preventDefault()
                 },
                 "ArrowRight": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    if (focus.column<Object.keys(d.options.columns).length) {
-                        focus.column++
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    table.moveRight()
                     e.preventDefault()
+                },
+                "Enter": (e) => {
+                    e.preventDefault()
+                    if (browser.view.user) {
+                        table.startEditor()
+                    }
                 }
                 // Space -> open/close subtree
+            },
+            "spreadsheet-edit": {
+                "Escape": (e) => {
+                    e.preventDefault()
+                    table.stopEditor()
+                },
+                "Tab": (e) => {
+                    e.preventDefault()
+                    table.moveNextCell()
+                },
+                "Shift+Tab": (e) => {
+                    e.preventDefault()
+                    table.movePrevCell()
+                }
             }
         },
         commands: {
@@ -474,6 +480,69 @@
             }
         },
         actions: {
+            startCellEditor: async function() {
+                document.body.dataset.simplyKeyboard="spreadsheet-edit"
+                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
+                return slo.editor.textarea(field)
+            },
+            stopCellEditor: async function() {
+                document.body.dataset.simplyKeyboard="spreadsheet"
+                return slo.editor.close()
+            },
+            nextCellEditor: async function() {
+                let d = window.slo.getDataModel('items')
+                let focus = browser.view.spreadsheet.focus
+                let columns = browser.view.spreadsheet.columns
+                let current = focus
+                function findNext() {
+                    current.column++
+                    if (!columns[current.column]) {
+                        current.column = 0
+                        current.row++ //@FIXME: skip hidden rows
+                        if (current.row>d.data.length-1) {
+                            current.row = 1
+                        }
+                        return findNext()
+                    }
+                    let row = d.data[focus.row-1]
+                    let col = row[columns[current.column]]
+                    if (typeof col !== 'string' && !(col instanceof String)) {
+                        return findNext()
+                    }
+                    return current
+                }
+                focus = findNext()
+                await this.app.actions.focusCell(focus.row,focus.column)
+                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
+                return slo.editor.textarea(field)
+            },
+            prevCellEditor: async function() {
+                                let d = window.slo.getDataModel('items')
+                let focus = browser.view.spreadsheet.focus
+                let columns = browser.view.spreadsheet.columns
+                let current = focus
+                function findPrev() {
+                    current.column++
+                    if (!columns[current.column]) {
+                        current.column = columns.length-1
+                        current.row-- //@FIXME: skip hidden rows
+                        if (current.row<1) {
+                            current.row = d.data.length
+                        }
+                        return findPrev()
+                    }
+                    let row = d.data[focus.row-1]
+                    let col = row[columns[current.column]]
+                    if (typeof col !== 'string' && !(col instanceof String)) {
+                        return findPrev()
+                    }
+                    return current
+                }
+                focus = findPrev()
+                await this.app.actions.focusCell(focus.row,focus.column)
+                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
+                return slo.editor.textarea(field)
+            },
             login: async function(email, key) {
                 // check if email/key are valid
                 if (!await slo.api.login(email, key)) {
@@ -564,7 +633,11 @@
                     niveau, context
                 })
                 .then(function(json) {
-                    browser.view.view = 'spreadsheet';
+                    if (browser.view.user) {
+                        browser.view.view = 'spreadsheet-edit';
+                    } else {
+                        browser.view.view = 'spreadsheet';
+                    }
                     window.slo.spreadsheet('items',json)
                 })
             },
@@ -653,8 +726,14 @@
                     .forEach(r => {
                         r.classList.remove('focus')
                     })
-                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')').classList.add('focus')
-                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')').classList.add('focus')
+                    let focus = document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')')
+                    if (focus) {
+                        focus.classList.add('focus')
+                    }
+                    focus = document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')')
+                    if (focus) {
+                        focus.classList.add('focus')
+                    }
                 },10)
             }
         }
