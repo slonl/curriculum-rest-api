@@ -339,8 +339,15 @@ const spreadsheet = (function() {
     
     function renderBody() {
       let rows = ``
+      let count = 0
       for (let row of datamodel.view.data) {
         rows += renderRow(row)
+        count++
+      }
+      if (count<options.rows) {
+        for (i=count;i<options.rows;i++) {
+          rows += '<tr class="empty"><td>&nbsp;</td></tr>'
+        }
       }
       body.innerHTML = rows
     }
