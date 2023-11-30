@@ -648,9 +648,15 @@
                     } else {
                         browser.view.view = 'spreadsheet';
                     }
+                    //@TODO: on window resize, recalculate
+                    let panel = document.querySelector('.slo-content-panel')
+                    let rect = panel.getBoundingClientRect()
+                    let rowHeight = 27
+                    let rows = Math.floor(rect.height / rowHeight) - 3
                     browser.view.sloSpreadsheet = spreadsheet({
                         container: document.getElementById('slo-spreadsheet'),
                         columns: defs.columns,
+                        rows: rows,
                         icons: '/assets/icons/feather-sprite.svg'
                     }, defs.rows)
                     browser.view.sloSpreadsheet.render()

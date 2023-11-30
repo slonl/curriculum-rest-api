@@ -25,12 +25,13 @@ const spreadsheet = (function() {
     options.container = settings.container
     options.columns = settings.columns
     options.icons = settings.icons || ''
+    options.rows = settings.rows || 15
 
     let datamodel = simply.viewmodel.create('largetable', data, {
       offset: 0,
       columns: options.columns,
       rows: options.rows,
-      rowHeight: 35.8167,
+      rowHeight: 27,
       closed: {},
       focus: {
         row: 1,
@@ -184,7 +185,6 @@ const spreadsheet = (function() {
     table.style.position = 'sticky'
     table.style.top = '0px'
     table.style.width = '100%'
-    table.style.height = '100%'
     let head = document.createElement('thead')
     let body = document.createElement('tbody')
     table.appendChild(head)
@@ -363,7 +363,7 @@ const spreadsheet = (function() {
     function renderHeading() {
       let heading = `
 <tr>
-  <th class="ds-datatable-disable-sort slo-minwidth"></th>
+  <th class="ds-datatable-disable-sort slo-rownumber"></th>
 `
       let col=''
       let visible = []
@@ -497,7 +497,13 @@ const spreadsheet = (function() {
         selector.style.top = (rect.top - offset.top)+'px'
         selector.style.left = (rect.left - offset.left)+'px'
         selector.style.width = rect.width+'px'
-        selector.style.height = rect.height+'px'
+        selector.style['min-height'] = rect.height+'px'
+        selector.innerHTML = el.innerHTML
+        let current = selector.getBoundingClientRect()
+        if (current.top+current.height > offset.top+offset.height) {
+          selector.style.top = (offset.height - current.height)+'px'
+        }
+        selector.style.display = 'block'
       },
       startEditor: () => {
 
