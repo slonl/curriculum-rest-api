@@ -493,69 +493,6 @@
             }
         },
         actions: {
-            startCellEditor: async function() {
-                document.body.dataset.simplyKeyboard="spreadsheet-edit"
-                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
-                return slo.editor.textarea(field)
-            },
-            stopCellEditor: async function() {
-                document.body.dataset.simplyKeyboard="spreadsheet"
-                return slo.editor.close()
-            },
-            nextCellEditor: async function() {
-                let d = window.slo.getDataModel('items')
-                let focus = browser.view.spreadsheet.focus
-                let columns = browser.view.spreadsheet.columns
-                let current = focus
-                function findNext() {
-                    current.column++
-                    if (!columns[current.column]) {
-                        current.column = 0
-                        current.row++ //@FIXME: skip hidden rows
-                        if (current.row>d.data.length-1) {
-                            current.row = 1
-                        }
-                        return findNext()
-                    }
-                    let row = d.data[focus.row-1]
-                    let col = row[columns[current.column]]
-                    if (typeof col !== 'string' && !(col instanceof String)) {
-                        return findNext()
-                    }
-                    return current
-                }
-                focus = findNext()
-                await this.app.actions.focusCell(focus.row,focus.column)
-                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
-                return slo.editor.textarea(field)
-            },
-            prevCellEditor: async function() {
-                                let d = window.slo.getDataModel('items')
-                let focus = browser.view.spreadsheet.focus
-                let columns = browser.view.spreadsheet.columns
-                let current = focus
-                function findPrev() {
-                    current.column++
-                    if (!columns[current.column]) {
-                        current.column = columns.length-1
-                        current.row-- //@FIXME: skip hidden rows
-                        if (current.row<1) {
-                            current.row = d.data.length
-                        }
-                        return findPrev()
-                    }
-                    let row = d.data[focus.row-1]
-                    let col = row[columns[current.column]]
-                    if (typeof col !== 'string' && !(col instanceof String)) {
-                        return findPrev()
-                    }
-                    return current
-                }
-                focus = findPrev()
-                await this.app.actions.focusCell(focus.row,focus.column)
-                let field = document.querySelector('.slo-spreadsheet td.focus [data-simply-field]')
-                return slo.editor.textarea(field)
-            },
             login: async function(email, key) {
                 // check if email/key are valid
                 if (!await slo.api.login(email, key)) {
@@ -720,42 +657,6 @@
             register : function(email) {
                 var url = window.release.apiPath+'register/';
                 window.slo.api.get(url + "?email=" + email);
-            },
-            focusCell: function(row, column) {
-                let d = window.slo.getDataModel('items')
-                browser.view.spreadsheet.focus.row = row;
-                browser.view.spreadsheet.focus.column = column;
-                // check if the cell is visible
-                // FIXME: check that row is not collapsed 
-                // TODO: move scrollbar down appropriately
-                // instead of setting offset directly - move scrollbar and let it update
-                // the offset
-                if (d.options.offset>row || (d.options.offset+d.options.rows)<=row) { 
-                    let offset = Math.min(Math.max(row - Math.floor(d.options.rows/2), 0), d.data.length-d.options.rows)
-                    if (offset!=d.options.offset) {
-                        d.update({
-                            offset: offset
-                        })
-                    }
-                }
-                row = row - d.options.offset
-                // FIXME: keep column within limits of the visible data
-                // then highlight the cell (hide previous highlight)
-                // throttle this to prevent trailing renders
-                window.setTimeout(() => {
-                    Array.from(document.querySelectorAll('.slo-spreadsheet .focus'))
-                    .forEach(r => {
-                        r.classList.remove('focus')
-                    })
-                    let focus = document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')')
-                    if (focus) {
-                        focus.classList.add('focus')
-                    }
-                    focus = document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')')
-                    if (focus) {
-                        focus.classList.add('focus')
-                    }
-                },10)
             }
         }
     });

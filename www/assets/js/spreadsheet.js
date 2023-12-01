@@ -177,6 +177,10 @@ const spreadsheet = (function() {
         }
         count++
       }
+      //check focus
+      if (typeof params.focus != 'undefined') {
+        this.options.focus = params.focus
+      }
     });
 
     options.container.innerHTML = ''
@@ -321,23 +325,32 @@ const spreadsheet = (function() {
     }
 
     function renderRow(row) {
+      let rowClass = row.closed;
+      if (datamodel.options.focus?.row == row.id) {
+        rowClass += ' focus';
+      }
       let html = `<tr id="${row.columns.id}" class="${row.closed}"><td>${row.id+1}</td>`
-      let value
+      let value, count = 0
+      let colClass = ''
       for (let column of options.columns) {
         if (!column.checked) {
           continue
         }
+        count++
         value = row.columns[column.value] || ''
+        if (datamodel.options.focus?.row == row.id && datamodel.options.focus?.column == count) {
+          colClass='focus'
+        }
         switch(column.type) {
           case 'id': 
-            html+= `<td><a href="${value}" target="sloSide">#</a></td>`
+            html+= `<td class="${colClass}"><a href="${value}" target="sloSide">#</a></td>`
             break
           case 'tree':
-            html+=`<td data-simply-command="toggleTree"><span class="slo-indent slo-indent-${row.indent}">${value}</span></td>`
+            html+=`<td class="${colClass}" data-simply-command="toggleTree"><span class="slo-indent slo-indent-${row.indent}">${value}</span></td>`
             break
           case 'text':
           default:
-            html += `<td>${value}</td>`
+            html += `<td class="${colClass}">${value}</td>`
             break
         }
       }
@@ -358,6 +371,7 @@ const spreadsheet = (function() {
         }
       }
       body.innerHTML = rows
+      spreadsheet.selector(body.querySelector('td.focus'))
     }
     
     function renderHeading() {
@@ -464,10 +478,17 @@ const spreadsheet = (function() {
               if (offset!=datamodel.options.offset) {
                   // FIXME: update scrollbar offset as well
                   datamodel.update({
-                      offset
+                      offset,
+                      focus
                   })
                   spreadsheet.renderBody()
               }
+          }
+          let id = datamodel.data[row]?.columns.id
+          if (id) {
+              id = new URL(id)
+              //FIXME: change a view or fire event instead of this
+              window.history.pushState({}, '', new URL(id.pathname.split('/').pop(), window.location))
           }
           var row = row - datamodel.options.offset
           var column = focus.column          
@@ -488,10 +509,21 @@ const spreadsheet = (function() {
           },10)
       },
       gotoId: (id) => {
-          let row = datamodel.data.findIndex(r => r['@id']==id)
-          spreadsheet.goto(row,2)
+          let row = spreadsheet.findId(id)
+          if (row>=0) {
+            spreadsheet.goto(row,2)
+          }
+      },
+      findId: (id) => {
+          let row = datamodel.data.findIndex(r => r.columns.id==id)
+          return row ? row : null
       },
       selector: (el) => {
+        if (!el) {
+          selector.style.display = 'none'
+          return
+        }
+        selector.style.display = 'block'
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         selector.style.top = (rect.top - offset.top)+'px'

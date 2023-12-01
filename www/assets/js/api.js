@@ -112,7 +112,8 @@
                 let validColumns = Object.keys(n).filter(c => c[0].match(/[a-z]/))
                 let columns = {
                     id: n['@id'],
-                    type: n['@type']
+                    type: n['@type'],
+                    niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
                 validColumns.forEach(column => { columns[column] = n[column]})
                 //TODO: add niveaus
@@ -170,6 +171,15 @@
                 type: {
                     name: 'Type',
                     value: 'type',
+                    checked: true,
+                    disabled: false,
+                    sortable: true,
+                    filterable: true,
+                    type: 'list'
+                },
+                niveaus: {
+                    name: 'Niveaus',
+                    value: 'niveaus',
                     checked: true,
                     disabled: false,
                     sortable: true,
