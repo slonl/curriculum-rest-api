@@ -1,7 +1,6 @@
 <template data-simply-template="document">
     <div class="slo-document">
 
-
         <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
             <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
             data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
@@ -31,49 +30,154 @@
             </ul>
         </nav>
 
-        <div>
+        <div> <!---SLO.dev.muze.nl-->
 
-            <h1 data-simply-field="document.title"> Hier komt een document </h1>
 
-            <!-- Templates-->
-            <!--  <template> id="item" -->
-                    <ul data-simply-list="document.ExamenprogrammaDomein"> <!-- parent  -->
-                        <!-- Recursive template-->
-                        <template>
+
+
+            <main class="slo-main slo-document">
+                <div class="slo-content-panel">
+
+                    <div class="slo-entity" data-simply-list = "documentList">
+                        <template rel="documentTemplate"></template>
+                    </div>
+
+
+                    <template id="documentTemplate">
                         <section>
-                            <li>
-                                <div>
-                                <p class="ds-space ds-light-background" data-simply-field="prefix"></p>
-                                <h1 data-simply-field="title"></h1>
-                                </div>
-                                <span data-simply-field="@id"></span>
-                                <span data-simply-field="type"></span>
-                                <summary data-simply-field="description"></summary>
-                
-                            <!-- /Recursive template-->
-                                <!-- <template rel="item"></template> -->
-                                    <!-- child -->
-                                        <section>
-                                            <ul data-simply-list="document.ExamenprogrammaDomein.ExamenprogrammaSubdomein">
-                                                <li>
-                                                    <div>
-                                                    <p class="ds-space ds-light-background" data-simply-field="prefix"></p>
-                                                    <h1 data-simply-field="title"></h1>
-                                                    </div>
-                                                    <span data-simply-field="@id"></span>
-                                                    <span data-simply-field="@type"></span>
-                                                    <summary data-simply-field="description"></summary>
-                                                </li>
-                                            </ul>
-                                        </section>
-
-                                    <!-- /child -->
+                            <h1 class="slo-editable slo-prefix" data-simply-field="prefix">
+                                <span class="slo-editable" data-simply-field="title">Title Error</span></h1>
+                                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                                    <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                                </svg>
+                                <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                                    <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                                </svg>
+                                <ul data-simply-list="documentSublist">
+                                    <li data-simply-list="documentSublist">
+                                        <template rel="documentTemplate"></template>
+                                    </li>
+                                </ul>
                             </li>
                         </section>
-                        </template>
+                    </template>
+
+
+                    <h1 class="slo-entity"><span class="slo-editable slo-prefix">ak</span>
+                    <span class="slo-editable">Aardrijkskunde</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                   </h1>
+            
+                    <h2 class="slo-entity"><span class="slo-editable slo-prefix">ak/1</span>
+                    <span class="slo-editable">Burgerschap</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    </h2>
+            
+                    <h3 class="slo-entity"><span class="slo-editable slo-prefix">ak/1/1</span>
+                    <span class="slo-editable">Leefbaarheid</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    </h3>
+            
+                    <h4 class="slo-entity"><span class="slo-editable slo-prefix">ak/1/1/1</span>
+                    <span class="slo-editable">Leefbaarheid in de eigen regio</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    </h4>
+            
+                    <ul>
+                        <li class="slo-entity">
+                            <span class="ds-badge">ob vmbo bb</span>
+                            <span class="slo-editable">Je beschrijft en verklaart aan de hand van gekozen criteria de leefbaarheid van je eigen regio.</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                        </li>
+                        <li class="slo-entity">
+                            <span class="ds-badge">ob vmbo kb</span>
+                            <span class="slo-editable">Je beschrijft en verklaart aan de hand van gekozen criteria de leefbaarheid van je eigen regio.</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                        </li>
+                        <li>
+                            <svg class="ds-icon ds-icon-feather">
+                                <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                        </li>
                     </ul>
             
-            <!-- </template> /Templates -->
-        </div>
+                    <h3 class="slo-entity"><span class="slo-editable slo-prefix">ak/1/2</span>
+                    <span class="slo-editable">Multiculturele samenleving</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    </h3>
+            
+                    <h4 class="slo-entity"><span class="slo-editable slo-prefix">ak/1/2/1</span>
+                    <span class="slo-editable">Spreiding van culturen in Nederland</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    </h4>
+                    <ul>
+                        <li class="slo-entity">
+                            <span class="ds-badge">ob vmbo bb</span>
+                            <span class="slo-editable">Je beschrijft de spreiding van verschillende bevolkingsgroepen in Nederland.</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                        </li>
+                        <li class="slo-entity">
+                            <span class="ds-badge">ob vmbo kb</span>
+                            <span class="slo-editable">Je verklaart de spreiding van verschillende bevolkingsgroepen in Nederland.</span>
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                        </li>
+                        <li>
+                            <svg class="ds-icon ds-icon-feather">
+                                <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                        </li>
+                    </ul>
+                </div>
+            </main>         
+
+
+        </div><!---SLO.dev.muze.nl-->
     </div>
 </template>
