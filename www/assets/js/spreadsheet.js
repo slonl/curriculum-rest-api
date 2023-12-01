@@ -410,6 +410,8 @@ const spreadsheet = (function() {
       datamodel.options.visibleColumns = visible
     }
 
+    let scrollEnabled = true
+    let scrollBox
     function addScrollbar() {
       let scrollbar = document.createElement('div')
       scrollbar.className = 'scrollbar'
@@ -417,11 +419,13 @@ const spreadsheet = (function() {
       scrollbar.style.width = '1px'
       options.container.appendChild(scrollbar)
 
-      const scrollBox = document.querySelector('.ds-scrollbox')
+      scrollBox = document.querySelector('.ds-scrollbox')
       scrollBox.addEventListener('scroll', (evt) => {
-        let offset = Math.floor(scrollBox.scrollTop/datamodel.options.rowHeight)
-        datamodel.update({ offset })
-        renderBody()
+        if (scrollEnabled) {
+          let offset = Math.floor(scrollBox.scrollTop/datamodel.options.rowHeight)
+          datamodel.update({ offset })
+          renderBody()
+        }
       })
       let length = datamodel.data.length
       datamodel.addPlugin('order', () => {
@@ -481,6 +485,9 @@ const spreadsheet = (function() {
                       offset,
                       focus
                   })
+                  scrollEnabled = false
+                  scrollBox.scrollTop = datamodel.options.rowHeight * Math.max(0, focus.row - Math.floor(datamodel.options.rows/2))
+                  scrollEnabled = true
                   spreadsheet.renderBody()
               }
           }
