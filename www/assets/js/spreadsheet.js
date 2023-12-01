@@ -329,7 +329,7 @@ const spreadsheet = (function() {
       if (datamodel.options.focus?.row == row.id) {
         rowClass += ' focus';
       }
-      let html = `<tr id="${row.columns.id}" class="${row.closed}"><td>${row.id+1}</td>`
+      let html = `<tr id="${row.columns.id}" class="${rowClass}"><td>${row.id+1}</td>`
       let value, count = 0
       let colClass = ''
       for (let column of options.columns) {
@@ -340,6 +340,8 @@ const spreadsheet = (function() {
         value = row.columns[column.value] || ''
         if (datamodel.options.focus?.row == row.id && datamodel.options.focus?.column == count) {
           colClass='focus'
+        } else {
+          colClass=''
         }
         switch(column.type) {
           case 'id': 
@@ -439,8 +441,36 @@ const spreadsheet = (function() {
     }
     addScrollbar()
 
+    let clickListener
+    function addClickSelectCell() {
+        if (clickListener) {
+            body.removeEventListener('click', clickListener)
+        }
+        clickListener = function(evt) {
+            let cell = evt.target.closest('td')
+            if (cell) {
+                let current = body.querySelectorAll('.focus')
+                current.forEach(el => {
+                    el.classList.remove('focus')
+                })
+                cell.classList.add('focus')
+                cell.closest('tr').classList.add('focus')
+                let row = spreadsheet.findId(cell.closest('tr').id)
+                if (row!==null) {
+                    let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
+                    let column = columns.findIndex(td => td===cell)
+                    spreadsheet.goto(row,column)
+                }
+            }
+        }
+        body.addEventListener('click', clickListener)
+    }
+    addClickSelectCell()
+
     datamodel.update()
 
+    let changeListeners = []
+    
     let spreadsheet = { 
       options: datamodel.options,
       update: (...params) => {
@@ -482,38 +512,27 @@ const spreadsheet = (function() {
               if (offset!=datamodel.options.offset) {
                   // FIXME: update scrollbar offset as well
                   datamodel.update({
-                      offset,
-                      focus
+                      offset
                   })
                   scrollEnabled = false
+                  //FIXME: doesn't take closed rows into account
                   scrollBox.scrollTop = datamodel.options.rowHeight * Math.max(0, focus.row - Math.floor(datamodel.options.rows/2))
                   scrollEnabled = true
-                  spreadsheet.renderBody()
               }
           }
+          datamodel.update({ focus })
+          spreadsheet.renderBody()
+          spreadsheet.selector(table.querySelector('td.focus'))
           let id = datamodel.data[row]?.columns.id
           if (id) {
               id = new URL(id)
-              //FIXME: change a view or fire event instead of this
-              window.history.pushState({}, '', new URL(id.pathname.split('/').pop(), window.location))
           }
-          var row = row - datamodel.options.offset
-          var column = focus.column          
-          window.setTimeout(() => {
-              Array.from(table.querySelectorAll('.focus'))
-              .forEach(r => {
-                  r.classList.remove('focus')
-              })
-              let focus = table.querySelector('tbody tr:nth-child('+(row+1)+')')
-              if (focus) {
-                  focus.classList.add('focus')
-              }
-              focus = table.querySelector('tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')')
-              if (focus) {
-                  focus.classList.add('focus')
-                  spreadsheet.selector(focus)
-              }
-          },10)
+          if (changeListeners) {
+              changeListeners.forEach(listener => listener.call(spreadsheet, id))
+          }
+      },
+      onChange: (listener) => {
+        changeListeners.push(listener)
       },
       gotoId: (id) => {
           let row = spreadsheet.findId(id)
@@ -523,7 +542,7 @@ const spreadsheet = (function() {
       },
       findId: (id) => {
           let row = datamodel.data.findIndex(r => r.columns.id==id)
-          return row ? row : null
+          return row>=0 ? row : null
       },
       selector: (el) => {
         if (!el) {

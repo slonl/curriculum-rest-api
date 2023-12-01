@@ -126,7 +126,7 @@
                     let row = {}
                     row.index = count
                     row['data-simply-template'] = 'entity'
-                    row.indent = 'slo-indent-'+indent;
+                    row.indent = indent;
                     row.columns = getColumns(n)
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     allRows.push(row)

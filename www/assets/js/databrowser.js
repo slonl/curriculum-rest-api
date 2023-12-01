@@ -535,6 +535,12 @@
                         await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // focus current item
                         this.app.view.sloSpreadsheet.gotoId(currentId)
+                        this.app.view.sloSpreadsheet.onChange((id) => {
+                            let url = new URL(id)
+                            let uuid = id.pathname.split('/').pop()
+                            this.app.view.item.uuid = uuid
+                            history.pushState({}, '', new URL(uuid, window.location))
+                        })
                     break;
                 }
             },
