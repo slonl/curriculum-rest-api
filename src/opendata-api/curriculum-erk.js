@@ -26,8 +26,58 @@ module.exports = {
 				id
 				prefix
 				title
-				erk_taalprofieltekst_id
-				erk_schaal_id
+				ErkTaalprofieltekst {
+				  id
+				  title
+						}
+						ErkSchaal {
+						  id
+						  title
+						  ErkGebied{
+							id
+							title
+							deprecated
+						  }
+						  ErkCategorie{
+							id
+							title
+							  ErkGebied{
+								id
+								title
+								deprecated
+							  }
+							deprecated
+						  }
+						  ErkTaalactiviteit {
+							id
+							title
+							strategie
+							  ErkCategorie{
+								id
+								title
+								  ErkGebied{
+									id
+									title
+									deprecated
+								  }
+								deprecated
+							  }
+							deprecated
+							}
+						ErkCandobeschrijving {
+							id
+							title
+							Niveau {
+							  ...NiveauShort
+							}
+							ErkVoorbeeld {
+								id
+								title
+								deprecated
+							}
+							deprecated
+						}
+				}
 				unreleased
 			}
 			_allErkTaalprofielMeta {
