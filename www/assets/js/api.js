@@ -201,11 +201,15 @@
                         let allNiveaus = column.values
                         let html = '<ul>'
                         allNiveaus.forEach(n => {
-                            let checked = value.includes(n) ? ' checked': ''
-                            html+=`<li><input type="checkbox"${checked} name="niveau" value="${n}">${n}</li>`
+                            if (!n.name) {
+                                return
+                            }
+                            let checked = value.includes(n.name) ? ' checked': ''
+                            html+=`<li><input type="checkbox"${checked} name="niveau" value="${n.name}">${n.name}</li>`
                         } )
                         html+='</ul>'
-                        el.innerHTML = html
+                        this.innerHTML = html
+                        this.querySelector('input[type="checkbox"]')?.focus()
                     }
                 }
             }
@@ -255,39 +259,6 @@
                 return types.includes(type)
             })
             .pop()
-        },
-        editor: {
-            textarea: function(field) {
-                if (editor) {
-                    editor.textarea.remove()
-                }
-                let cell = field.closest('td')
-                let textarea = document.createElement('textarea')
-                textarea.className = 'slo-editor slo-textarea'
-//              let fieldName = field.dataset.simplyField
-//              let value = field.dataBinding.config.data[fieldName]
-                textarea.innerText = field.innerText
-                cell.appendChild(textarea)
-                cell.classList.add('slo-edit')
-                textarea.style.height = field.offsetHeight+'px'
-                textarea.focus()
-                editor = {
-                    cell,
-                    field,
-                    type: 'textarea',
-                    textarea
-                }
-            },
-            close: function() {
-                if (editor) {
-                    editor.cell.classList.remove('slo-edit')
-                    editor.cell.removeChild(editor.textarea)
-                    editor = null
-                }
-            },
-            next: function() {
-
-            }
         }
     }
 })()

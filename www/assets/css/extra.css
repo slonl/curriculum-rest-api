@@ -121,3 +121,16 @@
     .ds-button-bar .ds-flex-right {
         margin-left: auto;
     }
+    .slo-cell-selector {
+        padding: 0.1em;
+    }
+    .slo-cell-selector > *:first-child {
+        margin-top: 0;
+    }
+    .slo-cell-selector > *:last-child {
+        margin-bottom: 0;
+    }
+    .slo-cell-selector > * {
+        margin-left: 0;
+        margin-right: 0;
+    }

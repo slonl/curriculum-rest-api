@@ -235,7 +235,9 @@ const spreadsheet = (function() {
         break
         default:
           value = htmlEscape(value)
+          let selectorRect = selector.getBoundingClientRect()
           selector.innerHTML = `<textarea class="spreadsheet-editor">${value}</textarea>`
+          selector.querySelector('textarea').style.height = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break
       }
@@ -301,6 +303,9 @@ const spreadsheet = (function() {
 
     function showEditor(rect, offset, el) {
       let column = getColumnDefinition(el)
+      if (!column.editor && typeof column.editor != 'undefined') {
+        return
+      } 
       selector.dataset.simplyKeyboard = 'spreadsheet-edit'
       defaultEditor.call(selector, rect, offset, el)
       if (column.editor) {
