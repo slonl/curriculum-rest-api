@@ -17,8 +17,6 @@
 
     var browser = simply.app({
         container: document.body,
-        view: {
-        },
         routes: {
             '/login/': function() {
                 document.getElementById('login').setAttribute('open','open')
@@ -437,7 +435,7 @@
                 let dialog = el.closest('dialog')
                 if (dialog) {
                     dialog.removeAttribute('open')
-                    window.location.pathname='/'
+                    simply.route.goto('/')
                 }
             },
             login: async function(form,values) {
@@ -533,9 +531,11 @@
             login: async function(email, key) {
                 // check if email/key are valid
                 if (!await slo.api.login(email, key)) {
+                    browser.view.loggedIn = false
                     return 'Ongeldig email en/of API-key'
                 }
                 browser.view.user = email
+                browser.view.loggedIn = true
                 localStorage.setItem('username',email)
                 localStorage.setItem('key',key)
                 return true
@@ -702,11 +702,12 @@
     });
 
     browser.view.pageSize = 100;
-    document.addEventListener('simply-content-loaded', () => {
-        let user = localStorage.getItem('username')
-        let key = localStorage.getItem('key')
-        if (user && key) {
-            browser.view.user = user
-            slo.api.token = btoa(user+':'+key)
-        }
-    })
+    let user = localStorage.getItem('username')
+    let key = localStorage.getItem('key')
+    if (user && key) {
+        browser.view.user = user
+        browser.view.loggedIn = true
+        slo.api.token = btoa(user+':'+key)
+    } else {
+        browser.view.loggedIn = false
+    }
