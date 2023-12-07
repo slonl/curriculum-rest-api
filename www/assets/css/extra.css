@@ -117,3 +117,7 @@
     .slo-rownumber {
         width: 4em;
     }
+    .ds-flex-right,
+    .ds-button-bar .ds-flex-right {
+        margin-left: auto;
+    }

@@ -201,6 +201,113 @@ const spreadsheet = (function() {
     selector.classList.add('slo-cell-selector')
     helpers.appendChild(selector)
 
+    function htmlEscape(str) {
+      return str.replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+    }
+
+    function defaultEditor(rect, offset, el) {
+      let columnDef = getColumnDefinition(el)
+      let row = getRow(el)
+      let value = row.columns[columnDef.value] || ''
+      let values = columnDef.values
+      switch(columnDef.type) {
+        case 'list':
+          if (!Array.isArray(value)) {
+            value = [ value ]
+          }
+          let html = `<ul>`
+          let name = columnDef.value
+          for (let v of values) {
+            if (!v.name) {
+              continue
+            }
+            let checked = value.includes(v.name)
+            let val = htmlEscape(v.name)
+            html+=`<li><label><input type="checkbox" name="${name}" value="${val}" ${checked}> ${val}</label></li>`
+          }
+          html+= '</ul>'
+          selector.innerHTML = html
+          selector.querySelector('input[type="checkbox"]')?.focus()
+        break
+        default:
+          value = htmlEscape(value)
+          selector.innerHTML = `<textarea class="spreadsheet-editor">${value}</textarea>`
+          selector.querySelector('textarea').focus()
+        break
+      }
+    }
+
+    function defaultViewer(rect,offset,el) {
+      let columnDef = getColumnDefinition(el)
+      let row = getRow(el)
+      selector.style.top = (rect.top - offset.top)+'px'
+      selector.style.left = (rect.left - offset.left)+'px'
+      selector.style.width = rect.width+'px'
+      selector.style['min-height'] = rect.height+'px'
+      let value = row.columns[columnDef.value] || ''
+      switch(columnDef.type) {
+        case 'list':
+          if (!Array.isArray(value)) {
+            value = [ value ]
+          }
+          let html = `<ul>`
+          for (let v of value) {
+            html+='<li>'+htmlEscape(v)+'</li>'
+          }
+          html+= '</ul>'
+          selector.innerHTML = html
+        break
+        default:
+          selector.innerHTML = htmlEscape(value)
+        break
+      }
+      let current = selector.getBoundingClientRect()
+      if (current.top+current.height > offset.top+offset.height) {
+        selector.style.top = (offset.height - current.height)+'px'
+      }
+      selector.style.display = 'block'
+    }
+
+    function getRow(el) {
+      let id = el.closest('tr').id
+      let row = datamodel.data.filter(r => r.columns.id==id).pop()
+      return row
+    }
+
+    function getColumnDefinition(el) {
+      // column definitions are in options.columns
+      let visibleColumns = options.columns.filter(c => c.checked)
+      let siblingCells = Array.from(el.closest('tr').querySelectorAll('td'))
+      while (siblingCells[siblingCells.length-1]!==el) {
+        siblingCells.pop()
+      }
+      siblingCells.pop()
+      let column = visibleColumns[siblingCells.length-1]
+      return column
+    }
+
+    function showSelector(rect, offset, el) {
+      let column = getColumnDefinition(el)
+      delete selector.dataset.simplyKeyboard
+      defaultViewer.call(selector, rect, offset, el)
+      if (column.viewer) {
+        column.viewer.call(selector, rect, offset, el)
+      }
+    }
+
+    function showEditor(rect, offset, el) {
+      let column = getColumnDefinition(el)
+      selector.dataset.simplyKeyboard = 'spreadsheet-edit'
+      defaultEditor.call(selector, rect, offset, el)
+      if (column.editor) {
+        column.editor.call(selector, rect, offset, el)
+      }
+    }
+
     function columnsSelectWidget() {      
       let checked, name, disabled, list = ''
       for (let column of options.columns) {
@@ -248,10 +355,6 @@ const spreadsheet = (function() {
 <div class="slo-form-inline slo-dropdown-filter">
     <input type="text" name="${column.value}" placeholder="filter" 
         data-simply-command="filterText" data-simply-immediate="true">
-    <!-- button data-simply-command="filterText" 
-        data-simply-value="${column.value}" class="ds-icon-button ds-button ds-button-naked"><svg class="ds-icon ds-icon-feather">
-        <use xlink:href="${options.icons}#filter"></use>
-    </svg></button -->
 </div>`
       } else {
         let html = `<ul class="ds-dropdown-list">`
@@ -277,6 +380,9 @@ const spreadsheet = (function() {
       let selectButton = `<a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom" data-simply-command="copyColumn" data-simply-value="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#clipboard"></use>
     </svg></a>`
+      let closeButton = `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="sluit" data-simply-command="closeFilter"><svg class="ds-icon ds-icon-feather">
+        <use xlink:href="${options.icons}#x"></use>
+    </svg></a>`
       if (!column.sortable) {
         return `<div class="ds-button-group ds-button-bar">${selectButton}</div>`
       }
@@ -289,6 +395,7 @@ const spreadsheet = (function() {
         <use xlink:href="${options.icons}#columns"></use>
     </svg></a>
     ${selectButton}
+    ${closeButton}
 </div>`
       } else {
         return `
@@ -304,6 +411,7 @@ const spreadsheet = (function() {
         <use xlink:href="${options.icons}#arrow-up"></use>
     </svg></a>
     ${selectButton}
+    ${closeButton}
 </div>`
       }
     }
@@ -470,9 +578,10 @@ const spreadsheet = (function() {
     datamodel.update()
 
     let changeListeners = []
-    
+
     let spreadsheet = { 
       options: datamodel.options,
+      data: datamodel.data,
       update: (...params) => {
         datamodel.update.apply(datamodel, params)
         renderBody()
@@ -504,9 +613,11 @@ const spreadsheet = (function() {
       },
       goto: (row, column) => {
           // row/column only count visible rows and columns
+          row = Math.max(0, Math.min(datamodel.view.visibleData.length+1, row))
+          column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
           let focus = datamodel.options.focus
-          focus.column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
-          focus.row = Math.max(1, Math.min(datamodel.view.visibleData.length+1, row))
+          focus.column = column
+          focus.row = row
           if (datamodel.options.offset>row || (datamodel.options.offset+datamodel.options.rows)<=row) {
               let offset = Math.min(Math.max(row - Math.floor(datamodel.options.rows/2), 0), datamodel.view.visibleData.length - datamodel.options.rows);
               if (offset!=datamodel.options.offset) {
@@ -552,23 +663,20 @@ const spreadsheet = (function() {
         selector.style.display = 'block'
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
-        selector.style.top = (rect.top - offset.top)+'px'
-        selector.style.left = (rect.left - offset.left)+'px'
-        selector.style.width = rect.width+'px'
-        selector.style['min-height'] = rect.height+'px'
-        selector.innerHTML = el.innerHTML
-        let current = selector.getBoundingClientRect()
-        if (current.top+current.height > offset.top+offset.height) {
-          selector.style.top = (offset.height - current.height)+'px'
+        showSelector(rect, offset, el)
+      },
+      editor: (el) => {
+        if (!el) {
+          selector.style.display = 'none'
+          return
         }
         selector.style.display = 'block'
+        let offset = table.getBoundingClientRect()
+        let rect = el.getBoundingClientRect()
+        showEditor(rect, offset, el)
       },
-      startEditor: () => {
-
-      },
-      stopEditor: () => {
-
-      }
+      getRow,
+      getColumnDefinition
     }
     return spreadsheet
   }

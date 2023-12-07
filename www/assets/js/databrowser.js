@@ -343,27 +343,63 @@
                 "Enter": (e) => {
                     e.preventDefault()
                     if (browser.view.user) {
-                        browser.view.sloSpreadsheet.startEditor()
+                        let el = document.querySelector('td.focus')
+                        browser.view.sloSpreadsheet.editor(el)
                     }
+                },
+                "Escape": (e) => {
+                    e.preventDefault()
+                    let dropdowns = document.querySelectorAll('.ds-dropdown-state:checked')
+                    dropdowns.forEach(d => d.checked = false)
                 }
                 // Space -> open/close subtree
             },
             "spreadsheet-edit": {
                 "Escape": (e) => {
                     e.preventDefault()
-                    browser.view.sloSpreadsheet.stopEditor()
+                    let el = document.querySelector('td.focus')
+                    browser.view.sloSpreadsheet.selector(el)
                 },
                 "Tab": (e) => {
                     e.preventDefault()
-                    browser.view.sloSpreadsheet.moveNext()
+                    let el = browser.view.sloSpreadsheet.moveNext()
+                    browser.view.sloSpreadsheet.editor(el)
                 },
                 "Shift+Tab": (e) => {
                     e.preventDefault()
-                    browser.view.sloSpreadsheet.movePrev()
+                    let el = browser.view.sloSpreadsheet.movePrev()
+                    browser.view.sloSpreadsheet.editor(el)
+                },
+                "ArrowDown": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>=0) {
+                            current++
+                            targets[current]?.focus()
+                        }
+                    }
+                },
+                "ArrowUp": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>0) {
+                            current--
+                            targets[current]?.focus()
+                        }
+                    }
                 }
             }
         },
         commands: {
+            closeFilter: (el, value) => {
+                el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
+            },
             toggleColumn: (el, value) => {
               let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
               column.checked = el.checked
@@ -586,11 +622,8 @@
                 })
                 .then(function(json) {
                     let defs = slo.treeToRows(json)
-                    if (browser.view.user) {
-                        browser.view.view = 'spreadsheet-edit';
-                    } else {
-                        browser.view.view = 'spreadsheet';
-                    }
+                    browser.view.view = 'spreadsheet';
+                    //@TODO: als browser.view.user, dan editmode enablen
                     //@TODO: on window resize, recalculate
                     let panel = document.querySelector('.slo-content-panel')
                     let rect = panel.getBoundingClientRect()

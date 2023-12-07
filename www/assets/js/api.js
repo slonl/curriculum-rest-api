@@ -128,6 +128,7 @@
                     row['data-simply-template'] = 'entity'
                     row.indent = indent;
                     row.columns = getColumns(n)
+                    row.node = n
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     allRows.push(row)
                     countColumnValues(row.columns)
@@ -157,7 +158,14 @@
                     sortable: true,
                     filterable: true,
                     className: 'slo-small',
-                    type: 'tree'
+                    type: 'tree',
+                    viewer: function(rect, offset, el) {
+                        let span = el.querySelector('span.slo-indent')
+                        let spanRect = span.getBoundingClientRect()
+                        this.style.left = (spanRect.left - offset.left)+'px'
+                        this.style.width = rect.width - (spanRect.left - rect.left)+'px'
+                        this.innerHTML = span.innerHTML
+                    }
                 },
                 title: {
                     name: 'Title',
@@ -175,7 +183,8 @@
                     disabled: false,
                     sortable: true,
                     filterable: true,
-                    type: 'list'
+                    type: 'list',
+                    editor: false
                 },
                 niveaus: {
                     name: 'Niveaus',
@@ -184,7 +193,20 @@
                     disabled: false,
                     sortable: true,
                     filterable: true,
-                    type: 'list'
+                    type: 'list',
+                    editor: function(rect, offset, el) {
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        let column = browser.view.sloSpreadsheet.getColumnDefinition(el)
+                        let value = row.columns[column.value] || []
+                        let allNiveaus = column.values
+                        let html = '<ul>'
+                        allNiveaus.forEach(n => {
+                            let checked = value.includes(n) ? ' checked': ''
+                            html+=`<li><input type="checkbox"${checked} name="niveau" value="${n}">${n}</li>`
+                        } )
+                        html+='</ul>'
+                        el.innerHTML = html
+                    }
                 }
             }
             Object.keys(allColumns).forEach(c => {
