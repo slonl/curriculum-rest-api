@@ -252,6 +252,9 @@ const spreadsheet = (function() {
       selector.style['min-height'] = rect.height+'px'
       let value = row.columns[columnDef.value] || ''
       switch(columnDef.type) {
+        case 'id':
+          selector.innerHTML = el.innerHTML
+        break
         case 'list':
           if (!Array.isArray(value)) {
             value = [ value ]
@@ -599,22 +602,44 @@ const spreadsheet = (function() {
         renderBody()
       },
       moveLeft: () => {
-        spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column-1)
+        return spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column-1)
       },
       moveRight: () => {
-        spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column+1)
+        return spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column+1)
       },
       moveUp: () => {
-        spreadsheet.goto(datamodel.options.focus.row-1, datamodel.options.focus.column)
+        return spreadsheet.goto(datamodel.options.focus.row-1, datamodel.options.focus.column)
       },
       moveDown: () => {
-        spreadsheet.goto(datamodel.options.focus.row+1, datamodel.options.focus.column)
+        return spreadsheet.goto(datamodel.options.focus.row+1, datamodel.options.focus.column)
       },
       moveNext: () => {
-
+        let column = datamodel.options.focus.column
+        let row = datamodel.options.focus.row
+        let visibleColumns = options.columns.filter(c => c.checked)
+        do {
+          if (column >= visibleColumns.length) {
+            column = 1
+            row++
+          } else {
+            column++
+          }
+        } while (visibleColumns[column-1]?.editor === false) //@TODO: limit to rows < max
+        return spreadsheet.goto(row, column)
       },
       movePrev: () => {
-
+        let column = datamodel.options.focus.column
+        let row = datamodel.options.focus.row
+        let visibleColumns = options.columns.filter(c => c.checked)
+        do {
+          if (column <= 1 ) {
+            column = visibleColumns.length
+            row--
+          } else {
+            column--
+          }
+        } while (visibleColumns[column-1]?.editor === false && row >= 0)
+        return spreadsheet.goto(row, column)
       },
       goto: (row, column) => {
           // row/column only count visible rows and columns
@@ -638,7 +663,8 @@ const spreadsheet = (function() {
           }
           datamodel.update({ focus })
           spreadsheet.renderBody()
-          spreadsheet.selector(table.querySelector('td.focus'))
+          let el = table.querySelector('td.focus')
+          spreadsheet.selector(el)
           let id = datamodel.data[row]?.columns.id
           if (id) {
               id = new URL(id)
@@ -646,6 +672,7 @@ const spreadsheet = (function() {
           if (changeListeners) {
               changeListeners.forEach(listener => listener.call(spreadsheet, id))
           }
+          return el
       },
       onChange: (listener) => {
         changeListeners.push(listener)

@@ -352,7 +352,8 @@
                     let dropdowns = document.querySelectorAll('.ds-dropdown-state:checked')
                     dropdowns.forEach(d => d.checked = false)
                 }
-                // Space -> open/close subtree
+                // @TODO: Space -> open/close subtree in prefix/tree column, open links in id column
+                // @TODO: PageUp/Down/Home/End
             },
             "spreadsheet-edit": {
                 "Escape": (e) => {

@@ -148,7 +148,8 @@
                     sortable: false,
                     filterable: false,
                     className: 'slo-minwidth',
-                    type: 'id'
+                    type: 'id',
+                    editor: false
                 },
                 prefix: {
                     name: 'Prefix',
