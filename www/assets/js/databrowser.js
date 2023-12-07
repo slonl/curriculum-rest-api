@@ -15,6 +15,11 @@
     })();
 */    
 
+    function isString(s) {
+        return typeof s === 'string' || s instanceof String
+    }
+
+    let changeHistory = []
     var browser = simply.app({
         container: document.body,
         routes: {
@@ -319,6 +324,7 @@
             }
         },
         keyboard: {
+            //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
             spreadsheet: {
                 //TODO: calculate prev/next row while skipping over
                 //closed trees. So find the prev/next visible row.
@@ -359,13 +365,15 @@
                     let el = document.querySelector('td.focus')
                     browser.view.sloSpreadsheet.selector(el)
                 },
-                "Tab": (e) => {
+                "Tab": async (e) => {
                     e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
                     let el = browser.view.sloSpreadsheet.moveNext()
                     browser.view.sloSpreadsheet.editor(el)
                 },
-                "Shift+Tab": (e) => {
+                "Shift+Tab": async (e) => {
                     e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
                     let el = browser.view.sloSpreadsheet.movePrev()
                     browser.view.sloSpreadsheet.editor(el)
                 },
@@ -392,10 +400,18 @@
                             targets[current]?.focus()
                         }
                     }
+                },
+                "Control+Enter": async (e) => {
+                    // save changes, close editor
+                    e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
+                    let el = document.querySelector('td.focus')
+                    browser.view.sloSpreadsheet.selector(el)
                 }
             }
         },
         commands: {
+            //@TODO: spreadsheet commands should be in spreadsheet.js and referenced here
             closeFilter: (el, value) => {
                 el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
             },
@@ -577,6 +593,30 @@
                             let uuid = id.pathname.split('/').pop()
                             this.app.view.item.uuid = uuid
                             history.pushState({}, '', new URL(uuid, window.location))
+                        })
+                        this.app.view.sloSpreadsheet.onEdit((update) => {
+                            //@FIXME: handle add/delete entities (relations)
+                            let row = this.app.view.sloSpreadsheet.data.find(r => r.columns.id===update.id)
+                            let node = row.node
+                            let prop = node[update.property]
+                            let change = {
+                                id: update.id,
+                                property: update.property
+                            }
+                            if (Array.isArray(prop)) {
+                                let newValue = update.values.getAll(update.property)
+                                change.diff = Diff.diffArrays(prop, newValue)
+                            } else if (isString(prop)) {
+                                let newValue = update.values.get(update.property)
+                                change.diff = Diff.diffWordsWithSpace(prop, newValue)
+                                if (update.values.get('dirty')==='unset') {
+                                    change.dirty = false
+                                }
+                            } else {
+                                let newValue = update.values.get(update.property)
+                                change.set = newValue 
+                            }
+                            changeHistory.push(change)
                         })
                     break;
                 }

@@ -214,13 +214,14 @@ const spreadsheet = (function() {
       let row = getRow(el)
       let value = row.columns[columnDef.value] || ''
       let values = columnDef.values
+      let name
       switch(columnDef.type) {
         case 'list':
           if (!Array.isArray(value)) {
             value = [ value ]
           }
-          let html = `<ul>`
-          let name = columnDef.value
+          let html = `<form><ul>`
+          name = columnDef.value
           for (let v of values) {
             if (!v.name) {
               continue
@@ -229,14 +230,15 @@ const spreadsheet = (function() {
             let val = htmlEscape(v.name)
             html+=`<li><label><input type="checkbox" name="${name}" value="${val}" ${checked}> ${val}</label></li>`
           }
-          html+= '</ul>'
+          html+= '</ul></form>'
           selector.innerHTML = html
           selector.querySelector('input[type="checkbox"]')?.focus()
         break
         default:
           value = htmlEscape(value)
+          name = columnDef.value
           let selectorRect = selector.getBoundingClientRect()
-          selector.innerHTML = `<textarea class="spreadsheet-editor">${value}</textarea>`
+          selector.innerHTML = `<form><textarea name="${name}" class="spreadsheet-editor">${value}</textarea></form>`
           selector.querySelector('textarea').style.height = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break
@@ -586,6 +588,7 @@ const spreadsheet = (function() {
     datamodel.update()
 
     let changeListeners = []
+    let editListeners = []
 
     let spreadsheet = { 
       options: datamodel.options,
@@ -674,6 +677,9 @@ const spreadsheet = (function() {
           }
           return el
       },
+      onEdit: (listener) => {
+        editListeners.push(listener)
+      },
       onChange: (listener) => {
         changeListeners.push(listener)
       },
@@ -706,6 +712,22 @@ const spreadsheet = (function() {
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         showEditor(rect, offset, el)
+      },
+      saveChanges: () => {
+        if (!editListeners || !editListeners.length) {
+          return
+        }
+        let el = body.querySelector('td.focus')
+        let columnDef = getColumnDefinition(el)
+        let values = new FormData(selector.querySelector('form'))
+        let id = el.closest('tr').id
+        for (listener of editListeners) {
+          listener.call(spreadsheet, {
+            id,
+            property: columnDef.value,
+            values
+          })
+        }
       },
       getRow,
       getColumnDefinition
