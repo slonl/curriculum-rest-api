@@ -200,15 +200,15 @@
                         let column = browser.view.sloSpreadsheet.getColumnDefinition(el)
                         let value = row.columns[column.value] || []
                         let allNiveaus = column.values
-                        let html = '<ul>'
+                        let html = '<form><ul>'
                         allNiveaus.forEach(n => {
                             if (!n.name) {
                                 return
                             }
                             let checked = value.includes(n.name) ? ' checked': ''
-                            html+=`<li><input type="checkbox"${checked} name="niveau" value="${n.name}">${n.name}</li>`
+                            html+=`<li><input type="checkbox"${checked} name="niveaus" value="${n.name}">${n.name}</li>`
                         } )
-                        html+='</ul>'
+                        html+='</ul></form>'
                         this.innerHTML = html
                         this.querySelector('input[type="checkbox"]')?.focus()
                     }

@@ -596,27 +596,39 @@
                         })
                         this.app.view.sloSpreadsheet.onEdit((update) => {
                             //@FIXME: handle add/delete entities (relations)
-                            let row = this.app.view.sloSpreadsheet.data.find(r => r.columns.id===update.id)
+                            let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
+                            let row = this.app.view.sloSpreadsheet.data[index]
                             let node = row.node
                             let prop = node[update.property]
                             let change = {
                                 id: update.id,
                                 property: update.property
                             }
-                            if (Array.isArray(prop)) {
-                                let newValue = update.values.getAll(update.property)
+                            let newValue
+                            if (update.property==='niveaus') {
+                                let original = row.columns.niveaus
+                                newValue = update.values.getAll('niveaus')
+                                change.diff = Diff.diffArrays(original, newValue)
+                            } else if (Array.isArray(prop)) {
+                                newValue = update.values.getAll(update.property)
                                 change.diff = Diff.diffArrays(prop, newValue)
                             } else if (isString(prop)) {
-                                let newValue = update.values.get(update.property)
+                                newValue = update.values.get(update.property)
                                 change.diff = Diff.diffWordsWithSpace(prop, newValue)
                                 if (update.values.get('dirty')==='unset') {
                                     change.dirty = false
                                 }
                             } else {
-                                let newValue = update.values.get(update.property)
+                                newValue = update.values.get(update.property)
                                 change.set = newValue 
                             }
                             changeHistory.push(change)
+                            node[update.property] = newValue
+                            row.columns[update.property] = newValue
+                            this.app.view.sloSpreadsheet.update({
+                                data: this.app.view.sloSpreadsheet.data
+                            })
+                            this.app.view.sloSpreadsheet.renderBody()
                         })
                     break;
                 }
