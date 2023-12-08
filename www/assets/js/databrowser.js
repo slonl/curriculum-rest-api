@@ -19,7 +19,6 @@
         return typeof s === 'string' || s instanceof String
     }
 
-    let changeHistory = []
     var browser = simply.app({
         container: document.body,
         routes: {
@@ -597,34 +596,30 @@
                         this.app.view.sloSpreadsheet.onEdit((update) => {
                             //@FIXME: handle add/delete entities (relations)
                             let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
+                            let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                             let row = this.app.view.sloSpreadsheet.data[index]
                             let node = row.node
                             let prop = node[update.property]
                             let change = {
                                 id: update.id,
-                                property: update.property
+                                property: update.property,
+                                prevValue: prop
                             }
-                            let newValue
-                            if (update.property==='niveaus') {
-                                let original = row.columns.niveaus
-                                newValue = update.values.getAll('niveaus')
-                                change.diff = Diff.diffArrays(original, newValue)
-                            } else if (Array.isArray(prop)) {
-                                newValue = update.values.getAll(update.property)
-                                change.diff = Diff.diffArrays(prop, newValue)
-                            } else if (isString(prop)) {
-                                newValue = update.values.get(update.property)
-                                change.diff = Diff.diffWordsWithSpace(prop, newValue)
+                            if (columnDef.type=='list') {
+                                change.newValue = update.values.getAll(update.property)
+                            } else {
+                                change.newValue = update.values.get(update.property)
                                 if (update.values.get('dirty')==='unset') {
                                     change.dirty = false
                                 }
-                            } else {
-                                newValue = update.values.get(update.property)
-                                change.set = newValue 
                             }
-                            changeHistory.push(change)
-                            node[update.property] = newValue
-                            row.columns[update.property] = newValue
+                            if (change.newValue === change.prevValue) {
+                                return // no change failsave
+                            }
+                            slo.changeHistory.push(change)
+                            localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
+                            node[update.property] = change.newValue
+                            row.columns[update.property] = change.newValue
                             this.app.view.sloSpreadsheet.update({
                                 data: this.app.view.sloSpreadsheet.data
                             })
@@ -657,6 +652,7 @@
                 return window.slo.api.get(window.release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'list';
+                    slo.applyHistory(json.data)
                     browser.view.list = json.data;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -674,6 +670,8 @@
                     niveau, context
                 })
                 .then(function(json) {
+                    // @TODO: parse changeHistory and update node properties
+                    slo.applyHistory(json)
                     let defs = slo.treeToRows(json)
                     browser.view.view = 'spreadsheet';
                     //@TODO: als browser.view.user, dan editmode enablen
@@ -697,6 +695,7 @@
                 return window.slo.api.get(window.release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'doelniveauList';
+                    slo.applyHistory(json.data)
                     browser.view.list = json.data;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -707,6 +706,7 @@
                 return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
                 .then(function(json) {
                     browser.view.view = 'item';
+                    slo.applyHistory(json)
                     browser.view.item = json;
                     browser.actions.updatePaging();
                 });
@@ -717,6 +717,7 @@
                 return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
                 .then(function(json) {
                     browser.view.view = 'list';
+                    slo.applyHistory(json)
                     browser.view.list = json;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -727,6 +728,7 @@
                 return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
                 .then(function(json) {
                     browser.view.view = 'item';
+                    slo.applyHistory(json)
                     browser.view.item = json;
                     browser.actions.updatePaging();
                 });
@@ -763,3 +765,12 @@
     } else {
         browser.view.loggedIn = false
     }
+
+    changeHistory = localStorage.getItem('changeHistory')
+    if (changeHistory) {
+        slo.changeHistory = JSON.parse(changeHistory)
+        slo.parseHistory()
+    } else {
+        slo.changeHistory = []
+    }
+    delete changeHistory

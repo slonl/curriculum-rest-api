@@ -1,4 +1,19 @@
 (function() {
+    const walk = (node, indent, f) => {
+        if (!node) return;
+        if (node['@type']==='Niveau') {
+            return
+        }
+        if (Array.isArray(node)) {
+            node.forEach(n => walk(n,indent,f))
+        } else if (typeof node === 'object' ) {
+            indent = f(node, indent)
+            Object.entries(node)
+            .filter((v,k) => (v && typeof v === 'object'))
+            .forEach(n => walk(n,indent,f))
+        }
+    }
+
     let dataModels = {}
     let editor = null
     window.slo = {
@@ -60,6 +75,31 @@
                 });
             }
         },
+        changeHistory: [],
+        current: {},
+        parseHistory: function() {
+            slo.changeHistory.forEach(change => {
+                if (!slo.current[change.id]) {
+                    slo.current[change.id] = {}
+                }
+                slo.current[change.id][change.property] = change.newValue
+            })
+        },
+        applyHistory: function(data) {
+            if (!Array.isArray(data)) {
+                data = [data]
+            }
+            data.forEach(node => {
+                walk(node, 0, (n) => {
+                    let id = n['@id']
+                    if (slo.current[id]) {
+                        Object.keys(slo.current[id]).forEach(prop => {
+                            n[prop] = slo.current[id][prop]
+                        })
+                    }
+                })
+            })
+        },
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -72,20 +112,6 @@
                 selectedColumns = JSON.parse(selectedColumns)
             }
 
-            const walk = (node, indent, f) => {
-                if (!node) return;
-                if (node['@type']==='Niveau') {
-                    return
-                }
-                if (Array.isArray(node)) {
-                    node.forEach(n => walk(n,indent,f))
-                } else if (typeof node === 'object' ) {
-                    indent = f(node, indent)
-                    Object.entries(node)
-                    .filter((v,k) => (v && typeof v === 'object'))
-                    .forEach(n => walk(n,indent,f))
-                }
-            }
 
             const countColumnValues = (columns) => {
                 Object.keys(columns).forEach(name => {
