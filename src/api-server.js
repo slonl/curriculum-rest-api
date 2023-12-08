@@ -216,7 +216,7 @@ function jsonLD(entry, schema, type) {
 		'Syllabus','SyllabusVakleergebied','SyllabusSpecifiekeEindterm','SyllabusToelichting','SyllabusVakbegrip',
 		'InhVakleergebied', 'InhInhoudslijn', 'InhCluster',
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
-		'ErkVakleergebied', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
+		'ErkVakleergebied', 'ErkTaalprofiel', 'ErkTaalprofieltekst', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
 		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
 		'FoDomein', 'FoSubdomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
 		'Tag', 'Relatie',

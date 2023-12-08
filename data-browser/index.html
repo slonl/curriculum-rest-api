@@ -620,6 +620,22 @@
                             </ul>
                         </template>
                     </div>
+                    <div data-simply-field="item.ErkTaalprofiel" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Taalprofiel</h3>
+                            <ul data-simply-list="item.ErkTaalprofiel">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
+                    <div data-simply-field="item.ErkTaalprofieltekst" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Taalprofieltekst</h3>
+                            <ul data-simply-list="item.ErkTaalprofieltekst">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
                     <div data-simply-field="item.ErkGebied" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Gebied</h3>
@@ -1608,6 +1624,12 @@
             '/erk_vakleergebied/': function(params) {
                 browser.actions.list('erk_vakleergebied/')
             },
+            '/erk_taalprofiel/': function(params) {
+                browser.actions.list('erk_taalprofiel/')
+            },
+            '/erk_taalprofieltekst/': function(params) {
+                browser.actions.list('erk_taalprofieltekst/')
+            },
             '/erk_gebied/': function(params) {
                 browser.actions.list('erk_gebied/')
             },
@@ -1843,6 +1865,23 @@
     }
 
     var contexts = {
+        'curriculum-fo':{
+            title: 'Curriculum Funderend onderwijs',
+            data: {
+                fo_domein: 'Domein',
+                fo_subdomein: 'Subdomein',
+                fo_doelzin: 'Doelzin',
+                fo_uitwerking: 'Uitwerking',
+                fo_toelichting: 'Toelichting'
+            }
+        },
+        'curriculum-samenhang': {
+            title: 'Samenhang',
+            data: {
+                tag: 'Begrippen',
+                relatie: 'Relaties'
+            }
+        },
         'curriculum-basis': {
             title: 'Basis',
             data: {
@@ -1910,6 +1949,8 @@
             title: 'Europees referentiekader',
             data: {
                 erk_vakleergebied: 'ErkVakleergebied',
+                erk_taalprofiel: 'ErkTaalprofiel',
+                erk_taalprofieltekst: 'ErkTaalprofieltekst',
                 erk_gebied: 'ErkGebied',
                 erk_categorie: 'ErkCategorie',
                 erk_taalactiviteit: 'ErkTaalactiviteit',
@@ -1937,23 +1978,6 @@
                 inh_cluster: 'InhCluster',
                 inh_subcluster: 'InhSubcluster'
             }
-        },
-        'curriculum-fo':{
-            title: 'Concept kerndoelen Nederlands & rekenen en wiskunde',
-            data: {
-                fo_domein: 'Domein',
-                fo_subdomein: 'Subdomein',
-                fo_doelzin: 'Doelzin',
-                fo_uitwerking: 'Uitwerking',
-                fo_toelichting: 'Toelichting'
-            }
-//        },
-//        'curriculum-samenhang': {
-//            title: 'Samenhang',
-//            data: {
-//                tag: 'Begrippen',
-//                relatie: 'Relaties'
-//            }
 //        },
 //        'curriculum-niveauhierarchie':{
 //            title: 'Niveau Hierarchie',

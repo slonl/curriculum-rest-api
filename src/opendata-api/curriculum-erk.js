@@ -21,6 +21,83 @@ module.exports = {
 				count
 			}
 		}`,
+		ErkTaalprofiel: `query ErkTaalprofiel($page:Int, $perPage:Int) {
+			allErkTaalprofiel(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+				id
+				prefix
+				title
+				ErkTaalprofieltekst {
+				  id
+				  title
+						}
+						ErkSchaal {
+						  id
+						  title
+						  ErkGebied{
+							id
+							title
+							deprecated
+						  }
+						  ErkCategorie{
+							id
+							title
+							  ErkGebied{
+								id
+								title
+								deprecated
+							  }
+							deprecated
+						  }
+						  ErkTaalactiviteit {
+							id
+							title
+							strategie
+							  ErkCategorie{
+								id
+								title
+								  ErkGebied{
+									id
+									title
+									deprecated
+								  }
+								deprecated
+							  }
+							deprecated
+							}
+						ErkCandobeschrijving {
+							id
+							title
+							Niveau {
+							  ...NiveauShort
+							}
+							ErkVoorbeeld {
+								id
+								title
+								deprecated
+							}
+							deprecated
+						}
+				}
+				unreleased
+			}
+			_allErkTaalprofielMeta {
+				count
+			}
+		}`,
+		ErkTaalprofieltekst: `query ErkTaalprofieltekst($page:Int, $perPage:Int) {
+			allErkTaalprofieltekst(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+				id
+				prefix
+				title
+				Niveau {
+				  ...NiveauShort
+				}
+				unreleased
+			}
+			_allErkTaalprofieltekstMeta {
+				count
+			}
+		}`,
 		ErkGebied: `query ErkGebied($page:Int, $perPage:Int) {
 			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
 				id
@@ -184,6 +261,30 @@ module.exports = {
 				deprecated
 			}
 		`,
+		'erk_taalprofiel': `
+			id
+			prefix
+			title
+			ErkSchaal {
+				id
+				title
+				deprecated
+			}
+			ErkTaalprofieltekst {
+				id
+				title
+				deprecated
+			}
+		`,
+		'erk_taalprofieltekst': `
+			id
+			prefix
+			title
+			Niveau {
+				id
+				title
+			}
+		`,
 		'erk_gebied': `
 			id
 			prefix
@@ -291,6 +392,41 @@ module.exports = {
 					title
 			}
 		}
+		allErkTaalprofiel(filter:{id:$id}) {
+			id
+			prefix
+			title
+			ErkSchaal {
+				id
+				title
+				ErkCandobeschrijving {
+					id
+					title
+					isempty
+					Niveau {
+					  id
+					  title
+					}
+				}
+			}
+			ErkTaalprofieltekst {
+				id
+				title
+				Niveau {
+				  id
+				  title
+				}
+			}
+		}
+		ErkTaalprofieltekst(filter:{id:$id}) {
+			id
+			prefix
+			title
+			Niveau {
+			  id
+			  title
+			}
+		}
 		allErkGebied(filter:{id:$id}) {
 			id
 			prefix
@@ -388,6 +524,24 @@ module.exports = {
 				return {
 					data: result.data.ErkVakleergebied,
 					type: 'ErkVakleergebied'
+				}
+			}),
+		'erk_taalprofiel/': (req) =>
+			opendata.api["ErkTaalprofiel"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allErkTaalprofiel, 
+					type: 'ErkTaalprofiel', 
+					meta: result.data._allErkTaalprofielMeta
+				}
+			}),
+		'erk_taalprofieltekst/': (req) =>
+			opendata.api["ErkTaalprofieltekst"](req.params, req.query)
+			.then(function(result) {
+				return { 
+					data: result.data.allErkTaalprofieltekst, 
+					type: 'ErkTaalprofieltekst', 
+					meta: result.data._allErkTaalprofieltekstMeta
 				}
 			}),
 		'erk_gebied/': (req) =>
