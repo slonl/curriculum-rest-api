@@ -24,6 +24,23 @@
                     column: 0
                 }
             }
+            /*,
+            document: [
+     
+                { prefix : "first item1",  sublist : [{ prefix : "first sublist item 1", subitem: "subitem 2" }]},
+                
+                { prefix : "second item2",  sublist :
+                    [  
+                                  
+                        { prefix : "first subitem1", subitem : "second subitem1", sublist: [ { item : "FOOBAR"} ] },
+                        { prefix : "second item2", subitem : "second subitem2" },
+           
+                       
+                    ]
+                 }    
+                
+            ],
+            */
         },
         routes: {
             '/login/': function() {
@@ -529,6 +546,7 @@
                         currentId = this.app.view.item['@id']
                         // get roots of current item
                         roots = await window.slo.api.get('/roots/'+currentItem)
+
                         // pick one
                         // FIXME: remember which one was picked last
                         // switch to spreadsheet of that root
@@ -545,6 +563,12 @@
                         }
                         await this.app.actions.document(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // @TODO GPC: focus current item
+                        let documentModel = window.slo.getDataModel('items')
+                        console.log(documentModel);
+                        //let row = model.data.findIndex(r => r['@id']==currentId)
+                        //this.app.view.document.focus.row = row;
+                        //this.app.view.document.focus.column = 2;
+                        //this.app.actions.focusCell(row,2)
                     break;
                 }
             },
@@ -584,7 +608,6 @@
                 });
             },
             spreadsheet: function(root, context, niveau) {
-                browser.view.items = []
                 return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                     niveau, context
                 })
@@ -593,14 +616,17 @@
                     window.slo.spreadsheet('items',json)
                 })
             },
-            document: function(root, context, niveau) {
-                //browser.view.items = []
+            document: async function(root, context, niveau) {
+                browser.view.documentList = []
                 return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                     niveau, context
                 })
-                .then(function(json) {
-                    browser.view.document = json;
+                .then(async function(json) {
+                    //browser.view.document = json;
                     browser.view.view = 'document';
+                    //console.log(json);
+                    browser.view.documentList = await window.slo.document(json)
+
                 })
             },
             doelniveauList: function(type) {

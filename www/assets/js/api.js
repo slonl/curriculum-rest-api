@@ -249,6 +249,67 @@
             datamodel.update();
             return datamodel;
         },
+       async document(json){
+            console.log(json)
+            let documentData = []
+            
+        
+            function formatDocumentData(json){
+                let dataObj = { documentSublist : [], documentNiveaus : [] };
+
+                 Object.entries(json).forEach(([key, value]) => {
+                            
+                    if( Array.isArray(value)){
+                        if (key == 'Niveau') {
+                            for(let child of value){
+                                dataObj['documentNiveaus'].push(formatDocumentData(child));
+                            }
+                        }
+                        else{
+                            for(let child of value){
+                                dataObj['documentSublist'].push(formatDocumentData(child));
+                            }
+                        }
+                    }
+                
+                    else {
+                        dataObj[key] = value ;
+                    }   
+
+                    
+                });
+                
+                return dataObj;
+            }
+
+            documentData = formatDocumentData(json);
+
+            console.log(JSON.stringify(documentData, null, 4));
+            documentData = JSON.parse(JSON.stringify(documentData));
+
+            return [documentData];
+            //format json so as to fill the view
+
+            // for each object in array make nuw object as follows:
+
+
+            //for each in json if array add array to array, else if object move to -somewhere-
+
+            /*
+            return [
+     
+                { prefix : "prefix1",  title: "title1", 
+                    documentSublist : [{ prefix : "prefix2", title: "title2", 
+                        documentSublist: [{ prefix : "prefix3", title: "title3"
+                        }]
+                    }]
+                },
+                  
+                
+            ]
+            */
+
+        },
         getDataModel(name) {
             return dataModels[name]
         },
