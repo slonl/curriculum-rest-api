@@ -49,7 +49,7 @@
         background: var(--ds-primary);
     }
     .slo-spreadsheet .ds-scrollbox {
-        --ds-scrollbox-height: calc(100vh - 340px);
+        --ds-scrollbox-height: calc(100vh - 280px);
         min-height: 400px;
     }
     .vsb-menu {
@@ -64,29 +64,73 @@
     .slo-spreadsheet tr.focus td.focus {
         background-color: var(--ds-grey-30);
         position: relative;
-        white-space: break-spaces;
-        overflow: visible;
     }
 
-    .slo-spreadsheet .slo-cell {
-        padding: 0 0.5em;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis
-    }
-    .slo-spreadsheet tr.focus td.focus .slo-cell {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        min-height: 100%;
-        background-color: var(--ds-grey-30);
-        border: 2px solid var(--ds-primary);
-        z-index: 100;
-        white-space: break-spaces;
-        overflow: visible;
-    }
     .slo-username span {
         line-height: var(--ds-button-line-height);
         padding-left: 1em;
+    }
+    .slo-editmode .slo-index {
+        margin-left: 1em;
+    }
+    .slo-delete, .slo-add {
+        visibility: hidden;
+        cursor: pointer;
+    }
+    .slo-editmode tr.focus .slo-delete,
+    .slo-editmode tr:hover .slo-delete,
+    .slo-editmode tr.focus .slo-add,
+    .slo-editmode tr:hover .slo-add {
+        visibility: visible;
+        top: 0;
+    }
+    .slo-textarea {
+        position: absolute;
+        top: 0;
+        background-color: white;
+        z-index: 100;
+        border: 2px solid red;
+    }
+    .slo-spreadsheet .ds-dropdown-nav {
+        min-width: var(--ds-dropdown-width);
+        width: auto;
+    }
+    .slo-cell-selector {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        outline: 2px solid blue;
+        z-index: 100;
+        background-color: white;
+        font-weight: normal;
+        line-height: var(--ds-line-height);
+        padding: 0 1px;
+        overflow: visible;
+        height: auto;
+        display: none;
+    }
+    .slo-content-panel {
+        margin-bottom: 0;
+    }
+    .slo-rownumber {
+        width: 4em;
+    }
+    .ds-flex-right,
+    .ds-button-bar .ds-flex-right {
+        margin-left: auto;
+    }
+    .slo-cell-selector {
+        padding: 0.1em;
+    }
+    .slo-cell-selector > *:first-child {
+        margin-top: 0;
+    }
+    .slo-cell-selector > *:last-child {
+        margin-bottom: 0;
+    }
+    .slo-cell-selector > * {
+        margin-left: 0;
+        margin-right: 0;
     }

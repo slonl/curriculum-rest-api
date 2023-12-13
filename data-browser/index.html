@@ -17,9 +17,9 @@
             <use xlink:href="/assets/icons/feather-sprite.svg#grid"></use>
         </svg></button>
     </div>
-    <nav class="ds-align-right" data-simply-field="user" data-simply-content="template" data-simply-transformer="option" data-simply-default-template="none">
-        <template data-simply-template="none"></template>
-        <template data-simply-template="some">
+    <nav class="ds-align-right" data-simply-field="loggedIn" data-simply-content="template">
+        <template data-simply-template="false"></template>
+        <template data-simply-template="true">
             <ul class="ds-navbar-nav">
                 <li>
                     <button data-simply-command="logoff"
@@ -154,6 +154,7 @@
                 </ul>
             </template>
             <link rel="simply-include" href="/templates/item.html">
+            <link rel="simply-include" href="/templates/filters.html">
             <link rel="simply-include" href="/templates/spreadsheet.html">
         </section>
     </div>
