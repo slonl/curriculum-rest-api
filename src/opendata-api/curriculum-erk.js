@@ -33,6 +33,7 @@ module.exports = {
 						ErkSchaal {
 						  id
 						  title
+  						  category
 						  ErkGebied{
 							id
 							title
@@ -51,7 +52,7 @@ module.exports = {
 						  ErkTaalactiviteit {
 							id
 							title
-							strategie
+							category
 							  ErkCategorie{
 								id
 								title
