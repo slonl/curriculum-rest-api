@@ -260,12 +260,12 @@
                  Object.entries(json).forEach(([key, value]) => {
                             
                     if( Array.isArray(value)){
-                        if (key == 'Niveau') {
+                        if (key === 'Niveau') {
                             for(let child of value){
                                 dataObj['documentNiveaus'].push(formatDocumentData(child));
                             }
                         }
-                        else{
+                        else {
                             for(let child of value){
                                 dataObj['documentSublist'].push(formatDocumentData(child));
                             }
@@ -287,7 +287,7 @@
             console.log(JSON.stringify(documentData, null, 4));
             documentData = JSON.parse(JSON.stringify(documentData));
 
-            return [documentData];
+            //return [documentData];
             //format json so as to fill the view
 
             // for each object in array make nuw object as follows:
@@ -295,19 +295,20 @@
 
             //for each in json if array add array to array, else if object move to -somewhere-
 
-            /*
+            
             return [
      
-                { prefix : "prefix1",  title: "title1", 
-                    documentSublist : [{ prefix : "prefix2", title: "title2", 
-                        documentSublist: [{ prefix : "prefix3", title: "title3"
+                { prefix : "prefix1",  title: "title1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
+                    documentSublist : [{ prefix : "prefix2", title: "title2", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
+                        documentNiveaus:[{ prefix: "niveauPrefix1", title : "niveauTitle1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."}],
+                        documentSublist: [{ prefix : "prefix3", title: "title3", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."
                         }]
                     }]
                 },
                   
                 
             ]
-            */
+            
 
         },
         getDataModel(name) {

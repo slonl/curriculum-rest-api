@@ -39,35 +39,46 @@
         <template id="documentTemplate">
             <section>
                 <h1 class="slo-entity">
-                <span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
-                <span class="slo-editable" data-simply-field="title">title</span>
-                <span class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></span>
+                    <span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
+                    <span class="slo-editable" data-simply-field="title">title</span>
+                    <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
                 </h1>
-                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                        <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
-                    </svg>
-                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                        <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
-                    </svg>
-                    <section >
-                        <span data-simply-list="documentSublist">
-                                <template rel="documentTemplate"></template>
-                        </span>
-                        <ul data-simply-list="documentNiveaus">
-                            <template>
-                                    <li><span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
-                                        <span class="slo-editable" data-simply-field="title">title</span>
-                                        <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
-                                    </li>
-                            </template>
-                            <li>
-                                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                    <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
-                                </svg>
-                            </li>
-                        </ul>
-                    </div>-
-                    </section>
+                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                    <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                </svg>
+                <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                    <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
+                </svg>
+
+                <ul data-simply-list="documentNiveaus">
+                    <li>
+                        FIRST!
+                    </li>
+                    <template>
+                        <li><span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
+                            <span class="slo-editable" data-simply-field="title">title</span>
+                            <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
+                        </li>
+                    </template>
+                    
+                    <li> plus
+                        <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                            <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                        </svg>
+                    </li>
+
+                    <li>
+                        SECOND!
+                    </li>
+
+                </ul>
+
+                <section >
+                    <p data-simply-list="documentSublist">
+                        <template rel="documentTemplate"></template>
+                    </p>
+            
+                </section>
             </section>
         </template>
 
