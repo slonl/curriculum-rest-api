@@ -250,7 +250,7 @@
             return datamodel;
         },
        async document(json){
-            console.log(json)
+            console.log(JSON.stringify(json, null, 4))
             let documentData = []
             
         

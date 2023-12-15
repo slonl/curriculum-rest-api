@@ -32,9 +32,9 @@
 
         <div> <!---SLO.dev.muze.nl-->
 
-        <div data-simply-list="documentList">
+        <span data-simply-list="documentList">
             <template rel="documentTemplate"></template>
-        </div>
+        </span>
 
         <template id="documentTemplate">
             <section>
@@ -50,18 +50,22 @@
                         <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
                     </svg>
                     <section >
-                        <div data-simply-list="documentSublist">
+                        <span data-simply-list="documentSublist">
                                 <template rel="documentTemplate"></template>
-                        </div>
-                        <div data-simply-list="documentNiveaus">
+                        </span>
+                        <ul data-simply-list="documentNiveaus">
                             <template>
-                                <ul>
                                     <li><span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
                                         <span class="slo-editable" data-simply-field="title">title</span>
-                                        <span class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></span>
+                                        <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
                                     </li>
-                                </ul>
                             </template>
+                            <li>
+                                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                                    <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
+                                </svg>
+                            </li>
+                        </ul>
                     </div>-
                     </section>
             </section>
