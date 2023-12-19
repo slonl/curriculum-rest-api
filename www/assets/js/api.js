@@ -123,17 +123,26 @@
 
             const countColumnValues = (columns) => {
                 Object.keys(columns).forEach(name => {
+                    if (!name) {
+                        return
+                    }
                     if (!allColumns[name]) {
                         allColumns[name] = {}
                     }
                     if (Array.isArray(columns[name])) {
                         columns[name].forEach(v => {
+                            if (!v) {
+                                return
+                            }
                             if (!allColumns[name][v]) {
                                 allColumns[name][v] = 0;
                             }
                             allColumns[name][v]++
                         })
                     } else {
+                        if (!columns[name]) {
+                            return
+                        }
                         if (!allColumns[name][columns[name]]) {
                             allColumns[name][columns[name]] = 0
                         }
