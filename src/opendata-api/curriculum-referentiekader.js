@@ -237,11 +237,11 @@ module.exports = {
 			RefSubdomein: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			RefVakleergebied: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort,
@@ -255,11 +255,11 @@ module.exports = {
 			RefOnderwerp: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			RefDomein: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort
@@ -273,15 +273,15 @@ module.exports = {
 			RefSubdomein: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			RefDeelonderwerp: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			RefTekstkenmerk: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort
@@ -295,7 +295,7 @@ module.exports = {
 			RefOnderwerp: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort
@@ -309,7 +309,7 @@ module.exports = {
 			RefOnderwerp {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
 			Doelniveau: Doelniveau,
 			NiveauIndex: {
 				Niveau: NiveauShort

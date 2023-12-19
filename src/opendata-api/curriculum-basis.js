@@ -144,11 +144,11 @@ module.exports = {
 			title: _,
 			deprecated: _,
 		}
-		const PageSize = request.query.pageSize || 100
-		const Page = request.query.page || 0
+		const PageSize = parseInt(request.query.pageSize || request.query.perPage || '100')
+		const Page = parseInt(request.query.page || '0')
 		const Paging = {
 			start: Page*PageSize,
-			end: (Page+1)*PageSize-1
+			end: (Page+1)*PageSize
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
 		
@@ -245,6 +245,7 @@ module.exports = {
 		`,
 		Doelniveau: `
 		const results = from(data.Doelniveau)
+		.slice(Paging.start, Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			...shortInfo,
@@ -264,9 +265,9 @@ module.exports = {
 		})
 
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
-			count: results.length
+			count: data.Doelniveau.length
 		}
 
 		meta
