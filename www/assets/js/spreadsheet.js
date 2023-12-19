@@ -463,7 +463,8 @@ const spreadsheet = (function() {
       if (datamodel.options.focus?.row == row.id) {
         rowClass += ' focus';
       }
-      let add,remove = ''
+      let add = ''
+      let remove = ''
       if (options.editMode) {
         add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
             <use xlink:href="${options.icons}#plus-circle"></use>
