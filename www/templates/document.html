@@ -1,91 +1,82 @@
 <template data-simply-template="document">
-    <div class="slo-document">
+    <main class="slo-main slo-document">
+        <div class="slo-document">
 
-        <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
-            <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
-            data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
-            data-simply-activate="niveaus-select" data-simply-element="niveaus">
-                <template>
-                    <option data-simply-field="title"></option>
-                </template>
-            </select>
-            <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
-            data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
-            data-simply-activate="contexts-select" data-simply-element="contexts">
-                <template>
-                    <option data-simply-field="context"></option>
-                </template>
-            </select>
-            <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
-                <svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
-                </svg>
-            </button>
-        </div>
-        <nav class="ds-crumbs">
-            <ul class="ds-crumbs-list">
-                <li>API</li>
-                <li><a href="/">2023</a></li>
-                <li><a href="" data-simply-field="contextLink"></a></li>
-            </ul>
-        </nav>
+            <div>
+                <span>
+                    <nav class="ds-crumbs">
+                        <ul class="ds-crumbs-list">
+                            <li>API</li>
+                            <li><a href="/">2023</a></li>
+                            <li><a href="" data-simply-field="contextLink"></a></li>
+                        </ul>
+                    </nav>
+                </span>
+                <span class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
+                    <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
+                    data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
+                    data-simply-activate="niveaus-select" data-simply-element="niveaus">
+                        <template>
+                            <option data-simply-field="title"></option>
+                        </template>
+                    </select>
+                    <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
+                    data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
+                    data-simply-activate="contexts-select" data-simply-element="contexts">
+                        <template>
+                            <option data-simply-field="context"></option>
+                        </template>
+                    </select>
+                </span>
+            </div>
 
-        <div> <!---SLO.dev.muze.nl-->
-
-        <span data-simply-list="documentList">
-            <template rel="documentTemplate"></template>
-        </span>
-
-        <template id="documentTemplate">
+        
+    <!---SLO.dev.muze.nl-->
+        
+            <span data-simply-list="documentList">
+                <template rel="documentTemplate"></template>
+            </span>
+        
             <section>
-                <h1 class="slo-entity">
-                    <span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
-                    <span class="slo-editable" data-simply-field="title">title</span>
-                    <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
-                </h1>
-                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                    <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
-                </svg>
-                <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                    <use xlink:href="/files/feather-sprite.svg#x-circle"></use>
-                </svg>
+                <template id="documentTemplate">
+                
+                        <h1 class="slo-entity">
+                            <span class="slo-prefix" data-simply-field="prefix"></span>
+                            <span data-simply-field="title"></span>
+                        </h1>
+                        
+                        <div class="ds-margin-up" data-simply-list="documentNiveaus">
+                            <template>
+                                <span class="slo-entity">
+                                    <div class="ds-badge" data-simply-field="title"></div>
+                                </span>
+                            </template>
+                        </div>
 
-                <ul data-simply-list="documentNiveaus">
-                    <li>
-                        FIRST!
-                    </li>
-                    <template>
-                        <li><span class="slo-editable slo-prefix" data-simply-field="prefix">prefix</span>
-                            <span class="slo-editable" data-simply-field="title">title</span>
-                            <p class="slo-editable slo-prefix" data-simply-field="description" data-simply-content="attributes"></p>
-                        </li>
-                    </template>
+                        <ul class="ds-margin-up" data-simply-list="documentExamenprogrammaEindterm">
+                            <template>
+                                    <li class="slo-entity">
+                                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
+                                            <span class="slo-prefix" data-simply-field="title"></span>
+                                    </li>
+                            </template>
+                        </ul>
+
+                        <section >
+                            <div data-simply-list="documentSublist">
+                                <template rel="documentTemplate"></template>
+                            </divdiv>           
+                        </section>
                     
-                    <li> plus
-                        <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                            <use xlink:href="/files/feather-sprite.svg#plus-circle"></use>
-                        </svg>
-                    </li>
-
-                    <li>
-                        SECOND!
-                    </li>
-
-                </ul>
-
-                <section >
-                    <p data-simply-list="documentSublist">
-                        <template rel="documentTemplate"></template>
-                    </p>
-            
-                </section>
+                </template>
             </section>
-        </template>
 
 
 
 
-        </div><!---SLO.dev.muze.nl-->
-    </div>
+
+            <!---SLO.dev.muze.nl-->
+        </div>
+    </main>
 </template>
 
