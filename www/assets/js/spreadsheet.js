@@ -127,6 +127,7 @@ const spreadsheet = (function() {
         }
         return true
       })
+      this.view.visibleData = this.view.data.slice()
     })
 
     // adds caching of sorted list
@@ -147,6 +148,7 @@ const spreadsheet = (function() {
                 sorted = this.view.data.slice()
             }
             this.view.data = sorted
+            this.view.visibleData = this.view.data.slice()
         };
     }
 
@@ -257,6 +259,7 @@ const spreadsheet = (function() {
     function defaultViewer(rect,offset,el) {
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
+      selector.innerHTML = ''
       selector.style.top = (rect.top - offset.top)+'px'
       selector.style.left = (rect.left - offset.left)+'px'
       selector.style.width = rect.width+'px'
@@ -272,6 +275,9 @@ const spreadsheet = (function() {
           }
           let html = `<ul>`
           for (let v of value) {
+            if (!v) {
+              continue
+            }
             html+='<li>'+htmlEscape(v)+'</li>'
           }
           html+= '</ul>'
@@ -714,12 +720,12 @@ const spreadsheet = (function() {
           spreadsheet.renderBody()
           let el = table.querySelector('td.focus')
           spreadsheet.selector(el)
-          let id = datamodel.data[row]?.columns.id
+          let id = datamodel.view.visibleData[row]?.columns.id
           if (id) {
               id = new URL(id)
-          }
-          if (changeListeners) {
-              changeListeners.forEach(listener => listener.call(spreadsheet, id))
+              if (changeListeners) {
+                  changeListeners.forEach(listener => listener.call(spreadsheet, id))
+              }
           }
           return el
       },
@@ -736,7 +742,7 @@ const spreadsheet = (function() {
           }
       },
       findId: (id) => {
-          let row = datamodel.data.findIndex(r => r.columns.id==id)
+          let row = datamodel.view.visibleData.findIndex(r => r.columns.id==id)
           return row>=0 ? row : null
       },
       selector: (el) => {
