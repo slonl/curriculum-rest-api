@@ -900,6 +900,9 @@
                     'prefix': parentNode.prefix
                 }
                 node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.uuid
+                if (!parentNode[type]) {
+                    parentNode[type] = []
+                }
                 parentNode[type].unshift(node)
                 let data = slo.treeToRows(browser.view.root)
                 browser.view.sloSpreadsheet.update({
