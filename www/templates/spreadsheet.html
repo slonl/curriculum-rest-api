@@ -30,5 +30,22 @@
         </nav>
         <div class="ds-scrollbox" id="slo-spreadsheet" style="overflow-anchor: none;">
         </div>
+        <dialog class="slo-type-selector ds-dialog">
+            <form data-simply-command="insertRowType">
+                <label>Selecteer type</label>
+                <ul data-simply-list="availableTypes">
+                    <template>
+                        <li><label>
+                            <input type="radio" name="type"
+                                data-simply-command="selectType"
+                                data-simply-field="type" 
+                                data-simply-content="attributes" 
+                                data-simply-attributes="value">
+                            <span data-simply-field="name">
+                        </label></li>
+                    </template>
+                </ul>
+            </form>
+        </dialog>
     </div>
 </template>
