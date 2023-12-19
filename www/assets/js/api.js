@@ -9,8 +9,16 @@
         } else if (typeof node === 'object' ) {
             indent = f(node, indent)
             Object.entries(node)
-            .filter((v,k) => (v && typeof v === 'object'))
-            .forEach(n => walk(n,indent,f))
+            .filter(([k,v]) => {
+                if (!Array.isArray(v) || !v.length || k== 'Niveau') {
+                    return false
+                }
+                return true
+            })
+            .forEach(([k,v]) => { 
+                walk(v,indent,f); 
+                node.hasChildren=true; 
+            })
         }
     }
 
@@ -75,6 +83,132 @@
                 });
             }
         },
+        contexts: {
+            'curriculum-fo':{
+                title: 'Curriculum Funderend onderwijs',
+                data: {
+                    fo_domein: 'Domein',
+                    fo_subdomein: 'Subdomein',
+                    fo_doelzin: 'Doelzin',
+                    fo_toelichting: 'Toelichting',
+                    fo_uitwerking: 'Uitwerking'
+                }
+            },
+            'curriculum-samenhang': {
+                title: 'Samenhang',
+                data: {
+                    tag: 'Begrippen',
+                    relatie: 'Relaties'
+                }
+            },
+            'curriculum-basis': {
+                title: 'Basis',
+                data: {
+                    vakleergebied: 'Vakleergebied',
+                    niveau: 'Niveau',
+                    doelniveau: 'DoelNiveau',
+                    doel: 'Doel'
+                }
+            },
+            'curriculum-kerndoelen': {
+                title: 'Kerndoelen',
+                data: {
+                    kerndoel_vakleergebied: 'KerndoelVakleergebied',
+                    kerndoel_domein: 'KerndoelDomein',
+                    kerndoel: 'Kerndoel',
+                    kerndoel_uitstroomprofiel: 'KerndoelUitstroomprofiel'
+                }
+            },
+            'curriculum-examenprogramma': {
+                title: 'Examenprogramma',
+                data: {
+                    examenprogramma: 'Examenprogramma',
+                    examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
+                    examenprogramma_domein: 'ExamenprogrammaDomein',
+                    examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
+                    examenprogramma_eindterm: 'ExamenprogrammaEindterm'
+                }
+            },
+            'curriculum-syllabus': {
+                title: 'Syllabus',
+                data: {
+                    syllabus: 'Syllabus',
+                    syllabus_vakleergebied: 'SyllabusVakleergebied',
+                    syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
+                    syllabus_toelichting: 'SyllabusToelichting',
+                    syllabus_vakbegrip: 'SyllabusVakbegrip'
+                }
+            },
+            'curriculum-examenprogramma-bg': {
+                title: 'Examenprogramma Beroepsgericht',
+                data: {
+                    examenprogramma_bg_profiel: 'ExamenprogrammaBgProfiel',
+                    examenprogramma_bg_kern: 'ExamenprogrammaBgKern',
+                    examenprogramma_bg_kerndeel: 'ExamenprogrammaBgKerndeel',
+                    examenprogramma_bg_globale_eindterm: 'ExamenprogrammaBgGlobaleEindterm',
+                    examenprogramma_bg_module: 'ExamenprogrammaBgModule',
+                    examenprogramma_bg_keuzevak: 'ExamenprogrammaBgKeuzevak',
+                    examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
+                    examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
+                    examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
+                }
+            },
+            'curriculum-referentiekader': {
+                title: 'Referentiekader',
+                data: {
+                    ref_vakleergebied: 'RefVakleergebied',
+                    ref_domein: 'RefDomein',
+                    ref_subdomein: 'RefSubdomein',
+                    ref_onderwerp: 'RefOnderwerp',
+                    ref_deelonderwerp: 'RefDeelonderwerp',
+                    ref_tekstkenmerk: 'RefTekstkenmerk'
+                }
+            },
+            'curriculum-erk': {
+                title: 'Europees referentiekader',
+                data: {
+                    erk_vakleergebied: 'ErkVakleergebied',
+                    erk_gebied: 'ErkGebied',
+                    erk_categorie: 'ErkCategorie',
+                    erk_taalactiviteit: 'ErkTaalactiviteit',
+                    erk_schaal: 'ErkSchaal',
+                    erk_candobeschrijving: 'ErkCandobeschrijving',
+                    erk_voorbeeld: 'ErkVoorbeeld',
+                    erk_lesidee: 'ErkLesidee'
+                }
+            },
+            'curriculum-leerdoelenkaarten': {
+                title: 'Leerdoelenkaarten',
+                data: {
+                    ldk_vakleergebied: 'LdkVakleergebied',
+                    ldk_vakkern: 'LdkVakkern',
+                    ldk_vaksubkern: 'LdkVaksubkern',
+                    ldk_vakinhoud: 'LdkVakinhoud',
+                    ldk_vakbegrip: 'LdkVakbegrip'
+                }
+            },
+            'curriculum-inhoudslijnen': {
+                title: 'Inhoudslijnen',
+                data: {
+                    inh_vakleergebied: 'InhVakleergebied',
+                    inh_inhoudslijn: 'InhInhoudslijn',
+                    inh_cluster: 'InhCluster',
+                    inh_subcluster: 'InhSubcluster'
+                }
+    //        },
+    //        'curriculum-niveauhierarchie':{
+    //            title: 'Niveau Hierarchie',
+    //            data: {
+    //                nh_categorie: 'NhCategorie',
+    //                nh_sector: 'NhSector',
+    //                nh_schoolsoort: 'NhSchoolsoort',
+    //                nh_leerweg: 'NhLeerweg',
+    //                nh_bouw: 'NhBouw',
+    //                nh_niveau: 'NhNiveau'
+    //            }
+            }
+        },
+
         changeHistory: [],
         current: {},
         parseHistory: function() {
@@ -115,17 +249,26 @@
 
             const countColumnValues = (columns) => {
                 Object.keys(columns).forEach(name => {
+                    if (!name) {
+                        return
+                    }
                     if (!allColumns[name]) {
                         allColumns[name] = {}
                     }
                     if (Array.isArray(columns[name])) {
                         columns[name].forEach(v => {
+                            if (!v) {
+                                return
+                            }
                             if (!allColumns[name][v]) {
                                 allColumns[name][v] = 0;
                             }
                             allColumns[name][v]++
                         })
                     } else {
+                        if (!columns[name]) {
+                            return
+                        }
                         if (!allColumns[name][columns[name]]) {
                             allColumns[name][columns[name]] = 0
                         }
@@ -221,9 +364,17 @@
                     sortable: true,
                     filterable: true,
                     type: 'list',
+                    viewer: function(rect, offset, el) {
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        if (!row.node.Niveau?.length) {
+                            this.querySelector('ul').style.color='#888'
+                            return false
+                        }
+                    },
                     editor: function(rect, offset, el) {
                         let row = browser.view.sloSpreadsheet.getRow(el)
                         let column = browser.view.sloSpreadsheet.getColumnDefinition(el)
+                        let disabled = !row.node.Niveau?.length ? ' disabled' : ''
                         let value = row.columns[column.value] || []
                         let allNiveaus = column.values
                         let html = '<form><ul>'
@@ -232,11 +383,24 @@
                                 return
                             }
                             let checked = value.includes(n.name) ? ' checked': ''
-                            html+=`<li><input type="checkbox"${checked} name="niveaus" value="${n.name}">${n.name}</li>`
+                            html+=`<li><input type="checkbox"${checked} ${disabled} name="niveaus" value="${n.name}">${n.name}</li>`
                         } )
                         html+='</ul></form>'
                         this.innerHTML = html
                         this.querySelector('input[type="checkbox"]')?.focus()
+                        if (!row.node.Niveau?.length) {
+                            this.querySelector('ul').style.color='#888'
+                        }
+                        if (disabled) {
+                            return false
+                        }
+                    },
+                    isEditable: (el) => {
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        if (!row.node.Niveau?.length) {
+                            return false
+                        }
+                        return true
                     }
                 }
             }
@@ -286,6 +450,61 @@
                 return types.includes(type)
             })
             .pop()
+        },
+        getTypeNameByType(type) {
+            let context = slo.getContextByType(type)
+            return Object.entries(contexts[context].data)
+            .find(([k,v]) => v==type)[0]
+        },
+        getTypeByTypeName(_type, context) {            
+            return contexts[context].data[_type]
+        },
+        getAvailableChildTypes(type) {
+            let context = slo.getContextByType(type)
+            let _type = slo.getTypeNameByType(type)
+            let schema = browser.view.schemas
+                .find(s => s['$id'] == 'https://opendata.slo.nl/curriculum/schemas/'+context+'/context.json')
+            let props = schema.properties[_type].items.properties
+            let subtypes = Object.keys(props)
+                .filter(k => k.substr(k.length-3)=='_id')
+                .map(k => {
+                    let type = k.substr(0, k.length-3)
+                    let name = slo.getTypeByTypeName(type, context)
+                    return {
+                        name,
+                        type: name
+                    }
+                })
+            return subtypes
+        },
+        async parseSchema(schema) {
+            // from https://github.com/mokkabonna/json-schema-merge-allof
+
+            const customizer = (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return _.union(objValue, srcValue)
+                }
+                return
+            }
+
+            const resolveAllOf = (inputSpec) => {
+                if (inputSpec && typeof inputSpec === 'object') {
+                    if (Object.keys(inputSpec).length > 0) {
+                        if (inputSpec.allOf) {
+                            const allOf  = inputSpec.allOf
+                            delete inputSpec.allOf
+                            const nested = _.mergeWith.apply(_, [{}].concat(allOf, [customizer]))
+                            inputSpec    = _.defaultsDeep(inputSpec, nested, customizer)
+                        }
+                        Object.keys(inputSpec).forEach((key) => {
+                            inputSpec[key] = resolveAllOf(inputSpec[key])
+                        })
+                    }
+                }
+                return inputSpec
+            }
+
+            return resolveAllOf(await $RefParser.dereference(schema))
         }
     }
 })()

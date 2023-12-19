@@ -23,9 +23,18 @@ const spreadsheet = (function() {
   }
   return function(settings, data) {
     options.container = settings.container
-    options.columns = settings.columns
-    options.icons = settings.icons || ''
-    options.rows = settings.rows || 15
+    options.columns   = settings.columns
+    options.icons     = settings.icons || ''
+    options.rows      = settings.rows || 15
+    options.editMode  = settings.editMode || false
+    
+    options.columns.forEach(c => {
+      if (typeof c.isEditable == 'undefined') {
+        c.isEditable = () => {
+          return c.editor !== false
+        }
+      }
+    })
 
     let datamodel = simply.viewmodel.create('largetable', data, {
       offset: 0,
@@ -34,7 +43,7 @@ const spreadsheet = (function() {
       rowHeight: 27,
       closed: {},
       focus: {
-        row: 1,
+        row: 0,
         column: 1
       }
     })
@@ -118,6 +127,7 @@ const spreadsheet = (function() {
         }
         return true
       })
+      this.view.visibleData = this.view.data.slice()
     })
 
     // adds caching of sorted list
@@ -138,6 +148,7 @@ const spreadsheet = (function() {
                 sorted = this.view.data.slice()
             }
             this.view.data = sorted
+            this.view.visibleData = this.view.data.slice()
         };
     }
 
@@ -248,6 +259,7 @@ const spreadsheet = (function() {
     function defaultViewer(rect,offset,el) {
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
+      selector.innerHTML = ''
       selector.style.top = (rect.top - offset.top)+'px'
       selector.style.left = (rect.left - offset.left)+'px'
       selector.style.width = rect.width+'px'
@@ -263,6 +275,9 @@ const spreadsheet = (function() {
           }
           let html = `<ul>`
           for (let v of value) {
+            if (!v) {
+              continue
+            }
             html+='<li>'+htmlEscape(v)+'</li>'
           }
           html+= '</ul>'
@@ -293,7 +308,8 @@ const spreadsheet = (function() {
         siblingCells.pop()
       }
       siblingCells.pop()
-      let column = visibleColumns[siblingCells.length-1]
+      let focusColumn = siblingCells.length - 1 - (options.editMode ? 1 : 0)
+      let column = visibleColumns[focusColumn]
       return column
     }
 
@@ -447,16 +463,26 @@ const spreadsheet = (function() {
       if (datamodel.options.focus?.row == row.id) {
         rowClass += ' focus';
       }
-      let html = `<tr id="${row.columns.id}" class="${rowClass}"><td>${row.id+1}</td>`
+      let add,remove = ''
+      if (options.editMode) {
+        add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
+            <use xlink:href="${options.icons}#plus-circle"></use>
+        </svg></td>`
+        remove = `<td><svg data-simply-command="deleteRow" class="slo-delete ds-icon ds-icon-feather">
+            <use xlink:href="${options.icons}#x-circle"></use>
+        </svg></td>`
+      }
+      let html = `<tr id="${row.columns.id}" class="${rowClass}">${add}<td>${row.id+1}</td>`
       let value, count = 0
       let colClass = ''
+      let focusColumn = datamodel.options.focus.column
       for (let column of options.columns) {
         if (!column.checked) {
           continue
         }
         count++
         value = row.columns[column.value] || ''
-        if (datamodel.options.focus?.row == row.id && datamodel.options.focus?.column == count) {
+        if (datamodel.options.focus?.row == row.id && focusColumn == count) {
           colClass='focus'
         } else {
           colClass=''
@@ -466,7 +492,13 @@ const spreadsheet = (function() {
             html+= `<td class="${colClass}"><a href="${value}" target="sloSide">#</a></td>`
             break
           case 'tree':
-            html+=`<td class="${colClass}" data-simply-command="toggleTree"><span class="slo-indent slo-indent-${row.indent}">${value}</span></td>`
+            let hasChildren = ''
+            if (row.node.hasChildren) {
+              hasChildren = ' slo-has-children'
+            }
+            html+=`<td class="${colClass}" data-simply-command="toggleTree">
+    <span class="slo-indent slo-indent-${row.indent} ${hasChildren}">${value}</span>
+</td>`
             break
           case 'text':
           default:
@@ -474,7 +506,7 @@ const spreadsheet = (function() {
             break
         }
       }
-      html += '</tr>'
+      html += `${remove}</tr>`
       return html
     }
     
@@ -495,9 +527,12 @@ const spreadsheet = (function() {
     }
     
     function renderHeading() {
+      let add = ''
+      if (options.editMode) {
+        add = `<th class="ds-datatable-disable-sort slo-minwidth"></th>`
+      }
       let heading = `
-<tr>
-  <th class="ds-datatable-disable-sort slo-rownumber"></th>
+<tr>${add}<th class="ds-datatable-disable-sort slo-rownumber"></th>
 `
       let col=''
       let visible = []
@@ -565,6 +600,10 @@ const spreadsheet = (function() {
             body.removeEventListener('click', clickListener)
         }
         clickListener = function(evt) {
+            let command = evt.target.closest('[data-simply-command]')
+            if (command) {
+                return
+            }
             let cell = evt.target.closest('td')
             if (cell) {
                 let current = body.querySelectorAll('.focus')
@@ -577,6 +616,9 @@ const spreadsheet = (function() {
                 if (row!==null) {
                     let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
                     let column = columns.findIndex(td => td===cell)
+                    if (options.editMode) {
+                      column--
+                    }
                     spreadsheet.goto(row,column)
                 }
             }
@@ -593,8 +635,11 @@ const spreadsheet = (function() {
     let spreadsheet = { 
       options: datamodel.options,
       data: datamodel.data,
-      update: (...params) => {
-        datamodel.update.apply(datamodel, params)
+      update: (params) => {
+        datamodel.update.call(datamodel, params)
+        if (params.data) {
+          spreadsheet.data = params.data
+        }
         renderBody()
       },
       render: () => {
@@ -620,14 +665,18 @@ const spreadsheet = (function() {
         let column = datamodel.options.focus.column
         let row = datamodel.options.focus.row
         let visibleColumns = options.columns.filter(c => c.checked)
+        let visibleRows = datamodel.view.visibleData
         do {
           if (column >= visibleColumns.length) {
             column = 1
             row++
+            if (row>visibleRows.length) {
+              return false
+            }
           } else {
             column++
           }
-        } while (visibleColumns[column-1]?.editor === false) //@TODO: limit to rows < max
+        } while (visibleColumns[column-1]?.editor === false) 
         return spreadsheet.goto(row, column)
       },
       movePrev: () => {
@@ -638,15 +687,18 @@ const spreadsheet = (function() {
           if (column <= 1 ) {
             column = visibleColumns.length
             row--
+            if (row<1) {
+              return false
+            }
           } else {
             column--
           }
-        } while (visibleColumns[column-1]?.editor === false && row >= 0)
+        } while (visibleColumns[column-1]?.editor === false)
         return spreadsheet.goto(row, column)
       },
       goto: (row, column) => {
           // row/column only count visible rows and columns
-          row = Math.max(0, Math.min(datamodel.view.visibleData.length+1, row))
+          row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
           column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
           let focus = datamodel.options.focus
           focus.column = column
@@ -668,12 +720,12 @@ const spreadsheet = (function() {
           spreadsheet.renderBody()
           let el = table.querySelector('td.focus')
           spreadsheet.selector(el)
-          let id = datamodel.data[row]?.columns.id
+          let id = datamodel.view.visibleData[row]?.columns.id
           if (id) {
               id = new URL(id)
-          }
-          if (changeListeners) {
-              changeListeners.forEach(listener => listener.call(spreadsheet, id))
+              if (changeListeners) {
+                  changeListeners.forEach(listener => listener.call(spreadsheet, id))
+              }
           }
           return el
       },
@@ -690,7 +742,7 @@ const spreadsheet = (function() {
           }
       },
       findId: (id) => {
-          let row = datamodel.data.findIndex(r => r.columns.id==id)
+          let row = datamodel.view.visibleData.findIndex(r => r.columns.id==id)
           return row>=0 ? row : null
       },
       selector: (el) => {
@@ -713,6 +765,10 @@ const spreadsheet = (function() {
         let rect = el.getBoundingClientRect()
         showEditor(rect, offset, el)
       },
+      isEditable: (el) => {
+        let column = getColumnDefinition(el)
+        return column.isEditable(el)
+      },
       saveChanges: () => {
         if (!editListeners || !editListeners.length) {
           return
@@ -730,6 +786,9 @@ const spreadsheet = (function() {
         }
       },
       getRow,
+      getRowByLine: (line) => {
+        return datamodel.view.visibleData[line]
+      },
       getColumnDefinition
     }
     return spreadsheet
