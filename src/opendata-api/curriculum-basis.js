@@ -245,6 +245,7 @@ module.exports = {
 		`,
 		Doelniveau: `
 		const results = from(data.Doelniveau)
+		.slice(Paging.start, Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			...shortInfo,
@@ -264,7 +265,7 @@ module.exports = {
 		})
 
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}
