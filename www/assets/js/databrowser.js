@@ -298,11 +298,11 @@
                 browser.view.context = params.context;
                 browser.view.contextLink = {
                     href: '/curriculum-'+params.context+'/',
-                    innerHTML: contexts['curriculum-'+params.context].title
+                    innerHTML: slo.contexts['curriculum-'+params.context].title
                 }
                 browser.view.view = 'context';
                 editor.addDataSource('contextdata', {
-                    load: Object.entries(contexts['curriculum-'+params.context].data).map(([key,value]) => {
+                    load: Object.entries(slo.contexts['curriculum-'+params.context].data).map(([key,value]) => {
                         return {
                             link: {
                                 href: key+'/',
@@ -661,7 +661,7 @@
                 let schemas = []
                 let baseURL = 'https://opendata.slo.nl/curriculum/schemas/'
                 window.curriculum = new Curriculum()
-                Object.entries(contexts).forEach(([context,temp]) => {
+                Object.entries(slo.contexts).forEach(([context,temp]) => {
                     schemas.push(
                         fetch(baseURL+context+'/context.json')
                         .then(response => {
