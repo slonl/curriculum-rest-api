@@ -9,8 +9,16 @@
         } else if (typeof node === 'object' ) {
             indent = f(node, indent)
             Object.entries(node)
-            .filter((v,k) => (v && typeof v === 'object'))
-            .forEach(n => walk(n,indent,f))
+            .filter(([k,v]) => {
+                if (!Array.isArray(v) || !v.length || k== 'Niveau') {
+                    return false
+                }
+                return true
+            })
+            .forEach(([k,v]) => { 
+                walk(v,indent,f); 
+                node.hasChildren=true; 
+            })
         }
     }
 
@@ -221,9 +229,17 @@
                     sortable: true,
                     filterable: true,
                     type: 'list',
+                    viewer: function(rect, offset, el) {
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        if (!row.node.Niveau?.length) {
+                            this.querySelector('ul').style.color='#888'
+                            return false
+                        }
+                    },
                     editor: function(rect, offset, el) {
                         let row = browser.view.sloSpreadsheet.getRow(el)
                         let column = browser.view.sloSpreadsheet.getColumnDefinition(el)
+                        let disabled = !row.node.Niveau?.length ? ' disabled' : ''
                         let value = row.columns[column.value] || []
                         let allNiveaus = column.values
                         let html = '<form><ul>'
@@ -232,11 +248,24 @@
                                 return
                             }
                             let checked = value.includes(n.name) ? ' checked': ''
-                            html+=`<li><input type="checkbox"${checked} name="niveaus" value="${n.name}">${n.name}</li>`
+                            html+=`<li><input type="checkbox"${checked} ${disabled} name="niveaus" value="${n.name}">${n.name}</li>`
                         } )
                         html+='</ul></form>'
                         this.innerHTML = html
                         this.querySelector('input[type="checkbox"]')?.focus()
+                        if (!row.node.Niveau?.length) {
+                            this.querySelector('ul').style.color='#888'
+                        }
+                        if (disabled) {
+                            return false
+                        }
+                    },
+                    isEditable: (el) => {
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        if (!row.node.Niveau?.length) {
+                            return false
+                        }
+                        return true
                     }
                 }
             }
@@ -286,6 +315,61 @@
                 return types.includes(type)
             })
             .pop()
+        },
+        getTypeNameByType(type) {
+            let context = slo.getContextByType(type)
+            return Object.entries(contexts[context].data)
+            .find(([k,v]) => v==type)[0]
+        },
+        getTypeByTypeName(_type, context) {            
+            return contexts[context].data[_type]
+        },
+        getAvailableChildTypes(type) {
+            let context = slo.getContextByType(type)
+            let _type = slo.getTypeNameByType(type)
+            let schema = browser.view.schemas
+                .find(s => s['$id'] == 'https://opendata.slo.nl/curriculum/schemas/'+context+'/context.json')
+            let props = schema.properties[_type].items.properties
+            let subtypes = Object.keys(props)
+                .filter(k => k.substr(k.length-3)=='_id')
+                .map(k => {
+                    let type = k.substr(0, k.length-3)
+                    let name = slo.getTypeByTypeName(type, context)
+                    return {
+                        name,
+                        type: name
+                    }
+                })
+            return subtypes
+        },
+        async parseSchema(schema) {
+            // from https://github.com/mokkabonna/json-schema-merge-allof
+
+            const customizer = (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return _.union(objValue, srcValue)
+                }
+                return
+            }
+
+            const resolveAllOf = (inputSpec) => {
+                if (inputSpec && typeof inputSpec === 'object') {
+                    if (Object.keys(inputSpec).length > 0) {
+                        if (inputSpec.allOf) {
+                            const allOf  = inputSpec.allOf
+                            delete inputSpec.allOf
+                            const nested = _.mergeWith.apply(_, [{}].concat(allOf, [customizer]))
+                            inputSpec    = _.defaultsDeep(inputSpec, nested, customizer)
+                        }
+                        Object.keys(inputSpec).forEach((key) => {
+                            inputSpec[key] = resolveAllOf(inputSpec[key])
+                        })
+                    }
+                }
+                return inputSpec
+            }
+
+            return resolveAllOf(await $RefParser.dereference(schema))
         }
     }
 })()
