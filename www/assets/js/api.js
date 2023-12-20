@@ -250,7 +250,7 @@
             return datamodel;
         },
        async document(json){
-            console.log(JSON.stringify(json, null, 4))
+            //console.log(JSON.stringify(json, null, 4))
             let documentData = []
             
         
@@ -270,8 +270,6 @@
                             case 'ExamenprogrammaEindterm':
                                 for(let child of value){
                                     dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
-                                    console.log("added ExamenProgfgrammaEindterm array");
-                                    console.log(value);
                                 };
                             break;
                             default:
@@ -279,26 +277,6 @@
                                     dataObj['documentSublist'].push(formatDocumentData(child));
                                 };
                         }
-
-                        /*
-                        if (key === 'Niveau') {
-                            for(let child of value){
-                                dataObj['documentNiveaus'].push(formatDocumentData(child));
-                            }
-                        }
-                        
-                        else if (key === 'ExamenProgrammaEindterm'){
-                            for(let child of value){
-                                dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
-                            }
-                        }
-                        
-                        else {
-                            for(let child of value){
-                                dataObj['documentSublist'].push(formatDocumentData(child));
-                            }
-                        }
-                        */
 
                     }
                     else {
@@ -318,16 +296,10 @@
 
             documentData = formatDocumentData(json);
 
-            console.log(JSON.stringify(documentData, null, 4));
+            //console.log(JSON.stringify(documentData, null, 4));
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
-            //format json so as to fill the view
-
-            // for each object in array make nuw object as follows:
-
-
-            //for each in json if array add array to array, else if object move to -somewhere-
 
             /*
             return [
@@ -340,7 +312,6 @@
                 },               
             ]
             */
-            
 
         },
         getDataModel(name) {
