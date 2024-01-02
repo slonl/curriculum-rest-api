@@ -811,7 +811,7 @@
                         await this.app.actions.document(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // @TODO GPC: focus current item
                         let documentModel = window.slo.getDataModel('items')
-                        console.log(documentModel);
+                        //console.log(documentModel);
                         //let row = model.data.findIndex(r => r['@id']==currentId)
                         //this.app.view.document.focus.row = row;
                         //this.app.view.document.focus.column = 2;
@@ -886,9 +886,7 @@
                     niveau, context
                 })
                 .then(async function(json) {
-                    //browser.view.document = json;
                     browser.view.view = 'document';
-                    //console.log(json);
                     browser.view.documentList = await window.slo.document(json)
 
                 })

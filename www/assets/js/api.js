@@ -444,9 +444,12 @@
             //console.log(JSON.stringify(json, null, 4))
             let documentData = []
             
-        
+
             function formatDocumentData(json){
+                
                 let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [] };
+
+            console.log(json);
 
                  Object.entries(json).forEach(([key, value]) => {
                             
@@ -472,7 +475,7 @@
                     }
                     else {
 
-                        if (typeof(value) === "object"){
+                        if (typeof(value) === "object" && value === !null ){
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
