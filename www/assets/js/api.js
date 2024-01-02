@@ -441,15 +441,10 @@
             }
         },
        async document(json){
-            //console.log(JSON.stringify(json, null, 4))
             let documentData = []
-            
 
             function formatDocumentData(json){
-                
                 let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [] };
-
-            console.log(json);
 
                  Object.entries(json).forEach(([key, value]) => {
                             
@@ -490,7 +485,7 @@
 
             documentData = formatDocumentData(json);
 
-            //console.log(JSON.stringify(documentData, null, 4));
+            console.log(JSON.stringify(documentData, null, 4));
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
