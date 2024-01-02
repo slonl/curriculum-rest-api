@@ -15,8 +15,13 @@
     })();
 */    
 
+    function isString(s) {
+        return typeof s === 'string' || s instanceof String
+    }
+
     var browser = simply.app({
         container: document.body,
+
         view: {
             spreadsheet: {
                 focus: {
@@ -42,6 +47,7 @@
             ],
             */
         },
+
         routes: {
             '/login/': function() {
                 document.getElementById('login').setAttribute('open','open')
@@ -319,11 +325,11 @@
                 browser.view.context = params.context;
                 browser.view.contextLink = {
                     href: '/curriculum-'+params.context+'/',
-                    innerHTML: contexts['curriculum-'+params.context].title
+                    innerHTML: slo.contexts['curriculum-'+params.context].title
                 }
                 browser.view.view = 'context';
                 editor.addDataSource('contextdata', {
-                    load: Object.entries(contexts['curriculum-'+params.context].data).map(([key,value]) => {
+                    load: Object.entries(slo.contexts['curriculum-'+params.context].data).map(([key,value]) => {
                         return {
                             link: {
                                 href: key+'/',
@@ -344,56 +350,213 @@
             }
         },
         keyboard: {
+            //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
             spreadsheet: {
                 //TODO: calculate prev/next row while skipping over
                 //closed trees. So find the prev/next visible row.
                 "ArrowDown": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    console.log('up',focus)
-                    if (focus.row<(d.data.length-1)) {
-                        focus.row++
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    browser.view.sloSpreadsheet.moveDown()
                     e.preventDefault()
                 },
                 "ArrowUp": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    console.log('down',focus)
-                    if (focus.row>0) {
-                        focus.row--
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    browser.view.sloSpreadsheet.moveUp()
                     e.preventDefault()
                 },
                 "ArrowLeft": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    if (focus.column>0) {
-                        focus.column--
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    browser.view.sloSpreadsheet.moveLeft()
                     e.preventDefault()
                 },
                 "ArrowRight": (e) => {
-                    let d = window.slo.getDataModel('items')
-                    let focus = browser.view.spreadsheet.focus
-                    if (focus.column<Object.keys(d.options.columns).length) {
-                        focus.column++
-                        browser.actions.focusCell(focus.row, focus.column)
-                    }
+                    browser.view.sloSpreadsheet.moveRight()
                     e.preventDefault()
+                },
+                "Enter": (e) => {
+                    e.preventDefault()
+                    if (browser.view.user) {
+                        let el = document.querySelector('td.focus')
+                        browser.view.sloSpreadsheet.editor(el)
+                    }
+                },
+                "Escape": (e) => {
+                    e.preventDefault()
+                    let dropdowns = document.querySelectorAll('.ds-dropdown-state:checked')
+                    dropdowns.forEach(d => d.checked = false)
+                },
+                "Home": (e) => {
+                    e.preventDefault()
+                    browser.view.sloSpreadsheet.goto(0,0)
+                },
+                "End": (e) => {
+                    e.preventDefault()
+                    let row = browser.view.sloSpreadsheet.data.length-1
+                    let column = browser.view.sloSpreadsheet.options.columns.length
+                    browser.view.sloSpreadsheet.goto(row, column)
+                },
+                "PageUp": (e) => {
+                    e.preventDefault()
+                    let rowsPerPage = browser.view.sloSpreadsheet.options.rows
+                    let row = browser.view.sloSpreadsheet.options.focus.row - (rowsPerPage - 1) -1
+                    let column = browser.view.sloSpreadsheet.options.focus.column
+                    browser.view.sloSpreadsheet.goto(row, column)                    
+                },
+                "PageDown": (e) => {
+                    e.preventDefault()
+                    let rowsPerPage = browser.view.sloSpreadsheet.options.rows
+                    let row = browser.view.sloSpreadsheet.options.focus.row + (rowsPerPage - 1) -1
+                    let column = browser.view.sloSpreadsheet.options.focus.column
+                    browser.view.sloSpreadsheet.goto(row, column)                    
+                },
+                "Insert": async (e) => {
+                    e.preventDefault()
+                    let el = document.querySelector('td.focus')
+                    let selectedType = await browser.actions.showTypeSelector(el)
+                },
+                "Delete": (e) => {
+                    e.preventDefault()
+                    let el = document.querySelector('td.focus')
+                    browser.actions.deleteRow(el.closest('tr'))
                 }
-                // Space -> open/close subtree
+                // @TODO: Space -> open/close subtree in prefix/tree column, open links in id column
+            },
+            "spreadsheet-types": {
+                "Escape": (e) => {
+                    e.preventDefault()
+                    browser.actions.hideTypeSelector()
+                },
+                "ArrowDown": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>=0) {
+                            current++
+                            targets[current]?.focus()
+                        }
+                    }
+                },
+                "ArrowUp": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>0) {
+                            current--
+                            targets[current]?.focus()
+                        }
+                    }
+                },
+                "Enter": (e) => {
+                    e.preventDefault()
+                    if (browser.view.user) {
+                        let el = document.querySelector('td.focus')
+                        let selector = document.querySelector('.slo-type-selector')
+                        let type = selector.querySelector('input:checked')
+                        browser.actions.hideTypeSelector()
+                        return browser.actions.insertRow(el.closest('tr'), type.value)
+                    }
+                }
+            },
+            "spreadsheet-edit": {
+                "Escape": (e) => {
+                    e.preventDefault()
+                    let el = document.querySelector('td.focus')
+                    browser.view.sloSpreadsheet.selector(el)
+                },
+                "Tab": async (e) => {
+                    e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
+                    let el
+                    do {
+                        el = browser.view.sloSpreadsheet.moveNext()
+                        browser.view.sloSpreadsheet.editor(el)
+                    } while(el && !browser.view.sloSpreadsheet.isEditable(el))
+                },
+                "Shift+Tab": async (e) => {
+                    e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
+                    let el
+                    do {
+                        el = browser.view.sloSpreadsheet.movePrev()
+                        browser.view.sloSpreadsheet.editor(el)
+                    } while (el && !browser.view.sloSpreadsheet.isEditable(el))
+                },
+                "ArrowDown": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>=0) {
+                            current++
+                            targets[current]?.focus()
+                        }
+                    }
+                },
+                "ArrowUp": (e) => {
+                    let target = document.activeElement
+                    if (target && (target.type=='checkbox' || target.type=='radio')) {
+                        e.preventDefault()
+                        let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                        let current = targets.findIndex(input => input==e.target)
+                        if (current>0) {
+                            current--
+                            targets[current]?.focus()
+                        }
+                    }
+                },
+                "Control+Enter": async (e) => {
+                    // save changes, close editor
+                    e.preventDefault()
+                    await browser.view.sloSpreadsheet.saveChanges()
+                    let el = document.querySelector('td.focus')
+                    browser.view.sloSpreadsheet.selector(el)
+                }
             }
         },
         commands: {
+            //@TODO: spreadsheet commands should be in spreadsheet.js and referenced here
+            closeFilter: (el, value) => {
+                el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
+            },
+            toggleColumn: (el, value) => {
+              let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
+              column.checked = el.checked
+              browser.view.sloSpreadsheet.render()
+            },
+            filterValue: (el, value) => {
+              let column = browser.view.sloSpreadsheet.options.columns.find(c => c.value==el.name)
+              let state = !column.filteredValues[value]
+              column.filteredValues[value] = state
+              let columnFilter = Object.entries(column.filteredValues)
+                .filter(([name,value]) => value)
+                .map(([name,value]) => name)
+              let filter = {}
+              filter[el.name] = columnFilter
+              browser.view.sloSpreadsheet.update({
+                filter
+              })
+            },
+            filterText: (el, value) => {
+              let filter = {}
+              if (value.length>2) {
+                filter[el.name] = value
+                browser.view.sloSpreadsheet.update({
+                  filter
+                })
+              } else {
+                filter[el.name] = ''
+                browser.view.sloSpreadsheet.update({filter})
+              }
+            },
+
+
             close: function(el,value) {
                 let dialog = el.closest('dialog')
                 if (dialog) {
                     dialog.removeAttribute('open')
-                    window.location.pathname='/'
+                    simply.route.goto('/')
                 }
             },
             login: async function(form,values) {
@@ -429,41 +592,37 @@
                 this.app.actions.switchView(value)
             },
             toggleTree: function(el,value) {
-                let id = el.closest('tr').querySelector('[data-simply-field="@references"]').pathname
-                id = id.split('/').pop()
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.update({
+                return // disabled for now because of some navigation bugs
+                let id = el.closest('tr').id
+                browser.view.sloSpreadsheet.update({
                     toggle: id
                 })
                 el.closest('tr').classList.toggle('closed')
             },
             openTree: function(el, value) {
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.options.closed = {}
-                datamodel.update()
+                browser.view.sloSpreadsheet.options.closed = {}
+                browser.view.sloSpreadsheet.update()
             },
-            sortTree: function(el, value) {
-                let column = el.closest('th').querySelector('label.slo-column-name').innerText.trim()
-                let datamodel = window.slo.getDataModel('items')
-                datamodel.update({
-                    propSort: {
-                        sortBy: column,
-                        sortDirection: value
-                    }
-                })
-                el.closest('tr')
-                .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
-                .forEach(e => {
-                    e.classList.remove('ds-datatable-sorted-descending')
-                    e.classList.remove('ds-datatable-sorted-ascending')
-                })
-                if (column=='Prefix') {
-                    el.closest('table').classList.remove('sorted')
-                    el.closest('th').classList.add('ds-datatable-sorted-descending')
-                } else {
-                    el.closest('table').classList.add('sorted')
-                    el.closest('th').classList.add('ds-datatable-sorted-'+value)
+            sort: (el,value) => {
+              browser.view.sloSpreadsheet.update({
+                sort: {
+                  sortBy: el.dataset.name,
+                  sortDirection: value
                 }
+              })
+              el.closest('tr')
+              .querySelectorAll('.ds-datatable-sorted-descending,.ds-datatable-sorted-ascending')
+              .forEach(e => {
+                  e.classList.remove('ds-datatable-sorted-descending')
+                  e.classList.remove('ds-datatable-sorted-ascending')
+              })
+              if (el.dataset.name=='prefix') {
+                  el.closest('table').classList.remove('sorted')
+                  el.closest('th').classList.add('ds-datatable-sorted-descending')
+              } else {
+                  el.closest('table').classList.add('sorted')
+                  el.closest('th').classList.add('ds-datatable-sorted-'+value)
+              }
             },
             nextPage: function(el,value) {
                 page = Math.min(browser.view.max-1, parseInt(browser.view.page));
@@ -488,21 +647,72 @@
                         browser.view.listTitle = 'Zoekresultaten voor &quot;'+text+'&quot;';
                     })
                 }
+            },
+            showAllChanges: async function(el, value) {
+                alert('nog niet geimplementeerd')
+            },
+            commitChanges: async function(el, value) {
+                alert('nog niet geimplementeerd')
+            },
+            showChange: async function(el, value) {
+                alert('nog niet geimplementeerd')
+            },
+            insertRow: async function(el, value) {
+                //find possible types for sibling and child of node
+                //show popup with list of types
+                let selectedType = await browser.actions.showTypeSelector(el)
+            },
+            selectType: async function(el, value) {
+                browser.actions.hideTypeSelector()
+                el = document.querySelector('td.focus')
+                browser.actions.insertRow(el.closest('tr'),value)
+            },
+            deleteRow: async function(el, value) {
+                browser.actions.deleteRow(el.closest('tr'))
             }
         },
         actions: {
             login: async function(email, key) {
                 // check if email/key are valid
                 if (!await slo.api.login(email, key)) {
+                    browser.view.loggedIn = false
                     return 'Ongeldig email en/of API-key'
                 }
                 browser.view.user = email
+                browser.view.loggedIn = true
                 localStorage.setItem('username',email)
                 localStorage.setItem('key',key)
                 return true
             },
+            loadSchemas: async function() {
+                let schemas = []
+                let baseURL = 'https://opendata.slo.nl/curriculum/schemas/'
+                window.curriculum = new Curriculum()
+                Object.entries(slo.contexts).forEach(([context,temp]) => {
+                    schemas.push(
+                        fetch(baseURL+context+'/context.json')
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json()
+                            }
+                            console.error(baseURL+context+'/context.json: '+response.status+': '+response.statusText)
+                        })
+                        .then(json => curriculum.parseSchema(json))
+                    )
+                })
+                return Promise.allSettled(schemas)
+                .then(values => values
+                    .filter(schema => schema.status=='fulfilled')
+                    .map(schema => schema.value)
+                )
+            },
             switchView: async function(view){
                 let currentView = this.app.view.view;
+
+                if (!this.app.view?.item?.uuid) {
+                    return
+                }
+
                 let currentItem, currentId, roots, currentType, currrentContext;
                 
                 switch(view) {
@@ -534,11 +744,48 @@
                         }
                         await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // focus current item
-                        let model = window.slo.getDataModel('items')
-                        let row = model.data.findIndex(r => r['@id']==currentId)
-                        this.app.view.spreadsheet.focus.row = row;
-                        this.app.view.spreadsheet.focus.column = 2;
-                        this.app.actions.focusCell(row,2)
+                        this.app.view.sloSpreadsheet.gotoId(currentId)
+                        this.app.view.sloSpreadsheet.onChange((id) => {
+                            let url = new URL(id)
+                            let uuid = id.pathname.split('/').pop()
+                            this.app.view.item.uuid = uuid
+                            history.pushState({}, '', new URL(uuid, window.location))
+                        })
+                        this.app.view.sloSpreadsheet.onEdit((update) => {
+                            //@FIXME: handle add/delete entities (relations)
+                            let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
+                            let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
+                            let row = this.app.view.sloSpreadsheet.data[index]
+                            let node = row.node
+                            let prop = node[update.property]
+                            let change = {
+                                id: update.id,
+                                property: update.property,
+                                prevValue: prop,
+                                timestamp: new Date().toLocaleString('nl-NL')
+                            }
+                            if (columnDef.type=='list') {
+                                change.newValue = update.values.getAll(update.property)
+                            } else {
+                                change.newValue = update.values.get(update.property)
+                                if (update.values.get('dirty')==='unset') {
+                                    change.dirty = false
+                                }
+                            }
+                            if (change.newValue === change.prevValue) {
+                                return // no change failsave
+                            }
+                            slo.changeHistory.push(change)
+                            browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
+                            browser.view.undoSize = slo.changeHistory.length
+                            localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
+                            node[update.property] = change.newValue
+                            row.columns[update.property] = change.newValue
+                            this.app.view.sloSpreadsheet.update({
+                                data: this.app.view.sloSpreadsheet.data
+                            })
+                            this.app.view.sloSpreadsheet.renderBody()
+                        })
                     break;
                     case 'document':
                         document.body.setAttribute('data-simply-keyboard','document')
@@ -596,6 +843,7 @@
                 return window.slo.api.get(window.release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'list';
+                    slo.applyHistory(json.data)
                     browser.view.list = json.data;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -612,8 +860,24 @@
                     niveau, context
                 })
                 .then(function(json) {
+                    browser.view.root = json
+                    slo.applyHistory(json)
+                    let defs = slo.treeToRows(json)
                     browser.view.view = 'spreadsheet';
-                    window.slo.spreadsheet('items',json)
+                    //@TODO: als browser.view.user, dan editmode enablen
+                    //@TODO: on window resize, recalculate
+                    let panel = document.querySelector('.slo-content-panel')
+                    let rect = panel.getBoundingClientRect()
+                    let rowHeight = 27
+                    let rows = Math.floor(rect.height / rowHeight) - 3
+                    browser.view.sloSpreadsheet = spreadsheet({
+                        container: document.getElementById('slo-spreadsheet'),
+                        columns: defs.columns,
+                        rows: rows,
+                        icons: '/assets/icons/feather-sprite.svg',
+                        editMode: (browser.view.user ? true : false)
+                    }, defs.rows)
+                    browser.view.sloSpreadsheet.render()
                 })
             },
             document: async function(root, context, niveau) {
@@ -635,6 +899,7 @@
                 return window.slo.api.get(window.release.apiPath+type)
                 .then(function(json) {
                     browser.view.view = 'doelniveauList';
+                    slo.applyHistory(json.data)
                     browser.view.list = json.data;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -644,8 +909,13 @@
             item: function(id) {
                 return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
                 .then(function(json) {
-                    browser.view.view = 'item';
+                    slo.applyHistory(json)
                     browser.view.item = json;
+                    if (browser.view.preferedView && browser.view.preferedView!='item') {
+                        browser.actions.switchView(browser.view.preferedView)
+                        return
+                    }
+                    browser.view.view = 'item';
                     browser.actions.updatePaging();
                 });
             },
@@ -655,6 +925,7 @@
                 return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
                 .then(function(json) {
                     browser.view.view = 'list';
+                    slo.applyHistory(json)
                     browser.view.list = json;
                     browser.view['listTitle'] = titles[type];
                     console.log(titles[type],browser.view['listTitle']);
@@ -665,6 +936,7 @@
                 return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
                 .then(function(json) {
                     browser.view.view = 'item';
+                    slo.applyHistory(json)
                     browser.view.item = json;
                     browser.actions.updatePaging();
                 });
@@ -688,45 +960,79 @@
                 var url = window.release.apiPath+'register/';
                 window.slo.api.get(url + "?email=" + email);
             },
-            focusCell: function(row, column) {
-                let d = window.slo.getDataModel('items')
-                browser.view.spreadsheet.focus.row = row;
-                browser.view.spreadsheet.focus.column = column;
-                // check if the cell is visible
-                // FIXME: check that row is not collapsed 
-                // TODO: move scrollbar down appropriately
-                // instead of setting offset directly - move scrollbar and let it update
-                // the offset
-                if (d.options.offset>row || (d.options.offset+d.options.rows)<=row) { 
-                    let offset = Math.min(Math.max(row - Math.floor(d.options.rows/2), 0), d.data.length-d.options.rows)
-                    if (offset!=d.options.offset) {
-                        d.update({
-                            offset: offset
-                        })
-                    }
+            insertRow: function(row, type, parent=null) {
+                //FIXME: implement parent
+                if (!browser.view.user) return
+                let visibleRows = browser.view.sloSpreadsheet.visibleData
+                rowNumber = browser.view.sloSpreadsheet.options.focus.row
+                row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                let parentNode = row.node
+                let node = {
+                    'uuid': curriculum.uuid(),
+                    '@type': type,
+                    'prefix': parentNode.prefix
                 }
-                row = row - d.options.offset
-                // FIXME: keep column within limits of the visible data
-                // then highlight the cell (hide previous highlight)
-                // throttle this to prevent trailing renders
-                window.setTimeout(() => {
-                    Array.from(document.querySelectorAll('.slo-spreadsheet .focus'))
-                    .forEach(r => {
-                        r.classList.remove('focus')
-                    })
-                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+')').classList.add('focus')
-                    document.querySelector('.slo-spreadsheet tbody tr:nth-child('+(row+1)+') td:nth-child('+(column+1)+')').classList.add('focus')
-                },10)
+                node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.uuid
+                if (!parentNode[type]) {
+                    parentNode[type] = []
+                }
+                parentNode[type].unshift(node)
+                let data = slo.treeToRows(browser.view.root)
+                browser.view.sloSpreadsheet.update({
+                    data: data.rows
+                })
+            },
+            deleteRow: function(row) {
+                if (!browser.view.user) return
+                let visibleRows = browser.view.sloSpreadsheet.visibleData
+                rowNumber = browser.view.sloSpreadsheet.options.focus.row
+                row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                row.deleted = true
+                browser.view.sloSpreadsheet.renderBody()
+            },
+            showTypeSelector: async function(el) {
+                let thisType = browser.view.sloSpreadsheet.getRow(el).node['@type']
+                let childTypes = slo.getAvailableChildTypes(thisType)
+                // @FIXME: add parent types as well
+
+                browser.view.availableTypes = childTypes
+                document.body.dataset.simplyKeyboard = 'spreadsheet-types'
+                let rect = el.getBoundingClientRect()
+                let selector = document.querySelector('.slo-type-selector')
+                selector.style.top = rect.top
+                selector.style.left = rect.left
+                selector.setAttribute('open','open')
+                selector.querySelector('input').focus()
+            },
+            hideTypeSelector: async function() {
+                document.body.dataset.simplyKeyboard = 'spreadsheet'
+                let selector = document.querySelector('.slo-type-selector')
+                selector.removeAttribute('open')
             }
         }
     });
 
     browser.view.pageSize = 100;
-    document.addEventListener('simply-content-loaded', () => {
-        let user = localStorage.getItem('username')
-        let key = localStorage.getItem('key')
-        if (user && key) {
-            browser.view.user = user
-            slo.api.token = btoa(user+':'+key)
-        }
-    })
+    let user = localStorage.getItem('username')
+    let key = localStorage.getItem('key')
+    if (user && key) {
+        browser.view.user = user
+        browser.view.loggedIn = true
+        slo.api.token = btoa(user+':'+key)
+        browser.actions.loadSchemas().then(schemas => {
+            browser.view.schemas = schemas
+        })
+    } else {
+        browser.view.loggedIn = false
+    }
+
+    changeHistory = localStorage.getItem('changeHistory')
+    if (changeHistory) {
+        slo.changeHistory = JSON.parse(changeHistory)
+        browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
+        browser.view.undoSize = slo.changeHistory.length
+        slo.parseHistory()
+    } else {
+        slo.changeHistory = []
+    }
+    delete changeHistory

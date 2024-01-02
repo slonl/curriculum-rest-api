@@ -17,9 +17,9 @@
             <use xlink:href="/assets/icons/feather-sprite.svg#grid"></use>
         </svg></button>
     </div>
-    <nav class="ds-align-right" data-simply-field="user" data-simply-content="template" data-simply-transformer="option" data-simply-default-template="none">
-        <template data-simply-template="none"></template>
-        <template data-simply-template="some">
+    <nav class="ds-align-right" data-simply-field="loggedIn" data-simply-content="template">
+        <template data-simply-template="false"></template>
+        <template data-simply-template="true">
             <ul class="ds-navbar-nav">
                 <li>
                     <button data-simply-command="logoff"
@@ -61,8 +61,8 @@
     </form>
 </div>
 <main class="slo-main">
-    <nav class="slo-menu" data-simply-path="/">
-        <div data-simply-list="menu">
+    <nav class="slo-menu">
+        <div data-simply-list="menu" data-simply-path="/">
             <template>
                 <details>
                     <summary data-simply-field="title"></summary>
@@ -75,13 +75,14 @@
                 </details>
             </template>
         </div>
-        <ul class="slo-submenu slo-submenu-extra" data-simply-list="submenu">
+        <ul class="slo-submenu slo-submenu-extra" data-simply-list="submenu" data-simply-path="/">
             <template>
                  <li class="slo-submenu-item"><a href="#"
                  data-simply-field="link" data-simply-group="menu"
                  data-simply-command="simply-select">Contact</a></li>
             </template>
         </ul>
+        <link rel="simply-include" href="/templates/changes.html">
     </nav>
     <div class="slo-content-panel">
         <div class="error" data-simply-field="error" data-simply-content="template" data-simply-transformer="truthy">
@@ -154,6 +155,7 @@
                 </ul>
             </template>
             <link rel="simply-include" href="/templates/item.html">
+            <link rel="simply-include" href="/templates/filters.html">
             <link rel="simply-include" href="/templates/spreadsheet.html">
             <link rel="simply-include" href="/templates/document.html">
         </section>

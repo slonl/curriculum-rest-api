@@ -48,6 +48,18 @@ function inNiveaus(e, niveaus) {
     }).length>0
 }
 
+const nonEnumerables = {
+  NiveauIndex: {
+    Niveau: {
+      id: _,
+      title: _
+    }
+  },
+  Tag: {
+    title: _
+  }
+}
+
 function getAll(contexts, niveaus) {
     return (data) => {
         let result = {}
@@ -71,6 +83,13 @@ function getAll(contexts, niveaus) {
                     k = 'uuid'
                 }
                 result[k] = v
+            }
+        })
+        // add non-enumerable tags that we still want, Tag, NiveauIndex, etc.
+        // @FIXME: somehow this doesn't work
+        Object.keys(nonEnumerables).forEach(k => {
+            if (data[k]) {
+                result[k] = from(data[k]).select(nonEnumerables[k])
             }
         })
         if (result.uuid) {

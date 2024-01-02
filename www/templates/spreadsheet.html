@@ -28,170 +28,24 @@
                 <li><a href="" data-simply-field="contextLink"></a></li>
             </ul>
         </nav>
-        <div class="ds-scrollbox" style="overflow-anchor: none;">
-            <table style="position: sticky; top: 0; width: 100%; z-index: 10" class="slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers">
-                <col class="ds-datatable-col-1">
-                <col class="ds-datatable-col-2">
-                <col class="ds-datatable-col-3">
-                <col class="ds-datatable-col-4">
-                <col class="ds-datatable-col-5">
-                <col class="ds-datatable-col-6">
-                <col class="ds-datatable-col-7">
-                <thead>
-                    <td class="ds-datatable-disable-sort slo-rownumbers slo-smallwidth"></th>
-                    <th class="ds-datatable-disable-sort slo-minwidth">#</th>
-                    <th class="ds-datatable-sorted-descending">
-                        <label class="slo-column-name">Prefix</label>
-                        <label class="slo-filter ds-dropdown">
-                        <svg class="ds-icon ds-icon-feather">
-                            <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                        </svg>
-                        <input type="radio" name="slo-filter-state" class="ds-dropdown-state">
-                        <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
-                            <div class="ds-dropdown-content slo-dropdown-buttons">
-                                <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="Boomweergave" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#columns"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
-                                    </svg></a>
-                                </div>
-                                <div class="slo-form-inline slo-dropdown-filter">
-                                    <input type="text" placeholder="filter">
-                                    <button class="ds-icon-button ds-button ds-button-naked"><svg class="ds-icon ds-icon-feather">
-                                <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                            </svg></button>
-                                </div>
-                                </div>
-                        </nav>
-                    </label></th>
-                    <th class="slo-larger-width">
-                        <label class="slo-column-name">Titel</label>
-                        <label class="slo-filter ds-dropdown">
-                        <svg class="ds-icon ds-icon-feather">
-                            <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                        </svg>
-                        <input type="radio" name="slo-filter-state" class="ds-dropdown-state">
-                        <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
-                            <div class="ds-dropdown-content slo-dropdown-buttons">
-                                <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend" data-simply-command="sortTree" data-simply-value="ascending"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
-                                    </svg></a>
-                                </div>
-                                <div class="slo-form-inline slo-dropdown-filter">
-                                    <input type="text" placeholder="filter">
-                                    <button class="ds-icon-button ds-button ds-button-naked"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                                    </svg></button>
-                                </div>
-                            </div>
-                        </nav>
-                    </label></th>
-                    <th>
-                        <label class="slo-column-name">Type</label>
-                        <label class="slo-filter ds-dropdown">
-                        <svg class="ds-icon ds-icon-feather">
-                            <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                        </svg>
-                        <input type="radio" name="slo-filter-state" class="ds-dropdown-state">
-                        <nav class="ds-dropdown-nav ds-dropdown-center ds-align-left">
-                            <div class="ds-dropdown-content slo-dropdown-buttons">
-                                <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer aflopend" data-simply-command="sortTree" data-simply-value="descending"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-down"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="sorteer oplopend" data-simply-command="sortTree" data-simply-value="ascending"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#arrow-up"></use>
-                                    </svg></a>
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
-                                    </svg></a>
-                                </div>
-                            </div>
-                            <ul class="ds-dropdown-list">
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> doel (123)</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ldk_vakinhoud (23)</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ldk_vakkern (10)</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ldk_vakleergebied (1)</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ldk_vaksubkern (20)</li>
-                            </ul>
-                        </nav>
-                    </label></th>
-                    <th class="ds-datatable-disable-sort">
-                        <label class="slo-column-name">Niveaus</label>
-                        <label class="slo-filter ds-dropdown">
-                        <svg class="ds-icon ds-icon-feather">
-                            <use xlink:href="/assets/icons/feather-sprite.svg#filter"></use>
-                        </svg>
-                        <input type="radio" name="slo-filter-state" class="ds-dropdown-state">
-                        <nav class="ds-dropdown-nav ds-dropdown-right ds-align-left">
-                            <div class="ds-dropdown-content slo-dropdown-buttons">
-                                <div class="ds-button-group ds-button-bar">
-                                    <a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom"><svg class="ds-icon ds-icon-feather">
-                                        <use xlink:href="/assets/icons/feather-sprite.svg#clipboard"></use>
-                                    </svg></a>
-                                </div>
-                            </div>
-                            <ul class="ds-dropdown-list">
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ob vmbo bb (123)</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked> ob vmbo kb (230)</li>
-                            </ul>
-                        </nav>
-                    </label></th>
-                    <th class="slo-minwidth ds-datatable-disable-sort">
-                        <label class="ds-dropdown">
-                        <svg class="ds-icon ds-icon-feather">
-                            <use xlink:href="/assets/icons/feather-sprite.svg#plus"></use>
-                        </svg>
-                        <input type="radio" name="slo-filter-state" class="ds-dropdown-state">
-                        <nav class="ds-dropdown-nav ds-dropdown-right ds-align-left">
-                            <ul class="ds-dropdown-list">
-                                <li class="ds-dropdown-item"><input type="checkbox" checked>ID</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked>Prefix</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked>Titet</li>
-                                <li class="ds-dropdown-item"><input type="checkbox"> Omschrijving</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked>Type</li>
-                                <li class="ds-dropdown-item"><input type="checkbox" checked>Niveaus</li>
-                            </ul>
-                        </nav>
-                    </label></th>
-                </thead>
-                <tbody data-simply-list="items" data-simply-data="items">
-                    <template data-simply-template="entity">
-                        <tr class="slo-entity" data-simply-field="closed" data-simply-content="attributes" data-simply-attributes="class">
-                            <td><svg class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
-                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                            </svg>
-                            <span class="slo-index" data-simply-field="index"></span>
-                            </td>
-                            <td><div class="slo-cell"><a href="#" data-simply-field="@references" data-simply-content="attributes" data-simply-attributes="href">#</a></div></td>
-                            <td data-simply-command="toggleTree"><div class="slo-cell"><span class="slo-indent-1" data-simply-field="indent" data-simply-content="attributes" data-simply-attributes="class"></span><span data-simply-field="prefix"></span></div></td>
-                            <td><div class="slo-cell" data-simply-field="title"></div></td>
-                            <td><div class="slo-cell" data-simply-field="@type"></div></td>
-                            <td><div class="slo-cell" data-simply-list="Niveaus" data-simply-entry="title">
-                                <template>
-                                    <span data-simply-field="title"></span>
-                                </template>
-                            </div></td>
-                            <td><svg class="slo-delete ds-icon ds-icon-feather">
-                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                            </svg></td>
-                        </tr>
-                    </template>
-                    <template data-simply-template="empty">
-                        <tr><td>&nbsp;</td></tr>
-                    </template>
-                </tbody>
-            </table>
-            <div class="slo-scrollbar" style="height: 800px;"></div>
+        <div class="ds-scrollbox" id="slo-spreadsheet" style="overflow-anchor: none;">
         </div>
+        <dialog class="slo-type-selector ds-dialog">
+            <form data-simply-command="insertRowType">
+                <label>Selecteer type</label>
+                <ul data-simply-list="availableTypes">
+                    <template>
+                        <li><label>
+                            <input type="radio" name="type"
+                                data-simply-command="selectType"
+                                data-simply-field="type" 
+                                data-simply-content="attributes" 
+                                data-simply-attributes="value">
+                            <span data-simply-field="name">
+                        </label></li>
+                    </template>
+                </ul>
+            </form>
+        </dialog>
     </div>
 </template>
