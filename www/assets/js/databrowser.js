@@ -21,6 +21,33 @@
 
     var browser = simply.app({
         container: document.body,
+
+        view: {
+            spreadsheet: {
+                focus: {
+                    row: 0,
+                    column: 0
+                }
+            }
+            /*,
+            document: [
+     
+                { prefix : "first item1",  sublist : [{ prefix : "first sublist item 1", subitem: "subitem 2" }]},
+                
+                { prefix : "second item2",  sublist :
+                    [  
+                                  
+                        { prefix : "first subitem1", subitem : "second subitem1", sublist: [ { item : "FOOBAR"} ] },
+                        { prefix : "second item2", subitem : "second subitem2" },
+           
+                       
+                    ]
+                 }    
+                
+            ],
+            */
+        },
+
         routes: {
             '/login/': function() {
                 document.getElementById('login').setAttribute('open','open')
@@ -681,9 +708,13 @@
             },
             switchView: async function(view){
                 let currentView = this.app.view.view;
+
                 if (!this.app.view?.item?.uuid) {
                     return
                 }
+
+                let currentItem, currentId, roots, currentType, currrentContext;
+                
                 switch(view) {
                     case 'item':
                         document.body.setAttribute('data-simply-keyboard','item')
@@ -693,15 +724,15 @@
                     break;
                     case 'spreadsheet':
                         document.body.setAttribute('data-simply-keyboard','spreadsheet')
-                        let currentItem = this.app.view.item.uuid
-                        let currentId = this.app.view.item['@id']
+                        currentItem = this.app.view.item.uuid
+                        currentId = this.app.view.item['@id']
                         // get roots of current item
-                        let roots = await window.slo.api.get('/roots/'+currentItem)
+                        roots = await window.slo.api.get('/roots/'+currentItem)
                         // pick one
                         // FIXME: remember which one was picked last
                         // switch to spreadsheet of that root
-                        let currentType = this.app.view.item['@type']
-                        let currentContext = window.slo.getContextByType(currentType)
+                        currentType = this.app.view.item['@type']
+                        currentContext = window.slo.getContextByType(currentType)
                         if (!this.app.view.contexts) {
                             this.app.view.contexts = ['curriculum-basis'];
                         }
@@ -756,6 +787,36 @@
                             this.app.view.sloSpreadsheet.renderBody()
                         })
                     break;
+                    case 'document':
+                        document.body.setAttribute('data-simply-keyboard','document')
+                        currentItem = this.app.view.item.uuid
+                        currentId = this.app.view.item['@id']
+                        // get roots of current item
+                        roots = await window.slo.api.get('/roots/'+currentItem)
+
+                        // pick one
+                        // FIXME: remember which one was picked last
+                        // switch to spreadsheet of that root
+                        currentType = this.app.view.item['@type']
+                        currentContext = window.slo.getContextByType(currentType)
+                        if (!this.app.view.contexts) {
+                            this.app.view.contexts = ['curriculum-basis'];
+                        }
+                        if (currentContext && !this.app.view.contexts.includes(currentContext)) {
+                            this.app.view.contexts.push(currentContext)
+                        }
+                        if (!this.app.view.niveaus) {
+                            this.app.view.niveaus = [];
+                        }
+                        await this.app.actions.document(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        // @TODO GPC: focus current item
+                        let documentModel = window.slo.getDataModel('items')
+                        console.log(documentModel);
+                        //let row = model.data.findIndex(r => r['@id']==currentId)
+                        //this.app.view.document.focus.row = row;
+                        //this.app.view.document.focus.column = 2;
+                        //this.app.actions.focusCell(row,2)
+                    break;
                 }
             },
             search: function(text) {
@@ -795,7 +856,6 @@
                 });
             },
             spreadsheet: function(root, context, niveau) {
-                browser.view.items = []
                 return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                     niveau, context
                 })
@@ -818,6 +878,19 @@
                         editMode: (browser.view.user ? true : false)
                     }, defs.rows)
                     browser.view.sloSpreadsheet.render()
+                })
+            },
+            document: async function(root, context, niveau) {
+                browser.view.documentList = []
+                return window.slo.api.get(window.release.apiPath+'tree/'+root, {
+                    niveau, context
+                })
+                .then(async function(json) {
+                    //browser.view.document = json;
+                    browser.view.view = 'document';
+                    //console.log(json);
+                    browser.view.documentList = await window.slo.document(json)
+
                 })
             },
             doelniveauList: function(type) {
