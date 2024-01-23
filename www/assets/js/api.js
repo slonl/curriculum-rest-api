@@ -480,45 +480,35 @@
                             case 'Tag':
                                 for(let child of value){
                                     if (child.title == null){ 
-                                        //console.log("Warning: found one Tag with an empty title, skipping!")
                                     }
                                     else { 
                                         dataObj['documentSublist'].push(formatDocumentData(child));
-                                        //console.log("Warning: pushing Tag child into list:");
-                                        //console.log(child);
                                     };
                                 };
                             break;
                             default:
-                                console.log(value.length)
+                                // @TODO: making sure the value isn't an empty array before making a sublist
                                 if (value.length !==0){
                                     for(let child of value){
                                             dataObj['documentSublist'].push(formatDocumentData(child));
                                     };
                                 }
-                                else {
-                                    console.log(value);
-                                }
                             }
                     }
                     else {
-
-                        if ( (typeof(value) === "object" && value !== null)){ // && value.keys(value).length !== 0) {
+                        if ( (typeof(value) === "object" && value !== null)){
                             
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
-                            //console.log(value);
                             dataObj[key] = value ;
                         }
 
                     }
                     
                 });
-                
-                //var newDataObj = dataObj.filter(value => Object.keys(value).length !== 0 );
-                
-                //console.log(newDatObj)
+
+                // @TODO : remove object that have empty arrays as values.
 
                 return dataObj;
             }
@@ -530,7 +520,7 @@
 
             return [documentData];
 
-            /*
+            /* TESTDATA:
             return [
                 { prefix : "prefix1",  title: "title1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
                     documentSublist : [{ prefix : "prefix2", title: "title2", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
