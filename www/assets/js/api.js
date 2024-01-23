@@ -444,7 +444,7 @@
             let documentData = []
             
             // @TODO: remove console.log
-            console.log(JSON.stringify(json, null, 4));
+            // console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
                 let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [], documentVakleergebied: [], documentNiveauIndex: [],  documentExamenprogrammaBody:[] };
@@ -454,11 +454,6 @@
                     if( Array.isArray(value)){
 
                         switch (key){
-                            case 'Niveau':
-                                for(let child of value){
-                                    dataObj['documentNiveaus'].push(formatDocumentData(child));
-                                };
-                            break;
                             case 'ExamenprogrammaEindterm':
                                 for(let child of value){
                                     dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
@@ -474,14 +469,21 @@
                                     dataObj['documentVakleergebied'].push(formatDocumentData(child));
                                 };
                             break;
+                            
                             case 'NiveauIndex':
                                 for(let child of value){
-                                    dataObj['documentNiveauIndex'].push(formatDocumentData(child));
-                                };
+                                    if (typeof child.Niveau != "undefined") {
+                                        dataObj['documentNiveauIndex'].push(child.Niveau);
+                                    }
+                                    else {
+                                        console.log("Found a NiveauIndex with something that wasn't a Niveau.");
+                                    }
+                                }
                             break;
                             case 'Tag':
                                 for(let child of value){
-                                    if (child.title == null){ 
+                                    if (child.title == null){
+                                        //console.log("Found a Tag without a title");
                                     }
                                     else { 
                                         dataObj['documentSublist'].push(formatDocumentData(child));
@@ -498,8 +500,7 @@
                     }
                     else {
                         if ( (typeof(value) === "object" && value !== null)){
-                            
-                            dataObj['documentSublist'].push(formatDocumentData(value));
+                                Object.assign(dataObj["documentSublist"], formatDocumentData(value) );
                         }
                         else {
                             dataObj[key] = value ;
@@ -526,7 +527,7 @@
             documentData = formatDocumentData(json);
 
             // @TODO: remove console.log
-            console.log(JSON.stringify(documentData, null, 4));
+            // console.log(JSON.stringify(documentData, null, 4));
 
             documentData = JSON.parse(JSON.stringify(documentData));
 
