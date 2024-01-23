@@ -442,6 +442,8 @@
         },
        async SLOdocumentPage(json){
             let documentData = []
+            
+            // @TODO: remove console.log
             console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
@@ -487,7 +489,6 @@
                                 };
                             break;
                             default:
-                                // @TODO: making sure the value isn't an empty array before making a sublist
                                 if (value.length !==0){
                                     for(let child of value){
                                             dataObj['documentSublist'].push(formatDocumentData(child));
@@ -508,14 +509,25 @@
                     
                 });
 
-                // @TODO : remove object that have empty arrays as values.
+                // remove object that have empty arrays as values:
+                Object.entries(dataObj).forEach(([key, value]) => {
 
+                    if (Array.isArray(value) && value.length == 0){
+                        delete dataObj[key];
+                        return dataObj
+                    }
+
+                });
+            
                 return dataObj;
+
             }
 
             documentData = formatDocumentData(json);
 
-            //console.log(JSON.stringify(documentData, null, 4));
+            // @TODO: remove console.log
+            console.log(JSON.stringify(documentData, null, 4));
+
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
