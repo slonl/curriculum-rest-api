@@ -440,14 +440,15 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async document(json){
+       async SLOdocumentPage(json){
             let documentData = []
+            console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
-                let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [] };
+                let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [], documentVakleergebied: [], documentNiveauIndex: [],  documentExamenprogrammaBody:[] };
 
                  Object.entries(json).forEach(([key, value]) => {
-                            
+
                     if( Array.isArray(value)){
 
                         switch (key){
@@ -461,31 +462,70 @@
                                     dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
                                 };
                             break;
-                            default:
+                            case 'ExamenprogrammaBody':
                                 for(let child of value){
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
+                                    dataObj['documentExamenprogrammaBody'].push(formatDocumentData(child));
                                 };
-                        }
-
+                            break;
+                            case 'Vakleergebied':
+                                for(let child of value){
+                                    dataObj['documentVakleergebied'].push(formatDocumentData(child));
+                                };
+                            break;
+                            case 'NiveauIndex':
+                                for(let child of value){
+                                    dataObj['documentNiveauIndex'].push(formatDocumentData(child));
+                                };
+                            break;
+                            case 'Tag':
+                                for(let child of value){
+                                    if (child.title == null){ 
+                                        //console.log("Warning: found one Tag with an empty title, skipping!")
+                                    }
+                                    else { 
+                                        dataObj['documentSublist'].push(formatDocumentData(child));
+                                        //console.log("Warning: pushing Tag child into list:");
+                                        //console.log(child);
+                                    };
+                                };
+                            break;
+                            default:
+                                console.log(value.length)
+                                if (value.length !==0){
+                                    for(let child of value){
+                                            dataObj['documentSublist'].push(formatDocumentData(child));
+                                    };
+                                }
+                                else {
+                                    console.log(value);
+                                }
+                            }
                     }
                     else {
 
-                        if (typeof(value) === "object" && value === !null ){
+                        if ( (typeof(value) === "object" && value !== null)){ // && value.keys(value).length !== 0) {
+                            
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
+                            //console.log(value);
                             dataObj[key] = value ;
                         }
 
-                    }     
+                    }
+                    
                 });
                 
+                //var newDataObj = dataObj.filter(value => Object.keys(value).length !== 0 );
+                
+                //console.log(newDatObj)
+
                 return dataObj;
             }
 
             documentData = formatDocumentData(json);
 
-            console.log(JSON.stringify(documentData, null, 4));
+            //console.log(JSON.stringify(documentData, null, 4));
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
