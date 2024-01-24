@@ -172,3 +172,33 @@
         width: fit-content;
         margin: 0;
     }
+
+    .slo-document .ds-crumbs {
+        line-height: 2.5em
+    }
+    .slo-document .slo-context-filter {
+        float: right;
+        justify-content: end;
+    }
+    .slo-doocument .slo-context-filter .ds-button {
+        margin-right: 0;
+    }
+    
+    .slo-document .ds-scrollbox {
+        margin-top: var(--ds-spacing);
+    }
+
+    .slo-document .slo-content-panel {
+        margin-left: 0;
+        width: auto;
+    }
+    .slo-document .ds-scrollbox {
+        position: relative;
+        overflow: auto;
+    }
+    .slo-document .slo-scrollbar {
+        position: absolute;
+        width: 10px;
+        top: 0;
+    }
+
