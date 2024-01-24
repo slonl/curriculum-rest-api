@@ -443,8 +443,8 @@
        async SLOdocumentPage(json){
             let documentData = []
             
-            // @TODO: remove console.log
-            console.log(JSON.stringify(json, null, 4));
+            //json as received from the database
+            //console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
                 let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [], documentVakleergebied: [], documentNiveauIndex: [],  documentExamenprogrammaBody:[] };
@@ -484,6 +484,12 @@
                                     }
                                 }
                             break;
+                            case 'Niveau':
+                                for(let child of value){
+                                    dataObj['documentNiveauIndex'].push(formatDocumentData(child));
+                                };
+                            break;
+                            // @TODO : check if tag data is complete
                             case 'Tag':
                                 for(let child of value){
                                     if (child.title == null){
@@ -530,24 +536,12 @@
 
             documentData = formatDocumentData(json);
 
-            // @TODO: remove console.log
-            console.log(JSON.stringify(documentData, null, 4));
+            //documentData is the json that will be sent to the client
+            //console.log(JSON.stringify(documentData, null, 4));
 
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
-
-            /* TESTDATA:
-            return [
-                { prefix : "prefix1",  title: "title1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
-                    documentSublist : [{ prefix : "prefix2", title: "title2", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
-                        documentNiveaus:[{ prefix: "niveauPrefix1", title : "niveauTitle1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."}],
-                        documentSublist: [{ prefix : "prefix3", title: "title3", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."
-                        }]
-                    }]
-                },               
-            ]
-            */
 
         },
         getDataModel(name) {
