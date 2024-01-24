@@ -444,7 +444,7 @@
             let documentData = []
             
             // @TODO: remove console.log
-            // console.log(JSON.stringify(json, null, 4));
+            console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
                 let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [], documentVakleergebied: [], documentNiveauIndex: [],  documentExamenprogrammaBody:[] };
@@ -459,6 +459,11 @@
                                     dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
                                 };
                             break;
+                            case 'ExamenprogrammaKop1':
+                                for(let child of value){
+                                    dataObj['documentSublist'].unshift(formatDocumentData(child));
+                                };
+                            break;
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
                                     dataObj['documentExamenprogrammaBody'].push(formatDocumentData(child));
@@ -469,7 +474,6 @@
                                     dataObj['documentVakleergebied'].push(formatDocumentData(child));
                                 };
                             break;
-                            
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
@@ -527,7 +531,7 @@
             documentData = formatDocumentData(json);
 
             // @TODO: remove console.log
-            // console.log(JSON.stringify(documentData, null, 4));
+            console.log(JSON.stringify(documentData, null, 4));
 
             documentData = JSON.parse(JSON.stringify(documentData));
 
