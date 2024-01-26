@@ -135,9 +135,14 @@ module.exports = {
 		meta
 
 		`,
-		// @ TODO : Check why the from(data.DoelenOpNiveauByLdkVakleergebiedById) doesn't exist
+		// @ TODO : Check why the deepest "Doelniveu; Doelen" gives a timeout.
+		// @ TODO : check the GraphQL query, translation to SS query will probably need to be a nested qyery.
+		// @ TODO : will probably need a filter on uuid, which looks like from(Index(request.query.id))
 		DoelenOpNiveauByLdkVakleergebiedById: `
-		const results = from(data.DoelenOpNiveauByLdkVakleergebiedById)
+		const results = from(data.LdkVakleergebied)
+		.where({
+			"@id": from(Index(request.query.id)),
+		})
 		.select({
 			...shortInfo,
 			NiveauIndex:{
@@ -149,17 +154,62 @@ module.exports = {
 					...shortInfo,
 					LdkVakinhoud: {
 						...shortInfo,
-						Doelniveau: Doelen,
+						Doelniveau: {
+							"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
+							"@id": Id,
+							uuid: _.id,
+							prefix: _,
+							"Kerndoel":_,
+							"LdkVakbegrip":_,
+							Doel: {
+									"@id": Id,
+									"@type": Type,
+									uuid: _.id,
+									title: _,
+									"bron":_,
+									"Leerlingtekst": _
+							},
+						},
 					},
-					Doelniveau:	Doelen,
+					Doelniveau: {
+						"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
+						"@id": Id,
+						uuid: _.id,
+						prefix: _,
+						"Kerndoel":_,
+						"LdkVakbegrip":_,
+						Doel: {
+								"@id": Id,
+								"@type": Type,
+								uuid: _.id,
+								title: _,
+								"bron":_,
+								"Leerlingtekst": _
+						},
+					},
 				},
-				Doelniveau: Doelen,
+				Doelniveau: {
+					"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
+					"@id": Id,
+					uuid: _.id,
+					prefix: _,
+					"Kerndoel":_,
+					"LdkVakbegrip":_,
+					Doel: {
+							"@id": Id,
+							"@type": Type,
+							uuid: _.id,
+							title: _,
+							"bron":_,
+							"Leerlingtekst": _
+					},
+				},
 			}
 		})
 		`,
-		// @ TODO : Check why the from(data.LdkVakleergebiedOpNiveau) doesn't exist
+
 		LdkVakleergebiedOpNiveau: `
-		const results = from(data.LdkVakleergebiedOpNiveau)
+		const results = from(data.NiveauIndex)
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
@@ -167,14 +217,30 @@ module.exports = {
 			}
 		})`,
 
-		// @ TODO : Check why the from(data.LdkVakleergebiedByIdOpNiveau) doesn't exist
+		// @ TODO : check the GraphQL query, translation to SS query will probably need to be a nested qyery.
+		// @ TODO : will probably need a filter on uuid, which looks like from(Index(request.query.id))
 		LdkVakleergebiedByIdOpNiveau: `
-		const results = from(data.LdkVakleergebiedByIdOpNiveau)
+		const results = from(data.NiveauIndex)
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
-				Doelniveau: Doelniveau
+				Doelniveau: {
+					"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
+					"@id": Id,
+					uuid: _.id,
+					prefix: _,
+					"Kerndoel":_,
+					"LdkVakbegrip":_,
+					Doel: {
+							"@id": Id,
+							"@type": Type,
+							uuid: _.id,
+							title: _,
+							"bron":_,
+							"Leerlingtekst": _
+					},
+				},
 			},
 			LdkVakkern: {
 				...shortInfo,
@@ -183,16 +249,14 @@ module.exports = {
 			Niveau: NiveauShort
 		})`,
 
-		// @ TODO : Check why the from(data.LdkVakkernOpNiveau) doesn't exist
 		LdkVakkernOpNiveau: `
-		const results = from(data.LdkVakkernOpNiveau)
+		const results = from(data.NiveauIndex)
 		.select({
 			LdkVakkern: {
 				...shortInfo,
 				deprecated: _,
-			}
 		  }
-		}`,
+		})`,
 
 		LdkVakkernByIdOpNiveau: `
 		const results = from(data.LdkVakkernByIdOpNiveau)
