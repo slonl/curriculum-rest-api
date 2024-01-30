@@ -454,16 +454,32 @@
                     if( Array.isArray(value)){
 
                         switch (key){
+     
+                            case 'Doel':
+                            case 'Doelniveau':
                             case 'ExamenprogrammaEindterm':
+                            case 'ErkLesidee':
+                            case 'ErkVoorbeeld':
+                            case 'FoToelichting':
+                            case 'FoUitwerking':
+                            case 'InhSubcluster':
+                            case 'KerndoelDomein':
+                            case 'KerndoelUitstroomprofiel':
+                            case 'LdkVakinhoud':
+                            case 'LdkVakbegrip':
+                            case 'Leerlingtekst':
+                            case 'LpibVakinhoud':
+                            case 'RefDeelonderwerp':
+                            case 'RefTekstkenmerk':
                             case 'Vakleergebied':
                                 for(let child of value){
-                                    dataObj['documentLeafNode'].push(formatDocumentData(child));
+                                    dataObj['documentLeafNode'].push(child);
                                 };
                             break;
 
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
-                                    dataObj['documentTextNode'].push(formatDocumentData(child));
+                                    dataObj['documentTextNode'].push(child);
                                 };
                             break;
                             
