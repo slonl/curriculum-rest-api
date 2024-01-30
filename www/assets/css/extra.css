@@ -183,22 +183,9 @@
     .slo-doocument .slo-context-filter .ds-button {
         margin-right: 0;
     }
-    
-    .slo-document .ds-scrollbox {
-        margin-top: var(--ds-spacing);
-    }
-
     .slo-document .slo-content-panel {
         margin-left: 0;
         width: auto;
     }
-    .slo-document .ds-scrollbox {
-        position: relative;
-        overflow: auto;
-    }
-    .slo-document .slo-scrollbar {
-        position: absolute;
-        width: 10px;
-        top: 0;
-    }
+
 

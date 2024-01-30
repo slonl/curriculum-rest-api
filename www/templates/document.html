@@ -16,12 +16,8 @@
                         <option data-simply-field="context"></option>
                     </template>
                 </select>
-                <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
-                    <svg class="ds-icon ds-icon-feather">
-                        <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
-                    </svg>
-                </button>
             </div>
+            
             <nav class="ds-crumbs">
                 <ul class="ds-crumbs-list">
                     <li>API</li>
@@ -77,8 +73,8 @@
                                 </span>
                             </template>
                         </div>
-
-                        <ul class="ds-margin-up" data-simply-list="documentExamenprogrammaEindterm">
+                   
+                        <ul class="ds-margin-up" data-simply-list="documentLeafNode">
                             <template>
                                     <li class="slo-entity">
                                         <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
@@ -93,9 +89,9 @@
                             </template>
                         </ul>
 
-                        <ul class="ds-margin-up" data-simply-list="documentVakleergebied">
+                        <div class="ds-margin-up" data-simply-list="documentTextNode">
                             <template>
-                                    <li class="slo-entity">
+                                    <div class="slo-entity">
                                         <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                                         <span class="slo-prefix" data-simply-field="title"></span>
                                         <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
@@ -104,23 +100,9 @@
                                         <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
                                             <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
                                         </svg>
-                                    </li>
+                                    </div>
                             </template>
-                        </ul>
- 
-                        <ul class="ds-margin-up" data-simply-list="documentExamenprogrammaBody">
-                            <template>
-                                    <li class="slo-entity" font-color="ds-black">
-                                        <span class="slo-prefix" data-simply-field="title"></span>
-                                        <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                                        </svg>
-                                        <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                                        </svg>
-                                    </li>
-                            </template>
-                        </ul>
+                        </div>
 
                         <div>
                             <section >

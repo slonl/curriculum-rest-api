@@ -447,7 +447,7 @@
             //console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
-                let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [], documentVakleergebied: [], documentNiveauIndex: [],  documentExamenprogrammaBody:[] };
+                let dataObj = { documentSublist : [], documentNiveaus : [], documentLeafNode: [], documentNiveauIndex: [], documentTextNode: []};
 
                  Object.entries(json).forEach(([key, value]) => {
 
@@ -455,25 +455,24 @@
 
                         switch (key){
                             case 'ExamenprogrammaEindterm':
+                            case 'Vakleergebied':
                                 for(let child of value){
-                                    dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
+                                    dataObj['documentLeafNode'].push(formatDocumentData(child));
                                 };
                             break;
+
+                            case 'ExamenprogrammaBody':
+                                for(let child of value){
+                                    dataObj['documentTextNode'].push(formatDocumentData(child));
+                                };
+                            break;
+                            
                             case 'ExamenprogrammaKop1':
                                 for(let child of value){
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                            case 'ExamenprogrammaBody':
-                                for(let child of value){
-                                    dataObj['documentExamenprogrammaBody'].push(formatDocumentData(child));
-                                };
-                            break;
-                            case 'Vakleergebied':
-                                for(let child of value){
-                                    dataObj['documentVakleergebied'].push(formatDocumentData(child));
-                                };
-                            break;
+                               
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
@@ -484,6 +483,7 @@
                                     }
                                 }
                             break;
+                            
                             case 'Niveau':
                                 for(let child of value){
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(child));
