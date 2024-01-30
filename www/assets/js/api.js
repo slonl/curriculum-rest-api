@@ -440,7 +440,7 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async SLOdocumentPage(json){
+       async documentPage(json){
             let documentData = []
             
             //json as received from the database
@@ -483,7 +483,7 @@
                                     }
                                 }
                             break;
-                            
+
                             case 'Niveau':
                                 for(let child of value){
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(child));
@@ -510,7 +510,7 @@
                     }
                     else {
                         if ( (typeof(value) === "object" && value !== null)){
-                                Object.assign(dataObj["documentSublist"], formatDocumentData(value) );
+                            dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
                             dataObj[key] = value ;

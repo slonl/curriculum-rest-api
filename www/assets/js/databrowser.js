@@ -870,7 +870,7 @@
                 })
                 .then(async function(json) {
                     browser.view.view = 'document';
-                    browser.view.documentList = await window.slo.SLOdocumentPage(json)
+                    browser.view.documentList = await window.slo.documentPage(json)
 
                 })
             },
