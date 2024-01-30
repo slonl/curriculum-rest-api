@@ -78,6 +78,9 @@
         if (browser.view.view=='spreadsheet') {
             browser.actions.switchView('spreadsheet')
         }
+        else if (browser.view.view=='document') {
+            browser.actions.switchView('document')
+        }
     })
 
     document.body.addEventListener('click', (e) => {

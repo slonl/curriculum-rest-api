@@ -440,69 +440,108 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async document(json){
-            //console.log(JSON.stringify(json, null, 4))
+       async documentPage(json){
             let documentData = []
             
-        
+            //json as received from the database
+            //console.log(JSON.stringify(json, null, 4));
+
             function formatDocumentData(json){
-                let dataObj = { documentSublist : [], documentNiveaus : [], documentExamenprogrammaEindterm: [] };
+                let dataObj = { documentSublist : [], documentNiveaus : [], documentLeafNode: [], documentNiveauIndex: [], documentTextNode: []};
 
                  Object.entries(json).forEach(([key, value]) => {
-                            
+
                     if( Array.isArray(value)){
 
                         switch (key){
-                            case 'Niveau':
+                            case 'ExamenprogrammaEindterm':
+                            case 'Vakleergebied':
                                 for(let child of value){
-                                    dataObj['documentNiveaus'].push(formatDocumentData(child));
+                                    dataObj['documentLeafNode'].push(formatDocumentData(child));
                                 };
                             break;
-                            case 'ExamenprogrammaEindterm':
+
+                            case 'ExamenprogrammaBody':
                                 for(let child of value){
-                                    dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
+                                    dataObj['documentTextNode'].push(formatDocumentData(child));
+                                };
+                            break;
+                            
+                            case 'ExamenprogrammaKop1':
+                                for(let child of value){
+                                    dataObj['documentSublist'].unshift(formatDocumentData(child));
+                                };
+                            break;
+                               
+                            case 'NiveauIndex':
+                                for(let child of value){
+                                    if (typeof child.Niveau != "undefined") {
+                                        dataObj['documentNiveauIndex'].push(child.Niveau);
+                                    }
+                                    else {
+                                        console.log("Found a NiveauIndex with something that wasn't a Niveau.");
+                                    }
+                                }
+                            break;
+
+                            case 'Niveau':
+                                for(let child of value){
+                                    dataObj['documentNiveauIndex'].push(formatDocumentData(child));
+                                };
+                            break;
+                            // @TODO : check if tag data is complete
+                            case 'Tag':
+                                for(let child of value){
+                                    if (child.title == null){
+                                        //console.log("Found a Tag without a title");
+                                    }
+                                    else { 
+                                        dataObj['documentSublist'].push(formatDocumentData(child));
+                                    };
                                 };
                             break;
                             default:
-                                for(let child of value){
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                        }
-
+                                if (value.length !==0){
+                                    for(let child of value){
+                                            dataObj['documentSublist'].push(formatDocumentData(child));
+                                    };
+                                }
+                            }
                     }
                     else {
-
-                        if (typeof(value) === "object"){
+                        if ( (typeof(value) === "object" && value !== null)){
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
                             dataObj[key] = value ;
                         }
 
-                    }     
+                    }
+                    
                 });
-                
+
+                // remove object that have empty arrays as values:
+                Object.entries(dataObj).forEach(([key, value]) => {
+
+                    if (Array.isArray(value) && value.length == 0){
+                        delete dataObj[key];
+                        return dataObj
+                    }
+
+                });
+            
                 return dataObj;
+
             }
 
             documentData = formatDocumentData(json);
 
+            //documentData is the json that will be sent to the client
             //console.log(JSON.stringify(documentData, null, 4));
+
             documentData = JSON.parse(JSON.stringify(documentData));
 
             return [documentData];
-
-            /*
-            return [
-                { prefix : "prefix1",  title: "title1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
-                    documentSublist : [{ prefix : "prefix2", title: "title2", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo.",
-                        documentNiveaus:[{ prefix: "niveauPrefix1", title : "niveauTitle1", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."}],
-                        documentSublist: [{ prefix : "prefix3", title: "title3", description : "Calm down, Marty, I didn’t disintegrate anything. The molecular structure of Einstein and the car are completely intact. Marty you gotta come back with me. Of course, from a group of Libyan Nationalists. They wanted me to build them a bomb, so I took their plutonium and in turn gave them a shiny bomb case full of used pinball machine parts. Yoo. Yoo."
-                        }]
-                    }]
-                },               
-            ]
-            */
 
         },
         getDataModel(name) {

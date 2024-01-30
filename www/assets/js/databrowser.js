@@ -29,23 +29,6 @@
                     column: 0
                 }
             }
-            /*,
-            document: [
-     
-                { prefix : "first item1",  sublist : [{ prefix : "first sublist item 1", subitem: "subitem 2" }]},
-                
-                { prefix : "second item2",  sublist :
-                    [  
-                                  
-                        { prefix : "first subitem1", subitem : "second subitem1", sublist: [ { item : "FOOBAR"} ] },
-                        { prefix : "second item2", subitem : "second subitem2" },
-           
-                       
-                    ]
-                 }    
-                
-            ],
-            */
         },
 
         routes: {
@@ -749,7 +732,7 @@
                             let url = new URL(id)
                             let uuid = id.pathname.split('/').pop()
                             this.app.view.item.uuid = uuid
-                            history.pushState({}, '', new URL(uuid, window.location))
+                            history.replaceState({}, '', new URL(uuid, window.location))
                         })
                         this.app.view.sloSpreadsheet.onEdit((update) => {
                             //@FIXME: handle add/delete entities (relations)
@@ -808,10 +791,10 @@
                         if (!this.app.view.niveaus) {
                             this.app.view.niveaus = [];
                         }
-                        await this.app.actions.document(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        await this.app.actions.renderDocumentPage(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         // @TODO GPC: focus current item
                         let documentModel = window.slo.getDataModel('items')
-                        console.log(documentModel);
+                        //console.log(documentModel);
                         //let row = model.data.findIndex(r => r['@id']==currentId)
                         //this.app.view.document.focus.row = row;
                         //this.app.view.document.focus.column = 2;
@@ -880,16 +863,14 @@
                     browser.view.sloSpreadsheet.render()
                 })
             },
-            document: async function(root, context, niveau) {
+            renderDocumentPage: async function(root, context, niveau) {
                 browser.view.documentList = []
                 return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                     niveau, context
                 })
                 .then(async function(json) {
-                    //browser.view.document = json;
                     browser.view.view = 'document';
-                    //console.log(json);
-                    browser.view.documentList = await window.slo.document(json)
+                    browser.view.documentList = await window.slo.documentPage(json)
 
                 })
             },
