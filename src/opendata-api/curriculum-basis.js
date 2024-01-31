@@ -5,6 +5,38 @@ module.exports = {
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
+
+		const Doelen = {
+			id : _,
+			prefix : _,
+			ce_se : _.ceSe,
+			Doel: {
+				id : _,
+				title : _,
+				description : _,
+				bron : _,
+				vakbegrippen : _,
+				aanbodid : _,
+				Leerlingtekst: {
+					title : _,
+					description : _,
+				}     
+			},
+			Kerndoel: {
+				id : _,
+				title : _,
+				description : _,
+				kerndoelLabel : _,
+				prefix : _,
+			},
+			LdkVakbegrip: {
+				id : _,
+				title : _,
+				ce_se : _.ceSe,
+			}
+		}
+		
+
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
