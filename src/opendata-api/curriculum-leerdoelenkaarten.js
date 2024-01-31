@@ -135,112 +135,80 @@ module.exports = {
 		meta
 
 		`,
-		// @ TODO : Check why the deepest "Doelniveu; Doelen" gives a timeout.
-		// @ TODO : check the GraphQL query, translation to SS query will probably need to be a nested qyery.
-		// @ TODO : will probably need a filter on uuid, which looks like from(Index(request.query.id))
 		DoelenOpNiveauByLdkVakleergebiedById: `
-		const results = from(data.LdkVakleergebied)
-		.where({
-			"@id": from(Index(request.query.id)),
-		})
+		const results = from(Index(request.query.id))
 		.select({
-			...shortInfo,
-			NiveauIndex:{
-			  Niveau: NiveauShort
-			},
-			LdkVakkern: {
-				...shortInfo,
-				LdkVaksubkern: {
-					...shortInfo,
-					LdkVakinhoud: {
-						...shortInfo,
-						Doelniveau: {
-							"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
-							"@id": Id,
-							uuid: _.id,
-							prefix: _,
-							"Kerndoel":_,
-							"LdkVakbegrip":_,
-							Doel: {
-									"@id": Id,
-									"@type": Type,
-									uuid: _.id,
-									title: _,
-									"bron":_,
-									"Leerlingtekst": _
-							},
-						},
-					},
-					Doelniveau: {
-						"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
-						"@id": Id,
-						uuid: _.id,
-						prefix: _,
-						"Kerndoel":_,
-						"LdkVakbegrip":_,
-						Doel: {
-								"@id": Id,
-								"@type": Type,
-								uuid: _.id,
-								title: _,
-								"bron":_,
-								"Leerlingtekst": _
-						},
-					},
-				},
-				Doelniveau: {
-					"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
-					"@id": Id,
-					uuid: _.id,
-					prefix: _,
-					"Kerndoel":_,
-					"LdkVakbegrip":_,
-					Doel: {
-							"@id": Id,
-							"@type": Type,
-							uuid: _.id,
-							title: _,
-							"bron":_,
-							"Leerlingtekst": _
-					},
-				},
-			}
+  			...shortInfo,
+  			NiveauIndex : o => from(o.NiveauIndex)
+  				.where({
+               		Niveau : { id: request.query.niveau }
+                })
+  				.select({
+                	...NiveauShort
+                })
+  			,
+  
+  			LdkVakkern : {
+              ...shortInfo,
+              	Doelniveau : o => from(o.Doelniveau)			  
+				.where({
+					Niveau : { id: request.query.niveau }
+				})
+  				.select({
+					...Doelen
+				}),
+              
+                LdkVaksubkern : {
+                  ...shortInfo,
+                      Doelniveau : o => from(o.Doelniveau)			  
+                  .where({
+                      Niveau : { id: request.query.niveau }
+                  })
+                  .select({
+                      ...Doelen
+                  }),
+
+                  LdkVakinhoud: {
+                      ...shortInfo,
+                      Doelniveau : o => from(o.Doelniveau)			  
+                      .where({
+                          Niveau : { id: request.query.niveau }
+                      })
+                      .select({
+                          ...Doelen
+                      })
+                	},
+              	},
+            }			
 		})
 		`,
-
 		LdkVakleergebiedOpNiveau: `
 		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id,
+		})
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
 			}
 		})`,
-
-		// @ TODO : check the GraphQL query, translation to SS query will probably need to be a nested qyery.
-		// @ TODO : will probably need a filter on uuid, which looks like from(Index(request.query.id))
 		LdkVakleergebiedByIdOpNiveau: `
 		const results = from(data.NiveauIndex)
+		.where({
+			uuid: request.query.id
+		})
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
-				Doelniveau: {
-					"@context":"https://opendata.slo.nl/curriculum/schemas/doel.jsonld",
-					"@id": Id,
-					uuid: _.id,
-					prefix: _,
-					"Kerndoel":_,
-					"LdkVakbegrip":_,
-					Doel: {
-							"@id": Id,
-							"@type": Type,
-							uuid: _.id,
-							title: _,
-							"bron":_,
-							"Leerlingtekst": _
-					},
-				},
+				Doelniveau : o => from(o.Doelniveau)			  
+				.where({
+					Niveau : { id: request.query.niveau }
+				})
+				.select({
+					...Doelen
+				})
 			},
 			LdkVakkern: {
 				...shortInfo,
@@ -251,6 +219,9 @@ module.exports = {
 
 		LdkVakkernOpNiveau: `
 		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id
+		})
 		.select({
 			LdkVakkern: {
 				...shortInfo,
@@ -259,7 +230,10 @@ module.exports = {
 		})`,
 
 		LdkVakkernByIdOpNiveau: `
-		const results = from(data.LdkVakkernByIdOpNiveau)
+		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id
+		})
 		.select({
 			LdkVakkern: {
 				...shortInfo,
@@ -267,20 +241,28 @@ module.exports = {
 				LdkVakleergebied: {
 					...shortInfo,
 						deprecated: _,
-				}
-				Doelniveau: Doelniveau,
-			},
+					},
+					Doelniveau : o => from(o.Doelniveau)			  
+					.where({
+						Niveau : { id: request.query.niveau }
+					})
+					.select({
+						...Doelen
+					})
+				},
 			LdkVaksubkern: {
 				...shortInfo,
 				deprecated: _,
 			},
-			Niveau NiveauShort,
-		  }
+			Niveau: NiveauShort,
 		})
 		`,
 
 		LdkVaksubkernOpNiveau: `
-		const results = from(data.LdkVaksubkernOpNiveau)
+		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id
+		})
 		.select({
 			LdkVaksubkern :{
 				...shortInfo,
@@ -290,7 +272,10 @@ module.exports = {
 		`,
 
 		LdkVaksubkernByIdOpNiveau: `
-		const results = from(data.LdkVaksubkernByIdOpNiveau)
+		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id 
+		})
 		.select({
 			LdkVaksubkern: {
 				...shortInfo,
@@ -299,7 +284,13 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				Doelniveau:	Doelniveau
+				Doelniveau : o => from(o.Doelniveau)			  
+					.where({
+						Niveau : { id: request.query.niveau }
+					})
+					.select({
+						...Doelen
+					})
 				},
 				LdkVakinhoud: {
 					...shortInfo,
@@ -311,7 +302,10 @@ module.exports = {
 		`,
 
 		LdkVakinhoudOpNiveau: `
-		const results = from(data.LdkVakinhoudOpNiveau)
+		const results = from(data.NiveauIndex)
+		.where({
+			uuid : request.query.id 
+		})
 		.select({
 			LdkVakinhoud: {
 				...shortInfo,
