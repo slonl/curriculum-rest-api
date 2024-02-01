@@ -1,0 +1,58 @@
+@media print {
+    .slo-weergave-switch {
+        display: none;
+    }
+    .slo-search-button {
+        display: none;
+    }
+    button {
+        display: none;
+    }
+    head {
+        display: none;
+    }
+    nav {
+        display: none;
+    }
+    footer {
+        display: none;
+    }
+    video {
+        display: none;
+    }
+    audio {
+        display: none;
+    }
+    object {
+        display: none;
+    }
+    embed {
+        display: none;
+    }
+    img {
+        max-width: 100%;
+    }
+    section {
+        break-before: always;
+        break-inside: avoid-page;
+        break-after: auto;
+        widows: 2;
+    }
+    div {
+        break-before: avoid;
+        break-inside: avoid-page;
+        break-after: auto;
+        widows: 2;
+    }
+    ul {
+        break-before: auto;
+        break-inside: avoid-page;
+        break-after: auto;
+    }
+    div h1 {
+        break-before: always;
+        break-inside: avoid;
+        break-after: avoid;
+    }
+
+}

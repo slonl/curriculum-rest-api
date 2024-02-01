@@ -291,7 +291,7 @@ module.exports = {
 					.select({
 						...Doelen
 					})
-				},
+				,
 				LdkVakinhoud: {
 					...shortInfo,
 					deprecated: _,
