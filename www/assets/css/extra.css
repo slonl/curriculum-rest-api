@@ -187,5 +187,8 @@
         margin-left: 0;
         width: auto;
     }
+    .slo-document a {
+        text-decoration: none;
+    }
 
  
