@@ -32,27 +32,13 @@
     img {
         max-width: 100%;
     }
-    section {
-        break-before: always;
+    section{
         break-inside: avoid-page;
-        break-after: auto;
-        widows: 2;
     }
-    div {
-        break-before: avoid;
-        break-inside: avoid-page;
-        break-after: auto;
-        widows: 2;
+    div div h1 {
+        break-inside: avoid;
     }
     ul {
-        break-before: auto;
         break-inside: avoid-page;
-        break-after: auto;
     }
-    div h1 {
-        break-before: always;
-        break-inside: avoid;
-        break-after: avoid;
-    }
-
 }
