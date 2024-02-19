@@ -496,7 +496,213 @@
                     let el = document.querySelector('td.focus')
                     browser.view.sloSpreadsheet.selector(el)
                 }
-            }
+            },
+            document: {
+                //TODO: calculate prev/next row while skipping over
+                //closed trees. So find the prev/next visible row.
+                "ArrowDown": (e) => {
+                    e.preventDefault();
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+
+                    let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+                    let itemIndex = getAllNodes.indexOf(focussedElement);
+
+                    getAllNodes[itemIndex].classList.remove("focus");
+                    
+                    if (itemIndex < (getAllNodes.length -1) ){
+                        itemIndex++;
+                    }
+                    else{
+                        itemIndex = 0;
+                    }
+
+                    getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                    getAllNodes[itemIndex].classList.add("focus");
+
+                    let nextFocussedElement = document.querySelector(".focus");
+
+                    // when the next element doesn't have an id skip it.
+                    if(nextFocussedElement.id === ""){
+                        getAllNodes[itemIndex].classList.remove("focus");
+                        itemIndex++;
+                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                        getAllNodes[itemIndex].classList.add("focus");
+                        nextFocussedElement = document.querySelector(".focus");
+                    }
+                                        
+                    let nextDocumentLocation = new URL(document.location.href);
+                                    
+                    let idPath = new URL(nextFocussedElement.id);
+
+                    let nextID = idPath.pathname.split("/").pop();
+
+                    idPath.pathname = "/uuid/" + nextID;
+
+                    idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+
+                    window.history.replaceState({}, '', idPath.href);                                
+                },
+                
+                "ArrowUp": (e) => {
+                    e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+
+                    let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+                    let itemIndex = getAllNodes.indexOf(focussedElement);   
+
+                    getAllNodes[itemIndex].classList.remove("focus");
+
+                    if (itemIndex > 0 ){
+                        itemIndex-- ;
+                    }
+                    else{
+                        itemIndex = (getAllNodes.length -1);
+                    }
+                   
+                    getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                    getAllNodes[itemIndex].classList.add("focus");
+
+                    let nextFocussedElement = document.querySelector(".focus");
+
+                    // when the next element doesn't have an id skip it.
+                    if(nextFocussedElement.id === ""){
+                        getAllNodes[itemIndex].classList.remove("focus");
+                        itemIndex--
+                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                        getAllNodes[itemIndex].classList.add("focus");
+                        nextFocussedElement = document.querySelector(".focus");
+                    }
+                    
+                    let nextDocumentLocation = new URL(document.location.href);
+                 
+                    let idPath = new URL(nextFocussedElement.id);
+
+                    let nextID = idPath.pathname.split("/").pop();
+
+                    idPath.pathname = "/uuid/" + nextID;
+
+                    idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+
+                    window.history.replaceState({}, '', idPath.href);
+                },
+                "ArrowLeft": (e) => {
+                  e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+
+                    let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+                    let itemIndex = getAllNodes.indexOf(focussedElement);   
+
+                    getAllNodes[itemIndex].classList.remove("focus");
+
+                    if (itemIndex > 0 ){
+                        itemIndex-- ;
+                    }
+                    else{
+                        itemIndex = (getAllNodes.length -1);
+                    }
+
+                    getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                    getAllNodes[itemIndex].classList.add("focus");
+
+                    let nextFocussedElement = document.querySelector(".focus");
+
+                    // when the next element doesn't have an id skip it.
+                    if(nextFocussedElement.id === ""){
+                        getAllNodes[itemIndex].classList.remove("focus");
+                        itemIndex--;
+                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                        getAllNodes[itemIndex].classList.add("focus");
+                        nextFocussedElement = document.querySelector(".focus");
+                    }
+                                        
+                    let nextDocumentLocation = new URL(document.location.href);
+                                    
+                    let idPath = new URL(nextFocussedElement.id);
+
+                    let nextID = idPath.pathname.split("/").pop();
+
+                    idPath.pathname = "/uuid/" + nextID;
+
+                    idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+
+                    window.history.replaceState({}, '', idPath.href);   
+                },
+                "ArrowRight": (e) => {
+                    e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+
+                    let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+                    let itemIndex = getAllNodes.indexOf(focussedElement);   
+
+                    getAllNodes[itemIndex].classList.remove("focus");
+
+                    if (itemIndex < (getAllNodes.length -1) ){
+                        itemIndex++;
+                    }
+                    else{
+                        itemIndex = 0;
+                    }
+                   
+                    getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                    getAllNodes[itemIndex].classList.add("focus");
+
+                    let nextFocussedElement = document.querySelector(".focus");
+
+                    // when the next element doesn't have an id skip it.
+                    if(nextFocussedElement.id === ""){
+                        getAllNodes[itemIndex].classList.remove("focus");
+                        itemIndex++;
+                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
+                        getAllNodes[itemIndex].classList.add("focus");
+                        nextFocussedElement = document.querySelector(".focus");
+                    }
+                    
+                    let nextDocumentLocation = new URL(document.location.href);
+                 
+                    let idPath = new URL(nextFocussedElement.id);
+
+                    let nextID = idPath.pathname.split("/").pop();
+
+                    idPath.pathname = "/uuid/" + nextID;
+
+                    idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+
+                    window.history.replaceState({}, '', idPath.href);
+                },/*
+                "Enter": (e) => {
+                    e.preventDefault()
+                   let focussedElement = document.getElementsByClassName("focus")[0];
+                },
+                "Escape": (e) => {
+                    e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+                },
+                "Home": (e) => {
+                    e.preventDefault()
+                   let focussedElement = document.getElementsByClassName("focus")[0];
+                },
+                "End": (e) => {
+                    e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];
+                },
+                "PageUp": (e) => {
+                    e.preventDefault()
+                    let focussedElement = document.getElementsByClassName("focus")[0];                    
+                },
+                "PageDown": (e) => {
+                    e.preventDefault()
+                   let focussedElement = document.getElementsByClassName("focus")[0];                  
+                },
+                "Insert": async (e) => {
+                    e.preventDefault()
+                  let focussedElement = document.getElementsByClassName("focus")[0];
+                },
+                "Delete": (e) => {
+                    e.preventDefault()
+                 let focussedElement = document.getElementsByClassName("focus")[0];
+                }
+            */
+            },
         },
         commands: {
             //@TODO: spreadsheet commands should be in spreadsheet.js and referenced here
@@ -798,7 +1004,7 @@
 
                         //focus on item
                         document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).scrollIntoView({ block: "center" });
-                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).setAttribute("class", "focus");  
+                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).classList.add("focus");  
                         
                     break;
                 }

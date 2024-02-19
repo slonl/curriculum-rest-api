@@ -188,8 +188,12 @@
         width: auto;
     }
  
-
     .slo-document .focus {
         outline: 1px solid blue;
+    }
+
+    .slo-document-niveau {
+        color: var(--ds-grey-70);
+        font-size: smaller;
     }
  
