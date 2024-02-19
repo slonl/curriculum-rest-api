@@ -776,7 +776,7 @@
                         currentId = this.app.view.item['@id']
                         // get roots of current item
                         roots = await window.slo.api.get('/roots/'+currentItem)
-
+                                              
                         // pick one
                         // FIXME: remember which one was picked last
                         // switch to spreadsheet of that root
@@ -792,13 +792,14 @@
                             this.app.view.niveaus = [];
                         }
                         await this.app.actions.renderDocumentPage(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
-                        // @TODO GPC: focus current item
-                        let documentModel = window.slo.getDataModel('items')
-                        //console.log(documentModel);
-                        //let row = model.data.findIndex(r => r['@id']==currentId)
-                        //this.app.view.document.focus.row = row;
-                        //this.app.view.document.focus.column = 2;
-                        //this.app.actions.focusCell(row,2)
+                        
+                  
+                        let documentModel = window.slo.getDataModel('items');
+
+                        //focus on item
+                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).scrollIntoView({ block: "center" });
+                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).setAttribute("class", "focus");  
+                        
                     break;
                 }
             },

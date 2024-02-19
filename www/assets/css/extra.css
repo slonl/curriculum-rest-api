@@ -187,5 +187,9 @@
         margin-left: 0;
         width: auto;
     }
+ 
 
-
+    .slo-document .focus {
+        outline: 1px solid blue;
+    }
+ 
