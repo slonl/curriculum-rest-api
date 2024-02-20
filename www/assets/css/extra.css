@@ -193,7 +193,23 @@
     }
 
     .slo-document-niveau {
-        color: var(--ds-grey-70);
-        font-size: smaller;
+        color: var(--ds-badge-font-color);
+        font-size: 0.8rem;
+        --ds-badge-color: var(--ds-grey-light);
+        --ds-badge-font-color: var(--ds-black);
+        --ds-badge-label-color: var(--ds-highlight);
+        --ds-badge-label-contrast-color: var(--ds-primary-contrast);
+        --ds-badge-height: 2em;
+        display: inline-block;
+        align-items: center;
+        background: var(--ds-badge-color);
+        border-radius: 0.3em;
+        padding: 0 0.6em;
+        text-align: center;   
+        margin: 0.05em 0;
+        margin-right: 0.3em;
+        line-height: var(--ds-badge-height);
+        max-height: var(--ds-badge-height);
+        position: relative;
     }
  
