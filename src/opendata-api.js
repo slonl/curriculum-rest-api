@@ -67,7 +67,7 @@ function camelize(str) {
 }
 
 opendata.api.Id = async (variables, urlQuery) => {
-	let type = await storeQuery(opendata.url+'/query/', `JSONTag.getAttribute(meta.index.id.get('/uuid/${variables.id}')?.deref(),'class')`)
+	let type = await storeQuery(opendata.url+'/query/', `JSONTag.getAttribute(meta.index.id.get('/uuid/${variables.id}'),'class')`)
 	let typedQuery = opendata.typedQueries[type]
 	if (!typedQuery) {
 		console.error('missing typedquery for '+type)
