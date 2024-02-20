@@ -26,6 +26,6 @@
     "request-promise-native": "^1.0.9",
     "uuid": "^9.0.0",
     "watch": "^1.0.2",
-    "@muze-nl/jsontag": "^0.8.6"
+    "@muze-nl/jsontag": "^0.9.1"
   }
 }
