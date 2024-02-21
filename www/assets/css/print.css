@@ -29,6 +29,9 @@
     embed {
         display: none;
     }
+    .slo-footer{
+        display: none;
+    }
     img {
         max-width: 100%;
     }
