@@ -150,7 +150,7 @@ module.exports = {
 			start: Page*PageSize,
 			end: (Page+1)*PageSize
 		}
-		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
+		const Index = id => meta.index.id.get('/uuid/'+id)
 		
 		const shortInfo = {
 		    '@id': Id,
