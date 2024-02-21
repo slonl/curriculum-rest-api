@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/slonl/curriculum-rest-api#readme",
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0",
+    "@sendgrid/mail": "^8.1.1",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "memory-cache": "^0.2.0",
