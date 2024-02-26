@@ -668,11 +668,18 @@
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
 
                     window.history.replaceState({}, '', idPath.href);
-                },/*
+                },
                 "Enter": (e) => {
                     e.preventDefault()
-                   let focussedElement = document.getElementsByClassName("focus")[0];
-                },
+                    if (browser.view.user) {
+                        let el = document.querySelector('.focus');
+                        console.log(el);
+                        //let selector = document.querySelector('.slo-type-selector')
+                        //let type = selector.querySelector('input:checked')
+                        //browser.actions.hideTypeSelector()
+                        //return browser.actions.insertRow(el.closest('tr'), type.value)
+                    }
+                },/*
                 "Escape": (e) => {
                     e.preventDefault()
                     let focussedElement = document.getElementsByClassName("focus")[0];
@@ -1127,12 +1134,11 @@
                         }
                         await this.app.actions.renderDocumentPage(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         
-                  
                         let documentModel = window.slo.getDataModel('items');
 
                         //focus on item
                         document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).scrollIntoView({ block: "center" });
-                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).classList.add("focus");  
+                        document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).classList.add("focus");
                         
                     break;
                 }
@@ -1206,7 +1212,10 @@
                 .then(async function(json) {
                     browser.view.view = 'document';
                     browser.view.documentList = await window.slo.documentPage(json)
-
+                    browser.view.sloDocument = sloDocument({
+                        container: document.getElementById('slo-document')
+                        }
+                    );
                 })
             },
             doelniveauList: function(type) {
