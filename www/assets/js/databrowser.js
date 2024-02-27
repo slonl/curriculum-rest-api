@@ -502,13 +502,14 @@
                 //closed trees. So find the prev/next visible row.
                 "ArrowDown": (e) => {
                     e.preventDefault();
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);
-
                     getAllNodes[itemIndex].classList.remove("focus");
                     
+                    // finding the bottom of the document and staying there.
                     if (itemIndex < (getAllNodes.length -1) ){
                         itemIndex++;
                     }
@@ -516,42 +517,30 @@
                         itemIndex = getAllNodes.length -1;
                     }
 
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
-                    let nextFocussedElement = document.querySelector(".focus");
-
-                    // when the next element doesn't have an id skip it.
-                    if(nextFocussedElement.id === ""){
-                        getAllNodes[itemIndex].classList.remove("focus");
-                        itemIndex++;
-                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
-                        getAllNodes[itemIndex].classList.add("focus");
-                        nextFocussedElement = document.querySelector(".focus");
-                    }
-                                        
+                    // replace URL with the new URL
+                    let nextFocussedElement = document.querySelector(".focus");                   
                     let nextDocumentLocation = new URL(document.location.href);
-                                    
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);                                
                 },
                 
                 "ArrowUp": (e) => {
                     e.preventDefault()
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
 
+                    // finding the top of the document and staying there.
                     if (itemIndex > 0 ){
                         itemIndex-- ;
                     }
@@ -559,83 +548,60 @@
                         itemIndex = 0;
                     }
                    
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
+                    // replace URL with the new URL
                     let nextFocussedElement = document.querySelector(".focus");
-
-                    // when the next element doesn't have an id skip it.
-                    if(nextFocussedElement.id === ""){
-                        getAllNodes[itemIndex].classList.remove("focus");
-                        itemIndex--
-                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
-                        getAllNodes[itemIndex].classList.add("focus");
-                        nextFocussedElement = document.querySelector(".focus");
-                    }
-                    
                     let nextDocumentLocation = new URL(document.location.href);
-                 
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);
+
                 },
                 "ArrowLeft": (e) => {
-                  e.preventDefault()
-                    let focussedElement = document.getElementsByClassName("focus")[0];
+                    e.preventDefault()
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
 
+                    // finding the top of the document and staying there.
                     if (itemIndex > 0 ){
                         itemIndex-- ;
                     }
                     else{
                         itemIndex = 0;
                     }
-
+                    
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
-                    let nextFocussedElement = document.querySelector(".focus");
-
-                    // when the next element doesn't have an id skip it.
-                    if(nextFocussedElement.id === ""){
-                        getAllNodes[itemIndex].classList.remove("focus");
-                        itemIndex--;
-                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
-                        getAllNodes[itemIndex].classList.add("focus");
-                        nextFocussedElement = document.querySelector(".focus");
-                    }
-                                        
+                    // replace URL with the new URL
+                    let nextFocussedElement = document.querySelector(".focus");              
                     let nextDocumentLocation = new URL(document.location.href);
-                                    
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);   
                 },
                 "ArrowRight": (e) => {
                     e.preventDefault()
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
 
+                    // finding the bottom of the document and staying there.
                     if (itemIndex < (getAllNodes.length -1) ){
                         itemIndex++;
                     }
@@ -643,33 +609,22 @@
                         itemIndex = (getAllNodes.length -1);
                     }
                    
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
+                    // replace URL with the new URL
                     let nextFocussedElement = document.querySelector(".focus");
-
-                    // when the next element doesn't have an id skip it.
-                    if(nextFocussedElement.id === ""){
-                        getAllNodes[itemIndex].classList.remove("focus");
-                        itemIndex++;
-                        getAllNodes[itemIndex].scrollIntoView({ block: "center" });
-                        getAllNodes[itemIndex].classList.add("focus");
-                        nextFocussedElement = document.querySelector(".focus");
-                    }
-                    
                     let nextDocumentLocation = new URL(document.location.href);
-                 
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);
                 },
                 "Enter": (e) => {
+                    // WIP-- for editing. --
+
                     e.preventDefault()
                     if (browser.view.user) {
                         let el = document.querySelector('.focus');
@@ -679,6 +634,7 @@
                         //browser.actions.hideTypeSelector()
                         //return browser.actions.insertRow(el.closest('tr'), type.value)
                     }
+                    // --WIP
                 },/*
                 "Escape": (e) => {
                     e.preventDefault()
@@ -686,68 +642,60 @@
                 },*/
                 "Home": (e) => {
                     e.preventDefault()
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
                    
                     itemIndex = 0;
  
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
+                    // replace URL with the new URL
                     let nextFocussedElement = document.querySelector(".focus");
-                    
-                    let nextDocumentLocation = new URL(document.location.href);
-                 
+                    let nextDocumentLocation = new URL(document.location.href);                
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);     
                 },
                 "End": (e) => {
                     e.preventDefault()
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
                    
                     itemIndex = getAllNodes.length -1 ;
  
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
+                    // replace URL with the new URL
                     let nextFocussedElement = document.querySelector(".focus");
-                    
                     let nextDocumentLocation = new URL(document.location.href);
-                 
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);    
                 },
                 "PageUp": (e) => {
                     e.preventDefault()
                     let incrementMovement = 5;
+                    
+                    //find current element to move to the next one
                     let focussedElement = document.getElementsByClassName("focus")[0];
-
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
 
                     //finding top of page and staying there
@@ -757,40 +705,28 @@
                     else {
                         itemIndex = 0;
                     }                  
-
-                    // when the next element doesn't have an id skip it.
-                    if ( typeof getAllNodes[itemIndex] !== "undefined" 
-                        && getAllNodes[itemIndex].id === ""
-                        && itemIndex > incrementMovement)
-                        {
-                        itemIndex--;
-                    }
-
+                    
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
+                    // replace URL with the new URL
                     let nextFocussedElement = document.querySelector(".focus");
-                    
                     let nextDocumentLocation = new URL(document.location.href);
-                 
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);                   
                 },
                 "PageDown": (e) => {
                     e.preventDefault()
                     let incrementMovement = 5;
-                    let focussedElement = document.getElementsByClassName("focus")[0];
 
+                    //find current element to move to the next one
+                    let focussedElement = document.getElementsByClassName("focus")[0];
                     let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
                     let itemIndex = getAllNodes.indexOf(focussedElement);   
-
                     getAllNodes[itemIndex].classList.remove("focus");
 
                     //finding bottom of page and staying there
@@ -800,32 +736,18 @@
                     else {
                         itemIndex = getAllNodes.length -1 ;
                     }
-                    
-                    // moving beyond the array sends us to an undefined index, need to move back
-                    if (typeof getAllNodes[itemIndex] === "undefined") {
-                        itemIndex = getAllNodes.length -1 ;
-                    }
-
-                    // when the next element doesn't have an id skip it.
-                    if ( typeof getAllNodes[itemIndex] !== "undefined" && getAllNodes[itemIndex].id === "" && itemIndex < getAllNodes.length -6 ) {
-                        itemIndex++ ;
-                    }
               
+                    // move to the next item
                     getAllNodes[itemIndex].scrollIntoView({ block: "center" });
                     getAllNodes[itemIndex].classList.add("focus");
 
-                    let nextFocussedElement = document.querySelector(".focus");
-                    
+                    // replace URL with the new URL
+                    let nextFocussedElement = document.querySelector(".focus"); 
                     let nextDocumentLocation = new URL(document.location.href);
-                 
                     let idPath = new URL(nextFocussedElement.id);
-
                     let nextID = idPath.pathname.split("/").pop();
-
                     idPath.pathname = "/uuid/" + nextID;
-
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-
                     window.history.replaceState({}, '', idPath.href);    
                 },/*
                 "Insert": async (e) => {
@@ -1214,8 +1136,7 @@
                     browser.view.documentList = await window.slo.documentPage(json)
                     browser.view.sloDocument = sloDocument({
                         container: document.getElementById('slo-document')
-                        }
-                    );
+                    });
                 })
             },
             doelniveauList: function(type) {
