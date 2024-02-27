@@ -29,16 +29,22 @@
     embed {
         display: none;
     }
+    .slo-footer{
+        display: none;
+    }
     img {
         max-width: 100%;
     }
-    section{
-        break-inside: avoid-page;
-    }
-    div div h1 {
+    h1 {
         break-inside: avoid;
     }
     ul {
-        break-inside: avoid-page;
+        break-inside: avoid;
+    }
+    section {
+        break-inside: avoid;
+    }
+    .slo-document .focus {
+        outline: 0 solid rgba(0,0,0,0);
     }
 }

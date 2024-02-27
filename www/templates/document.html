@@ -1,123 +1,131 @@
 <template data-simply-template="document">
 
-        <div class="slo-document">
-            <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
-                <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
-                data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
-                data-simply-activate="niveaus-select" data-simply-element="niveaus">
-                    <template>
-                        <option data-simply-field="title"></option>
-                    </template>
-                </select>
-                <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
-                data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
-                data-simply-activate="contexts-select" data-simply-element="contexts">
-                    <template>
-                        <option data-simply-field="context"></option>
-                    </template>
-                </select>
-            </div>
-            
-            <nav class="ds-crumbs">
-                <ul class="ds-crumbs-list">
-                    <li>API</li>
-                    <li><a href="/">2023</a></li>
-                    <li><a href="" data-simply-field="contextLink"></a></li>
-                </ul>
-            </nav>
-            
-            <div data-simply-list="documentList">
-                <template rel="documentTemplate"></template>
-            </div>
-
+    <div class="slo-document">
+        <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
+            <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
+            data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
+            data-simply-activate="niveaus-select" data-simply-element="niveaus">
+                <template>
+                    <option data-simply-field="title"></option>
+                </template>
+            </select>
+            <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
+            data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
+            data-simply-activate="contexts-select" data-simply-element="contexts">
+                <template>
+                    <option data-simply-field="context"></option>
+                </template>
+            </select>
+        </div>
+        
+        <nav class="ds-crumbs">
+            <ul class="ds-crumbs-list">
+                <li>API</li>
+                <li><a href="/">2023</a></li>
+                <li><a href="" data-simply-field="contextLink"></a></li>
+            </ul>
+        </nav>
+        
+        <div data-simply-list="documentList" id="slo-document">
+            <template rel="documentTemplate"></template>
+        </div>
+    
+        <template id="documentTemplate">
             <section>
-                <template id="documentTemplate">
-                    <div>
-                        <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
-                                <h1>                       
-                                <span class="slo-prefix" data-simply-field="prefix"></span>
-                                <span data-simply-field="title"></span>
-                                <span class="ds-badge ds-color" data-simply-list="documentNiveauIndex">
-                                    <template>
-                                        <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
-                                            <span class="ds-margin-up slo-prefix" data-simply-field="title"></span>
-                                                <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                                    <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                                                </svg>
-                                                <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                                                    <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                                                </svg>
-                                        </div>
-                                    </template>
-                                </span>
-
+                <h1 id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">                       
+                    <span class="slo-prefix" data-simply-field="prefix"></span>
+                    <span data-simply-field="title"></span>
+                    
+                    <span data-simply-list="documentNiveauIndex">
+                        <template>
+                            <span id="" class="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                                <span class="ds-margin-up ds-badge niveau" data-simply-field="title"></span>
+                                <!--
                                 <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                     <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
                                 </svg>
                                 <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
                                     <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
                                 </svg>
-                            </h1>
-                        </div>
-                        
-                        <div class="ds-margin-up" data-simply-list="documentNiveaus">
-                            <template>
-                                <div id="" class="slo-niveau" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
-                                        <div class="ds-badge" data-simply-field="title"></div>
-                                        <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                                        </svg>
-                                        <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                                        </svg>
-                                    </span>
-                                </div>
-                            </template>
-                        </div>
-                   
-                        <ul class="ds-margin-up" data-simply-list="documentLeafNode">
-                            <template>
-                                    <li class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
-                                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
-                                            <span class="slo-prefix" data-simply-field="title"></span>
-                                            <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                                            </svg>
-                                            <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                                            </svg>
-                                    </li>
-                            </template>
-                        </ul>
+                            -->
+                            </span>
+                        </template>
+                    </span>
 
-                        <div class="ds-margin-up" data-simply-list="documentTextNode">
-                            <template>
-                                    <div class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
-                                        <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
-                                        <span class="slo-prefix" data-simply-field="title"></span>
-                                        <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
-                                        </svg>
-                                        <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
-                                            <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
-                                        </svg>
-                                    </div>
-                            </template>
-                        </div>
+                    <!--
+                    <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
+                    </svg>
+                    <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
+                    </svg>
+                    -->
+                </h1>
 
-                        <div>
-                            <section >
-                                <div data-simply-list="documentSublist">
-                                    <template rel="documentTemplate"></template>
-                                </div>           
-                            </section>
+                <div class="ds-margin-up" data-simply-list="documentTextNode">
+                    <template>
+                        <div class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
+                            <span class="slo-prefix" data-simply-field="title"></span>
+                            <!--
+                            <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                            <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
+                            </svg>
+                            -->
                         </div>
-                    
-                    </div>
-                </template>
+                    </template>
+                </div>
 
-            </section>       
-        </div>
-        
+                <div class="ds-margin-up" data-simply-list="documentNiveaus">
+                    <template>
+                        <div id="" class="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                            <span class="ds-badge niveau" data-simply-field="title"></span>
+                            <!--
+                            <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                            <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
+                            </svg>
+                            -->
+                        </div>
+                    </template>
+                </div>
+
+                <ul class="ds-margin-up" data-simply-list="documentLeafNode">
+                    <template>
+                        <li class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
+                            <span class="slo-prefix" data-simply-field="title"></span>
+                            <!--
+                            <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
+                            </svg>
+                            <svg class="slo-delete ds-icon ds-icon-feather" title="Verwijder deze relatie">
+                                <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
+                            </svg>
+                            -->
+                        </li>
+                    </template>
+                </ul>
+
+                <div data-simply-list="documentSublist">
+                    <template rel="documentTemplate"></template>               
+                </div>
+
+            </section>
+                                    
+        </template>
+                
+    </div>
+    
+    <dialog class="slo-type-selector ds-dialog">
+        <form data-simply-command="modifyText">
+        </form>
+    </dialog>
+
 </template>
 

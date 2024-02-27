@@ -180,7 +180,7 @@
         float: right;
         justify-content: end;
     }
-    .slo-doocument .slo-context-filter .ds-button {
+    .slo-document .slo-context-filter .ds-button {
         margin-right: 0;
     }
     .slo-document .slo-content-panel {
@@ -188,8 +188,12 @@
         width: auto;
     }
  
-
     .slo-document .focus {
         outline: 1px solid blue;
+    }
+
+    /* forked from ds-badge: needed a font with relative size */
+    .slo-document .ds-badge.niveau {
+        font-size: 0.8rem;
     }
  
