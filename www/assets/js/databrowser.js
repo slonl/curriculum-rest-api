@@ -534,7 +534,8 @@
                     let nextID = idPath.pathname.split("/").pop();
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-                    window.history.replaceState({}, '', idPath.href);                                
+                    window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
                 },
                 
                 "ArrowUp": (e) => {
@@ -566,6 +567,7 @@
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
                     window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
 
                 },
                 "ArrowLeft": (e) => {
@@ -596,7 +598,8 @@
                     let nextID = idPath.pathname.split("/").pop();
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-                    window.history.replaceState({}, '', idPath.href);   
+                    window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
                 },
                 "ArrowRight": (e) => {
                     e.preventDefault()
@@ -627,6 +630,7 @@
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
                     window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
                 },
                 "Enter": (e) => {
                     // WIP-- for editing. --
@@ -669,6 +673,7 @@
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
                     window.history.replaceState({}, '', idPath.href);     
+                    browser.view.item.uuid = nextID
                 },
                 "End": (e) => {
                     e.preventDefault()
@@ -693,6 +698,7 @@
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
                     window.history.replaceState({}, '', idPath.href);    
+                    browser.view.item.uuid = nextID
                 },
                 "PageUp": (e) => {
                     e.preventDefault()
@@ -723,7 +729,9 @@
                     let nextID = idPath.pathname.split("/").pop();
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-                    window.history.replaceState({}, '', idPath.href);                   
+                    window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
+
                 },
                 "PageDown": (e) => {
                     e.preventDefault()
@@ -754,7 +762,8 @@
                     let nextID = idPath.pathname.split("/").pop();
                     idPath.pathname = "/uuid/" + nextID;
                     idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-                    window.history.replaceState({}, '', idPath.href);    
+                    window.history.replaceState({}, '', idPath.href);
+                    browser.view.item.uuid = nextID
                 },/*
                 "Insert": async (e) => {
                     e.preventDefault()
@@ -979,7 +988,7 @@
                     case 'spreadsheet':
                         document.body.setAttribute('data-simply-keyboard','spreadsheet')
                         currentItem = this.app.view.item.uuid
-                        currentId = this.app.view.item['@id']
+                        currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem //this.app.view.item['@id']
                         // get roots of current item
                         roots = await window.slo.api.get('/roots/'+currentItem)
                         // pick one
@@ -1230,10 +1239,10 @@
                     'unreleased': true
                 }
                 node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.uuid
-                let currValue = parentNode[type]
                 if (!parentNode[type]) {
                     parentNode[type] = []
                 }
+                let currValue = parentNode[type].slice()
                 parentNode[type].unshift(node)
                 let data = slo.treeToRows(browser.view.root)
                 browser.view.sloSpreadsheet.update({
@@ -1245,14 +1254,11 @@
                 let change = {
                     type: 'insert',
                     id: '/uuid/'+parentNode.uuid,
-                    prop: type,
+                    property: type,
                     prevValue: currValue,
                     newValue: parentNode[type],
                     dirty: true,
-                    child: {
-                        id: '/uuid/'.node.uuid,
-                        newValue: node
-                    },
+                    child: JSONTag.clone(node), // prevent later changes from polluting the child here
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 }
                 slo.changeHistory.push(change)
@@ -1276,6 +1282,7 @@
                 let change = {
                     id: '/uuid/'+parent.uuid,
                     type: 'delete',
+                    property: type,
                     prevValue: prevValue,
                     newValue: parentNode[type],
                     dirty: true,
@@ -1306,10 +1313,10 @@
                 selector.removeAttribute('open')
             },
             'commitChanges': async function() {
-                const linkedArray = (list) => {
+                const linkArray = (list) => {
                     let links = []
                     for (let v of list) {
-                        if (JSONTag.isObject(v) && v.uuid) {
+                        if (JSONTag.getType(v)==='object' && v.uuid) {
                             v = new JSONTag.Link('/uuid/'+v.uuid)
                         }
                         links.push(v)
@@ -1352,6 +1359,14 @@
                     }
                     return linkedChanges
                 }
+                
+                const replaceNiveaus = (niveaus) => {
+                    return from(data.Niveau)
+                    .where({
+                        title: anyOf(...newValue)
+                    })
+                }
+
                 // create and send command
                 let command = {
                     id: uuid(),
