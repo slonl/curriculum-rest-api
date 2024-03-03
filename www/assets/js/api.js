@@ -185,7 +185,12 @@
                     examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
                     examenprogramma_domein: 'ExamenprogrammaDomein',
                     examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
-                    examenprogramma_eindterm: 'ExamenprogrammaEindterm'
+                    examenprogramma_eindterm: 'ExamenprogrammaEindterm',
+                    examenprogramma_kop1: 'ExamenprogrammaKop1',
+                    examenprogramma_kop2: 'ExamenprogrammaKop2',
+                    examenprogramma_kop3: 'ExamenprogrammaKop3',
+                    examenprogramma_kop4: 'ExamenprogrammaKop4',
+                    examenprogramma_boyd: 'ExamenprogrammaBody'
                 }
             },
             'curriculum-syllabus': {
@@ -285,7 +290,7 @@
                     break
                     case 'insert':
                         slo.current[change.id][change.property] = change.newValue
-                        slo.inserted[change.child.id] = child
+                        slo.inserted[change.child.id] = change.child
                         // @TODO: add child node to index.id
                         // @TODO: calculate root and set parent non-enumerable properties
                     break
@@ -652,8 +657,13 @@
             return Object.entries(contexts[context].data)
             .find(([k,v]) => v==type)[0]
         },
-        getTypeByTypeName(_type, context) {            
-            return contexts[context].data[_type]
+        getTypeByTypeName(_type, context) {
+            for (context of Object.keys(contexts)) {
+                if (contexts[context].data[_type]) {
+                    return contexts[context].data[_type]
+                }
+            }
+            return _type
         },
         getAvailableChildTypes(type) {
             let context = slo.getContextByType(type)
