@@ -41,7 +41,7 @@ function storeQuery(url, query, variables, urlQuery) {
 		if (response.ok) {
 			return response.text()
 		}
-		throw new Error(response, response.status)
+		throw new Error(response.status+': '+response.statusText, {details: response})
 	}).then(json => {
 		return JSONTag.parse(json)
 	})
