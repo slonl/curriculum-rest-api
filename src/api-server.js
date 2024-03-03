@@ -6,6 +6,10 @@ const path      = require('path');
 const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
 const opendata  = require('./opendata-api.js');
+
+let JSONTag
+import('@muze-nl/jsontag').then(module => { JSONTag = module.default })
+
 global.opendata = opendata;
 
 const sgMail = require('@sendgrid/mail');
@@ -68,6 +72,11 @@ app.use(function(req, res, next) {
 	}
 	next();
 });
+
+// allow access to raw body, used to parse a query send as post body
+app.use(express.raw({
+    type: (req) => true // parse body on all requests
+}))
 
 app.route('/' + 'register/').get((req) => {
 	var user = req.query.email;
@@ -386,13 +395,48 @@ const flatten = function(arr, result = []) {
 };
 
 
-app.route('/' + 'register/').get((req) => {
-	console.log("Register user " + req.param.email);
-});
+app.route('/' + 'command/').post(async (req, res) => {
+	res.setHeader('content-type', 'application/json');
+	let auth = req.header('Authorization')
+	let token = atob(auth.split(' ')[1])
+	let user = token.split(':')[0]
+	if (editors[user]) {
+        let commandStr = req.body.toString() // raw body through express.raw()
+        //let command = JSONTag.parse(commandStr)
+        try {
+			let response = await opendata.api.runCommand(commandStr)
+			res.send(response)
+		} catch(error) {
+			res.status(500).send({ error: 500, message: error.message });
+		}
+	} else {
+		res.status(401)
+		res.send('{"code":401,"message":"Forbidden"}')
+	}
+})
+
+app.route('/command/:commandId').get(async (req, res) => {
+	console.log('get status for ',req.params.commandId)
+	res.setHeader('content-type', 'application/json');
+	let auth = req.header('Authorization')
+	let token = atob(auth.split(' ')[1])
+	let user = token.split(':')[0]
+	if (editors[user]) {
+		try {
+	        let response = await opendata.api.getCommandStatus(req.params.commandId)
+			res.send(response)
+		} catch(error) {
+			res.status(500).send({ error: 500, message: error.message });
+		}
+	} else {
+		res.status(401)
+		res.send('{"code":401,"message":"Forbidden"}')
+	}
+})
 
 // add routes above this line
 app.route('*').get((req,res) => {
-	res.status(404).send(notfound+'('+baseDatasetPath+':'+req.path+')');
+	res.status(404).send(JSON.stringify(Object.assign(notfound, { details: { path: req.path } } )));
 });
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
