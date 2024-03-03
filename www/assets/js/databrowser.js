@@ -15,6 +15,12 @@
     })();
 */    
 
+    function uuid() {
+      return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+
     function isString(s) {
         return typeof s === 'string' || s instanceof String
     }
@@ -898,7 +904,9 @@
                 alert('nog niet geimplementeerd')
             },
             commitChanges: async function(el, value) {
-                alert('nog niet geimplementeerd')
+                document.body.classList.add('loading')
+                await this.app.actions.commitChanges()
+                document.body.classList.remove('loading')
             },
             showChange: async function(el, value) {
                 alert('nog niet geimplementeerd')
@@ -1004,11 +1012,13 @@
                             let row = this.app.view.sloSpreadsheet.data[index]
                             let node = row.node
                             let prop = node[update.property]
+                            let timestamp = new Date().toISOString()
                             let change = {
-                                id: update.id,
+                                id: '/uuid/'+node.uuid,
+                                type: 'patch',
                                 property: update.property,
                                 prevValue: prop,
-                                timestamp: new Date().toLocaleString('nl-NL')
+                                timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                             }
                             if (columnDef.type=='list') {
                                 change.newValue = update.values.getAll(update.property)
@@ -1216,9 +1226,11 @@
                 let node = {
                     'uuid': curriculum.uuid(),
                     '@type': type,
-                    'prefix': parentNode.prefix
+                    'prefix': parentNode.prefix,
+                    'unreleased': true
                 }
                 node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.uuid
+                let currValue = parentNode[type]
                 if (!parentNode[type]) {
                     parentNode[type] = []
                 }
@@ -1227,6 +1239,26 @@
                 browser.view.sloSpreadsheet.update({
                     data: data.rows
                 })
+                // now add this to the change history
+                // @TODO: turn child reference into <link>?
+                let timestamp =  new Date().toISOString()
+                let change = {
+                    type: 'insert',
+                    id: '/uuid/'+parentNode.uuid,
+                    prop: type,
+                    prevValue: currValue,
+                    newValue: parentNode[type],
+                    dirty: true,
+                    child: {
+                        id: '/uuid/'.node.uuid,
+                        newValue: node
+                    },
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                }
+                slo.changeHistory.push(change)
+                browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
+                browser.view.undoSize = slo.changeHistory.length
+                localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
             },
             deleteRow: function(row) {
                 if (!browser.view.user) return
@@ -1235,6 +1267,24 @@
                 row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
                 row.deleted = true
                 browser.view.sloSpreadsheet.renderBody()
+                let parent = findParentRow(row)
+                let parentNode = parent.node
+                let type = row.node['@type']
+                let prevValue = parentNode[type]
+                parentNode[type] = parentNode[type].filter(e => e.uuid !== row.node.uuid) 
+                let timestamp = new Date().toISOString()
+                let change = {
+                    id: '/uuid/'+parent.uuid,
+                    type: 'delete',
+                    prevValue: prevValue,
+                    newValue: parentNode[type],
+                    dirty: true,
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                }
+                slo.changeHistory.push(change)
+                browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
+                browser.view.undoSize = slo.changeHistory.length
+                localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))                
             },
             showTypeSelector: async function(el) {
                 let thisType = browser.view.sloSpreadsheet.getRow(el).node['@type']
@@ -1254,6 +1304,79 @@
                 document.body.dataset.simplyKeyboard = 'spreadsheet'
                 let selector = document.querySelector('.slo-type-selector')
                 selector.removeAttribute('open')
+            },
+            'commitChanges': async function() {
+                const linkedArray = (list) => {
+                    let links = []
+                    for (let v of list) {
+                        if (JSONTag.isObject(v) && v.uuid) {
+                            v = new JSONTag.Link('/uuid/'+v.uuid)
+                        }
+                        links.push(v)
+                    }
+                    return links
+                }
+                const createLinks = (changes) => {
+                    // create new changeHistory but with links, new copy so that if 
+                    // command fails, the changeHistory itself isn't changed
+                    let linkedChanges = []
+                    for (let change of changes) {
+                        let linkedChange = Object.assign({}, change)
+                        switch(change.type) {
+                            case 'insert':
+                                if (change.child) {
+                                    let child = {}
+                                    Object.keys(change.child).forEach(key => {
+                                        if (Array.isArray(change.child[key])) {
+                                            child[key] = linkArray(child[key])
+                                        } else {
+                                            child[key] = change.child[key]
+                                        }
+                                    })
+                                    linkedChange.child = child
+                                }                                
+                            case 'patch':
+                            case 'delete':
+                                if (Array.isArray(change.newValue)) {
+                                    linkedChange.newValue = linkArray(linkedChange.newValue)
+                                }
+                            break
+                            default:
+                                throw new Error('Unknown change type: '+change.type)
+                            break
+                        }
+                        if (Array.isArray(change.prevValue)) {
+                            linkedChange.prevValue = linkArray(linkedChange.prevValue)
+                        }
+                        linkedChanges.push(linkedChange)
+                    }
+                    return linkedChanges
+                }
+                // create and send command
+                let command = {
+                    id: uuid(),
+                    name: 'patch',
+                    value: createLinks(slo.changeHistory)
+                }
+                try {
+                    let result = await slo.api.runCommand(command)
+                    if (result.status!=='accepted') {
+                        throw new Error('Invalid command: '+result.status+': '+result.message)
+                    }
+                    result = await slo.api.pollCommand(command.id)
+                    if (result.status!=='done') {
+                        throw new Error('Invalid command: '+result.status+': '+result.message)
+                    }                    
+                    slo.changeHistory = []
+                    browser.view.undoHistory = []
+                    browser.view.undoSize = 0
+                    slo.parseHistory()
+                    localStorage.setItem('changeHistory','[]')
+                    return true
+                } catch(err) {
+                    // catch: show error details for now, later try to fix conflicts //@TODO
+                    console.error(err)
+                }
             }
         }
     });
@@ -1267,9 +1390,11 @@
         slo.api.token = btoa(user+':'+key)
         browser.actions.loadSchemas().then(schemas => {
             browser.view.schemas = schemas
+            document.body.classList.remove('loading')
         })
     } else {
         browser.view.loggedIn = false
+        document.body.classList.remove('loading')
     }
 
     changeHistory = localStorage.getItem('changeHistory')
