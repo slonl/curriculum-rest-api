@@ -25,6 +25,17 @@
         return typeof s === 'string' || s instanceof String
     }
 
+    function arrayEquals(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
     var browser = simply.app({
         container: document.body,
 
@@ -781,6 +792,9 @@
             closeFilter: (el, value) => {
                 el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
             },
+            closeDialog: (el, value) => {
+                el.closest('dialog').close(false)
+            },
             toggleColumn: (el, value) => {
               let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
               column.checked = el.checked
@@ -923,15 +937,26 @@
             insertRow: async function(el, value) {
                 //find possible types for sibling and child of node
                 //show popup with list of types
-                let selectedType = await browser.actions.showTypeSelector(el)
+                browser.view.insertParentRow = el
+                let selectedType = await browser.actions.showTypeSelector(el)                
             },
             selectType: async function(el, value) {
                 browser.actions.hideTypeSelector()
-                el = document.querySelector('td.focus')
-                browser.actions.insertRow(el.closest('tr'),value)
+                //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
+                el = browser.view.insertParentRow
+                let row = await browser.actions.insertRow(el.closest('tr'),value)
+                let line = browser.view.sloSpreadsheet.getLineByRow(row)
+                el = browser.view.sloSpreadsheet.goto(line-1, 1)
+                while (!browser.view.sloSpreadsheet.isEditable(el)) {
+                    el = browser.view.sloSpreadsheet.moveNext()
+                }
+                browser.view.sloSpreadsheet.editor(el)
             },
             deleteRow: async function(el, value) {
                 browser.actions.deleteRow(el.closest('tr'))
+            },
+            undeleteRow: async function(el, value) {
+                browser.actions.undeleteRow(el.closest('tr'))
             }
         },
         actions: {
@@ -1015,12 +1040,16 @@
                             history.replaceState({}, '', new URL(uuid, window.location))
                         })
                         this.app.view.sloSpreadsheet.onEdit((update) => {
-                            //@FIXME: handle add/delete entities (relations)
                             let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
                             let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                             let row = this.app.view.sloSpreadsheet.data[index]
                             let node = row.node
-                            let prop = node[update.property]
+                            let prop
+                            if (update.property=='niveaus') {
+                                prop = row.columns.niveaus
+                            } else {
+                                prop = node[update.property]
+                            }
                             let timestamp = new Date().toISOString()
                             let change = {
                                 id: '/uuid/'+node.uuid,
@@ -1037,8 +1066,14 @@
                                     change.dirty = false
                                 }
                             }
-                            if (change.newValue === change.prevValue) {
+                            if (Array.isArray(change.newValue)) {
+                                if (arrayEquals(change.newValue, change.prevValue)) {
+                                    return // no change
+                                }
+                            } else if (change.newValue == change.prevValue) {
                                 return // no change failsave
+                            } else if (!change.newValue && !change.prevValue) {
+                                return // check if both are empty
                             }
                             slo.changeHistory.push(change)
                             browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
@@ -1105,7 +1140,10 @@
             list: function(type) {
                 browser.view['listTitle'] = titles[type];
                 browser.view.list = [];
-                return window.slo.api.get(window.release.apiPath+type)
+                return window.slo.api.get(window.release.apiPath+type, {
+                    pageSize: browser.view.pageSize,
+                    page: parseInt(browser.view.page)-1
+                })
                 .then(function(json) {
                     browser.view.view = 'list';
                     slo.applyHistory(json.data)
@@ -1225,12 +1263,13 @@
                 var url = window.release.apiPath+'register/';
                 window.slo.api.get(url + "?email=" + email);
             },
-            insertRow: function(row, type, parent=null) {
+            insertRow: function(rowEl, type, parent=null) {
                 //FIXME: implement parent
                 if (!browser.view.user) return
                 let visibleRows = browser.view.sloSpreadsheet.visibleData
-                rowNumber = browser.view.sloSpreadsheet.options.focus.row
-                row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                // rowNumber = browser.view.sloSpreadsheet.options.focus.row
+                // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                let row = browser.view.sloSpreadsheet.getRow(rowEl)
                 let parentNode = row.node
                 let node = {
                     'uuid': curriculum.uuid(),
@@ -1249,7 +1288,6 @@
                     data: data.rows
                 })
                 // now add this to the change history
-                // @TODO: turn child reference into <link>?
                 let timestamp =  new Date().toISOString()
                 let change = {
                     type: 'insert',
@@ -1265,15 +1303,66 @@
                 browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
                 browser.view.undoSize = slo.changeHistory.length
                 localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
+                // @FIXME: find inserted row, return it
+                row = browser.view.sloSpreadsheet.getRowByNode(node)
+                let line = browser.view.sloSpreadsheet.getLineByRow(row)
+                return browser.view.sloSpreadsheet.getRowByLine(line+1)
+            },
+            undeleteRow: function(rowEl) {
+                row = browser.view.sloSpreadsheet.getRow(rowEl)
+                if (row.deleted) {
+                    delete row.deleted
+                    delete row.node.deleted
+                    // FIXME: this undoes a deleteRow
+                    // but the change should be kept in changeHistory
+                    // for undo/redo purposes
+                    // however the deleteRow change should be filtered before sending to the server
+                    // this change should filter out earlier deleteRow
+                    let parent = browser.view.sloSpreadsheet.findParentRow(row)
+                    let parentNode = parent.node
+                    let type = row.node['@type']
+                    let prevValue = parentNode[type].slice()
+                    // find previous sibling of this row
+                    let prevSibling
+                    while (rowEl.previousElementSibling) {
+                        rowEl = rowEl.previousElementSibling
+                        prevSibling = browser.view.sloSpreadsheet.getRow(rowEl)
+                        if (prevSibling.indent==row.indent && !prevSibling.deleted) {
+                            break
+                        }
+                    }
+                    let newValue = parentNode[type]
+                    let siblingIndex = newValue.indexOf(prevSibling.node)
+                    newValue.splice(siblingIndex, 0, row.node)
+                    let timestamp = new Date().toISOString()
+                    let change = {
+                        id: '/uuid/'+parent.uuid,
+                        type: 'undelete',
+                        property: type,
+                        prevValue,
+                        newValue,
+                        dirty: true,
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    }
+                    slo.changeHistory.push(change)
+
+                    browser.view.sloSpreadsheet.renderBody()
+
+                    browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
+                    browser.view.undoSize = slo.changeHistory.length
+                    localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))                    
+                }
             },
             deleteRow: function(row) {
                 if (!browser.view.user) return
                 let visibleRows = browser.view.sloSpreadsheet.visibleData
-                rowNumber = browser.view.sloSpreadsheet.options.focus.row
-                row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                // rowNumber = browser.view.sloSpreadsheet.options.focus.row
+                // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
+                row = browser.view.sloSpreadsheet.getRow(row)
                 row.deleted = true
+                row.node.deleted = true
                 browser.view.sloSpreadsheet.renderBody()
-                let parent = findParentRow(row)
+                let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
                 let type = row.node['@type']
                 let prevValue = parentNode[type]
@@ -1302,15 +1391,39 @@
                 document.body.dataset.simplyKeyboard = 'spreadsheet-types'
                 let rect = el.getBoundingClientRect()
                 let selector = document.querySelector('.slo-type-selector')
-                selector.style.top = rect.top
-                selector.style.left = rect.left
-                selector.setAttribute('open','open')
+                let bodySize = document.body.getBoundingClientRect()
+                selector.showModal()
+                if (rect.bottom > (bodySize.height/2)) {
+                    let b = selector.getBoundingClientRect()
+                    selector.style.top = (rect.top - b.height ) +'px'
+                } else {
+                    selector.style.top = (rect.top + 27)+'px' //TODO: get this from spreadsheet options (rowHeight)
+                }
+                selector.style.left = rect.left + 'px'
+                // selector.setAttribute('open','open')
+                if (!selector.hasClickListener) {
+                    selector.addEventListener('click', (evt) => {
+                        selector.hasClickListener = true
+                        let rect = selector.getBoundingClientRect()
+                        let isInDialog = (rect.top<=evt.clientY 
+                            && rect.bottom >= evt.clientY
+                            && rect.left <= evt.clientX
+                            && rect.right >= evt.clientX)
+                        if (!isInDialog) {
+                            browser.actions.hideTypeSelector()
+                        }
+                    })
+                }
+                let checked = selector.querySelector('input:checked')
+                if (checked) {
+                    checked.checked=false
+                }
                 selector.querySelector('input').focus()
             },
             hideTypeSelector: async function() {
                 document.body.dataset.simplyKeyboard = 'spreadsheet'
                 let selector = document.querySelector('.slo-type-selector')
-                selector.removeAttribute('open')
+                selector.close(); //removeAttribute('open')
             },
             'commitChanges': async function() {
                 const linkArray = (list) => {
@@ -1344,10 +1457,11 @@
                                 }                                
                             case 'patch':
                             case 'delete':
+                            case 'undelete':
                                 if (Array.isArray(change.newValue)) {
                                     linkedChange.newValue = linkArray(linkedChange.newValue)
                                 }
-                            break
+                            break                                
                             default:
                                 throw new Error('Unknown change type: '+change.type)
                             break
