@@ -285,6 +285,7 @@
                     case 'delete':
                         // @TODO: check if any other parents exist, 
                         // else mark as deprecated and remove from index.id
+                    case 'undelete':
                     case 'patch':
                         slo.current[change.id][change.property] = change.newValue
                     break
