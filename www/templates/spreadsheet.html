@@ -31,18 +31,27 @@
         <div class="ds-scrollbox" id="slo-spreadsheet" style="overflow-anchor: none;">
         </div>
         <dialog class="slo-type-selector ds-dialog">
-            <form data-simply-command="insertRowType">
-                <label>Selecteer type</label>
-                <ul data-simply-list="availableTypes">
+            <header class="ds-dialog-header">
+                <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+                    <svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+                    </use></svg>
+                </button>
+                <div class="ds-space">
+                    <h2>Selecteer type</h2>
+                </div>
+            </header>
+            <div class="ds-dialog-content">
+                <div class="ds-space" data-simply-list="availableTypes">
                     <template>
-                        <li><label>
-                            <input type="radio" name="type"
-                                data-simply-command="selectType"
-                                data-simply-field="type" 
-                                data-simply-content="attributes" 
-                                data-simply-attributes="value">
-                            <span data-simply-field="name">
-                        </label></li>
+                        <label class="slo-type">
+                            <input data-simply-command="selectType"
+                                name="type" type="radio"
+                               data-simply-field="type" 
+                               data-simply-content="attributes" 
+                               data-simply-attributes="value">
+                            <span data-simply-field="name"></span>
+                        </label>
                     </template>
                 </ul>
             </form>
