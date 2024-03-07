@@ -250,3 +250,16 @@ body:not(.loading) .loading-overlay {
     transform: rotate(360deg);
   }
 }
+tr.deleted {
+    text-decoration: line-through;
+    color: red;
+}
+.slo-type-selector .slo-type {
+    cursor: pointer;
+}
+.slo-type-selector .slo-type:hover {
+    background-color: var(--ds-grey-20);
+}
+.slo-type-selector .ds-button-close {
+    right: 0;
+}
