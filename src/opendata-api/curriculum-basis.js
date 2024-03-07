@@ -196,7 +196,7 @@ module.exports = {
 					...shortInfo,
 					Niveau: ShortLink
 				})
-				.sort(sortByTitle)
+				.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -215,7 +215,7 @@ module.exports = {
 			description: _,
 
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -232,7 +232,7 @@ module.exports = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			...shortInfo,
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),

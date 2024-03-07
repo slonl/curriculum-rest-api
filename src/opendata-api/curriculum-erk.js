@@ -17,7 +17,7 @@ module.exports = {
 				},
 				Niveau: NiveauShort 
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -37,7 +37,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -56,7 +56,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -74,7 +74,7 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -92,7 +92,7 @@ module.exports = {
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -112,7 +112,7 @@ module.exports = {
 				erk_voorbeeld_id: _,
 				erk_lesidee_id: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -129,7 +129,7 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -146,7 +146,7 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),
@@ -205,7 +205,7 @@ module.exports = {
 					algemeen: _,
 				},
 			})
-			.sort(sortByPrefix)
+			.orderBy({ prefix:asc })
 
 			const meta = {
 				data: results.slice(Paging.start,Paging.end),

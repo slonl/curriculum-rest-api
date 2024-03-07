@@ -27,7 +27,7 @@ module.exports = {
 		ExamenprogrammaVakleergebied:`
 		const results = from(data.ExamenprogrammaVakleergebied) 
 		.select(shortInfo)
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -41,7 +41,7 @@ module.exports = {
 		Examenprogramma: `
 		const results = from(data.Examenprogramma) 
 		.select(shortInfo)
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -60,7 +60,7 @@ module.exports = {
 				...shortInfo,
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -82,7 +82,7 @@ module.exports = {
 				}
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -96,7 +96,7 @@ module.exports = {
 		ExamenprogrammaEindterm: `
 		const results = from(data.ExamenprogrammaEindterm) 
 		.select(shortInfo)
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -116,7 +116,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 				
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -130,7 +130,7 @@ module.exports = {
 		ExamenprogrammaKop2: `
 		const results = from(data.ExamenprogrammaKop2) 
 		.select(shortInfo)
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 		
 		const meta = {
 
@@ -145,7 +145,7 @@ module.exports = {
 		ExamenprogrammaKop3: `
 		const results = from(data.ExamenprogrammaKop3) 
 		.select(shortInfo)
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -159,7 +159,7 @@ module.exports = {
 		ExamenprogrammaKop4: `
 		const results = from(data.ExamenprogrammaKop4) 
 		.select(shortInfo)
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 				
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -173,7 +173,7 @@ module.exports = {
 		ExamenprogrammaBody: `
 		const results = from(data.ExamenprogrammaBody) 
 		.select(shortInfo)
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),

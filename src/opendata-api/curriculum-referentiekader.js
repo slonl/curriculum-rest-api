@@ -18,7 +18,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 			
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -42,7 +42,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 				
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -67,7 +67,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}				
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -94,7 +94,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 	
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -123,7 +123,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 		
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -154,7 +154,7 @@ module.exports = {
 				Niveau: NiveauShort
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),

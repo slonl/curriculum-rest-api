@@ -8,7 +8,7 @@ module.exports = {
 		.select({
 			...shortInfo,  
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -28,7 +28,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -52,7 +52,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -78,7 +78,7 @@ module.exports = {
 			  }
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -98,7 +98,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-		.sort(sortByTitle)
+		.orderBy({ title:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),

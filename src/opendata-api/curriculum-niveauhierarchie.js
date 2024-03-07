@@ -11,7 +11,7 @@ module.exports = {
 			nh_niveau_id: _,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -31,7 +31,7 @@ module.exports = {
 			nh_niveau_id: _,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -51,7 +51,7 @@ module.exports = {
 			nh_niveau_id: _,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -70,7 +70,7 @@ module.exports = {
 			nh_niveau_id: _,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -88,7 +88,7 @@ module.exports = {
 			nh_niveau_id: _,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -105,7 +105,7 @@ module.exports = {
 			...shortInfo,
 			unreleased: _,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),

@@ -12,7 +12,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  .sort(sortByPrefix)
+		  .orderBy({ prefix:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -31,7 +31,7 @@ module.exports = {
 			  deprecated: _,
 			},
 		  })
-		  .sort(sortByPrefix)
+		  .orderBy({ prefix:asc })
 	
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -46,7 +46,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 		  })
-		  .sort(sortByPrefix)
+		  .orderBy({ prefix:asc })
 	
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -61,7 +61,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 		  })
-		  .sort(sortByPrefix)
+		  .orderBy({ prefix:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -80,7 +80,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  .sort(sortByPrefix)
+		  .orderBy({ prefix:asc })
 	
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -95,7 +95,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -110,7 +110,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -129,7 +129,7 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
@@ -144,7 +144,7 @@ module.exports = {
 		.select({
 			...shortInfo,
 		})
-		.sort(sortByPrefix)
+		.orderBy({ prefix:asc })
 
 		  const meta = {
 			data: results.slice(Paging.start,Paging.end),
