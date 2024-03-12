@@ -81,6 +81,65 @@
                     browser.view.error = error.error;
                     browser.view.errorMessage = error.message;
                 });
+            },
+            runCommand: function(command) {
+                return fetch(window.apiURL+'/command/', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/jsontag',
+                        'Authorization': 'Basic '+slo.api.token
+                    },
+                    body: JSONTag.stringify(command),
+                    method: 'POST'
+                })
+                .then(function(response) {
+                    var json = response.json();
+                    if (response.ok) {
+                        return json;
+                    }
+                    return json.then(Promise.reject.bind(Promise));
+                })
+                .then(function(json) {
+                    if (json.error) {
+                        browser.view.error = json.error;
+                    } else {
+                        browser.view.error = '';
+                    }
+                    return json;
+                })
+            },
+            pollCommand: function(commandId) {
+                let counter=0, maxWait=10000
+                return new Promise((resolve, reject) => {
+                    let interval = setInterval(() => {
+                        fetch(window.apiURL+'/command/'+commandId, {
+                            headers: {
+                                'Accept':'application/jsontag',
+                                'Authorization':'Basic '+slo.api.token
+                            }
+                        })
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json()
+                            }
+                            throw new Error(response.status+': '+response.statusText)
+                        })
+                        .then(function(json) {
+                            if (json.status!='accepted') {
+                                resolve(json)
+                                clearInterval(interval)
+                                return
+                            }
+                            counter++
+                            if (counter>maxWait) {
+                                reject({
+                                    code: 408,
+                                    message: 'Command takes too long'
+                                })
+                            }
+                        })
+                    }, 1000)
+                })
             }
         },
         contexts: {
@@ -126,7 +185,12 @@
                     examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
                     examenprogramma_domein: 'ExamenprogrammaDomein',
                     examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
-                    examenprogramma_eindterm: 'ExamenprogrammaEindterm'
+                    examenprogramma_eindterm: 'ExamenprogrammaEindterm',
+                    examenprogramma_kop1: 'ExamenprogrammaKop1',
+                    examenprogramma_kop2: 'ExamenprogrammaKop2',
+                    examenprogramma_kop3: 'ExamenprogrammaKop3',
+                    examenprogramma_kop4: 'ExamenprogrammaKop4',
+                    examenprogramma_boyd: 'ExamenprogrammaBody'
                 }
             },
             'curriculum-syllabus': {
@@ -211,12 +275,30 @@
 
         changeHistory: [],
         current: {},
+        inserted: [],
         parseHistory: function() {
             slo.changeHistory.forEach(change => {
                 if (!slo.current[change.id]) {
                     slo.current[change.id] = {}
                 }
-                slo.current[change.id][change.property] = change.newValue
+                switch(change.type) {
+                    case 'delete':
+                        // @TODO: check if any other parents exist, 
+                        // else mark as deprecated and remove from index.id
+                    case 'undelete':
+                    case 'patch':
+                        slo.current[change.id][change.property] = change.newValue
+                    break
+                    case 'insert':
+                        slo.current[change.id][change.property] = change.newValue
+                        slo.inserted[change.child.id] = change.child
+                        // @TODO: add child node to index.id
+                        // @TODO: calculate root and set parent non-enumerable properties
+                    break
+                    default:
+                        throw new Error('Unknown change type:'+change.type)
+                    break
+                }
             })
         },
         applyHistory: function(data) {
@@ -225,7 +307,7 @@
             }
             data.forEach(node => {
                 walk(node, 0, (n) => {
-                    let id = n['@id']
+                    let id = n['id']
                     if (slo.current[id]) {
                         Object.keys(slo.current[id]).forEach(prop => {
                             n[prop] = slo.current[id][prop]
@@ -576,8 +658,13 @@
             return Object.entries(contexts[context].data)
             .find(([k,v]) => v==type)[0]
         },
-        getTypeByTypeName(_type, context) {            
-            return contexts[context].data[_type]
+        getTypeByTypeName(_type, context) {
+            for (context of Object.keys(contexts)) {
+                if (contexts[context].data[_type]) {
+                    return contexts[context].data[_type]
+                }
+            }
+            return _type
         },
         getAvailableChildTypes(type) {
             let context = slo.getContextByType(type)

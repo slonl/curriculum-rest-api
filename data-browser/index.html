@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/css/extra.css">
 <link rel="stylesheet" href="/assets/css/vanillaSelectBox.css">
 <link rel="stylesheet" href="/assets/css/print.css" media="print">
-<body>
+<body class="loading">
 <base href="{@NODE_DATA_URL}">
 <div class="slo-header">
     <img class="slo-logo" src="/img/header-logo-opendata.svg" alt="SLO / opendata">
@@ -130,6 +130,13 @@
                 <p>Sorry, deze pagina bestaat niet.</p>
             </template>
             <template data-simply-template="list">
+                <nav class="ds-crumbs">
+                    <ul class="ds-crumbs-list">
+                        <li>API</li>
+                        <li><a href="/">2023</a></li>
+                        <li><a href="" data-simply-field="contextLink"></a></li>
+                    </ul>
+                </nav>
                 <h1 data-simply-field="listTitle"></h1>
                 <ul data-simply-list="list" xdata-simply-data="list">
                     <template rel="links"></template>
@@ -173,6 +180,10 @@
         </ul>
     </nav>
 </footer>
+
+<div class="loading-overlay">
+    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+</div>
 
 <link rel="simply-include" href="/templates/deprecated.html">
 <link rel="simply-include" href="/templates/links.html">
