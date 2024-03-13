@@ -1102,9 +1102,15 @@
                         currentId = this.app.view.item['@id']
                         // get roots of current item
                         this.app.view.roots = await window.slo.api.get('/roots/'+currentItem)
-                                              
+                        if (root && !this.app.view.roots.includes(root)) {
+                            this.app.view.item.uuid = root.id
+                            currentItem = root.id
+                            currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
+                            this.app.view.roots = [root]
+                        }
+
                         // pick one
-                        // FIXME: remember which one was picked last
+                        this.app.view.root = this.app.view.roots[0]
                         // switch to spreadsheet of that root
                         currentType = this.app.view.item['@type']
                         currentContext = window.slo.getContextByType(currentType)
@@ -1117,7 +1123,7 @@
                         if (!this.app.view.niveaus) {
                             this.app.view.niveaus = [];
                         }
-                        await this.app.actions.renderDocumentPage(this.app.view.roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        await this.app.actions.renderDocumentPage(this.app.view.root.id,this.app.view.contexts,this.app.view.niveaus)
                         
                         let documentModel = window.slo.getDataModel('items');
 
@@ -1509,7 +1515,6 @@
                     browser.view.undoSize = 0
                     slo.parseHistory()
                     localStorage.setItem('changeHistory','[]')
-                    debugger
                     this.app.actions.updateView(this.app.view.roots[0])
                     return true
                 } catch(err) {
