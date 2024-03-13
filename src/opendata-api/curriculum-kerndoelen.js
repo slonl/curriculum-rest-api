@@ -5,43 +5,49 @@ module.exports = {
 	queries: {
 		Kerndoel: `
 		const results = from(data.Kerndoel)
-		.select({
-			...shortInfo,
-			description: _,
-			kerndoelLabel: _,
-			Niveau: NiveauShort,
-		})
-		.orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				description: _,
+				kerndoelLabel: _,
+				Niveau: NiveauShort,
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		const meta = {
-		data: results.slice(Paging.start,Paging.end),
-		page: Page,
-		count: results.length
-		}
-
-		meta
+			meta
 			
 		`,
 		KerndoelById: `
 		const results = from(Index(request.query.id))
-		.select({
-			...shortInfo,
-			Doelniveau: Doelniveau
-		})
+			.select({
+				...shortInfo,
+				Doelniveau: Doelniveau
+			})
 		`,
 		KerndoelDomein: `
 		const results = from(data.KerndoelDomein)
-		.select({
-			...shortInfo,
-			KerndoelVakleergebied: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			}
-		})
-		.orderBy({ title:asc })
-
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+		
 		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}
@@ -51,38 +57,44 @@ module.exports = {
 		`,
 		KerndoelUitstroomprofiel: `
 		const results = from(data.KerndoelUitstroomprofiel)
-		.select({
-			...shortInfo,
-			KerndoelVakleergebied: {
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-			  deprecated: _,
+				KerndoelVakleergebied: {
+					...shortInfo,
+				deprecated: _,
+				}
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ prefix:asc })
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		KerndoelVakleergebied: `
 		const results = from(data.KerndoelVakleergebied)
-		.select({
-			...shortInfo,
-		})
-		.orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 	},
@@ -91,71 +103,71 @@ module.exports = {
 		from(Index(request.query.id))
 			.select({
 				...shortInfo,
-			description: _,
-			kerndoelLabel: _,
-			KerndoelDomein: {
-				...shortInfo,
-				deprecated: _,
-				KerndoelVakleergebied: {
+				description: _,
+				kerndoelLabel: _,
+				KerndoelDomein: {
 					...shortInfo,
 					deprecated: _,
-				}
-			},
-			Niveau: NiveauShort,
-			Doelniveau: Doelniveau,
-			Niveau: Niveau,
-		})
+					KerndoelVakleergebied: {
+						...shortInfo,
+						deprecated: _,
+					}
+				},
+				Niveau: NiveauShort,
+				Doelniveau: Doelniveau,
+				Niveau: Niveau,
+			})
 
 		`,
 		KerndoelDomein: `
 		from(Index(request.query.id))
 			.select({
 				...shortInfo,
-			Kerndoel: {
-				...shortInfo,
-				kerndoelLabel: _,
-				deprecated: _,
-				Niveau: NiveauShort
-			},
-			KerndoelVakleergebied: {
-				...shortInfo,
-				deprecated: _,
-			}
-		})
+				Kerndoel: {
+					...shortInfo,
+					kerndoelLabel: _,
+					deprecated: _,
+					Niveau: NiveauShort
+				},
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
 		`,
 		KerndoelVakleergebied: `
 		from(Index(request.query.id))
 			.select({
 				...shortInfo,
-			Vakleergebied: {
-				...shortInfo,
-				deprecated: _,
-			},
-			KerndoelDomein: {
-				...shortInfo,
-				deprecated: _,
-			},
-			KerndoelUitstroomprofiel: {
-				...shortInfo,
-				deprecated: _,
-			},
-			Kerndoel: {
-				...shortInfo,
-				kerndoelLabel: _,
-				deprecated: _,
-				Niveau: NiveauShort,
-			}
-		})
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelDomein: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelUitstroomprofiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Kerndoel: {
+					...shortInfo,
+					kerndoelLabel: _,
+					deprecated: _,
+					Niveau: NiveauShort,
+				}
+			})
 		`,
 		KerndoelUitstroomprofiel: `
 		from(Index(request.query.id))
 			.select({
 				...shortInfo,
-			KerndoelVakleergebied: {
-				...shortInfo,
-				deprecated: _,
-			}
-		})
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
 		`
 	},
 	routes: {

@@ -191,15 +191,18 @@ module.exports = {
 	queries: {
 		Vakleergebied: `
 		const results = from(data.Vakleergebied)
-				.select({
-					'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
-					...shortInfo,
-					Niveau: ShortLink
-				})
-				.orderBy({ title:asc })
-
+			.orderBy({ 
+				title:asc 
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
+				...shortInfo,
+				Niveau: ShortLink
+			})
+		
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}
@@ -209,16 +212,20 @@ module.exports = {
 		`,
 		Niveau: `
 		const results = from(data.Niveau)
+		.orderBy({ 
+			title:asc
+		})
+		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			...shortInfo,
 			description: _,
 
 		})
-		.orderBy({ title:asc })
+		
 
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}
@@ -228,14 +235,17 @@ module.exports = {
 		`,
 		Doel: `
 		const results = from(data.Doel)
+		.orderBy({ 
+			title:asc 
+		})
+		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			...shortInfo,
 		})
-		.orderBy({ title:asc })
-
+		
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}

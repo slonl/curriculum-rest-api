@@ -21,167 +21,200 @@ module.exports = {
 				examenjaar: _,
 				Niveau: NiveauShort
 			}
-		}`
+		}
+	`
 	,
 	queries: {
 		ExamenprogrammaVakleergebied:`
-		const results = from(data.ExamenprogrammaVakleergebied) 
-		.select(shortInfo)
-		.orderBy({ title:asc })
-		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+		const results = from(data.ExamenprogrammaVakleergebied)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		Examenprogramma: `
-		const results = from(data.Examenprogramma) 
-		.select(shortInfo)
-		.orderBy({ title:asc })
+		const results = from(data.Examenprogramma)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
 		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
 		
-		meta
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
+			
+			meta
 
 		`,
 		ExamenprogrammaDomein: `
-		const results = from(data.ExamenprogrammaDomein) 
-		.select({
-			...shortInfo,
-			Examenprogramma: {
+		const results = from(data.ExamenprogrammaDomein)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
+				Examenprogramma: {
+					...shortInfo,
+				}
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ title:asc })
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		ExamenprogrammaSubdomein: `
-		const results = from(data.ExamenprogrammaSubdomein) 
-		.select({
-			...shortInfo,
-			ExamenprogrammaDomein: {
+		const results = from(data.ExamenprogrammaSubdomein)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				Examenprogramma: {
-					...shortInfo
+				ExamenprogrammaDomein: {
+					...shortInfo,
+					Examenprogramma: {
+						...shortInfo
+					}
 				}
+			})
+		
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ title:asc })
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		ExamenprogrammaEindterm: `
-		const results = from(data.ExamenprogrammaEindterm) 
-		.select(shortInfo)
-		.orderBy({ prefix:asc })
+		const results = from(data.ExamenprogrammaEindterm)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
 		meta
 
 		`,
 		ExamenprogrammaKop1: `
-		const results = from(data.ExamenprogrammaKop1) 
-		.select({
-			...shortInfo,
-			Examenprogramma:{
+		const results = from(data.ExamenprogrammaKop1)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
+				Examenprogramma:{
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ prefix:asc })
-				
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
 
-		meta
+			meta
 
 		`,
 		ExamenprogrammaKop2: `
-		const results = from(data.ExamenprogrammaKop2) 
-		.select(shortInfo)
-		.orderBy({ prefix:asc })
-		
-		const meta = {
+		const results = from(data.ExamenprogrammaKop2)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
+			
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		ExamenprogrammaKop3: `
-		const results = from(data.ExamenprogrammaKop3) 
-		.select(shortInfo)
-		.orderBy({ prefix:asc })
+		const results = from(data.ExamenprogrammaKop3)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
 		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		ExamenprogrammaKop4: `
-		const results = from(data.ExamenprogrammaKop4) 
-		.select(shortInfo)
-		.orderBy({ prefix:asc })
-				
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+		const results = from(data.ExamenprogrammaKop4)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
+					
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		ExamenprogrammaBody: `
-		const results = from(data.ExamenprogrammaBody) 
-		.select(shortInfo)
-		.orderBy({ prefix:asc })
+		const results = from(data.ExamenprogrammaBody)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select(shortInfo)
 		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		ExamenprogrammaVolledig: `

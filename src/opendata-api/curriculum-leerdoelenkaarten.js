@@ -22,165 +22,180 @@ module.exports = {
 	queries: {
 		LdkVakleergebied: `
 		const results = from(data.LdkVakleergebied)
-		.select({
-			...shortInfo,
-			NiveauIndex: {
-			  Niveau: NiveauShort
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}
+		  	})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		  })
-		  .orderBy({ title:asc })
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		LdkVakkern: `
 		const results = from(data.LdkVakkern)
-		.select({
-			...shortInfo,
-			deprecated: _,
-			LdkVakleergebied: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				deprecated: _,
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
+				LdkVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		  })
-		  .orderBy({ title:asc })
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		LdkVaksubkern: `
 		const results = from(data.LdkVaksubkern)
-		.select({		
-			...shortInfo,
-			deprecated: _,
-			LdkVakkern: {
-			  LdkVakleergebied: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({		
 				...shortInfo,
 				deprecated: _,
-			  }
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
+				LdkVakkern: {
+					LdkVakleergebied: {
+						...shortInfo,
+						deprecated: _,
+					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}
+			})
+			
+		  	const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		  })
-		  .orderBy({ title:asc })
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		LdkVakinhoud: `
 		const results = from(data.LdkVakinhoud)
-		.select({
-			...shortInfo,
-			deprecated: _,
-			LdkVaksubkern: {
-			  LdkVakkern: {
-				LdkVakleergebied: {
-					...shortInfo,
-					deprecated: _,
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				deprecated: _,
+				LdkVaksubkern: {
+					LdkVakkern: {
+						LdkVakleergebied: {
+							...shortInfo,
+							deprecated: _,
+						}
+					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
-			  }
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ title:asc })
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		LdkVakbegrip: `
 		const results = from(data.LdkVakbegrip)
-		.select({
-			...shortInfo,
-			ce_se: _,
-			Doelniveau: Doelniveau,
-		  })
-		  .orderBy({ title:asc })
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				ce_se: _,
+				Doelniveau: Doelniveau,
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		DoelenOpNiveauByLdkVakleergebiedById: `
 		const results = from(Index(request.query.id))
-		.select({
-  			...shortInfo,
-  			NiveauIndex : o => from(o.NiveauIndex)
-  				.where({
-               		Niveau : { id: request.query.niveau }
-                })
-  				.select({
-                	...NiveauShort
-                })
+			.select({
+  				...shortInfo,
+  				NiveauIndex : o => from(o.NiveauIndex)
+					.where({
+						Niveau : { id: request.query.niveau }
+					})
+					.select({
+						...NiveauShort
+					})
   			,
   
   			LdkVakkern : {
               ...shortInfo,
               	Doelniveau : o => from(o.Doelniveau)			  
-				.where({
-					Niveau : { id: request.query.niveau }
-				})
-  				.select({
-					...Doelen
-				}),
-              
+					.where({
+						Niveau : { id: request.query.niveau }
+					})
+					.select({
+						...Doelen
+					}),
+				
                 LdkVaksubkern : {
-                  ...shortInfo,
-                      Doelniveau : o => from(o.Doelniveau)			  
-                  .where({
-                      Niveau : { id: request.query.niveau }
-                  })
-                  .select({
-                      ...Doelen
-                  }),
+                  	...shortInfo,
+                    Doelniveau : o => from(o.Doelniveau)			  
+						.where({
+							Niveau : { id: request.query.niveau }
+						})
+						.select({
+							...Doelen
+						}),
 
                   LdkVakinhoud: {
-                      ...shortInfo,
-                      Doelniveau : o => from(o.Doelniveau)			  
-                      .where({
-                          Niveau : { id: request.query.niveau }
-                      })
-                      .select({
-                          ...Doelen
-                      })
-                	},
-              	},
-            }			
-		})
+						...shortInfo,
+						Doelniveau : o => from(o.Doelniveau)			  
+							.where({
+								Niveau : { id: request.query.niveau }
+							})
+							.select({
+								...Doelen
+							})
+                		},
+              		},
+            	}			
+			})
 		`,
 		LdkVakleergebiedOpNiveau: `
 		const results = from(data.NiveauIndex)

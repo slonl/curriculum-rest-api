@@ -6,110 +6,95 @@ module.exports = {
 	queries: {
 		RefVakleergebied: `
 		const results = from(data.RefVakleergebied)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			description: _,					
-			Vakleergebied: {
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
-		})
-		.orderBy({ prefix:asc })
+				unreleased: _,
+				description: _,					
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}
+			})
 			
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		RefDomein: `
 		const results = from(data.RefDomein)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			RefVakleergebied: {
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
-		})
-		.orderBy({ prefix:asc })
-				
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
-		`,
-		RefSubdomein: `
-		const results = from(data.RefSubdomein)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			RefDomein: { 
+				unreleased: _,
 				RefVakleergebied: {
 					...shortInfo,
 					deprecated: _,
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}				
-		})
-		.orderBy({ prefix:asc })
-		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			})
+				
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 		`,
-		RefOnderwerp: `
-		const results = from(data.RefOnderwerp)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			RefSubdomein: {
-				RefDomein: {
+		RefSubdomein: `
+		const results = from(data.RefSubdomein)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefDomein: { 
 					RefVakleergebied: {
 						...shortInfo,
 						deprecated: _,
 					}
-				}
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}				
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ prefix:asc })
-	
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
 
-		meta
+			meta
 		`,
-		RefDeelonderwerp: `
-		const results = from(data.RefDeelonderwerp)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			RefOnderwerp: {
+		RefOnderwerp: `
+		const results = from(data.RefOnderwerp)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
 				RefSubdomein: {
 					RefDomein: {
 						RefVakleergebied: {
@@ -117,52 +102,85 @@ module.exports = {
 							deprecated: _,
 						}
 					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
-		})
-		.orderBy({ prefix:asc })
-		
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			})
 
-		meta
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
+
+			meta
+		`,
+		RefDeelonderwerp: `
+		const results = from(data.RefDeelonderwerp)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefOnderwerp: {
+					RefSubdomein: {
+						RefDomein: {
+							RefVakleergebied: {
+								...shortInfo,
+								deprecated: _,
+							}
+						}
+					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
+				}
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
+
+			meta
 		`,
 
 		// @TODO : Check if RefTekstkenmerk is indeed empty
 		RefTekstkenmerk: `
 		const results = from(data.RefTekstkenmerk)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			RefOnderwerp: {
-				RefSubdomein: {
-					RefDomein: {
-						RefVakleergebied: {
-							...shortInfo,
-							deprecated: _,
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefOnderwerp: {
+					RefSubdomein: {
+						RefDomein: {
+							RefVakleergebied: {
+								...shortInfo,
+								deprecated: _,
+							}
 						}
 					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ prefix:asc })
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 		`,
 		/*
 		// @TODO : Check if ReferentiekaderVolledig is a word

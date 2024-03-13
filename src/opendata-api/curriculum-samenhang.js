@@ -5,40 +5,42 @@ module.exports = {
 	queries: {
 		Tag: `
 		const results = from(data.Tag)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			fo_toelichting_id: _,
-			fo_uitwerking_id: _,
-		})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				fo_toelichting_id: _,
+				fo_uitwerking_id: _,
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
 		`,
 		Relatie: `
 		const results = from(data.Syllabus)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			fo_toelichting_id: _,
-			fo_uitwerking_id: _,
-		})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				fo_toelichting_id: _,
+				fo_uitwerking_id: _,
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 
-			`
+		`
 	},
 	typedQueries: {
 		tag: `

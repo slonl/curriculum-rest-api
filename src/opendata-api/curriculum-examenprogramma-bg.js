@@ -5,6 +5,10 @@ module.exports = {
 	queries: {
 		ExamenprogrammaBgProfiel: `
 			const results = from(data.ExamenprogrammaBgProfiel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
 			Vakleergebied: {
@@ -12,10 +16,10 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		  .orderBy({ prefix:asc })
+		 
 
 		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
 			count: results.length
 		}
@@ -23,136 +27,157 @@ module.exports = {
 		meta
 		`,
 		ExamenprogrammaBgKern: `
-			const results = from(data.ExamenprogrammaBgKern)
+		const results = from(data.ExamenprogrammaBgKern)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-			ExamenprogrammaBgProfiel: {
-				...shortInfo,
-			  deprecated: _,
-			},
-		  })
-		  .orderBy({ prefix:asc })
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+		  	})
 	
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+		  	const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
 		meta
 		`,
 		ExamenprogrammaBgKerndeel: `
-			const results = from(data.ExamenprogrammaBgKerndeel)
+		const results = from(data.ExamenprogrammaBgKerndeel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-		  })
-		  .orderBy({ prefix:asc })
-	
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+		  	})
+		  
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 		`,
 		ExamenprogrammaBgGlobaleEindterm: `
 		const results = from(data.ExamenprogrammaBgGlobaleEindterm)
-		.select({
-			...shortInfo,
-		  })
-		  .orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+		  	const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 		`,
 		ExamenprogrammaBgModule: `
 		const results = from(data.ExamenprogrammaBgModule)
-		.select({
-			...shortInfo,
-			ExamenprogrammaBgProfiel: {
+			.orderBy({ prefix:asc })
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-			  deprecated: _,
-			}
-		  })
-		  .orderBy({ prefix:asc })
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+		  
 	
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 		`,
 		ExamenprogrammaBgDeeltaak: `
 		const results = from(data.ExamenprogrammaBgDeeltaak)
-		.select({
-			...shortInfo,
-		})
-		.orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 		`,
 		ExamenprogrammaBgModuletaak: `
 		const results = from(data.ExamenprogrammaBgModuletaak)
-		.select({
-			...shortInfo,
-		})
-		.orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 		`,
 		ExamenprogrammaBgKeuzevak: `
 		const results = from(data.ExamenprogrammaBgKeuzevak)
-		.select({
-			...shortInfo,
-			ExamenprogrammaBgProfiel: {
+			.orderBy({ prefix:asc })
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
 			}
-		})
-		.orderBy({ prefix:asc })
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 		`,
 		ExamenprogrammaBgKeuzevaktaak: `
 		const results = from(data.ExamenprogrammaBgKeuzevaktaak)
-		.select({
-			...shortInfo,
-		})
-		.orderBy({ prefix:asc })
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+		  	const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 		`,
 
 		ExamenprogrammaBgVolledig: `
@@ -160,50 +185,50 @@ module.exports = {
 		.select({
 			...shortInfo,
 			deprecated: _,
-			  ExamenprogrammaBgKern: {
-				...shortInfo,
-				deprecated: _,
-				ExamenprogrammaBgKerndeel: {
-					...shortInfo,
-				  deprecated: _,
-				  ExamenprogrammaBgGlobaleEindterm: {
+			  	ExamenprogrammaBgKern: {
 					...shortInfo,
 					deprecated: _,
-				  },
-				},
-			  },
-			  ExamenprogrammaBgModule: {
-				...shortInfo,
-				deprecated: _,
-				ExamenprogrammaBgDeeltaak: {
-					...shortInfo,
-				  deprecated: _,
-				  ExamenprogrammaBgGlobaleEindterm: {
-					...shortInfo,
-					deprecated: _,
-				  },
-				},
-				ExamenprogrammaBgModuletaak: {
+					ExamenprogrammaBgKerndeel: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+			  	},
+			  	ExamenprogrammaBgModule: {
 					...shortInfo,
 					deprecated: _,
-				},
-			  },
-			  ExamenprogrammaBgKeuzevak: {
-				...shortInfo,
-				deprecated: _,
-				ExamenprogrammaBgDeeltaak: {
-					...shortInfo,
-				  deprecated: _,
-				  ExamenprogrammaBgGlobaleEindterm: {
+					ExamenprogrammaBgDeeltaak: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+					ExamenprogrammaBgModuletaak: {
+						...shortInfo,
+						deprecated: _,
+					},
+			  	},
+			  	ExamenprogrammaBgKeuzevak: {
 					...shortInfo,
 					deprecated: _,
-				  },
-				},
-				ExamenprogrammaBgKeuzevaktaak: {
-					...shortInfo,
-					deprecated: _,
-				},
-			  },
+					ExamenprogrammaBgDeeltaak: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+					ExamenprogrammaBgKeuzevaktaak: {
+						...shortInfo,
+						deprecated: _,
+					},
+			  	},
 			})
 	    `
 	},
@@ -215,19 +240,19 @@ module.exports = {
 			replaces: _,
 			Vakleergebied: {
 				...shortInfo,
-			  deprecated: _,
+			  	deprecated: _,
 			},
 			ExamenprogrammaBgKern: {
 				...shortInfo,
-			  deprecated: _,
+			 	deprecated: _,
 			},
 			ExamenprogrammaBgModule: {
 				...shortInfo,
-			  deprecated: _,
+			  	deprecated: _,
 			},
 			ExamenprogrammaBgKeuzevak: {
 				...shortInfo,
-			  deprecated: _,
+			  	deprecated: _,
 			},
 		})
 		`,

@@ -4,7 +4,11 @@ module.exports = {
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
 		ErkVakleergebied: `
-			const results = from(data.ErkVakleergebied)
+		const results = from(data.ErkVakleergebied)
+			.orderBy({ 
+				prefix:asc 
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
 				...shortInfo,
@@ -17,10 +21,9 @@ module.exports = {
 				},
 				Niveau: NiveauShort 
 			})
-			.orderBy({ prefix:asc })
-
+			
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -29,6 +32,10 @@ module.exports = {
 		`,
 		ErkGebied: `
 		const results = from(data.ErkGebied)
+			.orderBy({ 
+				prefix:asc 
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_gebied',
 				...shortInfo,
@@ -37,10 +44,10 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
+			
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -49,6 +56,10 @@ module.exports = {
 		`,
 		ErkCategorie: `
 		const results = from(data.ErkCategorie)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_categorie',
 				...shortInfo,
@@ -56,10 +67,10 @@ module.exports = {
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
+			
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -68,16 +79,20 @@ module.exports = {
 		`,
 		ErkTaalactiviteit: `
 		const results = from(data.ErkTaalactiviteit)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalactiviteit',
 				...shortInfo,
 				erk_schaal_id: _,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
+			
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -86,16 +101,20 @@ module.exports = {
 		`,
 		ErkSchaal: `
 			const results = from(data.ErkSchaal)
+				.orderBy({
+					prefix:asc
+				})
+				.slice(Paging.start,Paging.end)
 				.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_schaal',
 				...shortInfo,
 				erk_candobeschrijving_id: _,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
+			
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -103,8 +122,12 @@ module.exports = {
 			meta
 		`,
 		ErkCandobeschrijving: `
-			const results = from(data.ErkCandobeschrijving)
-				.select({
+		const results = from(data.ErkCandobeschrijving)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_candobeschrijving',
 				...shortInfo,
 				unreleased: _,
@@ -112,10 +135,9 @@ module.exports = {
 				erk_voorbeeld_id: _,
 				erk_lesidee_id: _,
 			})
-			.orderBy({ prefix:asc })
-
+			
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -124,15 +146,18 @@ module.exports = {
 		`,
 		ErkVoorbeeld: `
 		const results = from(data.ErkVoorbeeld)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_voorbeeld',
 				...shortInfo,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
-
+			
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -141,15 +166,18 @@ module.exports = {
 		`,
 		ErkLesidee: `
 		const results = from(data.ErkLesidee)
-		.select({
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_lesidee',
 				...shortInfo,
 				unreleased: _,
 			})
-			.orderBy({ prefix:asc })
-
+			
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
@@ -159,23 +187,28 @@ module.exports = {
 		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
 		const results = from(Index(request.query.id))
+			.slice(Paging.start,Paging.end)
 			.select({
-			//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
-			...shortInfo,
-			Niveau: NiveauShort
-		  })
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
+				...shortInfo,
+				Niveau: NiveauShort
+		  	})
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: results.length
+			}
 
-		meta
+			meta
 		`,
 		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
 		const results = from(data.ErkSchalen)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
 			.select({
 				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',
 				...shortInfo,
@@ -205,10 +238,10 @@ module.exports = {
 					algemeen: _,
 				},
 			})
-			.orderBy({ prefix:asc })
+			
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
 				count: results.length
 			}
