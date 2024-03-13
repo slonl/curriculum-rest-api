@@ -994,7 +994,10 @@
                     .map(schema => schema.value)
                 )
             },
-            switchView: async function(view){
+            updateView: async function(root) {
+                this.app.actions.switchView(this.app.view.view, root)
+            },
+            switchView: async function(view,root){
                 let currentView = this.app.view.view;
 
                 if (!this.app.view?.item?.uuid) {
@@ -1013,11 +1016,17 @@
                     case 'spreadsheet':
                         document.body.setAttribute('data-simply-keyboard','spreadsheet')
                         currentItem = this.app.view.item.uuid
-                        currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem //this.app.view.item['@id']
+                        currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
+                        this.app.view.roots = await window.slo.api.get('/roots/'+currentItem)
+                        if (root && !this.app.view.roots.includes(root)) {
+                            this.app.view.item.uuid = root.id
+                            currentItem = root.id
+                            currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
+                            this.app.view.roots = [root]
+                        }
                         // get roots of current item
-                        roots = await window.slo.api.get('/roots/'+currentItem)
                         // pick one
-                        // FIXME: remember which one was picked last
+                        this.app.view.root = this.app.view.roots[0]
                         // switch to spreadsheet of that root
                         currentType = this.app.view.item['@type']
                         currentContext = window.slo.getContextByType(currentType)
@@ -1030,7 +1039,7 @@
                         if (!this.app.view.niveaus) {
                             this.app.view.niveaus = [];
                         }
-                        await this.app.actions.spreadsheet(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        await this.app.actions.spreadsheet(this.app.view.root.id,this.app.view.contexts,this.app.view.niveaus)
                         // focus current item
                         this.app.view.sloSpreadsheet.gotoId(currentId)
                         this.app.view.sloSpreadsheet.onChange((id) => {
@@ -1092,7 +1101,7 @@
                         currentItem = this.app.view.item.uuid
                         currentId = this.app.view.item['@id']
                         // get roots of current item
-                        roots = await window.slo.api.get('/roots/'+currentItem)
+                        this.app.view.roots = await window.slo.api.get('/roots/'+currentItem)
                                               
                         // pick one
                         // FIXME: remember which one was picked last
@@ -1108,7 +1117,7 @@
                         if (!this.app.view.niveaus) {
                             this.app.view.niveaus = [];
                         }
-                        await this.app.actions.renderDocumentPage(roots[0].id,this.app.view.contexts,this.app.view.niveaus)
+                        await this.app.actions.renderDocumentPage(this.app.view.roots[0].id,this.app.view.contexts,this.app.view.niveaus)
                         
                         let documentModel = window.slo.getDataModel('items');
 
@@ -1345,7 +1354,6 @@
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     }
                     slo.changeHistory.push(change)
-
                     browser.view.sloSpreadsheet.renderBody()
 
                     browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
@@ -1369,7 +1377,7 @@
                 parentNode[type] = parentNode[type].filter(e => e.uuid !== row.node.uuid) 
                 let timestamp = new Date().toISOString()
                 let change = {
-                    id: '/uuid/'+parent.uuid,
+                    id: '/uuid/'+parentNode.uuid,
                     type: 'delete',
                     property: type,
                     prevValue: prevValue,
@@ -1501,6 +1509,8 @@
                     browser.view.undoSize = 0
                     slo.parseHistory()
                     localStorage.setItem('changeHistory','[]')
+                    debugger
+                    this.app.actions.updateView(this.app.view.roots[0])
                     return true
                 } catch(err) {
                     // catch: show error details for now, later try to fix conflicts //@TODO
