@@ -515,7 +515,7 @@
                 }
             },
             document: {
-                //TODO: calculate prev/next row while skipping over
+                // @TODO : calculate prev/next row while skipping over
                 //closed trees. So find the prev/next visible row.
                 "ArrowDown": (e) => {
                     e.preventDefault();
@@ -788,7 +788,7 @@
             },
         },
         commands: {
-            //@TODO: spreadsheet commands should be in spreadsheet.js and referenced here
+            // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
             closeFilter: (el, value) => {
                 el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
             },
@@ -1167,8 +1167,8 @@
                     slo.applyHistory(json)
                     let defs = slo.treeToRows(json)
                     browser.view.view = 'spreadsheet';
-                    //@TODO: als browser.view.user, dan editmode enablen
-                    //@TODO: on window resize, recalculate
+                    // @TODO : als browser.view.user, dan editmode enablen
+                    // @TODO : on window resize, recalculate
                     let panel = document.querySelector('.slo-content-panel')
                     let rect = panel.getBoundingClientRect()
                     let rowHeight = 27

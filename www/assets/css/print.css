@@ -36,10 +36,10 @@
         max-width: 100%;
     }
     h1 {
-        break-inside: avoid;
+        break-after: avoid;
     }
     ul {
-        break-inside: avoid;
+        break-before: avoid;
     }
     section {
         break-inside: avoid;
