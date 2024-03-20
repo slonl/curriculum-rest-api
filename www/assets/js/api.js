@@ -557,10 +557,22 @@
                                     dataObj['documentSublist'].push(formatDocumentData(child));
                                 };
                             break;
-                            
-                            case 'ExamenprogrammaEindterm':
+
+                            // @TODO : this one might be broken: value is an empty array.
+                            case 'Examenprogramma':
+                                //console.log("Examenprogramma")
+                                //console.log(value)
                                 for(let child of value){
-                                    dataObj['documentExamenprogrammaEindterm'].push(formatDocumentData(child));
+                                    //console.log("Examenprogramma child:  ")
+                                    //console.log(child)
+                                    dataObj['documentSublist'].push(formatDocumentData(child));
+                                };
+                            break;
+                            
+                            //case 'ExamenprogrammaDomein':
+                            case 'ExamenprogrammaEindterm':
+                                for(let ExamenprogrammaEindterm of value){
+                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
                                 };
                             break;
 
@@ -590,7 +602,7 @@
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                               
+                                
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
@@ -604,7 +616,7 @@
 
                             case 'Niveau':
                                 for(let niveau of value){
-                                    console.log(niveau.description);
+                                    //console.log(niveau.description);
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
                             break;
@@ -620,13 +632,15 @@
                                     };
                                 };
                             break;
+
                             default:
                                 if (value.length !==0){
                                     for(let child of value){
                                             dataObj['documentSublist'].push(formatDocumentData(child));
                                     };
                                 }
-                            }
+                            //switch indentation
+                        } //switch end
                     }
                     else {
                         if ( (typeof(value) === "object" && value !== null)){
@@ -635,9 +649,7 @@
                         else {
                             dataObj[key] = value ;
                         }
-
                     }
-                    
                 });
 
                 // remove object that have empty arrays as values:
