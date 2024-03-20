@@ -1347,11 +1347,11 @@
                         }
                     }
                     let newValue = parentNode[type]
-                    let siblingIndex = newValue.indexOf(prevSibling.node)
+                    let siblingIndex = newValue.findIndex(e => e.uuid == prevSibling.node.uuid)
                     newValue.splice(siblingIndex, 0, row.node)
                     let timestamp = new Date().toISOString()
                     let change = {
-                        id: '/uuid/'+parent.uuid,
+                        id: '/uuid/'+parentNode.uuid,
                         type: 'undelete',
                         property: type,
                         prevValue,

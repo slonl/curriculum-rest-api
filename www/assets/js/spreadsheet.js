@@ -476,6 +476,12 @@ const spreadsheet = (function() {
       if (row.deleted) {
         rowClass += ' deleted';
       }
+      if (row.changed) {
+        rowClass += ' changed';
+      }
+      if (row.inserted) {
+        rowClass += ' inserted'
+      }
       let add = ''
       let remove = ''
       if (options.editMode) {

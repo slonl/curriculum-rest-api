@@ -254,6 +254,13 @@ tr.deleted {
     text-decoration: line-through;
     color: red;
 }
+tr.inserted {
+    text-decoration: underline;
+    color: green;
+}
+tr.changed {
+    color: blue;
+}
 .slo-type-selector .slo-type {
     cursor: pointer;
 }
