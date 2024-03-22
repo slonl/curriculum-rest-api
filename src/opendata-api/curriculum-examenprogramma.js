@@ -36,7 +36,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaVakleergebied.length
 			}
 
 			meta
@@ -54,7 +54,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.Examenprogramma.length
 			}
 			
 			meta
@@ -76,7 +76,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaDomein.length
 			}
 
 			meta
@@ -102,7 +102,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaSubdomein.length
 			}
 
 			meta
@@ -119,7 +119,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaEindterm.length
 			}
 
 		meta
@@ -142,7 +142,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaKop1.length
 			}
 
 			meta
@@ -160,7 +160,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaKop2.length
 			}
 
 			meta
@@ -177,7 +177,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaKop3.length
 			}
 
 			meta
@@ -194,7 +194,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaKop4.length
 			}
 
 			meta
@@ -211,7 +211,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBody.length
 			}
 
 			meta

@@ -204,7 +204,7 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: results.length
+			count: data.Vakleergebied.length
 		}
 
 		meta
@@ -227,7 +227,7 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: results.length
+			count: data.Niveau.length
 		}
 
 		meta
@@ -247,7 +247,7 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: results.length
+			count: data.Doel.length
 		}
 
 		meta

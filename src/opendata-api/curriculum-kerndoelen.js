@@ -19,7 +19,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.Kerndoel.length
 			}
 
 			meta
@@ -49,7 +49,7 @@ module.exports = {
 		  const meta = {
 			data: results,
 			page: Page,
-			count: results.length
+			count: data.KerndoelDomein.length
 		}
 
 		meta
@@ -72,7 +72,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.KerndoelUitstroomprofiel.length
 			}
 
 			meta
@@ -91,7 +91,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.KerndoelVakleergebied.length
 			}
 
 			meta

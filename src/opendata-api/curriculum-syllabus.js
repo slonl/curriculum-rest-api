@@ -16,7 +16,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.Syllabus.length
 			}
 
 			meta
@@ -39,7 +39,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.SyllabusVakbegrip.length
 			}
 
 			meta
@@ -66,7 +66,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.SyllabusVakleergebied.length
 			}
 
 			meta
@@ -95,7 +95,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.SyllabusToelichting.length
 			}
 
 			meta
@@ -118,7 +118,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.SyllabusSpecifiekeEindterm.length
 			}
 
 			meta

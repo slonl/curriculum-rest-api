@@ -19,7 +19,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhCategorie.length
 			}
 
 			meta
@@ -42,7 +42,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhSector.length
 			}
 
 			meta
@@ -65,7 +65,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhSchoolsoort.length
 			}
 
 			meta
@@ -87,7 +87,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhLeerweg.length
 			}
 
 			meta
@@ -108,7 +108,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhBouw.length
 			}
 
 			meta
@@ -128,7 +128,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.NhNiveau.length
 			}
 
 			meta

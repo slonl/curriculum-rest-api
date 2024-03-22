@@ -21,7 +21,7 @@ module.exports = {
 		  const meta = {
 			data: results,
 			page: Page,
-			count: results.length
+			count: data.ExamenprogrammaBgProfiel.length
 		}
 
 		meta
@@ -43,7 +43,7 @@ module.exports = {
 		  	const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgKern.length
 			}
 
 		meta
@@ -61,7 +61,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgKerndeel.length
 			}
 
 			meta
@@ -79,7 +79,7 @@ module.exports = {
 		  	const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgGlobaleEindterm.length
 			}
 
 			meta
@@ -100,7 +100,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgModule.length
 			}
 
 			meta
@@ -118,7 +118,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgDeeltaak.length
 			}
 
 			meta
@@ -136,7 +136,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgModuletaak.length
 			}
 
 			meta
@@ -156,7 +156,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgKeuzevak.length
 			}
 
 			meta
@@ -174,7 +174,7 @@ module.exports = {
 		  	const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ExamenprogrammaBgKeuzevaktaak.length
 			}
 
 			meta

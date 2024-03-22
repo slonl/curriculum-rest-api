@@ -36,7 +36,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.LdkVakleergebied.length
 			}
 
 			meta
@@ -63,7 +63,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.LdkVakkern.length
 			}
 
 			meta
@@ -92,7 +92,7 @@ module.exports = {
 		  	const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.LdkVaksubkern.length
 			}
 
 			meta
@@ -123,7 +123,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.LdkVakinhoud.length
 			}
 
 			meta
@@ -144,7 +144,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.LdkVakbegrip.length
 			}
 
 			meta

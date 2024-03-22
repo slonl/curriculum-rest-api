@@ -17,7 +17,7 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoDomein.length
 			}
 	
 			meta
@@ -35,7 +35,7 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoSubdomein.length
 			}
 	
 			meta
@@ -54,7 +54,7 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoDoelzin.length
 			}
 	
 			meta
@@ -73,7 +73,7 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoToelichting.length
 			}
 	
 			meta
@@ -92,7 +92,7 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoUitwerking.length
 			}
 	
 			meta

@@ -26,7 +26,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefVakleergebied.length
 			}
 
 			meta
@@ -53,7 +53,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefDomein.length
 			}
 
 			meta
@@ -81,7 +81,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefSubdomein.length
 			}
 
 			meta
@@ -111,7 +111,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefOnderwerp.length
 			}
 
 			meta
@@ -143,7 +143,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefDeelonderwerp.length
 			}
 
 			meta
@@ -177,7 +177,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.RefTekstkenmerk.length
 			}
 
 			meta

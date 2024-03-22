@@ -23,7 +23,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhVakleergebied.length
 			}
 	
 			meta
@@ -49,7 +49,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhInhoudslijn.length
 			}
 	
 			meta
@@ -78,7 +78,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhCluster.length
 			}
 	
 			meta
@@ -106,7 +106,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhSubcluster.length
 			}
 	
 			meta

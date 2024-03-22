@@ -16,7 +16,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.Tag.length
 			}
 
 			meta
@@ -35,7 +35,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.Syllabus.length
 			}
 
 			meta

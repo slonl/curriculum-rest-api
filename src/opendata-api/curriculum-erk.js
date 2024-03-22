@@ -25,7 +25,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkVakleergebied.length
 			}
 	
 			meta
@@ -49,7 +49,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkGebied.length
 			}
 	
 			meta
@@ -72,7 +72,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkCategorie.length
 			}
 	
 			meta
@@ -94,7 +94,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkTaalactiviteit.length
 			}
 	
 			meta
@@ -116,7 +116,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkSchaal.length
 			}
 	
 			meta
@@ -139,7 +139,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkCandobeschrijving.length
 			}
 	
 			meta
@@ -159,7 +159,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkVoorbeeld.length
 			}
 	
 			meta
@@ -179,7 +179,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkLesidee.length
 			}
 	
 			meta
@@ -197,7 +197,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: Index(request.query.id).length
 			}
 
 			meta
@@ -243,7 +243,7 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: results.length
+				count: data.ErkSchalen.length
 			}
 	
 			meta`,
