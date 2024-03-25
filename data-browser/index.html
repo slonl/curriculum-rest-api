@@ -260,7 +260,6 @@
                             </div>
                         </template>
                     </div>
-                    
                     <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Leerlingtekst</h3>
@@ -692,6 +691,14 @@
                             </ul>
                         </template>
                     </div>
+                    <div data-simply-field="item.FoSet" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Set</h3>
+                            <ul data-simply-list="item.FoSet">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
+                    </div>
                     <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Domein</h3>
@@ -776,6 +783,7 @@
     </nav>
 </footer>
 
+
 <template id="deprecatedLinks">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
@@ -834,9 +842,7 @@
             <span data-simply-field="deprecated" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
-                        <span class="ds-badge-label"><svg
-                class="ds-icon ds-icon-feather"><use
-                xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
+                        <span class="ds-badge-label"><svg class="ds-icon ds-icon-feather"><use xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
                         <span>Deprecated</span>
                     </span>
                 </template>
@@ -865,28 +871,24 @@
                     </span>
                 </template>
             </span>
+            <span data-simply-list="Niveau">
+                <template>
+                    <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
+                </template>
+            </span>
             <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
             </span>
         </a>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
-                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
-                data-simply-content="fixed" data-simply-transformer="niveau">
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref" data-simply-content="fixed" data-simply-transformer="niveau">
                     Op niveau
                 </a>
             </template>
             <template data-simply-template="false">false</template>
         </span>
-<!--        <span data-simply-list="Vakleergebied">
-            <template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">Vakleergebied</span>
-                    <span data-simply-field="title">title</span>
-                </span>
-            </template>
-        </span>
--->        <span data-simply-list="LdkVakkern">
+        <span data-simply-list="LdkVakkern">
             <template>
                 <span data-simply-list="LdkVakleergebied">
                     <template>
@@ -1207,82 +1209,56 @@
             </template>
         </span>
 
-        <span data-simply-list="FoDomein">
+        <span data-simply-list="FoSet">
             <template>
                 <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoDomein</span>
+                    <span class="ds-badge-label">FoSet</span>
 					<span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
-        <span data-simply-list="FoSubomein">
+        <span data-simply-list="FoDomein">
             <template>
-                <span data-simply-list="FoDomein">
-                    <template>
-                        <span class="ds-badge ds-badge-mini">
-                            <span class="ds-badge-label">FoDomein</span>
-                            <span data-simply-field="title">title</span>
-                        </span>
-                    </template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoDomein</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoSubdomein">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoSubdomein</span>
+                    <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="FoDoelzin">
             <template>
-				<span data-simply-list="FoSubomein">
-					<template>
-						<span data-simply-list="FoDomein">
-							<template>
-								<span class="ds-badge ds-badge-mini">
-									<span class="ds-badge-label">FoDomein</span>
-									<span data-simply-field="title">title</span>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoDoelzin</span>
+                    <span data-simply-field="title">title</span>
+                </span>
             </template>
         </span>
-        <span data-simply-list="FoUitwerking">
-            <template>
-				<span data-simply-list="FoDoelzin">
-					<template>
-						<span data-simply-list="FoSubomein">
-							<template>
-								<span data-simply-list="FoDomein">
-									<template>
-										<span class="ds-badge ds-badge-mini">
-											<span class="ds-badge-label">FoDomein</span>
-											<span data-simply-field="title">title</span>
-										</span>
-									</template>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+		<span data-simply-list="FoUitwerking">
+			<template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoUitwerking</span>
+                    <span data-simply-field="title">title</span>
+                </span>
             </template>
         </span>
-        <span data-simply-list="FoToelichting">
-            <template>
-				<span data-simply-list="FoDoelzin">
-					<template>
-						<span data-simply-list="FoSubomein">
-							<template>
-								<span data-simply-list="FoDomein">
-									<template>
-										<span class="ds-badge ds-badge-mini">
-											<span class="ds-badge-label">FoDomein</span>
-											<span data-simply-field="title">title</span>
-										</span>
-									</template>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+		<span data-simply-list="FoToelichting">
+			<template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">FoToelichting</span>
+                    <span data-simply-field="title">title</span>
+                </span>
             </template>
         </span>
+
+
 
         <span data-simply-list="Tag">
             <template>
@@ -1301,11 +1277,6 @@
             </template>
         </span>
 
-        <span data-simply-list="Niveau">
-            <template>
-                <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
-            </template>
-        </span>
     </li>
 </template>
 <template id="doelniveau">
@@ -1671,6 +1642,9 @@
                 browser.actions.list('nh_niveau/')
             },
 
+            '/fo_set/': function(params) {
+                browser.actions.list('fo_set/')
+            },
             '/fo_domein/': function(params) {
                 browser.actions.list('fo_domein/')
             },
@@ -1868,6 +1842,7 @@
         'curriculum-fo':{
             title: 'Curriculum Funderend onderwijs',
             data: {
+                fo_set: 'Set',
                 fo_domein: 'Domein',
                 fo_subdomein: 'Subdomein',
                 fo_doelzin: 'Doelzin',

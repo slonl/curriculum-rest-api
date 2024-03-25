@@ -2,17 +2,76 @@ module.exports = {
         context: 'fo',
         jsonld: 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld',
         schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-fo/context.json',
+        fragments: {
+                SetBasics: `fragment SetBasics on FoSet {
+                        id
+                        prefix
+                        title
+                        description
+                        unreleased
+                }`,
+                DomeinBasics: `fragment DomeinBasics on FoDomein {
+                        id
+                        prefix
+                        title
+                        description
+                        unreleased
+                }`
+        },
         queries: {
+                FoSet: `query FoSet($page:Int, $perPage:Int) {
+                        allFoSet(page:$page, perPage:$perPage, sortField:"vakleergebied_id",filter:{deprecated:null}) {
+                                ...SetBasics
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                Vakleergebied {
+                                        id
+                                        title
+                                }
+                        }
+                        _allFoSetMeta {
+                                count
+                        }
+                }`,
                 FoDomein: `query FoDomein($page:Int, $perPage:Int) {
                         allFoDomein(page:$page, perPage:$perPage, sortField:"vakleergebied_id",filter:{deprecated:null}) {
                                 id
                                 prefix
                                 title
-								Vakleergebied {
-										id
-										title
-								}
-                                fo_subdomein_id
+                                FoSet{
+                                        ...SetBasics
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                FoSubdomein{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
+                                FoDoelzin{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
                                 unreleased
                         }
                         _allFoDomeinMeta {
@@ -24,8 +83,28 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                FoDomein{
+                                        id
+                                        title
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                FoDoelzin{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
                                 unreleased
-                                fo_doelzin_id
                         }
                         _allFoSubdomeinMeta {
                                 count
@@ -36,28 +115,43 @@ module.exports = {
                                 id
                                 prefix
                                 title
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                description
+                                FoDomein{
+                                        id
+                                        title
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                FoSubdomein{
+                                        id
+                                        title
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                                 unreleased
-                                fo_toelichting_id
-                                fo_uitwerking_id
+                                FoUitwerking{
+                                        id
+                                        title
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                                FoToelichting{
+                                        id
+                                        title
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                         _allFoDoelzinMeta {
-                                count
-                        }
-                }`,
-                FoToelichting: `query FoToelichting($page:Int, $perPage:Int) {
-                        allFoToelichting(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-                                id
-                                prefix
-                                title
-                                fo_doelzin_id
-                                unreleased
-                        }
-                        _allFoToelichtingMeta {
                                 count
                         }
                 }`,
@@ -66,16 +160,50 @@ module.exports = {
                                 id
                                 prefix
                                 title
-                                fo_doelzin_id
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                                FoDoelzin{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
                                 unreleased
                         }
                         _allFoUitwerkingMeta {
                                 count
                         }
+                }`,
+                FoToelichting: `query FoToelichting($page:Int, $perPage:Int) {
+                        allFoToelichting(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
+                                id
+                                prefix
+                                title
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                                FoDoelzin{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
+                                unreleased
+                        }
+                        _allFoToelichtingMeta {
+                                count
+                        }
                 }`
         },
         typedQueries: {
-                'fo_domein': `
+                'fo_set': `
                         id
                         Vakleergebied {
                                 id
@@ -83,83 +211,179 @@ module.exports = {
                         }
                         prefix
                         title
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
+                        FoDomein {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        deprecated
+                `,
+                'fo_domein': `
+                        id
+                        prefix
+                        title
+                        FoSet {
+                                id
+                                prefix
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                         FoSubdomein {
                                 id
                                 title
-                                deprecated
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
+                        FoDoelzin {
+                                id
+                                title
+                                deprecated
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        deprecated
                 `,
                 'fo_subdomein': `
                         id
                         prefix
                         title
+                        FoDomein {
+                                id
+                                prefix
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                         FoDoelzin {
                                 id
                                 title
                                 deprecated
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
+                        deprecated
                 `,
                 'fo_doelzin': `
                         id
                         prefix
                         title
-                        FoToelichting {
+                        description
+                        FoDomein {
                                 id
+                                prefix
                                 title
-                                deprecated
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        FoSubdomein {
+                                id
+                                prefix
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                         FoUitwerking {
                                 id
                                 title
                                 deprecated
+                                Niveau {
+                                        ...NiveauShort
+                                }
                         }
-						FoSubdomein {
-							id
-							prefix
-							title
-						}
-						Niveau {
-							...NiveauShort
-						}
+                        FoToelichting {
+                                id
+                                title
+                                deprecated
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                 `,
                 'fo_toelichting': `
                         id
                         prefix
                         title
+                        Niveau {
+                                ...NiveauShort
+                        }
                         FoDoelzin {
                                 id
                                 title
                                 deprecated
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                 `,
                 'fo_uitwerking': `
                         id
                         prefix
                         title
+                        Niveau {
+                                ...NiveauShort
+                        }
                         FoDoelzin {
                                 id
                                 title
                                 deprecated
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                 `
         },
         idQuery: `
-                allFoDomein(filter:{id:$id}) {
+                allFoSet(filter:{id:$id}) {
                         id
                         prefix
                         title
@@ -167,113 +391,230 @@ module.exports = {
                                 id
                                 title
                         }
+                        FoDomein {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
+                }
+                allFoDomein(filter:{id:$id}) {
+                        id
+                        prefix
+                        title
+                        FoSet {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
                         FoSubdomein {
-                          id
-                          title
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        FoDoelzin {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
                         }
                 }
                 allFoSubdomein(filter:{id:$id}) {
                         id
                         prefix
                         title
+                        FoDomein {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
                         FoDoelzin {
-                          id
-                          title
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
                         }
                 }
                 allFoDoelzin(filter:{id:$id}) {
                         id
                         prefix
                         title
+                        description
+                        FoDomein {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
+                        FoSubdomein {
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
+                        }
                         FoToelichting {
-                          id
-                          title
+                                id
+                                title
+                                Niveau {
+                                        ...NiveauShort
+                                }
                         }
                         FoUitwerking {
-                          id
-                          title
+                                id
+                                title
+                                Niveau {
+                                        ...NiveauShort
+                                }
                         }
-						Niveau {
-						  ...NiveauShort
-						}
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                         FoSubdomein {
-                          id
-                          title
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                 }
                 allFoToelichting(filter:{id:$id}) {
                         id
                         prefix
                         title
+                        Niveau {
+                                id
+                                prefix
+                                title
+                        }
                         FoDoelzin {
-                          id
-                          title
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                 }
                 allFoUitwerking(filter:{id:$id}) {
                         id
                         prefix
                         title
+                        Niveau {
+                                id
+                                prefix
+                                title
+                        }
                         FoDoelzin {
-                          id
-                          title
-								Niveau {
-								  id
-								  prefix
-								  title
-								}
+                                id
+                                title
+                                NiveauIndex {
+                                        Niveau {
+                                                ...NiveauShort
+                                        }
+                                }
                         }
                 }`,
         routes: {
+                'fo_set/': (req) =>
+                        opendata.api["FoSet"](req.params, req.query)
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoSet,
+                                                type: 'FoSet',
+                                                meta: result.data._allFoSetMeta
+                                        }
+                                }),
                 'fo_domein/': (req) =>
                         opendata.api["FoDomein"](req.params, req.query)
-                        .then(function(result) {
-                                return {
-                                        data: result.data.allFoDomein,
-                                        type: 'FoDomein',
-                                        meta: result.data._allFoDomeinMeta
-                                }
-                        }),
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoDomein,
+                                                type: 'FoDomein',
+                                                meta: result.data._allFoDomeinMeta
+                                        }
+                                }),
                 'fo_subdomein/': (req) =>
                         opendata.api["FoSubdomein"](req.params, req.query)
-                        .then(function(result) {
-                                return {
-                                        data: result.data.allFoSubdomein,
-                                        type: 'FoSubdomein',
-                                        meta: result.data._allFoSubdomeinMeta
-                                }
-                        }),
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoSubdomein,
+                                                type: 'FoSubdomein',
+                                                meta: result.data._allFoSubdomeinMeta
+                                        }
+                                }),
                 'fo_doelzin/': (req) =>
                         opendata.api["FoDoelzin"](req.params, req.query)
-                        .then(function(result) {
-                                return {
-                                        data: result.data.allFoDoelzin,
-                                        type: 'FoDoelzin',
-                                        meta: result.data._allFoDoelzinMeta
-                                }
-                        }),
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoDoelzin,
+                                                type: 'FoDoelzin',
+                                                meta: result.data._allFoDoelzinMeta
+                                        }
+                                }),
                 'fo_toelichting/': (req) =>
                         opendata.api["FoToelichting"](req.params, req.query)
-                        .then(function(result) {
-                                return {
-                                        data: result.data.allFoToelichting,
-                                        type: 'FoToelichting',
-                                        meta: result.data._allFoToelichtingMeta
-                                }
-                        }),
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoToelichting,
+                                                type: 'FoToelichting',
+                                                meta: result.data._allFoToelichtingMeta
+                                        }
+                                }),
                 'fo_uitwerking/': (req) =>
                         opendata.api["FoUitwerking"](req.params, req.query)
-                        .then(function(result) {
-                                return {
-                                        data: result.data.allFoUitwerking,
-                                        type: 'FoUitwerking',
-                                        meta: result.data._allFoUitwerkingMeta
-                                }
-                        })
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoUitwerking,
+                                                type: 'FoUitwerking',
+                                                meta: result.data._allFoUitwerkingMeta
+                                        }
+                                })
         }
 };
