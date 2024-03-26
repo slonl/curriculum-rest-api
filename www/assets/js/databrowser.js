@@ -924,7 +924,8 @@
                 }
             },
             showAllChanges: async function(el, value) {
-                alert('nog niet geimplementeerd')
+                browser.view.mergedChanges = window.slo.mergeChanges()
+                document.getElementById('previewChanges').showModal()
             },
             commitChanges: async function(el, value) {
                 document.body.classList.add('loading')
@@ -1062,6 +1063,9 @@
                             let timestamp = new Date().toISOString()
                             let change = {
                                 id: '/uuid/'+node.uuid,
+                                '@type': node['@type'],
+                                context: slo.getContextByType(node['@type']),
+                                title: node.title,
                                 type: 'patch',
                                 property: update.property,
                                 prevValue: prop,
@@ -1307,6 +1311,9 @@
                 let change = {
                     type: 'insert',
                     id: '/uuid/'+parentNode.uuid,
+                    context: window.slo.getContextByType(parentNode['@type']),
+                    '@type': parentNode['@type'],
+                    title: parentNode.title,
                     property: type,
                     prevValue: currValue,
                     newValue: parentNode[type],
@@ -1353,6 +1360,9 @@
                     let change = {
                         id: '/uuid/'+parentNode.uuid,
                         type: 'undelete',
+                        context: window.slo.getContextByType(parentNode['@type']),
+                        title: parentNode.title,
+                        '@type': parentNode['@type'],
                         property: type,
                         prevValue,
                         newValue,
@@ -1385,6 +1395,9 @@
                 let change = {
                     id: '/uuid/'+parentNode.uuid,
                     type: 'delete',
+                    context: window.slo.getContextByType(parentNode['@type']),
+                    title: parentNode.title,
+                    '@type': parentNode['@type'],
                     property: type,
                     prevValue: prevValue,
                     newValue: parentNode[type],
