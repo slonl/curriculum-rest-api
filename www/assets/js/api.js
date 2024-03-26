@@ -286,7 +286,10 @@
                     case 'insert':
                         if (!merged[change.id]) {
                             merged[change.id] = {
-                                type: 'patch'
+                                type: 'patch',
+                                context: change.context,
+                                '@type': change['@type'],
+                                title: change.title
                             }
                         }
                         if (!merged[change.id][change.property]) {
@@ -297,7 +300,9 @@
                         merged[change.id][change.property].newValue = change.newValue
                         if (change.type == 'insert') {
                             merged[change.child.id] = {
-                                type: 'insert'
+                                type: 'insert',
+                                context: slo.getContextByType(change['@type']),
+                                '@type': change['@type']
                             }
                             for (let prop in change.child) {
                                 merged[change.child.id][prop] = {
@@ -315,12 +320,51 @@
             // remove any property changes that have been undone (reverted to original, e.g. undelete)
             for (let id in merged) {
                 for (let prop in merged[id]) {
+                    if (!merged[id][prop].newValue) {
+                        continue //type etc.
+                    }
                     if (merged[id][prop].newValue===merged[id][prop].prevValue) {
                         delete merged[id][prop]
                     }
                 }
             }
             return merged
+        },
+        mergeChanges: function() {
+            // prepare change history for overview
+            let merged = slo.mergeHistory(slo.changeHistory)
+            let contexts = {}
+            for (let id in merged) {
+                let context = merged[id].context
+                if (!contexts[context]) {
+                    contexts[context] = {}
+                }
+                let type = merged[id]['@type']
+                if (!contexts[context][type]) {
+                    contexts[context][type] = []
+                }
+                contexts[context][type].push({
+                    title: merged[id].title,
+                    patch: merged[id]
+                })
+            }
+            let result = []
+            for (let context in contexts) {
+                let types = []
+                for (let type in contexts[context]) {
+                    types.push({
+                        type,
+                        entities: contexts[context][type],
+                        count: contexts[context][type].length
+                    })
+                }
+                result.push({
+                    context,
+                    types,
+                    count: types.reduce((a,t) => a+t.count, 0)
+                })
+            }
+            return result
         },
         parseHistory: function() {
             //FIXME: delete must show row crossed through, not removed entirely
