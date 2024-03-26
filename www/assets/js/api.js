@@ -273,9 +273,7 @@
             }
         },
 
-        changeHistory: [],
-        current: {},
-//        inserted: [],
+/*
         mergeHistory: function(changes) {
             let merged = {}
             for (let change of changes) {
@@ -286,11 +284,13 @@
                     case 'insert':
                         if (!merged[change.id]) {
                             merged[change.id] = {
-                                type: 'patch',
                                 context: change.context,
                                 '@type': change['@type'],
-                                title: change.title
+                                '@title': change.title ?? 'Geen Titel'
                             }
+                        }
+                        if (change.property=='title') {
+                            merged[change.id]['@title'] = change.newValue
                         }
                         if (!merged[change.id][change.property]) {
                             merged[change.id][change.property] = {
@@ -299,15 +299,19 @@
                         }
                         merged[change.id][change.property].newValue = change.newValue
                         if (change.type == 'insert') {
-                            merged[change.child.id] = {
-                                type: 'insert',
+                            let childID = '/uuid/'+change.child.uuid
+                            merged[childID] = {
                                 context: slo.getContextByType(change['@type']),
                                 '@type': change['@type']
                             }
                             for (let prop in change.child) {
-                                merged[change.child.id][prop] = {
-                                    prevValue: null,
-                                    newValue: change.child[prop]
+                                if (prop[0]=='@') {
+                                    merged[childID][prop] = change.child[prop]
+                                } else {
+                                    merged[childID][prop] = {
+                                        prevValue: null,
+                                        newValue: change.child[prop]
+                                    }
                                 }
                             }
                         }
@@ -320,7 +324,7 @@
             // remove any property changes that have been undone (reverted to original, e.g. undelete)
             for (let id in merged) {
                 for (let prop in merged[id]) {
-                    if (!merged[id][prop].newValue) {
+                    if (!merged[id][prop]?.newValue) {
                         continue //type etc.
                     }
                     if (merged[id][prop].newValue===merged[id][prop].prevValue) {
@@ -375,7 +379,9 @@
                     slo.current[id] = {}
                 }
                 for (let prop in merged[id]) {
-                    slo.current[id][prop] = merged[id][prop].newValue
+                    if (typeof merged[id][prop].newValue !== 'undefined') {
+                        slo.current[id][prop] = merged[id][prop].newValue
+                    }
                 }
 //                if (merged[id].type=='insert') {
 //                    slo.inserted[id] = slo.current[id]
@@ -383,6 +389,7 @@
             }
         },
         applyHistory: function(data) {
+            slo.parseHistory()
             if (!Array.isArray(data)) {
                 data = [data]
             }
@@ -390,16 +397,17 @@
                 walk(node, 0, (n) => {
                     let id = '/uuid/'+n['uuid']
                     if (slo.current[id]) {
+                        if (!n._previous) {
+                            n._previous = Object.assign({}, n)
+                        }
                         Object.keys(slo.current[id]).forEach(prop => {
-                            if (!n._previous) {
-                                n._previous = Object.assign({}, n)
-                            }
                             n[prop] = slo.current[id][prop]
                         })
                     }
                 })
             })
         },
+*/
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -471,7 +479,7 @@
                 return result
             }
 
-            let marks = []
+//            let marks = []
             function addRow(n, indent, mark=null) {
                 if (n.id || n.uuid) {
                     count++
@@ -481,7 +489,14 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
-
+                    if (n instanceof changes.DeletedLink) {
+                        row.deleted = true
+                    } else if (n instanceof changes.InsertedLink) {
+                        row.inserted = true
+                    } else if (n instanceof changes.ChangedNode) {
+                        row.changed = true
+                    }
+/*
                     // marks contain add/removed information for parent nodes of current row
                     // marks works as a stack
                     marks = marks.slice(0, indent) // remove marks from other parents
@@ -534,6 +549,7 @@
                             }
                         }
                     }
+*/
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     allRows.push(row)
                     countColumnValues(row.columns)
@@ -836,22 +852,22 @@
             return dataModels[name]
         },
         getContextByType(type) {
-            return Object.keys(contexts)
+            return Object.keys(slo.contexts)
             .filter(c => {
-                let types = Object.values(contexts[c].data)
+                let types = Object.values(slo.contexts[c].data)
                 return types.includes(type)
             })
             .pop()
         },
         getTypeNameByType(type) {
             let context = slo.getContextByType(type)
-            return Object.entries(contexts[context].data)
+            return Object.entries(slo.contexts[context].data)
             .find(([k,v]) => v==type)[0]
         },
         getTypeByTypeName(_type, context) {
-            for (context of Object.keys(contexts)) {
-                if (contexts[context].data[_type]) {
-                    return contexts[context].data[_type]
+            for (context of Object.keys(slo.contexts)) {
+                if (slo.contexts[context].data[_type]) {
+                    return slo.contexts[context].data[_type]
                 }
             }
             return _type
