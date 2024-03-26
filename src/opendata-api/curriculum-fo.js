@@ -5,7 +5,8 @@ module.exports = {
 	queries: {
 		FoDomein: `
 		const results = from(data.FoDomein)
-		.select({
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				Vakleergebied: _,
 				FoSubdomein: _,
@@ -14,34 +15,36 @@ module.exports = {
 
 			const meta = {
 				type: 'Doelniveau',
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoDomein.length
 			}
 	
 			meta
 	
-			`,
+		`,
 		FoSubdomein: `
 		const results = from(data.FoSubdomein)
-		.select({
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				FoDoelzin: _
 			})
 	
 			const meta = {
 				type: 'Doelniveau',
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoSubdomein.length
 			}
 	
 			meta
 	
-			`,
+		`,
 		FoDoelzin: `
 		const results = from(data.FoDoelzin)
-		.select({
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				FoToelichting: _,
 				FoUitwerking: _
@@ -49,17 +52,18 @@ module.exports = {
 
 			const meta = {
 				type: 'Doelniveau',
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoDoelzin.length
 			}
 	
 			meta
 	
-			`,
+		`,
 		FoToelichting: `
 		const results = from(data.FoToelichting)
-		.select({
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				FoDoelzin: _,
 				unreleased: _
@@ -67,9 +71,9 @@ module.exports = {
 
 			const meta = {
 				type: 'Doelniveau',
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoToelichting.length
 			}
 	
 			meta
@@ -77,7 +81,8 @@ module.exports = {
 			`,
 		FoUitwerking: `
 		const results = from(data.FoUitwerking)
-		.select({
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
 				FoDoelzin: _,
 				unreleased: _,
@@ -85,9 +90,9 @@ module.exports = {
 	
 			const meta = {
 				type: 'Doelniveau',
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.FoUitwerking.length
 			}
 	
 			meta

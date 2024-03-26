@@ -685,7 +685,8 @@
             //console.log(JSON.stringify(json, null, 4));
 
             function formatDocumentData(json){
-                let dataObj = { documentSublist : [], documentNiveaus : [], documentLeafNode: [], documentNiveauIndex: [], documentTextNode: []};
+                // @TODO : this leads to print issues as some arrays in the object, although empty still call an empty template, leading to an html element that meses up print.
+                let dataObj = { documentSublist : [], documentLeafNode: [],  documentTextNode: [],  documentNiveaus : [], documentNiveauIndex: [], documentExamenprogrammaEindterm:[] };
 
                  Object.entries(json).forEach(([key, value]) => {
 
@@ -694,8 +695,6 @@
                         switch (key){
      
                             case 'Doel':
-                            case 'Doelniveau':
-                            case 'ExamenprogrammaEindterm':
                             case 'ErkLesidee':
                             case 'ErkVoorbeeld':
                             case 'FoToelichting':
@@ -711,9 +710,42 @@
                             case 'RefTekstkenmerk':
                             case 'Vakleergebied':
                                 for(let child of value){
-                                    dataObj['documentLeafNode'].push(child);
+                                    dataObj['documentSublist'].push(formatDocumentData(child));
                                 };
                             break;
+
+                            // @TODO : this one might be broken: value is an empty array.
+                            case 'Examenprogramma':
+                                //console.log("Examenprogramma")
+                                //console.log(value)
+                                for(let child of value){
+                                    //console.log("Examenprogramma child:  ")
+                                    //console.log(child)
+                                    dataObj['documentSublist'].push(formatDocumentData(child));
+                                };
+                            break;
+                            
+                            //case 'ExamenprogrammaDomein':
+                            case 'ExamenprogrammaEindterm':
+                                for(let ExamenprogrammaEindterm of value){
+                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
+                                };
+                            break;
+
+
+                            case 'Doelniveau':
+                                for(let doelNiveau of value){
+                                    if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
+                                        hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
+                                        dataObj['documentLeafNode'].push(hoistedChild);//child.Doel[0].title);
+                                    }
+                                    else{
+                                        dataObj['documentLeafNode'].push(doelNiveau);
+                                    }
+                                
+                                };
+                            break;
+
 
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
@@ -726,11 +758,11 @@
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                               
+                                
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
-                                        dataObj['documentNiveauIndex'].push(child.Niveau);
+                                        dataObj['documentNiveauIndex'].push(child.Niveau); //'documentNiveauIndex'
                                     }
                                     else {
                                         console.log("Found a NiveauIndex with something that wasn't a Niveau.");
@@ -739,10 +771,12 @@
                             break;
 
                             case 'Niveau':
-                                for(let child of value){
-                                    dataObj['documentNiveauIndex'].push(formatDocumentData(child));
+                                for(let niveau of value){
+                                    //console.log(niveau.description);
+                                    dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
                             break;
+
                             // @TODO : check if tag data is complete
                             case 'Tag':
                                 for(let child of value){
@@ -754,13 +788,15 @@
                                     };
                                 };
                             break;
+
                             default:
                                 if (value.length !==0){
                                     for(let child of value){
                                             dataObj['documentSublist'].push(formatDocumentData(child));
                                     };
                                 }
-                            }
+                            //switch indentation
+                        } //switch end
                     }
                     else {
                         if ( (typeof(value) === "object" && value !== null)){
@@ -769,9 +805,7 @@
                         else {
                             dataObj[key] = value ;
                         }
-
                     }
-                    
                 });
 
                 // remove object that have empty arrays as values:

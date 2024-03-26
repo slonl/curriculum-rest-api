@@ -5,115 +5,133 @@ module.exports = {
 	queries: {
 		NhCategorie: `
 		const results = from(data.NhCategorie)
-		.select({
-			...shortInfo,
-			nh_sector_id: _,
-			nh_niveau_id: _,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_sector_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhCategorie.length
+			}
 
-		meta
+			meta
 
 		`,
 		NhSector: `
 		const results = from(data.NhSector)
-		.select({
-			...shortInfo,
-			nh_schoolsoort_id: _,
-			nh_bouw_id: _,
-			nh_niveau_id: _,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_schoolsoort_id: _,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhSector.length
+			}
 
-		meta
+			meta
 
 		`,
 		NhSchoolsoort: `
 		const results = from(data.NhSchoolsoort)
-		.select({
-			...shortInfo,
-			nh_leerweg_id: _,
-			nh_bouw_id: _,
-			nh_niveau_id: _,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_leerweg_id: _,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhSchoolsoort.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		NhLeerweg: `
 		const results = from(data.NhLeerweg)
-		.select({
-			...shortInfo,
-			nh_bouw_id: _,
-			nh_niveau_id: _,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhLeerweg.length
+			}
 
-		meta
+			meta
 
-			`,
+		`,
 		NhBouw: `
 		const results = from(data.NhBouw)
-		.select({
-			...shortInfo,
-			nh_niveau_id: _,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+		
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhBouw.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		NhNiveau: `
 		const results = from(data.NhNiveau)
-		.select({
-			...shortInfo,
-			unreleased: _,
-		})
-		.sort(sortByPrefix)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.NhNiveau.length
+			}
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 	},

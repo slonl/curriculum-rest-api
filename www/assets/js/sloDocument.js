@@ -12,21 +12,43 @@ const sloDocument = (function() {
     options.container = settings.container
 
     let clickListener
-
+   
     // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
     function addClickSelectText() {
         if (clickListener) {
             options.container.removeEventListener('click', clickListener)
         }
-        clickListener = function() {
-          console.log("Too!")
-          console.log(this)
+        clickListener = function(evt) {
+
+          let clickedText = evt.target.closest('.slo-entity')
+          //scrollBox = document.querySelector('.focus')
+          console.log(clickedText.id)
+          console.log(clickedText.innerHTML)
+          
+          let focussedElement = document.getElementsByClassName("focus")[0];
+          
+          focussedElement.classList.remove("focus")
+          
+          clickedText.classList.add("focus")
+          //clickedText.scrollIntoView({ block: "center" });
+
+           // replace URL with the new URL
+           let nextFocussedElement = document.querySelector(".focus");                 
+           let nextDocumentLocation = new URL(document.location.href);
+           let idPath = new URL(nextFocussedElement.id);
+           let nextID = idPath.pathname.split("/").pop();
+           idPath.pathname = "/uuid/" + nextID;
+           idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+           window.history.replaceState({}, '', idPath.href);
+           browser.view.item.uuid = nextID
         }
         options.container.addEventListener('click', clickListener)
     }
     addClickSelectText()
 
-// WIP --
+  // WIP--
+  
+  /*
     function defaultEditor(rect, offset, el) {
       
       let columnDef = getColumnDefinition(el)
@@ -43,7 +65,8 @@ const sloDocument = (function() {
       selector.querySelector('textarea').focus()
 
     }
-
+*/
+/*
     function showEditor(rect, offset, el) {
       let column = getColumnDefinition(el)
       
@@ -57,6 +80,7 @@ const sloDocument = (function() {
         column.editor.call(selector, rect, offset, el)
       }
     }
+ */   
 
 
 
@@ -66,6 +90,7 @@ const sloDocument = (function() {
       },
 
       //WIP--
+      /*
       selector: (el) => {
         if (!el) {
           selector.style.display = 'none'
@@ -106,7 +131,7 @@ const sloDocument = (function() {
           })
         }
       }
-      //  --WIP
+    */  //  --WIP
     }
 
     return sloDocument
