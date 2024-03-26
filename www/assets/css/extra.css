@@ -270,3 +270,6 @@ tr.changed {
 .slo-type-selector .ds-button-close {
     right: 0;
 }
+dialog.preview-changes {
+    height: 75vh;
+}
