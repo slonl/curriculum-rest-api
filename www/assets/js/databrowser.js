@@ -515,14 +515,25 @@ var browser = simply.app({
             }
         },
         document: {
-            // @TODO : calculate prev/next row while skipping over
+            // @TODO : page up and down should move to next h1 element
             //closed trees. So find the prev/next visible row.
             "ArrowDown": (e) => {
                 e.preventDefault();
 
-                //find current element to move to the next one
-                let focussedElement = document.getElementsByClassName("focus")[0];
+                let focussedElement;
                 let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+
+                //find current element to move to the next one
+                if(document.getElementsByClassName("focus")[0]){
+                    focussedElement = document.getElementsByClassName("focus")[0];
+                }
+                else{
+                    focussedElement = getAllNodes[0];
+                    //console.log(focussedElement);
+                    focussedElement.classList.add("focus")
+                }
+
+                
                 let itemIndex = getAllNodes.indexOf(focussedElement);
                 getAllNodes[itemIndex].classList.remove("focus");
                 
@@ -643,24 +654,6 @@ var browser = simply.app({
                 window.history.replaceState({}, '', idPath.href);
                 browser.view.item.uuid = nextID
             },
-            "Enter": (e) => {
-                // WIP-- for editing. --
-
-                e.preventDefault()
-                if (browser.view.user) {
-                    let el = document.querySelector('.focus');
-                    console.log(el);
-                    //let selector = document.querySelector('.slo-type-selector')
-                    //let type = selector.querySelector('input:checked')
-                    //browser.actions.hideTypeSelector()
-                    //return browser.actions.insertRow(el.closest('tr'), type.value)
-                }
-                // --WIP
-            },/*
-            "Escape": (e) => {
-                e.preventDefault()
-                let focussedElement = document.getElementsByClassName("focus")[0];
-            },*/
             "Home": (e) => {
                 e.preventDefault()
 
@@ -775,16 +768,41 @@ var browser = simply.app({
                 idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
                 window.history.replaceState({}, '', idPath.href);
                 browser.view.item.uuid = nextID
-            },/*
-            "Insert": async (e) => {
-                e.preventDefault()
-              let focussedElement = document.getElementsByClassName("focus")[0];
             },
-            "Delete": (e) => {
+            "Enter": (e) => {
                 e.preventDefault()
-             let focussedElement = document.getElementsByClassName("focus")[0];
-            }
-        */
+                if (browser.view.user) {
+                    let el = document.querySelector('.focus')
+                    browser.view.sloDocument.editor(el)
+                    //return browser.actions.editText(el.closest('span'), type.value)
+                    //console.log(el);
+                    //console.log()
+
+                // e.preventDefault()
+                // if (browser.view.user) {
+                //     let el = document.querySelector('td.focus')
+                //     let selector = document.querySelector('.slo-type-selector')
+                //     let type = selector.querySelector('input:checked')
+                //     browser.actions.hideTypeSelector()
+                //     return browser.actions.insertRow(el.closest('tr'), type.value)
+                    
+                }
+                // --WIP
+            },
+            
+            // "Escape": (e) => {
+            //     e.preventDefault()
+            //     let focussedElement = document.getElementsByClassName("focus")[0];
+            // },
+            // "Insert": async (e) => {
+            //     e.preventDefault()
+            //   let focussedElement = document.getElementsByClassName("focus")[0];
+            // },
+            // "Delete": (e) => {
+            //     e.preventDefault()
+            //  let focussedElement = document.getElementsByClassName("focus")[0];
+            // }
+        
         },
     },
     commands: {
@@ -1128,8 +1146,8 @@ var browser = simply.app({
                     let documentModel = window.slo.getDataModel('items');
 
                     //focus on item
-                    document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).scrollIntoView({ block: "center" });
-                    document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem)).classList.add("focus");
+                    document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.scrollIntoView({ block: "center" });
+                    document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.classList.add("focus");
                     
                 break;
             }
@@ -1173,6 +1191,11 @@ var browser = simply.app({
             .catch(function(error) {
             });
         },
+        // functions for editing documentView
+        editText : function(){
+
+        },
+
         spreadsheet: function(root, context, niveau) {
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
