@@ -98,15 +98,11 @@ const changes = (()=> {
 				newValue: _,
 				dirty: oneOf(true, false)
 			})
-			if (ch.type=='insert') {
-				assert(ch, {
-					child: {
-						meta: {
-							context: oneOf(...Object.keys(slo.contexts)),
-							type: _
-						}
-					}
-				})
+			if (Array.isArray(ch.prevValue)) {
+				ch.prevValue = ch.prevValue.filter(e => !(e instanceof DeletedLink))
+			}
+			if (Array.isArray(ch.newValue)) {
+				ch.newValue = ch.newValue.filter(e => !(e instanceof DeletedLink))
 			}
 			Object.assign(this, ch)
 		}
@@ -145,7 +141,7 @@ const changes = (()=> {
 					}
 				}
 				me['@properties'][ch.property].newValue = ch.newValue
-				if (ch.type=='insert') {
+/*				if (ch.type=='insert') {
 					// add the new child to merged as well
 					m[ch.child.id] = {
 						'@id': ch.child.id,
@@ -155,6 +151,7 @@ const changes = (()=> {
 						'@properties': {}
 					}
 				}
+*/
 				return m
 			}, merged)
 			for (let id in merged) {
@@ -226,13 +223,12 @@ const changes = (()=> {
 						}
 						return n
 					})
+				} else {
+					this[prop] = change.prevValue
 				}
 				if (diff && diff.toBeAdded) {
 					// FIXME: try to add elements at the correct spot
-					if (!this[prop]) {
-						this[prop] = []
-					}
-					this[prop] = this[prop].concat(diff.toBeAdded.map(n => new InsertedLink(n)))
+					this[prop] = diff.toBeAdded.map(n => new InsertedLink(n)).concat(this[prop])
 				}
 			} else {
 				this[prop] = change.newValue
@@ -278,14 +274,17 @@ const changes = (()=> {
 	let merged = changeHistory.merge()
 	let local = merged.normalize()
 	let undoHistory = changeHistory.toReversed().slice(0,5)
+	let undoSize = changeHistory.length
 
 	const changes = {
 		changes: changeHistory,
 		merged,
 		local,
 		undoHistory,
+		undoSize,
 		getLocalView,
 		update,
+
 		Change,
 		Changes,
 		MergedChanges,
@@ -303,6 +302,7 @@ const changes = (()=> {
 		changes.merged = changes.changes.merge()
 		changes.local = changes.merged.normalize()
 		changes.undoHistory = changes.changes.toReversed().slice(0, 5)
+		changes.undoSize = changes.changes.length
 	}
 
 	function getLocalView(data) {
@@ -318,10 +318,8 @@ const changes = (()=> {
 				if (local[id] && local[id] instanceof ChangedNode) {
 					n['@mark'] = 'changed'
 					let localNode = local[id]
-					for (let nprop of Object.keys(n)) {
-						if (typeof localNode[nprop] != 'undefined') {
-							n[nprop] = localNode[nprop]
-						}
+					for (let lprop of Object.keys(localNode)) {
+						n[lprop] = localNode[lprop]
 					}
 				}
 			})

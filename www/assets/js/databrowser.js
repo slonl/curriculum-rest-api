@@ -1016,7 +1016,13 @@ var browser = simply.app({
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
                     currentItem = this.app.view.item.uuid
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
-                    this.app.view.roots = await window.slo.api.get('/roots/'+currentItem)
+                    //FIXME: uuid may not exist remote, but just been added
+                    if (!root) {
+                        roots = await window.slo.api.get('/roots/'+currentItem)
+                        if (roots) {
+                            this.app.view.roots = roots
+                        }
+                    }
                     if (root && !this.app.view.roots.includes(root)) {
                         this.app.view.item.uuid = root.id
                         currentItem = root.id
@@ -1052,14 +1058,33 @@ var browser = simply.app({
                         let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                         let row = this.app.view.sloSpreadsheet.data[index]
                         let node = row.node
-                        let prop
+                        let prop, prevValue, newValue, dirty = true
                         if (update.property=='niveaus') {
                             prop = row.columns.niveaus
                         } else {
-                            prop = node[update.property]
+                            prop = node[update.property] ?? ''
                         }
+                        prevValue = prop
+                        if (columnDef.type=='list') {
+                            newValue = update.values.getAll(update.property)
+                        } else {
+                            newValue = update.values.get(update.property)
+                            if (update.values.get('dirty')==='unset') {
+                                dirty = false
+                            }
+                        }
+                        if (Array.isArray(newValue)) {
+                            if (arrayEquals(newValue, prevValue)) {
+                                return // no change
+                            }
+                        } else if (newValue == prevValue) {
+                            return // no change failsave
+                        } else if (!newValue && !prevValue) {
+                            return // check if both are empty
+                        }
+
                         let timestamp = new Date().toISOString()
-                        let change = {
+                        let change = new changes.Change({
                             id: '/uuid/'+node.uuid,
                             meta: {
                                 context: window.slo.getContextByType(node['@type']),
@@ -1069,35 +1094,14 @@ var browser = simply.app({
                             },
                             type: 'patch',
                             property: update.property,
-                            prevValue: prop,
-                        }
-                        if (columnDef.type=='list') {
-                            change.newValue = update.values.getAll(update.property)
-                        } else {
-                            change.newValue = update.values.get(update.property)
-                            if (update.values.get('dirty')==='unset') {
-                                change.dirty = false
-                            }
-                        }
-                        if (Array.isArray(change.newValue)) {
-                            if (arrayEquals(change.newValue, change.prevValue)) {
-                                return // no change
-                            }
-                        } else if (change.newValue == change.prevValue) {
-                            return // no change failsave
-                        } else if (!change.newValue && !change.prevValue) {
-                            return // check if both are empty
-                        }
-                        slo.changeHistory.push(change)
-                        browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
-                        browser.view.undoSize = slo.changeHistory.length
-                        localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
-                        node[update.property] = change.newValue
-                        row.columns[update.property] = change.newValue
-                        this.app.view.sloSpreadsheet.update({
-                            data: this.app.view.sloSpreadsheet.data
+                            prevValue,
+                            newValue,
+                            dirty
                         })
-                        this.app.view.sloSpreadsheet.renderBody()
+                        changes.changes.push(change)
+                        changes.update()
+//                        this.app.actions.switchView('spreadsheet')
+                        browser.actions.spreadsheetUpdate()
                     })
                 break;
                 case 'document':
@@ -1105,7 +1109,14 @@ var browser = simply.app({
                     currentItem = this.app.view.item.uuid
                     currentId = this.app.view.item['@id']
                     // get roots of current item
-                    this.app.view.roots = await window.slo.api.get('/roots/'+currentItem)
+                    try {
+                        let roots = await window.slo.api.get('/roots/'+currentItem)
+                        if (roots) {
+                            this.app.view.roots = roots
+                        }
+                    } catch(e) {
+                        // ignore
+                    }
                     if (root && !this.app.view.roots.includes(root)) {
                         this.app.view.item.uuid = root.id
                         currentItem = root.id
@@ -1177,14 +1188,20 @@ var browser = simply.app({
             .catch(function(error) {
             });
         },
+        spreadsheetUpdate: function() {
+            changes.getLocalView(browser.view.root)
+            let defs = slo.treeToRows(browser.view.root)
+            browser.view.sloSpreadsheet.update({data:defs.rows})
+            browser.view.sloSpreadsheet.render()
+        },
         spreadsheet: function(root, context, niveau) {
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
             })
             .then(function(json) {
                 browser.view.root = json
-                changes.getLocalView(json)
-                let defs = slo.treeToRows(json)
+                changes.getLocalView(browser.view.root)
+                let defs = slo.treeToRows(browser.view.root)
                 browser.view.view = 'spreadsheet';
                 // @TODO : als browser.view.user, dan editmode enablen
                 // @TODO : on window resize, recalculate
@@ -1285,7 +1302,7 @@ var browser = simply.app({
             var url = window.release.apiPath+'register/';
             window.slo.api.get(url + "?email=" + email);
         },
-        insertRow: function(rowEl, type, parent=null) {
+        insertRow: async function(rowEl, type, parent=null) {
             //FIXME: implement parent
             if (!browser.view.user) return
             let visibleRows = browser.view.sloSpreadsheet.visibleData
@@ -1304,16 +1321,18 @@ var browser = simply.app({
                 parentNode[type] = []
             }
             //FIXME: add the node id to the index
-            //better: use curriculum library?
-            let currValue = parentNode[type].slice()
-            parentNode[type].unshift(node)
+            let prevValue = parentNode[type].slice()
+            let newValue = parentNode[type].slice()
+            newValue.unshift(new changes.InsertedLink(node))
+/*            parentNode[type].unshift(node)
             let data = slo.treeToRows(browser.view.root)
             browser.view.sloSpreadsheet.update({
                 data: data.rows
             })
+*/
             // now add this to the change history
             let timestamp =  new Date().toISOString()
-            let change = {
+            let change = new changes.Change({
                 id: '/uuid/'+parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByType(parentNode['@type']),
@@ -1323,10 +1342,10 @@ var browser = simply.app({
                 },
                 type: 'insert',
                 property: type,
-                prevValue: currValue,
-                newValue: parentNode[type],
+                prevValue: prevValue,
+                newValue: newValue,
                 dirty: true,
-                child: {
+/*                child: {
                     id: '/uuid/'+node.id,
                     meta: {
                         context: window.slo.getContextByType(node['@type']),
@@ -1336,31 +1355,27 @@ var browser = simply.app({
                     prefix: node.prefix,
                     unreleased: true
                 }
-            }
+*/
+            })
             changes.changes.push(change)
             changes.update()
-            browser.view.undoHistory = changes.undoHistory
-            browser.view.undoSize = changes.changes.length
+            await browser.actions.spreadsheetUpdate()
             // find inserted row, return it
-            row = browser.view.sloSpreadsheet.getRowByNode(node)
-            let line = browser.view.sloSpreadsheet.getLineByRow(row)
-            return browser.view.sloSpreadsheet.getRowByLine(line+1)
+//            row = browser.view.sloSpreadsheet.getRowByNode(node)
+//            let line = browser.view.sloSpreadsheet.getLineByRow(row)
+//            return browser.view.sloSpreadsheet.getRowByLine(line+1)
         },
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
             if (row.deleted) {
-//                delete row.deleted
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
                 let type = row.node['@type']
                 let newValue = parentNode[type].slice()
                 row.node.undelete(newValue)
-                newValue = newValue.filter( e => (!(e instanceof changes.DeletedLink)))
                 let prevValue = parentNode[type].slice()
-                prevValue = prevValue.filter( e => (!(e instanceof changes.DeletedLink)))
-//                row.node.undelete(parentNode[type])
                 let timestamp = new Date().toISOString()
-                let change = {
+                let change = new changes.Change({
                     id: '/uuid/'+parentNode.uuid,
                     meta: {
                         context: window.slo.getContextByType(parentNode['@type']),
@@ -1373,15 +1388,11 @@ var browser = simply.app({
                     prevValue,
                     newValue,
                     dirty: true
-                }
+                })
                 changes.changes.push(change)
                 changes.update()
-                browser.view.undoHistory = changes.undoHistory
-                browser.view.undoSize = changes.changes.length
-                //FIXME: does not add the children of undeleted node back??
-                // only after reload -> treeToRows must be run again
-//                browser.view.sloSpreadsheet.renderBody()
-                this.app.actions.switchView('spreadsheet')
+                //this.app.actions.switchView('spreadsheet')
+                browser.actions.spreadsheetUpdate()
             }
         },
         deleteRow: function(row) {
@@ -1390,19 +1401,14 @@ var browser = simply.app({
             // rowNumber = browser.view.sloSpreadsheet.options.focus.row
             // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
             row = browser.view.sloSpreadsheet.getRow(row)
-//            row.deleted = true
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
             let type = row.node['@type']
+
             let prevValue = parentNode[type].slice()
-            prevValue = prevValue.filter( e => (!(e instanceof changes.DeletedLink)))
             let newValue = prevValue.filter(e => (e.uuid !== row.node.uuid))
-            row.node = new changes.DeletedLink(row.node)
-//            parentNode[type] = parentNode[type].map(
-//                e => (e.uuid == row.node.uuid) ? new changes.DeletedLink(e) : e
-//            )
             let timestamp = new Date().toISOString()
-            let change = {
+            let change = new changes.Change({
                 id: '/uuid/'+parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByType(parentNode['@type']),
@@ -1415,17 +1421,11 @@ var browser = simply.app({
                 prevValue,
                 newValue,
                 dirty: true,
-            }
+            })
             changes.changes.push(change)
             changes.update()
-            browser.view.undoHistory = changes.undoHistory
-            browser.view.undoSize = changes.changes.length
-            //FIXME: apply history before rendering
-            //note: remember current row offset
-            // or treeToRows must be run again
-            //browser.view.sloSpreadsheet.update({})
-            //browser.view.sloSpreadsheet.renderBody()
-            this.app.actions.switchView('spreadsheet')
+//            this.app.actions.switchView('spreadsheet')
+            browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
             let thisType = browser.view.sloSpreadsheet.getRow(el).node['@type']
@@ -1574,5 +1574,4 @@ if (user && key) {
     document.body.classList.remove('loading')
 }
 
-browser.view.undoHistory = changes.undoHistory
-browser.view.undoSize = changes.changes.length
+browser.view.changes = changes
