@@ -254,6 +254,13 @@ tr.deleted {
     text-decoration: line-through;
     color: red;
 }
+tr.inserted {
+    text-decoration: underline;
+    color: green;
+}
+tr.changed {
+    color: blue;
+}
 .slo-type-selector .slo-type {
     cursor: pointer;
 }
@@ -262,4 +269,7 @@ tr.deleted {
 }
 .slo-type-selector .ds-button-close {
     right: 0;
+}
+dialog.preview-changes {
+    height: 75vh;
 }
