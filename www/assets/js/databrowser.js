@@ -1332,8 +1332,8 @@ var browser = simply.app({
             } catch(err) {
                 // catch: show error details for now, later try to fix conflicts //@TODO
                 console.error(err)
-            }
-        },*/
+            }*/
+        },
         editDocument(el, value){
             browser.view.sloDocument.editDocument(el, value)
         }
