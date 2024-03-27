@@ -140,9 +140,11 @@ const spreadsheet = (function() {
         };
         options = Object.assign(defaultOptions, options || {});
         let sorted = []
+        let reference = datamodel.view.data
         return function(params) {
             this.options[options.name] = options;
-            if (params[options.name] || sorted.length!=this.view.data.length) {
+            if (params[options.name] || sorted.length!=this.view.data.length || reference != this.view.data) {
+                reference = this.view.data
                 options = Object.assign(options, params[options.name]);
                 this.view.data.sort(options.getSort.call(this, options));
                 sorted = this.view.data.slice()
