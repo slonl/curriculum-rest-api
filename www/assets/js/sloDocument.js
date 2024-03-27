@@ -48,7 +48,7 @@ const sloDocument = (function() {
     // addClickSelectText()
 
     function editDocument(el, value) {
-      showEditor(el);
+      showEditorDialog(el);
     }
 
     function scrollIntoView(nodes, itemIndex){
@@ -72,15 +72,14 @@ const sloDocument = (function() {
         browser.view.item.uuid = nextID
     }
 
-    function showEditor(el) {
+    function showEditorDialog(el) {
       const dialog = el.querySelector("dialog");
       dialog.showModal()
       getTextDefinition(el)
     }
 
-    function hideEditor(el){
-      const dialog = el.querySelector("dialog");
-      dialog.close()
+    function closeEditorDialog(dialog){
+      dialog.close();
     }
 
     function getTextDefinition(el) {
@@ -112,7 +111,7 @@ const sloDocument = (function() {
           selector.style.display = 'none' // @TODO find out if this is needed
           return
         }
-        showEditor(el)
+        showEditorDialog(el)
         // @TODO : will need some refactoring to move to propper functions
         let addChangeButton = el.querySelector("#addChanges");
 
@@ -123,7 +122,8 @@ const sloDocument = (function() {
           let textBox = el.querySelector("input")
           console.log("closed a dialog")
           console.log(textBox.value)
-          hideEditor(el)
+          console.log(el)
+          // closeEditorDialog(el)
         })
       },
      
@@ -202,6 +202,9 @@ const sloDocument = (function() {
       saveChanges: (el) => {
         addChanges(el)
         hideEditor(el)
+      },
+      hideEditorDialog: (el) => {
+        closeEditorDialog(el);
       }
     }
 
