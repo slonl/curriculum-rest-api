@@ -15,39 +15,41 @@ const sloDocument = (function() {
     // @TODO : need to move the clicklistener to command / action
     let clickListener
    
-    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-    function addClickSelectText() {
-        if (clickListener) {
-            options.container.removeEventListener('click', clickListener)
-        }
-        clickListener = function(evt) {
-          let clickedText = evt.target.closest('.slo-entity')
+    // // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+    // function addClickSelectText() {
+    //     if (clickListener) {
+    //         options.container.removeEventListener('click', clickListener)
+    //     }
+    //     clickListener = function(evt) {
+    //       let clickedText = evt.target.closest('.slo-entity')
 
-          // templates occasionally generate without any content, only select if there is an ID to select
-          if(clickedText?.id){
-            //console.log(clickedText.id)
-            //console.log(clickedText.innerHTML)
-            let focussedElement = document.getElementsByClassName("focus")[0];
-            focussedElement?.classList.remove("focus")
-            clickedText.classList.add("focus")
+    //       // templates occasionally generate without any content, only select if there is an ID to select
+    //       if(clickedText?.id){
+    //         //console.log(clickedText.id)
+    //         //console.log(clickedText.innerHTML)
+    //         let focussedElement = document.getElementsByClassName("focus")[0];
+    //         focussedElement?.classList.remove("focus")
+    //         clickedText.classList.add("focus")
               
-             // replace URL with the new URL
-             let nextFocussedElement = document.querySelector(".focus");                 
-             let nextDocumentLocation = new URL(document.location.href);
-             let idPath = new URL(nextFocussedElement.id);
-             let nextID = idPath.pathname.split("/").pop();
-             idPath.pathname = "/uuid/" + nextID;
-             idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-             window.history.replaceState({}, '', idPath.href);
-             browser.view.item.uuid = nextID
-          }
+    //          // replace URL with the new URL
+    //          let nextFocussedElement = document.querySelector(".focus");                 
+    //          let nextDocumentLocation = new URL(document.location.href);
+    //          let idPath = new URL(nextFocussedElement.id);
+    //          let nextID = idPath.pathname.split("/").pop();
+    //          idPath.pathname = "/uuid/" + nextID;
+    //          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+    //          window.history.replaceState({}, '', idPath.href);
+    //          browser.view.item.uuid = nextID
+    //       }
 
-        }
-        options.container.addEventListener('click', clickListener)
+    //     }
+    //     options.container.addEventListener('click', clickListener)
+    // }
+    // addClickSelectText()
+
+    function editDocument(el, value) {
+      showEditor(el);
     }
-    addClickSelectText()
-
-
 
     function scrollIntoView(nodes, itemIndex){
         nodes[itemIndex].scrollIntoView({ block: "center" });
@@ -193,6 +195,9 @@ const sloDocument = (function() {
         nodes[itemIndex].classList.add("focus");
         updateURL()
         
+      },
+      editDocument: (el) =>{
+        editDocument(el);
       },
       saveChanges: (el) => {
         addChanges(el)

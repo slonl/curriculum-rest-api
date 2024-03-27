@@ -729,6 +729,9 @@ var browser = simply.app({
         },
         undeleteRow: async function(el, value) {
             browser.actions.undeleteRow(el.closest('tr'))
+        },
+        editDocument: function(el, value){
+            browser.actions.editDocument(el, value)
         }
     },
     actions: {
@@ -1298,6 +1301,9 @@ var browser = simply.app({
                 // catch: show error details for now, later try to fix conflicts //@TODO
                 console.error(err)
             }
+        },
+        editDocument(el, value){
+            browser.view.sloDocument.editDocument(el, value)
         }
     }
 });
