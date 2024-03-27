@@ -1,0 +1,50 @@
+@media print {
+    .slo-weergave-switch {
+        display: none;
+    }
+    .slo-search-button {
+        display: none;
+    }
+    button {
+        display: none;
+    }
+    head {
+        display: none;
+    }
+    nav {
+        display: none;
+    }
+    footer {
+        display: none;
+    }
+    video {
+        display: none;
+    }
+    audio {
+        display: none;
+    }
+    object {
+        display: none;
+    }
+    embed {
+        display: none;
+    }
+    .slo-footer{
+        display: none;
+    }
+    img {
+        max-width: 100%;
+    }
+    h1 {
+        break-after: avoid;
+    }
+    ul {
+        break-before: avoid;
+    }
+    section {
+        break-inside: avoid;
+    }
+    .slo-document .focus {
+        outline: 0 solid rgba(0,0,0,0);
+    }
+}

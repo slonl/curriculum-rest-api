@@ -5,8 +5,12 @@ module.exports = {
 	queries: {
 		InhVakleergebied: `
 		const results = from(data.InhVakleergebied)
-		.select({
-			...shortInfo,
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
 				Vakleergebied: {
 					...shortInfo,
 					deprecated: _,
@@ -15,115 +19,123 @@ module.exports = {
 					Niveau: NiveauShort	
 				}
 			})
-			.sort(sortByPrefix)
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhVakleergebied.length
 			}
 	
 			meta
 	
-			`,
+		`,
 		InhInhoudslijn: `
 		const results = from(data.InhInhoudslijn)
-		.select({
-			...shortInfo,
-			InhVakleergebied: {
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
-		})
-		.sort(sortByPrefix)
-
-			const meta = {
-				data: results.slice(Paging.start,Paging.end),
-				page: Page,
-				count: results.length
-			}
-	
-			meta
-	
-			`,
-		InhCluster: `
-		const results = from(data.InhCluster)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			InhInhoudslijn: {
 				InhVakleergebied: {
 					...shortInfo,
 					deprecated: _,
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
-			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
-		})
-		.sort(sortByPrefix)
+			})
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhInhoudslijn.length
 			}
 	
 			meta
 	
-			`,
-		InhSubcluster: `
-		const results = from(data.InhSubcluster)
-		.select({
-			...shortInfo,
-			unreleased: _,
-			InhCluster: {
+		`,
+		InhCluster: `
+		const results = from(data.InhCluster)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
 				InhInhoudslijn: {
 					InhVakleergebied: {
 						...shortInfo,
 						deprecated: _,
-						}
 					}
+				},
+				NiveauIndex: {
+					Niveau: NiveauShort
 				}
 			})
-			.sort(sortByPrefix)
 
 			const meta = {
-				data: results.slice(Paging.start,Paging.end),
+				data: results,
 				page: Page,
-				count: results.length
+				count: data.InhCluster.length
 			}
 	
 			meta
 	
-			`,
+		`,
+		InhSubcluster: `
+		const results = from(data.InhSubcluster)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				InhCluster: {
+					InhInhoudslijn: {
+						InhVakleergebied: {
+							...shortInfo,
+							deprecated: _,
+						}
+					}
+				}
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.InhSubcluster.length
+			}
+	
+			meta
+	
+		`,
 		InhoudslijnVolledig: `
 		const results = from(data.InhVakleergebied)
-		.select({
-			...shortInfo,
-		    NiveauIndex:{
-		 		Niveau: NiveauShort
-		    },
-		    InhInhoudslijn: {
+			.select({
 				...shortInfo,
-				deprecated: _,
-				InhCluster: {
+				NiveauIndex:{
+					Niveau: NiveauShort
+				},
+				InhInhoudslijn: {
 					...shortInfo,
 					deprecated: _,
-					InhSubcluster: {
+					InhCluster: {
 						...shortInfo,
 						deprecated: _,
+						InhSubcluster: {
+							...shortInfo,
+							deprecated: _,
+							Doelniveau: Doelen,
+						},
 						Doelniveau: Doelen,
-		        	},
-					Doelniveau: Doelen,
-		      	},
-				Doelniveau:	Doelen,
-		    },
-		    Doelniveau: Doelen,
-		})`
+					},
+					Doelniveau:	Doelen,
+				},
+				Doelniveau: Doelen,
+			})`
 	},
 	typedQueries: {
 		InhVakleergebied: `

@@ -300,6 +300,16 @@ const spreadsheet = (function() {
       return row
     }
 
+    function findParentRow(row) {
+      let indent = row.indent
+      let line = datamodel.view.visibleData.indexOf(row)
+      while (line && row.indent>=indent) {
+        line--
+        row = datamodel.view.visibleData[line]
+      }
+      return row
+    }
+
     function getColumnDefinition(el) {
       // column definitions are in options.columns
       let visibleColumns = options.columns.filter(c => c.checked)
@@ -463,15 +473,25 @@ const spreadsheet = (function() {
       if (datamodel.options.focus?.row == row.id) {
         rowClass += ' focus';
       }
+      if (row.deleted) {
+        rowClass += ' deleted';
+      }
       let add = ''
       let remove = ''
       if (options.editMode) {
-        add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
-            <use xlink:href="${options.icons}#plus-circle"></use>
-        </svg></td>`
-        remove = `<td><svg data-simply-command="deleteRow" class="slo-delete ds-icon ds-icon-feather">
-            <use xlink:href="${options.icons}#x-circle"></use>
-        </svg></td>`
+        if (row.deleted) {
+          add = `<td></td>`
+          remove = `<td><svg data-simply-command="undeleteRow" class="slo-delete ds-icon ds-icon-feather">
+              <use xlink:href="${options.icons}#plus-circle"></use>
+          </svg></td>` // unremove option here?
+        } else {
+          add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
+              <use xlink:href="${options.icons}#plus-circle"></use>
+          </svg></td>`
+          remove = `<td><svg data-simply-command="deleteRow" class="slo-delete ds-icon ds-icon-feather">
+              <use xlink:href="${options.icons}#x-circle"></use>
+          </svg></td>`
+        }
       }
       let html = `<tr id="${row.columns.id}" class="${rowClass}">${add}<td>${row.id+1}</td>`
       let value, count = 0
@@ -786,9 +806,16 @@ const spreadsheet = (function() {
           })
         }
       },
+      findParentRow,
       getRow,
       getRowByLine: (line) => {
         return datamodel.view.visibleData[line]
+      },
+      getRowByNode: (node) => {
+        return datamodel.view.visibleData.filter(row => row.node==node).pop()
+      },
+      getLineByRow: (row) => {
+        return datamodel.view.visibleData.findIndex(r => r==row)
       },
       getColumnDefinition
     }

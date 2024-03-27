@@ -5,108 +5,123 @@ module.exports = {
 	queries: {
 		Syllabus: `
 		const results = from(data.Syllabus)
-		.select({
-			...shortInfo,  
-		})
-		.sort(sortByTitle)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,  
+			})
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.Syllabus.length
+			}
 
-		meta
+			meta
 
 		`,
 		SyllabusVakbegrip: `
 		const results = from(data.SyllabusVakbegrip)
-		.select({
-			...shortInfo,
-			Syllabus: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
+				Syllabus: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.SyllabusVakbegrip.length
 			}
-		})
-		.sort(sortByTitle)
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		SyllabusVakleergebied: `
 		const results = from(data.SyllabusVakleergebied)
-		.select({
-			...shortInfo,
-			Syllabus: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			},
-			Vakleergebied: {
-				...shortInfo,
-				deprecated: _,
+				Syllabus: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.SyllabusVakleergebied.length
 			}
-		})
-		.sort(sortByTitle)
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		SyllabusToelichting: `
 		const results = from(data.SyllabusToelichting)
-		.select({
-			...shortInfo,
-			Syllabus: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
-			},
-			SyllabusSpecifiekeEindterm: {
-			  	Syllabus: {
+				Syllabus: {
 					...shortInfo,
 					deprecated: _,
-			  }
+				},
+				SyllabusSpecifiekeEindterm: {
+					Syllabus: {
+						...shortInfo,
+						deprecated: _,
+					}
+				}
+			})
+			
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.SyllabusToelichting.length
 			}
-		})
-		.sort(sortByTitle)
 
-		  const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		SyllabusSpecifiekeEindterm: `
 		const results = from(data.SyllabusSpecifiekeEindterm)
-		.select({
-			...shortInfo,
-			Syllabus: {
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
 				...shortInfo,
-				deprecated: _,
+				Syllabus: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.SyllabusSpecifiekeEindterm.length
 			}
-		})
-		.sort(sortByTitle)
 
-		const meta = {
-			data: results.slice(Paging.start,Paging.end),
-			page: Page,
-			count: results.length
-		}
-
-		meta
+			meta
 
 		`,
 		SyllabusVolledig: `

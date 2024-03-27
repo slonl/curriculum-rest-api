@@ -5,38 +5,6 @@ module.exports = {
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
-
-		const Doelen = {
-			id : _,
-			prefix : _,
-			ce_se : _.ceSe,
-			Doel: {
-				id : _,
-				title : _,
-				description : _,
-				bron : _,
-				vakbegrippen : _,
-				aanbodid : _,
-				Leerlingtekst: {
-					title : _,
-					description : _,
-				}     
-			},
-			Kerndoel: {
-				id : _,
-				title : _,
-				description : _,
-				kerndoelLabel : _,
-				prefix : _,
-			},
-			LdkVakbegrip: {
-				id : _,
-				title : _,
-				ce_se : _.ceSe,
-			}
-		}
-		
-
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
@@ -182,7 +150,7 @@ module.exports = {
 			start: Page*PageSize,
 			end: (Page+1)*PageSize
 		}
-		const Index = id => meta.index.id.get('/uuid/'+id)?.deref()
+		const Index = id => meta.index.id.get('/uuid/'+id)
 		
 		const shortInfo = {
 		    '@id': Id,
@@ -223,17 +191,20 @@ module.exports = {
 	queries: {
 		Vakleergebied: `
 		const results = from(data.Vakleergebied)
-				.select({
-					'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
-					...shortInfo,
-					Niveau: ShortLink
-				})
-				.sort(sortByTitle)
-
+			.orderBy({ 
+				title:asc 
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
+				...shortInfo,
+				Niveau: ShortLink
+			})
+		
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
-			count: results.length
+			count: data.Vakleergebied.length
 		}
 
 		meta
@@ -241,18 +212,22 @@ module.exports = {
 		`,
 		Niveau: `
 		const results = from(data.Niveau)
+		.orderBy({ 
+			title:asc
+		})
+		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			...shortInfo,
 			description: _,
 
 		})
-		.sort(sortByTitle)
+		
 
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
-			count: results.length
+			count: data.Niveau.length
 		}
 
 		meta
@@ -260,16 +235,19 @@ module.exports = {
 		`,
 		Doel: `
 		const results = from(data.Doel)
+		.orderBy({ 
+			title:asc 
+		})
+		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			...shortInfo,
 		})
-		.sort(sortByTitle)
-
+		
 		const meta = {
-			data: results.slice(Paging.start,Paging.end),
+			data: results,
 			page: Page,
-			count: results.length
+			count: data.Doel.length
 		}
 
 		meta
