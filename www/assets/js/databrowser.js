@@ -571,34 +571,33 @@ var browser = simply.app({
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
           column.checked = el.checked
           browser.view.sloSpreadsheet.render()
-        },
+        },        
         filterValue: (el, value) => {
-          let column = browser.view.sloSpreadsheet.options.columns.find(c => c.value==el.name)
-          let state = !column.filteredValues[value]
-          column.filteredValues[value] = state
-          let columnFilter = Object.entries(column.filteredValues)
-            .filter(([name,value]) => value)
-            .map(([name,value]) => name)
-          let filter = {}
-          filter[el.name] = columnFilter
-          browser.view.sloSpreadsheet.update({
-            filter
-          })
+            let column = browser.view.sloSpreadsheet.options.columns
+                .find(c => c.value==el.name)
+            let state = !column.filteredValues[value]
+            column.filteredValues[value] = state
+            let columnFilter = Object.entries(column.filteredValues)
+                .filter(([name,value]) => value)
+                .map(([name,value]) => name)
+            let filter = {}
+            filter[el.name] = columnFilter
+            browser.view.sloSpreadsheet.update({
+                filter
+            })
         },
         filterText: (el, value) => {
-          let filter = {}
-          if (value.length>2) {
-            filter[el.name] = value
-            browser.view.sloSpreadsheet.update({
-              filter
-            })
-          } else {
-            filter[el.name] = ''
-            browser.view.sloSpreadsheet.update({filter})
-          }
+            let filter = {}
+            if (value.length>2) {
+                filter[el.name] = value
+                browser.view.sloSpreadsheet.update({
+                    filter
+                })
+            } else {
+                filter[el.name] = ''
+                browser.view.sloSpreadsheet.update({filter})
+            }
         },
-
-
         close: function(el,value) {
             let dialog = el.closest('dialog')
             if (dialog) {
@@ -696,7 +695,8 @@ var browser = simply.app({
             }
         },
         showAllChanges: async function(el, value) {
-            alert('nog niet geimplementeerd')
+            browser.view.mergedChanges = window.slo.mergeChanges()
+            document.getElementById('previewChanges').showModal()
         },
         commitChanges: async function(el, value) {
             document.body.classList.add('loading')
@@ -837,10 +837,15 @@ var browser = simply.app({
                         let timestamp = new Date().toISOString()
                         let change = {
                             id: '/uuid/'+node.uuid,
+                            meta: {
+                                context: window.slo.getContextByType(node['@type']),
+                                title: node.title ?? '[Geen titel]',
+                                type: node['@type'],
+                                timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                            },
                             type: 'patch',
                             property: update.property,
                             prevValue: prop,
-                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                         }
                         if (columnDef.type=='list') {
                             change.newValue = update.values.getAll(update.property)
@@ -936,7 +941,7 @@ var browser = simply.app({
             })
             .then(function(json) {
                 browser.view.view = 'list';
-                slo.applyHistory(json.data)
+                changes.getLocalView(json.data)
                 browser.view.list = json.data;
                 browser.view['listTitle'] = titles[type];
                 console.log(titles[type],browser.view['listTitle']);
@@ -959,7 +964,7 @@ var browser = simply.app({
             })
             .then(function(json) {
                 browser.view.root = json
-                slo.applyHistory(json)
+                changes.getLocalView(json)
                 let defs = slo.treeToRows(json)
                 browser.view.view = 'spreadsheet';
                 // @TODO : als browser.view.user, dan editmode enablen
@@ -984,6 +989,8 @@ var browser = simply.app({
                 niveau, context
             })
             .then(async function(json) {
+                browser.view.root = json
+                changes.getLocalView(json)
                 browser.view.view = 'document';
                 browser.view.documentList = await window.slo.documentPage(json)
                 browser.view.sloDocument = sloDocument({
@@ -996,8 +1003,9 @@ var browser = simply.app({
             browser.view.list = [];
             return window.slo.api.get(window.release.apiPath+type)
             .then(function(json) {
+                changes.getLocalView(json.data)
                 browser.view.view = 'doelniveauList';
-                slo.applyHistory(json.data)
+                changes.getLocalView(json.data)
                 browser.view.list = json.data;
                 browser.view['listTitle'] = titles[type];
                 console.log(titles[type],browser.view['listTitle']);
@@ -1007,7 +1015,7 @@ var browser = simply.app({
         item: function(id) {
             return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
             .then(function(json) {
-                slo.applyHistory(json)
+                changes.getLocalView(json)
                 browser.view.item = json;
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
                     browser.actions.switchView(browser.view.preferedView)
@@ -1023,7 +1031,7 @@ var browser = simply.app({
             return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
             .then(function(json) {
                 browser.view.view = 'list';
-                slo.applyHistory(json)
+                changes.getLocalView(json)
                 browser.view.list = json;
                 browser.view['listTitle'] = titles[type];
                 console.log(titles[type],browser.view['listTitle']);
@@ -1034,7 +1042,7 @@ var browser = simply.app({
             return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
             .then(function(json) {
                 browser.view.view = 'item';
-                slo.applyHistory(json)
+                changes.getLocalView(json)
                 browser.view.item = json;
                 browser.actions.updatePaging();
             });
@@ -1076,6 +1084,8 @@ var browser = simply.app({
             if (!parentNode[type]) {
                 parentNode[type] = []
             }
+            //FIXME: add the node id to the index
+            //better: use curriculum library?
             let currValue = parentNode[type].slice()
             parentNode[type].unshift(node)
             let data = slo.treeToRows(browser.view.root)
@@ -1085,20 +1095,34 @@ var browser = simply.app({
             // now add this to the change history
             let timestamp =  new Date().toISOString()
             let change = {
-                type: 'insert',
                 id: '/uuid/'+parentNode.uuid,
+                meta: {
+                    context: window.slo.getContextByType(parentNode['@type']),
+                    title: parentNode.title,
+                    type: parentNode['@type'],                    
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'insert',
                 property: type,
                 prevValue: currValue,
                 newValue: parentNode[type],
                 dirty: true,
-                child: JSONTag.clone(node), // prevent later changes from polluting the child here
-                timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                child: {
+                    id: '/uuid/'+node.id,
+                    meta: {
+                        context: window.slo.getContextByType(node['@type']),
+                        type: node['@type']
+                    },
+                    uuid: node.uuid,
+                    prefix: node.prefix,
+                    unreleased: true
+                }
             }
-            slo.changeHistory.push(change)
-            browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
-            browser.view.undoSize = slo.changeHistory.length
-            localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))
-            // @FIXME: find inserted row, return it
+            changes.changes.push(change)
+            changes.update()
+            browser.view.undoHistory = changes.undoHistory
+            browser.view.undoSize = changes.changes.length
+            // find inserted row, return it
             row = browser.view.sloSpreadsheet.getRowByNode(node)
             let line = browser.view.sloSpreadsheet.getLineByRow(row)
             return browser.view.sloSpreadsheet.getRowByLine(line+1)
@@ -1106,45 +1130,39 @@ var browser = simply.app({
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
             if (row.deleted) {
-                delete row.deleted
-                delete row.node.deleted
-                // FIXME: this undoes a deleteRow
-                // but the change should be kept in changeHistory
-                // for undo/redo purposes
-                // however the deleteRow change should be filtered before sending to the server
-                // this change should filter out earlier deleteRow
+//                delete row.deleted
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
                 let type = row.node['@type']
+                let newValue = parentNode[type].slice()
+                row.node.undelete(newValue)
+                newValue = newValue.filter( e => (!(e instanceof changes.DeletedLink)))
                 let prevValue = parentNode[type].slice()
-                // find previous sibling of this row
-                let prevSibling
-                while (rowEl.previousElementSibling) {
-                    rowEl = rowEl.previousElementSibling
-                    prevSibling = browser.view.sloSpreadsheet.getRow(rowEl)
-                    if (prevSibling.indent==row.indent && !prevSibling.deleted) {
-                        break
-                    }
-                }
-                let newValue = parentNode[type]
-                let siblingIndex = newValue.indexOf(prevSibling.node)
-                newValue.splice(siblingIndex, 0, row.node)
+                prevValue = prevValue.filter( e => (!(e instanceof changes.DeletedLink)))
+//                row.node.undelete(parentNode[type])
                 let timestamp = new Date().toISOString()
                 let change = {
-                    id: '/uuid/'+parent.uuid,
+                    id: '/uuid/'+parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByType(parentNode['@type']),
+                        title: parentNode.title,
+                        type: parentNode['@type'],   
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
                     type: 'undelete',
                     property: type,
                     prevValue,
                     newValue,
-                    dirty: true,
-                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    dirty: true
                 }
-                slo.changeHistory.push(change)
-                browser.view.sloSpreadsheet.renderBody()
-
-                browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
-                browser.view.undoSize = slo.changeHistory.length
-                localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))                    
+                changes.changes.push(change)
+                changes.update()
+                browser.view.undoHistory = changes.undoHistory
+                browser.view.undoSize = changes.changes.length
+                //FIXME: does not add the children of undeleted node back??
+                // only after reload -> treeToRows must be run again
+//                browser.view.sloSpreadsheet.renderBody()
+                this.app.actions.switchView('spreadsheet')
             }
         },
         deleteRow: function(row) {
@@ -1153,28 +1171,42 @@ var browser = simply.app({
             // rowNumber = browser.view.sloSpreadsheet.options.focus.row
             // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
             row = browser.view.sloSpreadsheet.getRow(row)
-            row.deleted = true
-            row.node.deleted = true
-            browser.view.sloSpreadsheet.renderBody()
+//            row.deleted = true
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
             let type = row.node['@type']
-            let prevValue = parentNode[type]
-            parentNode[type] = parentNode[type].filter(e => e.uuid !== row.node.uuid) 
+            let prevValue = parentNode[type].slice()
+            prevValue = prevValue.filter( e => (!(e instanceof changes.DeletedLink)))
+            let newValue = prevValue.filter(e => (e.uuid !== row.node.uuid))
+            row.node = new changes.DeletedLink(row.node)
+//            parentNode[type] = parentNode[type].map(
+//                e => (e.uuid == row.node.uuid) ? new changes.DeletedLink(e) : e
+//            )
             let timestamp = new Date().toISOString()
             let change = {
                 id: '/uuid/'+parentNode.uuid,
+                meta: {
+                    context: window.slo.getContextByType(parentNode['@type']),
+                    title: parentNode.title,
+                    type: parentNode['@type'],
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
                 type: 'delete',
                 property: type,
-                prevValue: prevValue,
-                newValue: parentNode[type],
+                prevValue,
+                newValue,
                 dirty: true,
-                timestamp: timestamp.substring(0, timestamp.indexOf('.'))
             }
-            slo.changeHistory.push(change)
-            browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
-            browser.view.undoSize = slo.changeHistory.length
-            localStorage.setItem('changeHistory',JSON.stringify(slo.changeHistory))                
+            changes.changes.push(change)
+            changes.update()
+            browser.view.undoHistory = changes.undoHistory
+            browser.view.undoSize = changes.changes.length
+            //FIXME: apply history before rendering
+            //note: remember current row offset
+            // or treeToRows must be run again
+            //browser.view.sloSpreadsheet.update({})
+            //browser.view.sloSpreadsheet.renderBody()
+            this.app.actions.switchView('spreadsheet')
         },
         showTypeSelector: async function(el) {
             let thisType = browser.view.sloSpreadsheet.getRow(el).node['@type']
@@ -1220,7 +1252,7 @@ var browser = simply.app({
             selector.close(); //removeAttribute('open')
         },
         'commitChanges': async function() {
-            const linkArray = (list) => {
+/*            const linkArray = (list) => {
                 let links = []
                 for (let v of list) {
                     if (JSONTag.getType(v)==='object' && v.uuid) {
@@ -1301,7 +1333,7 @@ var browser = simply.app({
                 // catch: show error details for now, later try to fix conflicts //@TODO
                 console.error(err)
             }
-        },
+        },*/
         editDocument(el, value){
             browser.view.sloDocument.editDocument(el, value)
         }
@@ -1324,13 +1356,5 @@ if (user && key) {
     document.body.classList.remove('loading')
 }
 
-changeHistory = localStorage.getItem('changeHistory')
-if (changeHistory) {
-    slo.changeHistory = JSON.parse(changeHistory)
-    browser.view.undoHistory = slo.changeHistory.toReversed().slice(0,5)
-    browser.view.undoSize = slo.changeHistory.length
-    slo.parseHistory()
-} else {
-    slo.changeHistory = []
-}
-delete changeHistory
+browser.view.undoHistory = changes.undoHistory
+browser.view.undoSize = changes.changes.length

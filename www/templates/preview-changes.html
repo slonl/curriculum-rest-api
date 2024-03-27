@@ -1,0 +1,36 @@
+<dialog id="previewChanges" class="preview-changes ds-dialog">
+    <header class="ds-dialog-header">
+        <div class="ds-space">
+            <button data-simply-command="closeDialog" class="ds-button ds-button-light ds-button-close">
+                <svg class="ds-icon ds-icon-feather">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
+                </use></svg>
+            </button>
+            <h2>Wijzigingen</h2>
+        </div>
+    </header>
+    <div class="ds-dialog-content">
+		<div class="ds-space" data-simply-list="mergedChanges">
+			<template>
+				<details>
+					<summary><span data-simply-field="context"></span> (<span data-simply-field="count"></span>)</summary>
+					<div style="margin-left: 2em" data-simply-list="types">
+						<template>
+							<details>
+								<summary><span data-simply-field="type"></span> (<span data-simply-field="count"></span>)</summary>
+								<div style="margin-left: 2em" data-simply-list="entities">
+									<template>
+										<details>
+											<summary data-simply-field="@title"></summary>
+											<div style="margin-left: 2em">Hier komt de diff</div>
+										</details>
+									</template>
+								</div>
+							</details>
+						</template>
+					</div>
+				</details>
+			</template>
+		</div>
+    </div>        
+</dialog>

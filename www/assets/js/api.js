@@ -273,42 +273,133 @@
             }
         },
 
-        changeHistory: [],
-        current: {},
-        inserted: [],
-        parseHistory: function() {
-            slo.changeHistory.forEach(change => {
-                if (!slo.current[change.id]) {
-                    slo.current[change.id] = {}
-                }
-                switch(change.type) {
+/*
+        mergeHistory: function(changes) {
+            let merged = {}
+            for (let change of changes) {
+                switch (change.type) {
                     case 'delete':
-                        // @TODO: check if any other parents exist, 
-                        // else mark as deprecated and remove from index.id
                     case 'undelete':
                     case 'patch':
-                        slo.current[change.id][change.property] = change.newValue
-                    break
                     case 'insert':
-                        slo.current[change.id][change.property] = change.newValue
-                        slo.inserted[change.child.id] = change.child
-                        // @TODO: add child node to index.id
-                        // @TODO: calculate root and set parent non-enumerable properties
+                        if (!merged[change.id]) {
+                            merged[change.id] = {
+                                context: change.context,
+                                '@type': change['@type'],
+                                '@title': change.title ?? 'Geen Titel'
+                            }
+                        }
+                        if (change.property=='title') {
+                            merged[change.id]['@title'] = change.newValue
+                        }
+                        if (!merged[change.id][change.property]) {
+                            merged[change.id][change.property] = {
+                                prevValue: change.prevValue
+                            }
+                        }
+                        merged[change.id][change.property].newValue = change.newValue
+                        if (change.type == 'insert') {
+                            let childID = '/uuid/'+change.child.uuid
+                            merged[childID] = {
+                                context: slo.getContextByType(change['@type']),
+                                '@type': change['@type']
+                            }
+                            for (let prop in change.child) {
+                                if (prop[0]=='@') {
+                                    merged[childID][prop] = change.child[prop]
+                                } else {
+                                    merged[childID][prop] = {
+                                        prevValue: null,
+                                        newValue: change.child[prop]
+                                    }
+                                }
+                            }
+                        }
                     break
                     default:
-                        throw new Error('Unknown change type:'+change.type)
+                        throw new Error('Unknown change type:'+change.type, { details: change })
                     break
                 }
-            })
+            }
+            // remove any property changes that have been undone (reverted to original, e.g. undelete)
+            for (let id in merged) {
+                for (let prop in merged[id]) {
+                    if (!merged[id][prop]?.newValue) {
+                        continue //type etc.
+                    }
+                    if (merged[id][prop].newValue===merged[id][prop].prevValue) {
+                        delete merged[id][prop]
+                    }
+                }
+            }
+            return merged
+        },
+        mergeChanges: function() {
+            // prepare change history for overview
+            let merged = slo.mergeHistory(slo.changeHistory)
+            let contexts = {}
+            for (let id in merged) {
+                let context = merged[id].context
+                if (!contexts[context]) {
+                    contexts[context] = {}
+                }
+                let type = merged[id]['@type']
+                if (!contexts[context][type]) {
+                    contexts[context][type] = []
+                }
+                contexts[context][type].push({
+                    title: merged[id].title,
+                    patch: merged[id]
+                })
+            }
+            let result = []
+            for (let context in contexts) {
+                let types = []
+                for (let type in contexts[context]) {
+                    types.push({
+                        type,
+                        entities: contexts[context][type],
+                        count: contexts[context][type].length
+                    })
+                }
+                result.push({
+                    context,
+                    types,
+                    count: types.reduce((a,t) => a+t.count, 0)
+                })
+            }
+            return result
+        },
+        parseHistory: function() {
+            //FIXME: delete must show row crossed through, not removed entirely
+            //check changes for current entity? if array && newValue != remote -> show added/removed entries?
+            let merged = slo.mergeHistory(slo.changeHistory)
+            for (let id in merged) {
+                if (!slo.current[id]) {
+                    slo.current[id] = {}
+                }
+                for (let prop in merged[id]) {
+                    if (typeof merged[id][prop].newValue !== 'undefined') {
+                        slo.current[id][prop] = merged[id][prop].newValue
+                    }
+                }
+//                if (merged[id].type=='insert') {
+//                    slo.inserted[id] = slo.current[id]
+//                }
+            }
         },
         applyHistory: function(data) {
+            slo.parseHistory()
             if (!Array.isArray(data)) {
                 data = [data]
             }
             data.forEach(node => {
                 walk(node, 0, (n) => {
-                    let id = n['id']
+                    let id = '/uuid/'+n['uuid']
                     if (slo.current[id]) {
+                        if (!n._previous) {
+                            n._previous = Object.assign({}, n)
+                        }
                         Object.keys(slo.current[id]).forEach(prop => {
                             n[prop] = slo.current[id][prop]
                         })
@@ -316,6 +407,7 @@
                 })
             })
         },
+*/
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -371,7 +463,24 @@
                 return columns
             }
 
-            walk(data, 0, (n,indent) => {
+            function getDiff(a,b) {
+                let result = {}
+                let toBeRemoved = a.filter(x => !b.find(e => e.uuid == x.uuid))
+                let toBeAdded = b.filter(x => !a.find(e => e.uuid == x.uuid))
+                if (toBeRemoved.length) {
+                    result.toBeRemoved = toBeRemoved
+                }
+                if (toBeAdded.length) {
+                    result.toBeAdded = toBeAdded
+                }
+                if (!result.toBeRemoved && !result.toBeAdded) {
+                    result = null
+                }
+                return result
+            }
+
+//            let marks = []
+            function addRow(n, indent, mark=null) {
                 if (n.id || n.uuid) {
                     count++
                     let row = {}
@@ -380,13 +489,76 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
+                    if (n instanceof changes.DeletedLink) {
+                        row.deleted = true
+                    } else if (n instanceof changes.InsertedLink) {
+                        row.inserted = true
+                    } else if (n instanceof changes.ChangedNode) {
+                        row.changed = true
+                    }
+/*
+                    // marks contain add/removed information for parent nodes of current row
+                    // marks works as a stack
+                    marks = marks.slice(0, indent) // remove marks from other parents
+                    marks[indent] = [] // clear marks for this row as parent
+                    if (n._previous) {
+                        // deleted entries are not in n[prop], so add row manually
+                        // added entries are in n[prop], so will come around later... keep track of parent-child ids and match these somehow
+                        for (let prop in n._previous) {
+                            if (Array.isArray(n._previous[prop])) {
+                                let diff = getDiff(n._previous[prop],n[prop])
+                                if (diff) {
+                                    if (diff.toBeAdded) {
+                                        marks[indent].push({
+                                            type: 'insert',
+                                            [prop]: diff.toBeAdded
+                                        })
+                                    }
+                                    if (diff.toBeRemoved) {
+                                        marks[indent].push({
+                                            type: 'delete',
+                                            [prop]: diff.toBeRemoved
+                                        })
+                                        if (!diff.toBeAdded) {
+                                            n[prop] = n._previous[prop]
+                                        } else {
+                                            // FIXME: need to order the toBeAdded/toBeRemoved correctly
+                                            n[prop] = n._previous[prop].concat(diff.toBeAdded)
+                                        }
+                                    }
+
+                                }
+                            } else if (n._previous[prop]!=n[prop]) {
+                                row.changed=true
+                            }
+                        }
+                    }
+                    if (marks[indent-1]) { // marks info for the parent of this row
+                        for (let m of marks[indent-1]) {
+                            for (let prop in m) {
+                                if (prop=='type') {
+                                    continue
+                                }
+                                if (m[prop].find(e => e.uuid == row.node.uuid)) {
+                                    if (m.type=='insert') {
+                                        row.inserted = true
+                                    } else if (m.type=='delete') {
+                                        row.deleted = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+*/
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
                     allRows.push(row)
                     countColumnValues(row.columns)
                     return indent+1
                 }
-                return indent;
-            })
+                return indent;                
+            }
+            walk(data, 0, addRow)
+
             function capitalize(str) {
               return str[0].toUpperCase()+str.slice(1)
             }
@@ -680,22 +852,22 @@
             return dataModels[name]
         },
         getContextByType(type) {
-            return Object.keys(contexts)
+            return Object.keys(slo.contexts)
             .filter(c => {
-                let types = Object.values(contexts[c].data)
+                let types = Object.values(slo.contexts[c].data)
                 return types.includes(type)
             })
             .pop()
         },
         getTypeNameByType(type) {
             let context = slo.getContextByType(type)
-            return Object.entries(contexts[context].data)
+            return Object.entries(slo.contexts[context].data)
             .find(([k,v]) => v==type)[0]
         },
         getTypeByTypeName(_type, context) {
-            for (context of Object.keys(contexts)) {
-                if (contexts[context].data[_type]) {
-                    return contexts[context].data[_type]
+            for (context of Object.keys(slo.contexts)) {
+                if (slo.contexts[context].data[_type]) {
+                    return slo.contexts[context].data[_type]
                 }
             }
             return _type
