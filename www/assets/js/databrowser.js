@@ -732,6 +732,9 @@ var browser = simply.app({
         },
         editDocument: function(el, value){
             browser.actions.editDocument(el, value)
+        },
+        cancel: function(el, value){
+            browser.actions.hideEditorDialog(el);
         }
     },
     actions: {
@@ -1333,8 +1336,14 @@ var browser = simply.app({
             }*/
         },
         editDocument(el, value){
-            browser.view.sloDocument.editDocument(el, value)
+            browser.view.sloDocument.editDocument(el, value);
+        },
+        hideEditorDialog(el){
+            let buttonParentForm = el.parentElement;
+            let formParentDialog = buttonParentForm.parentElement
+            browser.view.sloDocument.hideEditorDialog(formParentDialog);
         }
+        
     }
 });
 
