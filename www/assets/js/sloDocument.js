@@ -11,67 +11,70 @@ const sloDocument = (function() {
   return function(settings, data) {
     options.container = settings.container
 
+
+    // @TODO : need to move the clicklistener to command / action
     let clickListener
    
-    // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-    function addClickSelectText() {
-        if (clickListener) {
-            options.container.removeEventListener('click', clickListener)
-        }
-        clickListener = function(evt) {
-          let clickedText = evt.target.closest('.slo-entity')
+    // // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+    // function addClickSelectText() {
+    //     if (clickListener) {
+    //         options.container.removeEventListener('click', clickListener)
+    //     }
+    //     clickListener = function(evt) {
+    //       let clickedText = evt.target.closest('.slo-entity')
 
-          // templates occasionally generate without any content, only select if there is an ID to select
-          if(clickedText?.id){
-            //console.log(clickedText.id)
-            //console.log(clickedText.innerHTML)
-            let focussedElement = document.getElementsByClassName("focus")[0];
-            focussedElement?.classList.remove("focus")
-            clickedText.classList.add("focus")
+    //       // templates occasionally generate without any content, only select if there is an ID to select
+    //       if(clickedText?.id){
+    //         //console.log(clickedText.id)
+    //         //console.log(clickedText.innerHTML)
+    //         let focussedElement = document.getElementsByClassName("focus")[0];
+    //         focussedElement?.classList.remove("focus")
+    //         clickedText.classList.add("focus")
               
-             // replace URL with the new URL
-             let nextFocussedElement = document.querySelector(".focus");                 
-             let nextDocumentLocation = new URL(document.location.href);
-             let idPath = new URL(nextFocussedElement.id);
-             let nextID = idPath.pathname.split("/").pop();
-             idPath.pathname = "/uuid/" + nextID;
-             idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-             window.history.replaceState({}, '', idPath.href);
-             browser.view.item.uuid = nextID
-          }
+    //          // replace URL with the new URL
+    //          let nextFocussedElement = document.querySelector(".focus");                 
+    //          let nextDocumentLocation = new URL(document.location.href);
+    //          let idPath = new URL(nextFocussedElement.id);
+    //          let nextID = idPath.pathname.split("/").pop();
+    //          idPath.pathname = "/uuid/" + nextID;
+    //          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+    //          window.history.replaceState({}, '', idPath.href);
+    //          browser.view.item.uuid = nextID
+    //       }
 
-        }
-        options.container.addEventListener('click', clickListener)
-    }
-    addClickSelectText()
-
-
-
-    // function addChange(el) {
-
-    //   const addChangeButton = el.querySelector("#addChange");
-
-    //   console.log("this works?")
-    //   console.log(addChangeButton)
-
-    //   // addChangeButton.addEventListener('click', (event) => {
-    //   //   //event.preventDefault();
-    //   //   let textBox = el.querySelector("input")
-    //   //   console.log("closed a dialog")
-    //   //   console.log(textBox.value)
-
-    //   // })
+    //     }
+    //     options.container.addEventListener('click', clickListener)
     // }
-    // addChange()
+    // addClickSelectText()
 
+    function editDocument(el, value) {
+      showEditor(el);
+    }
+
+    function scrollIntoView(nodes, itemIndex){
+        nodes[itemIndex].scrollIntoView({ block: "center" });
+    }
+
+    function getAllNodes(){
+      let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+      return getAllNodes;
+    }
+
+    function updateURL(){
+        // replace URL with the new URL
+        let nextFocussedElement = document.querySelector(".focus");                   
+        let nextDocumentLocation = new URL(document.location.href);
+        let idPath = new URL(nextFocussedElement.id);
+        let nextID = idPath.pathname.split("/").pop();
+        idPath.pathname = "/uuid/" + nextID;
+        idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
+        window.history.replaceState({}, '', idPath.href);
+        browser.view.item.uuid = nextID
+    }
 
     function showEditor(el) {
-
-      //show the correct dialog
       const dialog = el.querySelector("dialog");
       dialog.showModal()
-
-      //fill dialog with text
       getTextDefinition(el)
     }
 
@@ -86,9 +89,9 @@ const sloDocument = (function() {
        textBox.value = currentUUID
     }
 
-  function saveChanges(dialogContent){
+    function saveChanges(dialogContent){
+    }
 
-  }
 
     let sloDocument = {
       addClickSelectText: () => {
@@ -106,50 +109,100 @@ const sloDocument = (function() {
       },
       editor: (el) => {
         if (!el) {
-          selector.style.display = 'none'
+          selector.style.display = 'none' // @TODO find out if this is needed
           return
         }
-        //let rect = el.getBoundingClientRect()
         showEditor(el)
-
-// WIP --
         // @TODO : will need some refactoring to move to propper functions
         let addChangeButton = el.querySelector("#addChanges");
 
         console.log("this works?")
         console.log(addChangeButton)
-
         addChangeButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            let textBox = el.querySelector("input")
-            console.log("closed a dialog")
-            console.log(textBox.value)
-            hideEditor(el)
+          event.preventDefault();
+          let textBox = el.querySelector("input")
+          console.log("closed a dialog")
+          console.log(textBox.value)
+          hideEditor(el)
         })
-// --WIP
+      },
+     
+      // @TODO make this into a generic function and get/add "el" element if needed
+      move : (indexIncrement) => {
 
+        let focussedElement;
+        let nodes = getAllNodes()
+
+        //find current element to move to the next one
+        if(document.getElementsByClassName("focus")[0]){
+            focussedElement = document.getElementsByClassName("focus")[0];
+        }
+        else{
+            focussedElement = nodes[0];
+            focussedElement.classList.add("focus")
+        }
+
+        let itemIndex = nodes.indexOf(focussedElement);
+        nodes[itemIndex].classList.remove("focus");
+        
+        // moving around
+        itemIndex = itemIndex + indexIncrement;
+        
+        if( itemIndex > (nodes.length -1)) {
+            itemIndex = nodes.length -1;
+        }
+        
+        if ( itemIndex < 0) {
+          itemIndex = 0;
+        }
+
+        scrollIntoView(nodes, itemIndex)
+        nodes[itemIndex].classList.add("focus");
+        updateURL()
+        
+      },
+      moveTo : (destination) => {
+        let focussedElement;
+        let nodes = getAllNodes()
+      
+        //find current element to move to the next one
+        if(document.getElementsByClassName("focus")[0]){
+            focussedElement = document.getElementsByClassName("focus")[0];
+        }
+        // if no element is focussed, focus the first one
+        else{
+            focussedElement = nodes[0];
+            focussedElement.classList.add("focus")
+        }
+        
+        let itemIndex = nodes.indexOf(focussedElement);
+        
+        nodes[itemIndex].classList.remove("focus");
+        
+        // moving around
+        switch(destination){
+          case "top":
+            itemIndex = 0;
+          break;
+          case "bottom":
+            itemIndex = nodes.length -1;
+          break;
+          default:
+            itemIndex = Math.floor(nodes.length /2)
+        }
+
+        scrollIntoView(nodes, itemIndex)
+        nodes[itemIndex].classList.add("focus");
+        updateURL()
+        
+      },
+      editDocument: (el) =>{
+        editDocument(el);
       },
       saveChanges: (el) => {
         addChanges(el)
         hideEditor(el)
       }
-
-      // saveChanges: () => {
-      //   if (!editListeners || !editListeners.length) {
-      //     return
-      //   }
-      //   let el = body.querySelector('focus')
-      //   let columnDef = getColumnDefinition(el)
-      //   let values = new FormData(selector.querySelector('form'))
-      //   let id = el.closest('span').id
-      //   for (listener of editListeners) {
-      //     listener.call(spreadsheet, {
-      //       id,
-      //       property: columnDef.value,
-      //       values
-      //     })
-      //   }
-      // }
     }
 
     return sloDocument
