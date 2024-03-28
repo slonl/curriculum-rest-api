@@ -188,6 +188,40 @@ const changes = (()=> {
 			})
 			return result
 		}
+		preview() {
+			let contexts = {}
+			for (let id in this) {
+				let context = this[id]['@context']
+				if (!contexts[context]) {
+					contexts[context] = {}
+				}
+				let type = this[id]['@type']
+				if (!contexts[context][type]) {
+					contexts[context][type] = []
+				}
+				contexts[context][type].push({
+					title: this[id]['@title'],
+					patch: this[id]
+				})
+			}
+			let result = []
+			for (let context in contexts) {
+				let types = []
+				for (let type in contexts[context]) {
+					types.push({
+						type,
+						entities: contexts[context][type],
+						count: contexts[context][type].length
+					})
+				}
+				result.push({
+					context,
+					types,
+					count: types.reduce((a,t) => a+t.count, 0)
+				})
+			}
+			return result
+		}
 	}
 
 	class LocalView {

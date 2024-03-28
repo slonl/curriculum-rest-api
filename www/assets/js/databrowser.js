@@ -922,7 +922,7 @@ var browser = simply.app({
             }
         },
         showAllChanges: async function(el, value) {
-            browser.view.mergedChanges = window.slo.mergeChanges()
+            browser.view.mergedChanges = changes.merged.preview()
             document.getElementById('previewChanges').showModal()
         },
         commitChanges: async function(el, value) {
