@@ -1,4 +1,4 @@
-<dialog id="previewChanges" class="preview-changes ds-dialog">
+<dialog id="commitChanges" class="commit-changes ds-dialog">
     <header class="ds-dialog-header">
         <div class="ds-space">
             <button data-simply-command="closeDialog" class="ds-button ds-button-light ds-button-close">
@@ -6,10 +6,19 @@
                     <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
                 </use></svg>
             </button>
-            <h2>Wijzigingen</h2>
+            <h2>Wijzigingen opslaan</h2>
         </div>
     </header>
     <div class="ds-dialog-content">
+    	<div data-simply-field="commitError" class="ds-alert ds-alert-error"></div>
+    	<form class="ds-space" data-simply-command="commitChanges">
+    		<label>
+    			<div>Omschrijving</div>
+    			<textarea name="message" data-simply-field="commitMessage" class="slo-commit-message"></textarea>
+    		</label>
+    		<button class="ds-button ds-button-primary">Opslaan</button>
+    		<button class="ds-button" data-simply-command="closeDialog">Annuleer</button>
+    	</form>
 		<div class="ds-space" data-simply-list="mergedChanges">
 			<template>
 				<details open>
@@ -33,4 +42,7 @@
 			</template>
 		</div>
     </div>        
+    <div class="loading-overlay">
+	    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+	</div>
 </dialog>

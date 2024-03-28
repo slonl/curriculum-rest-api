@@ -33,8 +33,8 @@ const changes = (()=> {
 
 	function getDiff(a,b) {
 	    let result = {}
-	    let toBeRemoved = a.filter(x => !b.find(e => e.uuid == x.uuid))
-	    let toBeAdded = b.filter(x => !a.find(e => e.uuid == x.uuid))
+	    let toBeRemoved = a.filter(x => !b.find(e => e.id == x.id))
+	    let toBeAdded = b.filter(x => !a.find(e => e.id == x.id))
 	    if (toBeRemoved.length) {
 	        result.toBeRemoved = toBeRemoved
 	    }
@@ -118,9 +118,12 @@ const changes = (()=> {
 			}
 			super(...arr.map(ch => new Change(ch)))
 		}
+
+
 		save() {
 			localStorage.setItem('changeHistory', JSON.stringify(this))
 		}
+
 		merge() {
 			let merged = new MergedChanges()
 			this.reduce((m, ch) => {
@@ -188,6 +191,7 @@ const changes = (()=> {
 			})
 			return result
 		}
+
 		preview() {
 			let contexts = {}
 			for (let id in this) {
@@ -221,6 +225,27 @@ const changes = (()=> {
 				})
 			}
 			return result
+		}
+
+		commit() {
+			let commit = []
+			for (let id in this) {
+				let e = this[id]
+				assert(e, {
+					'@type': _,
+					'@id': id
+				})
+				for (let prop in e['@properties']) {
+					commit.push({
+						id,
+						'@type': e['@type'],
+						property: prop,
+						prevValue: e['@properties'][prop].prevValue,
+						newValue: e['@properties'][prop].newValue
+					})
+				}
+			}
+			return commit
 		}
 	}
 
@@ -295,14 +320,17 @@ const changes = (()=> {
 		}
 	}
 
+	let insertedNodes = {}
+
 	class InsertedLink {
 		#actualNode
 		constructor(node) {
 			Object.assign(this, node)
 			this.#actualNode = node
+			let id = this.id ?? this.uuid
+			insertedNodes[id] = true
 		}	
 	}
-
 
 	let changeHistory = new Changes()
 	let merged = changeHistory.merge()
@@ -318,7 +346,10 @@ const changes = (()=> {
 		undoSize,
 		getLocalView,
 		update,
-
+		clear,
+		isInsertedNode: function(id) {
+			return insertedNodes[id] ?? false
+		},
 		Change,
 		Changes,
 		MergedChanges,
@@ -339,6 +370,12 @@ const changes = (()=> {
 		changes.undoSize = changes.changes.length
 	}
 
+	function clear() {
+		localStorage.removeItem('changeHistory')
+		changes.changes = new Changes()
+		changes.update()
+	}
+
 	function getLocalView(data) {
 		changes.merged = changes.changes.merge()
 		changes.local = changes.merged.normalize()
@@ -348,7 +385,7 @@ const changes = (()=> {
 		}
 		for(let node of data) {
 			walk(node, 0, (n) => {
-				let id = '/uuid/'+n.uuid
+				let id = n.id ?? n.uuid
 				if (local[id] && local[id] instanceof ChangedNode) {
 					n['@mark'] = 'changed'
 					let localNode = local[id]
