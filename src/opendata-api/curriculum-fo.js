@@ -160,6 +160,7 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                                 Niveau {
                                         ...NiveauShort
                                 }
@@ -183,6 +184,7 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                                 Niveau {
                                         ...NiveauShort
                                 }
@@ -349,6 +351,7 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         Niveau {
                                 ...NiveauShort
                         }
@@ -367,6 +370,7 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         Niveau {
                                 ...NiveauShort
                         }
@@ -497,6 +501,7 @@ module.exports = {
                         FoToelichting {
                                 id
                                 title
+                                description
                                 Niveau {
                                         ...NiveauShort
                                 }
@@ -504,6 +509,7 @@ module.exports = {
                         FoUitwerking {
                                 id
                                 title
+                                description
                                 Niveau {
                                         ...NiveauShort
                                 }
@@ -527,6 +533,7 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         Niveau {
                                 id
                                 prefix
@@ -546,6 +553,7 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         Niveau {
                                 id
                                 prefix

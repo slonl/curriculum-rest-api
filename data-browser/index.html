@@ -246,13 +246,23 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
+
+                    <span data-simply-field="item.description" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <div class="ds-badge">
+                                <label class="ds-badge-label">Description</label>
+                                <span data-simply-field="item.description"></span>
+                            </div>
+                        </template>
+                    </span>
+
+<!--                     <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Description</h3>
                             <div data-simply-field="item.description"></div>
                         </template>
                     </div>
-                    <div data-simply-field="item.vakbegrippen" data-simply-content="template"  data-simply-transformer="truthy">
+ -->                    <div data-simply-field="item.vakbegrippen" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <div>
                                 <h3>Vakbegrippen</h3>
@@ -876,8 +886,13 @@
                     <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
                 </template>
             </span>
-            <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
-                <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
+            <span data-simply-field="title">titel</span>
+            <span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span>: 
+                        <span data-simply-field="description">Description</span>
+                    </span>
+                </template>
             </span>
         </a>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
@@ -1244,8 +1259,8 @@
 		<span data-simply-list="FoUitwerking">
 			<template>
                 <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoUitwerking</span>
-                    <span data-simply-field="title">title</span>
+                    <span class="ds-badge-label">FoUitwerking</span>xx
+                    <span data-simply-field="description">description</span>yy
                 </span>
             </template>
         </span>
@@ -1253,7 +1268,7 @@
 			<template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">FoToelichting</span>
-                    <span data-simply-field="title">title</span>
+                    <span data-simply-field="title">description</span>
                 </span>
             </template>
         </span>
