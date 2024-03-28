@@ -32,12 +32,19 @@
     
         <template id="documentTemplate">
             <section>
-                <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                     <h1>                       
                         <span class="slo-prefix" data-simply-field="prefix"></span>
                         <span class="" data-simply-field="title"></span>
                     </h1>
                     <p class="ds-margin-up slo-prefix" data-simply-field="description"></p>
+                    <dialog>
+                        <form>
+                            <label>Change content</label>
+                                <input type="text" id="content">
+                            <button id="addChanges" data-simply-command="showChange">add changes</button>
+                        </form>
+                    </dialog>
                     <!--
                     <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                         <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -50,9 +57,16 @@
 
                 <ul class="ds-margin-up" data-simply-list="documentNiveauIndex">
                     <template>
-                        <li id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                        <li id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="ds-badge" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
+                            <dialog>
+                                <form>
+                                    <label>Change content</label>
+                                    <input type="text" id="content">
+                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
+                                </form>
+                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -67,9 +81,16 @@
 
                 <div class="ds-margin-up" data-simply-list="documentNiveaus">
                     <template>
-                        <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                        <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="ds-badge niveau" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
+                            <dialog>
+                                <form>
+                                    <label>Change content</label>
+                                    <input type="text" id="content">
+                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
+                                </form>
+                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -86,10 +107,17 @@
 
                 <ul class="ds-margin-up" data-simply-list="documentExamenprogrammaEindterm">
                     <template>
-                        <li id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                        <li id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
+                            <dialog>
+                                <form>
+                                    <label>Change content</label>
+                                    <input type="text" id="content">
+                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
+                                </form>
+                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -104,10 +132,17 @@
 
                 <ul class="ds-margin-up" data-simply-list="documentLeafNode">
                     <template>
-                        <li class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                        <li class="slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
+                            <dialog>
+                                <form>
+                                    <label>Change content</label>
+                                    <input type="text" id="content">
+                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
+                                </form>
+                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -122,10 +157,17 @@
 
                 <div class="ds-margin-up" data-simply-list="documentTextNode">
                     <template>
-                        <div class="slo-prefix slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id">
+                        <div class="slo-prefix slo-entity" id="" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
+                            <dialog>
+                                <form>
+                                    <label>Change content</label>
+                                    <input type="text" id="content">
+                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
+                                </form>
+                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
