@@ -120,13 +120,31 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.Vakleergebied" data-simply-content="template" data-simply-transformer="truthy">
-                        <template data-simply-template="true">
+                    <div data-simply-field="item.Vakleergebied" data-simply-content="template" data-simply-transformer="entityArrayOrEmpty">
+                        <template data-simply-template="entity">
+                            <h3>Vakleergebied</h3>
+                            <ul>
+                                <li><a class="slo-relatie" data-simply-field="item.Vakleergebied" data-simply-transformer="idToHref"
+                                    data-simply-content="attributes" data-simply-attribute="id">
+                                    <span data-simply-field="item.Vakleergebied.prefix" data-simply-content="template" data-simply-transformer="truthy">
+                                        <template data-simply-template="true">
+                                            <span class="ds-badge ds-badge-mini">
+                                                <span class="ds-badge-label">Prefix</span>
+                                                <span data-simply-field="item.Vakleergebied.prefix"></span>
+                                            </span>
+                                        </template>
+                                    </span>
+                                    <span data-simply-field="item.Vakleergebied.title"></span>
+                                </a></li>
+                            </ul>
+                        </template>
+                        <template data-simply-template="array">
                             <h3>Vakleergebied</h3>
                             <ul data-simply-list="item.Vakleergebied">
                                 <template rel="links"></template>
                             </ul>
                         </template>
+                        <template data-simply-template="empty"></template>
                     </div>
                     <div data-simply-field="item.LdkVakleergebied" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
