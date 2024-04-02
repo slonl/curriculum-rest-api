@@ -695,13 +695,28 @@ var browser = simply.app({
             }
         },
         showAllChanges: async function(el, value) {
-            browser.view.mergedChanges = window.slo.mergeChanges()
+            browser.view.mergedChanges = changes.merged.preview()
             document.getElementById('previewChanges').showModal()
         },
-        commitChanges: async function(el, value) {
-            document.body.classList.add('loading')
-            await this.app.actions.commitChanges()
-            document.body.classList.remove('loading')
+        showCommitChanges: async function(el, value) {
+            browser.view.commitError = ''
+            browser.view.mergedChanges = changes.merged.preview()
+            document.getElementById('commitChanges').showModal()
+        },
+        commitChanges: async function(form, values) {
+            if (!values['message']) {
+                browser.view.commitError = 'Vul a.u.b. een omschrijving voor deze wijzigingen in.'
+            } else {
+                document.body.classList.add('loading')
+                try {
+                    await this.app.actions.commitChanges(values['message'])
+                    document.getElementById('commitChanges').close()
+                } catch(e) {
+                    browser.view.commitError = e.message
+                } finally {
+                    document.body.classList.remove('loading')
+                }
+            }
         },
         showChange: async function(el, value) {
             alert('nog niet geimplementeerd')
@@ -777,8 +792,9 @@ var browser = simply.app({
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
-
-            if (!this.app.view?.item?.uuid) {
+            let item = this.app.view.item
+            let id = item?.id ?? item?.uuid
+            if (!id) {
                 return
             }
 
@@ -788,12 +804,12 @@ var browser = simply.app({
                 case 'item':
                     document.body.setAttribute('data-simply-keyboard','item')
                     // get focused item
-                    return this.app.actions.item(this.app.view.item.uuid)
+                    return this.app.actions.item(id)
                     // switch to that
                 break;
                 case 'spreadsheet':
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
-                    currentItem = this.app.view.item.uuid
+                    currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                     //FIXME: uuid may not exist remote, but just been added
                     if (!root) {
@@ -803,7 +819,8 @@ var browser = simply.app({
                         }
                     }
                     if (root && !this.app.view.roots.includes(root)) {
-                        this.app.view.item.uuid = root.id
+                        this.app.view.item.id = root.id
+                        this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
@@ -829,7 +846,8 @@ var browser = simply.app({
                     this.app.view.sloSpreadsheet.onChange((id) => {
                         let url = new URL(id)
                         let uuid = id.pathname.split('/').pop()
-                        this.app.view.item.uuid = uuid
+                        this.app.view.item.id = uuid
+                        this.app.view.item.uuid = uuid //TODO: remove this when no longer needed
                         history.replaceState({}, '', new URL(uuid, window.location))
                     })
                     this.app.view.sloSpreadsheet.onEdit((update) => {
@@ -864,7 +882,7 @@ var browser = simply.app({
 
                         let timestamp = new Date().toISOString()
                         let change = new changes.Change({
-                            id: '/uuid/'+node.uuid,
+                            id: node.id ?? node.uuid,
                             meta: {
                                 context: window.slo.getContextByType(node['@type']),
                                 title: node.title ?? '[Geen titel]',
@@ -885,7 +903,7 @@ var browser = simply.app({
                 break;
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
-                    currentItem = this.app.view.item.uuid
+                    currentItem = id
                     currentId = this.app.view.item['@id']
                     // get roots of current item
                     try {
@@ -897,7 +915,8 @@ var browser = simply.app({
                         // ignore
                     }
                     if (root && !this.app.view.roots.includes(root)) {
-                        this.app.view.item.uuid = root.id
+                        this.app.view.item.id = root.id
+                        this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
@@ -1093,12 +1112,12 @@ var browser = simply.app({
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
             let node = {
-                'uuid': curriculum.uuid(),
+                id: curriculum.uuid(),
                 '@type': type,
                 'prefix': parentNode.prefix,
                 'unreleased': true
             }
-            node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.uuid
+            node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             if (!parentNode[type]) {
                 parentNode[type] = []
             }
@@ -1115,7 +1134,7 @@ var browser = simply.app({
             // now add this to the change history
             let timestamp =  new Date().toISOString()
             let change = new changes.Change({
-                id: '/uuid/'+parentNode.uuid,
+                id: parentNode.id ?? parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByType(parentNode['@type']),
                     title: parentNode.title,
@@ -1158,7 +1177,7 @@ var browser = simply.app({
                 let prevValue = parentNode[type].slice()
                 let timestamp = new Date().toISOString()
                 let change = new changes.Change({
-                    id: '/uuid/'+parentNode.uuid,
+                    id: parentNode.id ?? parentNode.uuid,
                     meta: {
                         context: window.slo.getContextByType(parentNode['@type']),
                         title: parentNode.title,
@@ -1188,10 +1207,10 @@ var browser = simply.app({
             let type = row.node['@type']
 
             let prevValue = parentNode[type].slice()
-            let newValue = prevValue.filter(e => (e.uuid !== row.node.uuid))
+            let newValue = prevValue.filter(e => (e.id !== row.node.id))
             let timestamp = new Date().toISOString()
             let change = new changes.Change({
-                id: '/uuid/'+parentNode.uuid,
+                id: parentNode.id ?? parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByType(parentNode['@type']),
                     title: parentNode.title,
@@ -1252,46 +1271,27 @@ var browser = simply.app({
             let selector = document.querySelector('.slo-type-selector')
             selector.close(); //removeAttribute('open')
         },
-        'commitChanges': async function() {
-/*            const linkArray = (list) => {
+        'commitChanges': async function(message) {
+            const linkArray = (list) => {
                 let links = []
                 for (let v of list) {
-                    if (JSONTag.getType(v)==='object' && v.uuid) {
-                        v = new JSONTag.Link('/uuid/'+v.uuid)
+                    let id = v.id ?? v.uuid
+                    if (JSONTag.getType(v)==='object' && id && !changes.isInsertedNode(id)) {
+                        v = new JSONTag.Link('/uuid/'+id)
                     }
                     links.push(v)
                 }
                 return links
             }
+
             const createLinks = (changes) => {
                 // create new changeHistory but with links, new copy so that if 
                 // command fails, the changeHistory itself isn't changed
                 let linkedChanges = []
                 for (let change of changes) {
                     let linkedChange = Object.assign({}, change)
-                    switch(change.type) {
-                        case 'insert':
-                            if (change.child) {
-                                let child = {}
-                                Object.keys(change.child).forEach(key => {
-                                    if (Array.isArray(change.child[key])) {
-                                        child[key] = linkArray(child[key])
-                                    } else {
-                                        child[key] = change.child[key]
-                                    }
-                                })
-                                linkedChange.child = child
-                            }                                
-                        case 'patch':
-                        case 'delete':
-                        case 'undelete':
-                            if (Array.isArray(change.newValue)) {
-                                linkedChange.newValue = linkArray(linkedChange.newValue)
-                            }
-                        break                                
-                        default:
-                            throw new Error('Unknown change type: '+change.type)
-                        break
+                    if (Array.isArray(change.newValue)) {
+                        linkedChange.newValue = linkArray(linkedChange.newValue)
                     }
                     if (Array.isArray(change.prevValue)) {
                         linkedChange.prevValue = linkArray(linkedChange.prevValue)
@@ -1309,31 +1309,27 @@ var browser = simply.app({
             }
 
             // create and send command
+            let commit = changes.merged.commit()
+
             let command = {
                 id: uuid(),
                 name: 'patch',
-                value: createLinks(slo.changeHistory)
+                author: browser.view.user,
+                message,
+                value: createLinks(commit)
             }
-            try {
-                let result = await slo.api.runCommand(command)
-                if (result.status!=='accepted') {
-                    throw new Error('Invalid command: '+result.status+': '+result.message)
-                }
-                result = await slo.api.pollCommand(command.id)
-                if (result.status!=='done') {
-                    throw new Error('Invalid command: '+result.status+': '+result.message)
-                }                    
-                slo.changeHistory = []
-                browser.view.undoHistory = []
-                browser.view.undoSize = 0
-                slo.parseHistory()
-                localStorage.setItem('changeHistory','[]')
-                this.app.actions.updateView(this.app.view.roots[0])
-                return true
-            } catch(err) {
-                // catch: show error details for now, later try to fix conflicts //@TODO
-                console.error(err)
-            }*/
+            let result = await slo.api.runCommand(command)
+            if (result.status!=='accepted') {
+                throw new Error('Invalid command: '+result.status+': '+result.message)
+            }
+            result = await slo.api.pollCommand(command.id)
+            if (result.status!=='done') {
+                throw new Error('Invalid command: '+result.status+': '+result.message)
+            }                    
+            changes.clear()
+            browser.actions.switchView(browser.view.preferedView)
+
+            return true
         },
         editDocument(el, value){
             browser.view.sloDocument.editDocument(el, value);

@@ -60,3 +60,22 @@
             return this.originalValue;
         }
     };
+
+    editor.transformers.idToHref = {
+        render: function(data) {
+            this.href = data['@references']
+            return data
+        }
+    }
+
+    editor.transformers.entityArrayOrEmpty = {
+        render: function(data) {
+            if (Array.isArray(data)) {
+                return 'array'
+            }
+            if (data) {
+                return 'entity'
+            }
+            return 'empty'
+        }
+    }
