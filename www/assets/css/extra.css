@@ -274,3 +274,6 @@ dialog.preview-changes,
 dialog.commit-changes {
     height: 75vh;
 }
+.slo-hidden {
+    display: none;
+}
