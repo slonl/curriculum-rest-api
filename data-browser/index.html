@@ -2127,7 +2127,7 @@
     };
     
     document.addEventListener('simply-content-loaded', function(evt) {
-        var menu = editor.currentData['/'].menu;
+        var menu = editor.currentData['/']?.menu;
         if (menu && menu[1]) {
             var api = menu[1].submenu[0]['data-simply-template'] = 'api';
         }
