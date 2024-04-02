@@ -63,7 +63,7 @@
 
     editor.transformers.idToHref = {
         render: function(data) {
-            this.href = data['@references']
+            this.closest('a').href = data
             return data
         }
     }
@@ -71,9 +71,12 @@
     editor.transformers.entityArrayOrEmpty = {
         render: function(data) {
             if (Array.isArray(data)) {
+                if (!data.length) {
+                    return 'empty'
+                }
                 return 'array'
             }
-            if (data) {
+            if (data && data.title) {
                 return 'entity'
             }
             return 'empty'
