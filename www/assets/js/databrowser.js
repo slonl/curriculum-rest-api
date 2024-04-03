@@ -528,11 +528,11 @@ var browser = simply.app({
             },
             "ArrowLeft": (e) => {
                 e.preventDefault()
-                browser.view.sloDocument.move(-1)
+                browser.view.sloDocument.moveTo("left")
             },
             "ArrowRight": (e) => {
                 e.preventDefault()
-                browser.view.sloDocument.move(1)
+                browser.view.sloDocument.moveTo("right")
             },
             "Home": (e) => {
                 e.preventDefault()

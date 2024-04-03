@@ -188,7 +188,8 @@
         width: auto;
     }
  
-    .slo-document .focus {
+    .slo-document .focus,
+    .slo-document .focus-field {
         outline: 1px solid blue;
     }
 

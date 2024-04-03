@@ -177,8 +177,10 @@ const sloDocument = (function() {
         
         let itemIndex = nodes.indexOf(focussedElement);
         
-        nodes[itemIndex].classList.remove("focus");
+        nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
         
+        let newPosition;
+                
         // moving around
         switch(destination){
           case "top":
@@ -187,8 +189,82 @@ const sloDocument = (function() {
           case "bottom":
             itemIndex = nodes.length -1;
           break;
+          case 'left':{
+
+            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
+              //console.log("No focussed field found, setting focus field to default")
+              let currentElement = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0]
+              //console.log(currentPosition)
+              currentElement.classList.add("focus-field")
+            }
+            
+            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
+            console.log(currentElement.dataset.simplyField)
+                    
+            switch (currentElement.dataset.simplyField){
+              case 'prefix':
+                //current element is already leftmost
+              break;
+              case 'title': {
+                let newPosition = currentElement.closest("focus-field")
+                currentElement.classList.remove("focus-field")
+                newPosition.classList.add("focus-field")
+              }
+              break;
+              case 'descirption':{
+                let newPosition = currentElement.closest("focus-field")
+                currentElement.classList.remove("focus-field")
+                newPosition.classList.add("focus-field")
+              }
+              break;
+              default:{
+                let newPosition = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0] //prefix is always the most left element
+                newPosition.classList.add("focus-field")
+              }
+            }
+          }
+          break;
+            
+          case 'right':{
+
+            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
+              //console.log("No focussed field found, setting focus field to default")
+              let currentElement = focussedElement.querySelectorAll('[data-simply-field="description"]')[0]
+              //console.log(currentPosition)
+              currentElement.classList.add("focus-field")
+            }
+
+            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
+            console.log(currentElement.dataset.simplyField)
+
+            switch (currentElement.dataset.simplyField){            //find current position focus
+              case 'prefix':{
+                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="title"]')
+                currentElement.classList.remove("focus-field")
+                newPosition.classList.add("focus-field")
+              }
+                //if on prefix move to title
+              break;
+              case 'title':{
+                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="description"]')
+                currentElement.classList.remove("focus-field")
+                newPosition.classList.add("focus-field")
+              }
+                 //if on title, move to description
+              break;
+              case 'descirption':{}
+                    //current element is already rightmost
+              break;
+              default:{
+                let newPosition = focussedElement.querySelectorAll('[data-simply-field="description"]')[0] //description is always the most right element
+                newPosition.classList.add("focus-field")
+              }
+            }
+          }
+          break;
+          
           default:
-            itemIndex = Math.floor(nodes.length /2)
+            itemIndex = Math.floor(nodes.length /2) //if all goes wrong just go to the middle of the page
         }
 
         scrollIntoView(nodes, itemIndex)
