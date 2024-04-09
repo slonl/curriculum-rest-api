@@ -188,7 +188,8 @@
         width: auto;
     }
  
-    .slo-document .focus {
+    .slo-document .focus,
+    .slo-document .focus-field {
         outline: 1px solid blue;
     }
 
@@ -270,6 +271,10 @@ tr.changed {
 .slo-type-selector .ds-button-close {
     right: 0;
 }
-dialog.preview-changes {
+dialog.preview-changes,
+dialog.commit-changes {
     height: 75vh;
+}
+.slo-hidden {
+    display: none;
 }

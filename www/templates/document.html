@@ -34,10 +34,10 @@
             <section>
                 <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                     <h1>                       
-                        <span class="slo-prefix" data-simply-field="prefix"></span>
-                        <span class="" data-simply-field="title"></span>
+                        <span class="slo-prefix" data-simply-field="prefix" data-simply-content="text"></span>
+                        <span class="slo-title" data-simply-field="title" data-simply-content="text" ></span>
                     </h1>
-                    <p class="ds-margin-up slo-prefix" data-simply-field="description"></p>
+                    <p class="ds-margin-up slo-prefix slo-description" data-simply-field="description" data-simply-content="text"></p>
                     <dialog>
                         <form>
                             <label>Change content</label>
@@ -59,8 +59,9 @@
                 <ul class="ds-margin-up" data-simply-list="documentNiveauIndex">
                     <template>
                         <li id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
-                            <span class="ds-badge" data-simply-field="title"></span>
-                            <span class="slo-prefix" data-simply-field="description"></span>
+                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
+                            <span class="ds-badge slo-title" data-simply-field="title" data-simply-content="text"></span>
+                            <span class="slo-prefix" data-simply-field="description" data-simply-content="text"></span>
                             <dialog>
                                 <form>
                                     <label>Change content</label>
@@ -84,6 +85,7 @@
                 <div class="ds-margin-up" data-simply-list="documentNiveaus">
                     <template>
                         <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
+                            <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="ds-badge niveau" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
                             <dialog>

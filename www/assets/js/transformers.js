@@ -60,3 +60,25 @@
             return this.originalValue;
         }
     };
+
+    editor.transformers.idToHref = {
+        render: function(data) {
+            this.closest('a').href = data
+            return data
+        }
+    }
+
+    editor.transformers.entityArrayOrEmpty = {
+        render: function(data) {
+            if (Array.isArray(data)) {
+                if (!data.length) {
+                    return 'empty'
+                }
+                return 'array'
+            }
+            if (data && data.title) {
+                return 'entity'
+            }
+            return 'empty'
+        }
+    }
