@@ -277,3 +277,26 @@ dialog.commit-changes {
 .slo-hidden {
     display: none;
 }
+.slo-form-header {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: -2em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    left: -2px;
+    border-bottom: none;
+}
+.slo-form-header .ds-form-group {
+    margin: 0;
+}
+.slo-form-header .ds-button-close {
+    height: 2em;
+    line-height: 2em;
+    min-height: unset;
+    right: 0;
+}
+.slo-form-header .ds-button-close .ds-icon {
+    height: 1em;
+}

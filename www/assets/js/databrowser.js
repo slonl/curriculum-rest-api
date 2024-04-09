@@ -567,11 +567,18 @@ var browser = simply.app({
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
         },
+        closeEditor: (el, value) => {
+            el = document.querySelector('td.focus')
+            browser.view.sloSpreadsheet.selector(el)
+        },
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
           column.checked = el.checked
           browser.view.sloSpreadsheet.render()
-        },        
+        },
+        toggleDirty: (el, value) => {
+          browser.view.dirtyChecked = el.checked ? 1 : 0
+        },
         filterValue: (el, value) => {
             let column = browser.view.sloSpreadsheet.options.columns
                 .find(c => c.value==el.name)
@@ -852,7 +859,8 @@ var browser = simply.app({
                         let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                         let row = this.app.view.sloSpreadsheet.data[index]
                         let node = row.node
-                        let prop, prevValue, newValue, dirty = true
+                        let prop, prevValue, newValue
+                        let dirty = browser.view.dirtyChecked==1
                         if (update.property=='niveaus') {
                             prop = row.columns.niveaus
                         } else {
@@ -861,11 +869,9 @@ var browser = simply.app({
                         prevValue = prop
                         if (columnDef.type=='list') {
                             newValue = update.values.getAll(update.property)
+                            dirty = true
                         } else {
                             newValue = update.values.get(update.property)
-                            if (update.values.get('dirty')==='unset') {
-                                dirty = false
-                            }
                         }
                         if (Array.isArray(newValue)) {
                             if (arrayEquals(newValue, prevValue)) {
@@ -894,7 +900,6 @@ var browser = simply.app({
                         })
                         changes.changes.push(change)
                         changes.update()
-//                        this.app.actions.switchView('spreadsheet')
                         browser.actions.spreadsheetUpdate()
                     })
                 break;
@@ -1357,3 +1362,4 @@ if (user && key) {
 }
 
 browser.view.changes = changes
+browser.view.dirtyChecked = true
