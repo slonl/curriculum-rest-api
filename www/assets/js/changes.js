@@ -108,6 +108,27 @@ const changes = (()=> {
 		}
 	}
 
+	function arrayEquals(property) {
+		if (property.newValue.length != property.prevValue.length) {
+			return false
+		}
+		let changed = false
+		property.newValue.forEach((val, i) => {
+			if (JSONTag.getType(val)=='object') {
+				if (property.prevValue[i].id != val.id) {
+					changed = true
+				}
+			} else if (JSONTag.getType(val)=='link') {
+				if (property.prevValue[i].value != val.value) {
+					changed = true
+				}
+			} else if (val != property.prevValue[i]) {
+				changed = true
+			}
+		})
+		return changed
+	}
+
 	class Changes extends Array {
 		constructor(arr) {
 			if (!arr && localStorage.getItem('changeHistory')) {
@@ -137,6 +158,9 @@ const changes = (()=> {
 						'@properties': {}
 					}
 				}
+				if (ch.dirty) {
+					m[ch.id]['@dirty']=true
+				}
 				let me = m[ch.id]
 				if (!me['@properties'][ch.property]) {
 					me['@properties'][ch.property] = {
@@ -144,24 +168,15 @@ const changes = (()=> {
 					}
 				}
 				me['@properties'][ch.property].newValue = ch.newValue
-/*				if (ch.type=='insert') {
-					// add the new child to merged as well
-					m[ch.child.id] = {
-						'@id': ch.child.id,
-						'@type': ch.child.type,
-						'@context': ch.child.context,
-						'@title': ch.child.title ?? '',
-						'@properties': {}
-					}
-				}
-*/
 				return m
 			}, merged)
 			for (let id in merged) {
 				let m = merged[id]
 				// remove properties where newValue == prevValue
 				for (let prop of Object.keys(m['@properties'])) {
-					if (m['@properties'][prop].newValue === m['@properties'][prop].oldValue) {
+					if ((Array.isArray(m['@properties'][prop].newValue) && arrayEquals(m['@properties'][prop]))
+						|| (m['@properties'][prop].newValue == m['@properties'][prop].prevValue)
+					) {
 						delete m['@properties'][prop]
 					}
 				}
@@ -235,10 +250,12 @@ const changes = (()=> {
 					'@type': _,
 					'@id': id
 				})
+				let dirty = e.dirty ? true : false
 				for (let prop in e['@properties']) {
 					commit.push({
 						id,
 						'@type': e['@type'],
+						dirty, 
 						property: prop,
 						prevValue: e['@properties'][prop].prevValue,
 						newValue: e['@properties'][prop].newValue

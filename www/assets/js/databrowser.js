@@ -706,6 +706,10 @@ var browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
+            if (Object.keys(changes.merged).length==0) {
+                alert('Wijzigingen heffen elkaar op')
+                return
+            }
             browser.view.commitError = ''
             browser.view.mergedChanges = changes.merged.preview()
             document.getElementById('commitChanges').showModal()
