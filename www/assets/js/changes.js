@@ -109,24 +109,24 @@ const changes = (()=> {
 	}
 
 	function arrayEquals(property) {
+		let equal = true
 		if (property.newValue.length != property.prevValue.length) {
 			return false
 		}
-		let changed = false
 		property.newValue.forEach((val, i) => {
 			if (JSONTag.getType(val)=='object') {
 				if (property.prevValue[i].id != val.id) {
-					changed = true
+					equal = false
 				}
 			} else if (JSONTag.getType(val)=='link') {
 				if (property.prevValue[i].value != val.value) {
-					changed = true
+					equal = false
 				}
 			} else if (val != property.prevValue[i]) {
-				changed = true
+				equal = false
 			}
 		})
-		return changed
+		return equal
 	}
 
 	class Changes extends Array {
@@ -189,6 +189,68 @@ const changes = (()=> {
 		}
 	}
 
+	function getPreviewDiff(m) {
+		function showArrayDiff(delta) {
+			let s = '<ul>'
+			for (let d of delta) {
+				if (d.removed) {
+					d.value.forEach(v => {
+						s+='<li><del>'+v.id+'</del></li>'
+					})
+				} else if (d.added) {
+					d.value.forEach(v => {
+						s+='<li><ins>'+v.id+'</ins></li>'
+					})
+				} else {
+					d.value.forEach(v => {
+						s+='<li>'+v.id+'</li>'
+					})
+				}
+				s+='</li>'
+			}
+			s+='</ul>'
+			return s
+		}
+		function showTextDiff(delta) {
+			let s = ''
+			for (let d of delta) {
+				if (d.removed) {
+					s+='<del>'+d.value+'</del>'
+				} else if (d.added) {
+					s+='<ins>'+d.value+'</ins>'
+				} else {
+					s+=d.value
+				}
+			}
+			return s
+		}
+		function compareArrayValue(left,right) {
+			if (JSONTag.getType(left)=='object') {
+				return left.id==right?.id
+			} else if (JSONTag.getType(left)=='link') {
+				return left.value == right?.value
+			} else {
+				return left==right
+			}
+		} 
+		let d = ''
+		for (let propName in m['@properties']) {
+			let prop = m['@properties'][propName]
+			if (Array.isArray(prop.newValue)) {
+				let delta = Diff.diffArrays(prop.prevValue, prop.newValue, {
+					comparator: compareArrayValue
+				})
+				d += '<label class="changes-diff"><div>'+propName+'</div>'+showArrayDiff(delta)+'</label>'
+			} else if (typeof prop.newValue == 'string' || prop.newValue instanceof String) {
+				let delta = Diff.diffWords(prop.prevValue, prop.newValue)
+				d += '<label class="changes-diff"><div>'+propName+'</div>'+showTextDiff(delta)+'</label>'
+			} else {
+				throw new Error('Not Yet Implemented (diff only works on arrays and strings)')
+			}
+		}
+		return d
+	}
+
 	class MergedChanges {
 		normalize() {
 			let result = new LocalView()
@@ -220,7 +282,8 @@ const changes = (()=> {
 				}
 				contexts[context][type].push({
 					title: this[id]['@title'],
-					patch: this[id]
+					patch: this[id],
+					diff: getPreviewDiff(this[id])
 				})
 			}
 			let result = []

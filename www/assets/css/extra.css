@@ -300,3 +300,15 @@ dialog.commit-changes {
 .slo-form-header .ds-button-close .ds-icon {
     height: 1em;
 }
+label.changes-diff ins {
+    background-color: #eaf2c2;
+}
+label.changes-diff del {
+    background-color: #fadad7;
+}
+label.changes-diff ul {
+    margin-top: 0;
+}
+label.changes-diff {
+    padding-left: 2em;
+}
