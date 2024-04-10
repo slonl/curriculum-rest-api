@@ -1,16 +1,16 @@
 <dialog id="commitChanges" class="commit-changes ds-dialog">
     <header class="ds-dialog-header">
+	    <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+	        <svg class="ds-icon ds-icon-feather">
+	            <use xlink:href="/assets/icons/feather-sprite.svg#x">
+	        </use></svg>
+	    </button>
         <div class="ds-space">
-            <button data-simply-command="closeDialog" class="ds-button ds-button-light ds-button-close">
-                <svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
-                </use></svg>
-            </button>
             <h2>Wijzigingen opslaan</h2>
         </div>
     </header>
     <div class="ds-dialog-content">
-    	<div data-simply-field="commitError" class="ds-alert ds-alert-error"></div>
+    	<div data-simply-field="commitError" class="ds-alert ds-alert-error ds-space-inside"></div>
     	<form class="ds-space" data-simply-command="commitChanges">
     		<label>
     			<div>Omschrijving</div>
@@ -21,7 +21,7 @@
 	    		<button class="ds-button" data-simply-command="closeDialog">Annuleer</button>
 	    	</div>
     	</form>
-		<div class="ds-space" data-simply-list="mergedChanges">
+    	<div class="ds-space" data-simply-list="mergedChanges">
 			<template>
 				<details open>
 					<summary><span data-simply-field="context"></span> (<span data-simply-field="count"></span>)</summary>
@@ -32,8 +32,12 @@
 								<div style="margin-left: 2em" data-simply-list="entities">
 									<template>
 										<details>
-											<summary data-simply-field="title"></summary>
-											<div style="margin-left: 2em">Hier komt de diff</div>
+											<summary>
+												<a data-simply-field="id" data-simply-command="review" target="review" class=""><svg class="ds-icon ds-icon-feather">
+										                <use xlink:href="/assets/icons/feather-sprite.svg#link">
+										            </use></svg></a>
+												<span data-simply-field="title"></span></summary>
+											<div data-simply-field="diff"></div>
 										</details>
 									</template>
 								</div>

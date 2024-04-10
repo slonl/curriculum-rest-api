@@ -579,6 +579,9 @@ var browser = simply.app({
         toggleDirty: (el, value) => {
           browser.view.dirtyChecked = el.checked ? 1 : 0
         },
+        review: (el, value) => {
+            window.open(el.href, el.target)
+        },
         filterValue: (el, value) => {
             let column = browser.view.sloSpreadsheet.options.columns
                 .find(c => c.value==el.name)
@@ -708,7 +711,6 @@ var browser = simply.app({
         showCommitChanges: async function(el, value) {
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
-                return
             }
             browser.view.commitError = ''
             browser.view.mergedChanges = changes.merged.preview()

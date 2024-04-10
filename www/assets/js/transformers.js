@@ -82,3 +82,10 @@
             return 'empty'
         }
     }
+
+    editor.transformers.class = {
+        render: function(data) {
+            this.classList.add('slo-mark-'+data)
+            return data
+        }
+    }

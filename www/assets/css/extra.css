@@ -68,7 +68,7 @@
 
     .slo-username span {
         line-height: var(--ds-button-line-height);
-        padding-left: 1em;
+        padding: 0 1em;
     }
     .slo-editmode .slo-index {
         margin-left: 1em;
@@ -290,6 +290,13 @@ dialog.commit-changes {
 }
 .slo-form-header .ds-form-group {
     margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-header label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .slo-form-header .ds-button-close {
     height: 2em;
@@ -311,4 +318,40 @@ label.changes-diff ul {
 }
 label.changes-diff {
     padding-left: 2em;
+}
+.slo-mark-inserted {
+    background-color: #eaf2c2;
+    text-decoration: underline;
+}
+.slo-mark-deleted {
+    background-color: #fadad7;
+    text-decoration: line-through;
+}
+.slo-mark-changed {
+    background-color: #EEE;
+}
+.slo-header .ds-button-bar {
+    position: static;
+}
+.slo-buttonbars {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: flex-end;
+}
+.ds-paging .ds-paging-info {
+    line-height: var(--ds-button-line-height);
+}
+body.ds-paging .slo-header .ds-paging {
+    display: flex;
+}
+.slo-header .ds-paging {
+    display: none;
+}
+.ds-button-close {
+    right: 0;
+}
+.ds-alert:empty {
+    display: none;
 }

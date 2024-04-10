@@ -7,12 +7,13 @@ then ExamenprogrammaDomein n[Examenprogramma][X] should also be a DeletedLink
  */
 
 const walk = (node, indent, f) => {
-    if (!node) return;
+    if (!node) return node;
     if (node['@type']==='Niveau') {
-        return
+        return node
     }
+    let result = null
     if (Array.isArray(node)) {
-        node.forEach(n => walk(n,indent,f))
+        return node.map(n => walk(n,indent,f) ?? n)
     } else if (typeof node === 'object' ) {
         indent = f(node, indent)
         Object.entries(node)
@@ -23,10 +24,11 @@ const walk = (node, indent, f) => {
             return true
         })
         .forEach(([k,v]) => { 
-            walk(v,indent,f); 
             node.hasChildren=true; 
+            node[k] = walk(v,indent,f) ?? v;
         })
     }
+    return node
 }
 
 const changes = (()=> {
@@ -195,16 +197,18 @@ const changes = (()=> {
 			for (let d of delta) {
 				if (d.removed) {
 					d.value.forEach(v => {
-						s+='<li><del>'+v.id+'</del></li>'
+						let title = changes.local[v.id]?.title ?? v.title
+						s+='<li><del>'+title+'</del></li>'
 					})
 				} else if (d.added) {
 					d.value.forEach(v => {
-						s+='<li><ins>'+v.id+'</ins></li>'
+						let title = changes.local[v.id]?.title ?? v.title
+						s+='<li><ins>'+title+'</ins></li>'
 					})
-				} else {
-					d.value.forEach(v => {
-						s+='<li>'+v.id+'</li>'
-					})
+				// } else {
+				// 	d.value.forEach(v => {
+				// 		s+='<li>'+v.id+'</li>'
+				// 	})
 				}
 				s+='</li>'
 			}
@@ -283,6 +287,7 @@ const changes = (()=> {
 				contexts[context][type].push({
 					title: this[id]['@title'],
 					patch: this[id],
+					id: window.release.apiPath+'uuid/'+id,
 					diff: getPreviewDiff(this[id])
 				})
 			}
@@ -398,6 +403,11 @@ const changes = (()=> {
 				parentArray[index] = this.#actualNode
 			}
 		}
+
+		get ['@mark']() {
+			return 'deleted'
+		}
+
 	}
 
 	let insertedNodes = {}
@@ -409,7 +419,12 @@ const changes = (()=> {
 			this.#actualNode = node
 			let id = this.id ?? this.uuid
 			insertedNodes[id] = true
-		}	
+		}
+
+		get ['@mark']() {
+			return 'inserted'
+		}
+
 	}
 
 	let changeHistory = new Changes()
@@ -472,6 +487,12 @@ const changes = (()=> {
 					for (let lprop of Object.keys(localNode)) {
 						n[lprop] = localNode[lprop]
 					}
+				}
+				if (local[id] && local[id] instanceof InsertedLink) {
+					debugger
+				}
+				if (local[id] && local[id] instanceof DeletedLink) {
+					debugger
 				}
 			})
 		}

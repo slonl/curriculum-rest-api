@@ -1,11 +1,11 @@
 <dialog id="previewChanges" class="preview-changes ds-dialog">
     <header class="ds-dialog-header">
+        <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+            <svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#x">
+            </use></svg>
+        </button>
         <div class="ds-space">
-            <button data-simply-command="closeDialog" class="ds-button ds-button-light ds-button-close">
-                <svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#x-circle">
-                </use></svg>
-            </button>
             <h2>Wijzigingen</h2>
         </div>
     </header>
@@ -21,7 +21,11 @@
 								<div style="margin-left: 2em" data-simply-list="entities">
 									<template>
 										<details>
-											<summary data-simply-field="title"></summary>
+											<summary>
+												<a data-simply-field="id" data-simply-command="review" target="review" class=""><svg class="ds-icon ds-icon-feather">
+										                <use xlink:href="/assets/icons/feather-sprite.svg#link">
+										            </use></svg></a>
+												<span data-simply-field="title"></span></summary>
 											<div data-simply-field="diff"></div>
 										</details>
 									</template>
