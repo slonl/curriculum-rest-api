@@ -556,6 +556,22 @@ var browser = simply.app({
                     let el = document.querySelector('.focus')
                     browser.view.sloDocument.editor(el)
                 }
+            },
+            "Escape": (e) => {
+                e.preventDefault()
+                if (browser.view.user) {
+                    let el = document.querySelector('.document-editor')
+                    browser.view.sloDocument.deselect(el)
+                }
+            },
+            "Control+Enter": async (e) => {
+                // save changes, close editor
+                e.preventDefault()
+                if (browser.view.user) {
+                    //await browser.view.sloDocument.saveChanges()
+                    let el = document.querySelector('.focus')
+                    browser.view.sloDocument.selector(el)
+                }
             }
         },
     },
@@ -1338,7 +1354,7 @@ var browser = simply.app({
             return true
         },
         editDocument(el, value){
-            browser.view.sloDocument.editDocument(el, value);
+            browser.view.sloDocument.setFocus(el, value);
         },
         hideEditorDialog(el){
             let buttonParentForm = el.parentElement;

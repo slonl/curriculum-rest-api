@@ -15,6 +15,38 @@ const sloDocument = (function() {
       showEditorDialog(el);
     }
 
+    function move(indexIncrement){
+      let focussedElement;
+      let nodes = getAllNodes()
+
+      //find current element to move to the next one
+      if(document.getElementsByClassName("focus")[0]){
+          focussedElement = document.getElementsByClassName("focus")[0];
+      }
+      else{
+          focussedElement = nodes[0];
+          focussedElement.classList.add("focus")
+      }
+
+      let itemIndex = nodes.indexOf(focussedElement);
+      nodes[itemIndex].classList.remove("focus");
+      
+      // moving around
+      itemIndex = itemIndex + indexIncrement;
+      
+      if( itemIndex > (nodes.length -1)) {
+          itemIndex = nodes.length -1;
+      }
+      
+      if ( itemIndex < 0) {
+        itemIndex = 0;
+      }
+
+      scrollIntoView(nodes, itemIndex)
+      nodes[itemIndex].classList.add("focus");
+      updateURL()
+    }
+
     function scrollIntoView(nodes, itemIndex){
         nodes[itemIndex].scrollIntoView({ block: "center" });
     }
@@ -46,10 +78,23 @@ const sloDocument = (function() {
       dialog.close();
     }
 
-    function getTextDefinition(el) {
+    async function getTextDefinition(el) {
        let currentUUID = browser.view.item.uuid
-       let textBox = el.querySelector("input")
-       textBox.value = currentUUID
+      
+
+
+       console.log(browser.view.documentList);
+
+
+       let currentContent;
+       /*
+       // @TODO : get the data from the DB instead of the page
+       return window.slo.api.get(window.release.apiPath+'uuid/'+ currentUUID)
+        .then( function (json){
+          console.log(json.title)
+          return json.title
+        });
+        */
     }
 
     function saveChanges(dialogContent){
@@ -57,9 +102,11 @@ const sloDocument = (function() {
 
 
     let sloDocument = {
+      /*
       addClickSelectText: () => {
         addClickSelectText()
       },
+      */
       selector: (el) => {
         if (!el) {
           selector.style.display = 'none'
@@ -70,11 +117,16 @@ const sloDocument = (function() {
         let rect = el.getBoundingClientRect()
         showSelector(rect, offset, el)
       },
+
       editor: (el) => {
-        if (!el) {
-          selector.style.display = 'none' // @TODO find out if this is needed
-          return
-        }
+        //let rect = el.getBoundingClientRect()
+        let boxContent = getTextDefinition(el);
+
+        //let title = el.closest('.slo-entity').querySelector('[data-simply-field="title"]').innerHTML
+        let name = "namePlaceholder"  //columnDef.value
+        el.innerHTML = `<form><textarea name="${name}" class="document-editor">${boxContent}</textarea></form>`
+
+        /*
         showEditorDialog(el)
         // @TODO : will need some refactoring to move to propper functions
         let addChangeButton = el.querySelector("#addChanges");
@@ -89,72 +141,71 @@ const sloDocument = (function() {
           console.log(el)
           // closeEditorDialog(el)
         })
+        */
       },
      
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
-
-        let focussedElement;
-        let nodes = getAllNodes()
-
-        //find current element to move to the next one
-        if(document.getElementsByClassName("focus")[0]){
-            focussedElement = document.getElementsByClassName("focus")[0];
-        }
-        else{
-            focussedElement = nodes[0];
-            focussedElement.classList.add("focus")
-        }
-
-        let itemIndex = nodes.indexOf(focussedElement);
-        nodes[itemIndex].classList.remove("focus");
-        
-        // moving around
-        itemIndex = itemIndex + indexIncrement;
-        
-        if( itemIndex > (nodes.length -1)) {
-            itemIndex = nodes.length -1;
-        }
-        
-        if ( itemIndex < 0) {
-          itemIndex = 0;
-        }
-
-        scrollIntoView(nodes, itemIndex)
-        nodes[itemIndex].classList.add("focus");
-        updateURL()
-        
+        move(indexIncrement);
       },
       moveTo : (destination) => {
         let focussedElement;
-        let nodes = getAllNodes()
-      
-        //find current element to move to the next one
-        if(document.getElementsByClassName("focus")[0]){
-            focussedElement = document.getElementsByClassName("focus")[0];
-        }
-        // if no element is focussed, focus the first one
-        else{
-            focussedElement = nodes[0];
-            focussedElement.classList.add("focus")
-        }
-        
-        let itemIndex = nodes.indexOf(focussedElement);
-        
-        nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
-        
-        let newPosition;
+        let nodes;
+        let itemIndex;
                 
         // moving around
         switch(destination){
           case "top":
+            focussedElement;
+            nodes = getAllNodes()
+          
+            //find current element to move to the next one
+            if(document.getElementsByClassName("focus")[0]){
+                focussedElement = document.getElementsByClassName("focus")[0];
+            }
+            // if no element is focussed, focus the first one
+            else{
+                focussedElement = nodes[0];
+                focussedElement.classList.add("focus")
+            }
+            
+            itemIndex = nodes.indexOf(focussedElement);
+            
+            nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
+            
+            //let newPosition;
             itemIndex = 0;
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
+            updateURL()
           break;
           case "bottom":
+            focussedElement;
+            nodes = getAllNodes()
+          
+            //find current element to move to the next one
+            if(document.getElementsByClassName("focus")[0]){
+                focussedElement = document.getElementsByClassName("focus")[0];
+            }
+            // if no element is focussed, focus the first one
+            else{
+                focussedElement = nodes[0];
+                focussedElement.classList.add("focus")
+            }
+            
+            itemIndex = nodes.indexOf(focussedElement);
+            
+            nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
+            
+            //let newPosition;
             itemIndex = nodes.length -1;
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
+            updateURL()
           break;
           case 'left':{
-
+            move(-1);
+            /*
             if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
               //console.log("No focussed field found, setting focus field to default")
               let currentElement = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0]
@@ -186,11 +237,13 @@ const sloDocument = (function() {
                 newPosition.classList.add("focus-field")
               }
             }
+            */
           }
           break;
             
           case 'right':{
-
+            move(1)
+            /*
             if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
               //console.log("No focussed field found, setting focus field to default")
               let currentElement = focussedElement.querySelectorAll('[data-simply-field="description"]')[0]
@@ -224,20 +277,32 @@ const sloDocument = (function() {
                 newPosition.classList.add("focus-field")
               }
             }
+            */
           }
           break;
           
           default:
             itemIndex = Math.floor(nodes.length /2) //if all goes wrong just go to the middle of the page
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
+            updateURL()
         }
 
-        scrollIntoView(nodes, itemIndex)
-        nodes[itemIndex].classList.add("focus");
-        updateURL()
+ 
         
       },
-      editDocument: (el) =>{
-        editDocument(el);
+      deselect: (el) => {
+        console.log(el);
+        if(el){
+          let currentSelection = el;
+          currentSelection.innerHTML = "";
+        }
+      },
+      setFocus: (el) =>{
+        document.querySelectorAll('.focus').forEach(item => item.classList.remove('focus'));
+        let newPosition = el.closest('.slo-entity');
+        newPosition.classList.add("focus");
+        updateURL()
       },
       saveChanges: (el) => {
         addChanges(el)
