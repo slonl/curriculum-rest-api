@@ -680,6 +680,12 @@ var browser = simply.app({
               el.closest('th').classList.add('ds-datatable-sorted-'+value)
           }
         },
+        cellEditor: (el, value) => {
+            if (browser.view.user) {
+                let el = document.querySelector('td.focus')
+                browser.view.sloSpreadsheet.editor(el)
+            }
+        },
         nextPage: function(el,value) {
             page = Math.min(browser.view.max-1, parseInt(browser.view.page));
             browser.actions.updatePage(page);
@@ -1371,3 +1377,4 @@ if (user && key) {
 
 browser.view.changes = changes
 browser.view.dirtyChecked = true
+

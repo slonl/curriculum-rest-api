@@ -358,3 +358,10 @@ body.ds-paging .slo-header .ds-paging {
 .ds-hidden {
     display: none;
 }
+.slo-cell-selector .slo-edit {
+    position: absolute;
+    margin-top: calc(-3px - var(--ds-button-line-height));
+}
+.slo-cell-selector .slo-edit:not(:hover) {
+    background-color: white;
+}

@@ -285,9 +285,16 @@ const spreadsheet = (function() {
       selector.style.width = rect.width+'px'
       selector.style['min-height'] = rect.height+'px'
       let value = row.columns[columnDef.value] || ''
+      let header = `
+<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+  <svg class="ds-icon ds-icon-feather">
+    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+  </use></svg>
+</button>
+`
       switch(columnDef.type) {
         case 'id':
-          selector.innerHTML = el.innerHTML
+          selector.innerHTML = header + el.innerHTML
         break
         case 'list':
           if (!Array.isArray(value)) {
@@ -301,10 +308,10 @@ const spreadsheet = (function() {
             html+='<li>'+htmlEscape(v)+'</li>'
           }
           html+= '</ul>'
-          selector.innerHTML = html
+          selector.innerHTML = header + html
         break
         default:
-          selector.innerHTML = htmlEscape(value)
+          selector.innerHTML = header + htmlEscape(value)
         break
       }
       let current = selector.getBoundingClientRect()
