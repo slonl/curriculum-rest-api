@@ -1061,19 +1061,21 @@ var browser = simply.app({
             return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
             .then(function(json) {
                 changes.getLocalView(json)
-                browser.view.item = {}
-                window.setTimeout(() => {
+                let clone = JSON.parse(JSON.stringify(json))
+                browser.view.item = clone
+//                window.setTimeout(() => {
                     //FIXME: browser.view.item can keep previous arrays if you don't
                     //clear them first, then wait a short while and fill item again
                     //that is either simplyview's view code, or simplyedits list code
-                    browser.view.item = json;
+                    // setting a clone also fixes the issue it appears
+//                    browser.view.item = json;
                     if (browser.view.preferedView && browser.view.preferedView!='item') {
                         browser.actions.switchView(browser.view.preferedView)
                         return
                     }
                     browser.view.view = 'item';
                     browser.actions.updatePaging();
-                }, 100) // don't decrease this, or you will get simplyedit errors dataParent undefined
+//                }, 100) // don't decrease this, or you will get simplyedit errors dataParent undefined
             });
         },
         listOpNiveau: function(niveau, type) {

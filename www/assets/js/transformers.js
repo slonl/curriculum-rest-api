@@ -83,9 +83,12 @@
         }
     }
 
-    editor.transformers.class = {
+    editor.transformers.parentClass = {
         render: function(data) {
-            this.classList.add('slo-mark-'+data)
+            // this is a workaround for a problem with using $mark and transformer to set the class
+            // $mark is undefined after switchView
+            // by not directly using $mark on the parent, the problem is gone
+            this.parentElement.classList.add('slo-mark-'+data)
             return data
         }
     }

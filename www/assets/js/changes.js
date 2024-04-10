@@ -395,6 +395,7 @@ const changes = (()=> {
 				}
 			}
 			this.#actualNode = node
+			this.$mark = 'deleted'
 		}
 
 		undelete(parentArray) {
@@ -402,10 +403,6 @@ const changes = (()=> {
 			if (index!=-1) {
 				parentArray[index] = this.#actualNode
 			}
-		}
-
-		get ['@mark']() {
-			return 'deleted'
 		}
 
 	}
@@ -419,10 +416,7 @@ const changes = (()=> {
 			this.#actualNode = node
 			let id = this.id ?? this.uuid
 			insertedNodes[id] = true
-		}
-
-		get ['@mark']() {
-			return 'inserted'
+			this.$mark = 'inserted'
 		}
 
 	}
@@ -482,7 +476,7 @@ const changes = (()=> {
 			walk(node, 0, (n) => {
 				let id = n.id ?? n.uuid
 				if (local[id] && local[id] instanceof ChangedNode) {
-					n['@mark'] = 'changed'
+					n.$mark = 'changed'
 					let localNode = local[id]
 					for (let lprop of Object.keys(localNode)) {
 						n[lprop] = localNode[lprop]

@@ -355,3 +355,6 @@ body.ds-paging .slo-header .ds-paging {
 .ds-alert:empty {
     display: none;
 }
+.ds-hidden {
+    display: none;
+}
