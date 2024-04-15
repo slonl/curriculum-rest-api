@@ -10,17 +10,57 @@ module.exports = {
                         description
                         unreleased
                 }`,
-                DomeinBasics: `fragment DomeinBasics on FoDomein {
+                Doelzin: `fragment Doelzin on FoDoelzin {
                         id
-                        prefix
                         title
-                        description
-                        unreleased
-                }`
+                        FoUitwerking {
+                                id
+                                title
+                                Niveau {
+                                        id
+                                        title
+                                        prefix
+                                }
+                        }
+                        FoToelichting {
+                        id
+                        title
+                                Niveau {
+                                        id
+                                        title
+                                        prefix
+                                }
+                        }
+		}`
         },
         queries: {
+                Fo: `query Fo($page: Int, $perPage: Int) {
+                        allFoSet(page: $page, perPage: $perPage, sortField: "title", filter: {deprecated: null}) {
+                                id
+                                prefix
+                                title
+                                FoDomein {
+                                        id
+                                        title
+                                        FoDoelzin {
+                                                ...Doelzin
+                                        }
+                                        FoSubdomein {
+                                                id
+                                                title
+                                                FoDoelzin {
+                                                        ...Doelzin
+                                                }
+                                        }       
+                                }
+                                unreleased
+                                }
+                                _allFoSetMeta {
+                                count
+                        }
+                }`,
                 FoSet: `query FoSet($page:Int, $perPage:Int) {
-                        allFoSet(page:$page, perPage:$perPage, sortField:"vakleergebied_id",filter:{deprecated:null}) {
+                        allFoSet(page:$page, perPage:$perPage, sortField:"title",filter:{deprecated:null}) {
                                 ...SetBasics
                                 NiveauIndex {
                                         Niveau {
@@ -37,7 +77,7 @@ module.exports = {
                         }
                 }`,
                 FoDomein: `query FoDomein($page:Int, $perPage:Int) {
-                        allFoDomein(page:$page, perPage:$perPage, sortField:"vakleergebied_id",filter:{deprecated:null}) {
+                        allFoDomein(page:$page, perPage:$perPage, sortField:"title",filter:{deprecated:null}) {
                                 id
                                 prefix
                                 title
@@ -570,6 +610,15 @@ module.exports = {
                         }
                 }`,
         routes: {
+                'fo/': (req) =>
+                        opendata.api["Fo"](req.params, req.query)
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoSet,
+                                                type: 'FoSet',
+                                                meta: result.data._allFoSetMeta
+                                        }
+                                }),
                 'fo_set/': (req) =>
                         opendata.api["FoSet"](req.params, req.query)
                                 .then(function (result) {
