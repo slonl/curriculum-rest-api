@@ -510,17 +510,23 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async documentPage(json){
-            let documentData = []
+       async documentPage(node){
             
+            let documentData = []
+            documentData.index = new Map();
+
             //json as received from the database
             //console.log(JSON.stringify(json, null, 4));
 
-            function formatDocumentData(json){
+            function formatDocumentData(node){
                 // @TODO : this leads to print issues as some arrays in the object, although empty still call an empty template, leading to an html element that meses up print.
                 let dataObj = { documentSublist : [], documentLeafNode: [],  documentTextNode: [],  documentNiveaus : [], documentNiveauIndex: [], documentExamenprogrammaEindterm:[] };
+                
+                dataObj["node"] = node;
 
-                 Object.entries(json).forEach(([key, value]) => {
+                documentData.index.set(node.id, dataObj);
+
+                 Object.entries(node).forEach(([key, value]) => {
 
                     if( Array.isArray(value)){
 
@@ -561,6 +567,8 @@
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
                                     dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
+        // console.log("will not be added to the map?");
+        // console.log(ExamenprogrammaEindterm);
                                 };
                             break;
 
@@ -569,10 +577,14 @@
                                 for(let doelNiveau of value){
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
-                                        dataObj['documentLeafNode'].push(hoistedChild);//child.Doel[0].title);
+                                        dataObj['documentLeafNode'].push(hoistedChild);
+        // console.log("will not be added to the map?");
+        // console.log(hoistedChild);
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
+        // console.log("will not be added to the map?");
+        // console.log(doelNiveau);
                                     }
                                 
                                 };
@@ -581,6 +593,8 @@
 
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
+                                    console.log("will not be added to the map?");
+                                    console.log(child);
                                     dataObj['documentTextNode'].push(child);
                                 };
                             break;
@@ -594,7 +608,9 @@
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
-                                        dataObj['documentNiveauIndex'].push(child.Niveau); //'documentNiveauIndex'
+                                        dataObj['documentNiveauIndex'].push(child.Niveau);
+        // console.log("will not be added to the map?");
+        // console.log(child.Niveau);
                                     }
                                     else {
                                         console.log("Found a NiveauIndex with something that wasn't a Niveau.");
@@ -635,6 +651,11 @@
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
+                            // if no capital Eindexamen instead of title and things.
+                            if(key[0] >= "A" && key[0] <= "Z")
+                            { 
+                                debugger;
+                            }
                             dataObj[key] = value ;
                         }
                     }
@@ -642,7 +663,7 @@
 
                 // remove object that have empty arrays as values:
                 Object.entries(dataObj).forEach(([key, value]) => {
-
+   
                     if (Array.isArray(value) && value.length == 0){
                         delete dataObj[key];
                         return dataObj
@@ -654,14 +675,14 @@
 
             }
 
-            documentData = formatDocumentData(json);
+            documentData.list = formatDocumentData(node);
 
             //documentData is the json that will be sent to the client
             //console.log(JSON.stringify(documentData, null, 4));
 
-            documentData = JSON.parse(JSON.stringify(documentData));
+            //documentData = JSON.parse(JSON.stringify(documentData));
 
-            return [documentData];
+            return documentData;
 
         },
         getDataModel(name) {

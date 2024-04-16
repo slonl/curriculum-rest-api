@@ -1045,7 +1045,9 @@ var browser = simply.app({
                 browser.view.root = json
                 changes.getLocalView(json)
                 browser.view.view = 'document';
-                browser.view.documentList = await window.slo.documentPage(json)
+                let pageData = await window.slo.documentPage(json)
+                browser.view.documentList =  [pageData.list]
+                browser.view.documentList.index = [pageData.index]
                 browser.view.sloDocument = sloDocument({
                     container: document.getElementById('slo-document')
                 });

@@ -80,21 +80,10 @@ const sloDocument = (function() {
 
     async function getTextDefinition(el) {
        let currentUUID = browser.view.item.uuid
-      
-
-
-       console.log(browser.view.documentList);
-
-
-       let currentContent;
-       /*
-       // @TODO : get the data from the DB instead of the page
-       return window.slo.api.get(window.release.apiPath+'uuid/'+ currentUUID)
-        .then( function (json){
-          console.log(json.title)
-          return json.title
-        });
-        */
+       console.log(currentUUID);
+       let currentContent = browser.view.documentList.index[0].get(currentUUID).title
+       console.log(currentContent);
+       return currentContent;
     }
 
     function saveChanges(dialogContent){
@@ -118,13 +107,12 @@ const sloDocument = (function() {
         showSelector(rect, offset, el)
       },
 
-      editor: (el) => {
+      editor: async (el) => {
         //let rect = el.getBoundingClientRect()
-        let boxContent = getTextDefinition(el);
-
+        let boxContent = await getTextDefinition(el)
+        let currentUUID = browser.view.item.uuid      
         //let title = el.closest('.slo-entity').querySelector('[data-simply-field="title"]').innerHTML
-        let name = "namePlaceholder"  //columnDef.value
-        el.innerHTML = `<form><textarea name="${name}" class="document-editor">${boxContent}</textarea></form>`
+        el.innerHTML = `<form><textarea name="${currentUUID}" class="document-editor">${boxContent}</textarea></form>`
 
         /*
         showEditorDialog(el)
@@ -205,6 +193,8 @@ const sloDocument = (function() {
           break;
           case 'left':{
             move(-1);
+
+            // @NOTE: the following commented code was a WIP for when the prefix/title/description was selctable/editable by design, this will probably be a stretch goal at some point
             /*
             if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
               //console.log("No focussed field found, setting focus field to default")
@@ -243,6 +233,8 @@ const sloDocument = (function() {
             
           case 'right':{
             move(1)
+
+            // @NOTE: the following commented code was a WIP for when the prefix/title/description was selctable/editable by design, this will probably be a stretch goal at some point
             /*
             if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
               //console.log("No focussed field found, setting focus field to default")
@@ -287,9 +279,6 @@ const sloDocument = (function() {
             nodes[itemIndex].classList.add("focus");
             updateURL()
         }
-
- 
-        
       },
       deselect: (el) => {
         console.log(el);
