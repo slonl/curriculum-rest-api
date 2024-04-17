@@ -100,11 +100,23 @@ const changes = (()=> {
 				newValue: _,
 				dirty: oneOf(true, false)
 			})
+			function hydrate(e) {
+				if (e.$mark=='inserted') {
+					return new InsertedLink(e)
+				}
+				if (e.$mark=='deleted') {
+					return new DeletedLink(e)
+				}
+				if (e.$mark=='changed') {
+					return new ChangedNode(e)
+				}
+				return e
+			}
 			if (Array.isArray(ch.prevValue)) {
-				ch.prevValue = ch.prevValue.filter(e => !(e instanceof DeletedLink))
+				ch.prevValue = ch.prevValue.map( hydrate )
 			}
 			if (Array.isArray(ch.newValue)) {
-				ch.newValue = ch.newValue.filter(e => !(e instanceof DeletedLink))
+				ch.newValue = ch.newValue.map( hydrate )
 			}
 			Object.assign(this, ch)
 		}
@@ -357,7 +369,7 @@ const changes = (()=> {
 
 	class ChangedNode {
 		applyChanges(prop, change) {
-			if (Array.isArray(change.newValue) || Array.isArray(change.prevValue)) {
+/*			if (Array.isArray(change.newValue) || Array.isArray(change.prevValue)) {
 				const diff = getDiff(change.prevValue, change.newValue)
 				if (diff && diff.toBeRemoved) {
 					this[prop] = change.prevValue.map(n => {
@@ -375,8 +387,9 @@ const changes = (()=> {
 					this[prop] = diff.toBeAdded.map(n => new InsertedLink(n)).concat(this[prop])
 				}
 			} else {
-				this[prop] = change.newValue
-			}
+*/
+			this[prop] = change.newValue
+//			}
 			console.log(this)
 		}
 	}
