@@ -108,7 +108,7 @@ const changes = (()=> {
 					return new DeletedLink(e)
 				}
 				if (e.$mark=='changed') {
-					return new ChangedNode(e)
+					return e; //new ChangedLink(e)
 				}
 				return e
 			}
@@ -207,16 +207,12 @@ const changes = (()=> {
 		function showArrayDiff(delta) {
 			let s = '<ul>'
 			for (let d of delta) {
-				if (d.removed) {
-					d.value.forEach(v => {
-						let title = changes.local[v.id]?.title ?? v.title
-						s+='<li><del>'+title+'</del></li>'
-					})
-				} else if (d.added) {
-					d.value.forEach(v => {
-						let title = changes.local[v.id]?.title ?? v.title
-						s+='<li><ins>'+title+'</ins></li>'
-					})
+				if (d.$mark && d.$mark=='deleted') {
+					let title = changes.local[d.id]?.title ?? d.title
+					s+='<li><del>'+title+'</del></li>'
+				} else if (d.$mark && d.$mark=='inserted') {
+					let title = changes.local[d.id]?.title ?? d.title
+					s+='<li><ins>'+title+'</ins></li>'
 				// } else {
 				// 	d.value.forEach(v => {
 				// 		s+='<li>'+v.id+'</li>'
@@ -253,10 +249,10 @@ const changes = (()=> {
 		for (let propName in m['@properties']) {
 			let prop = m['@properties'][propName]
 			if (Array.isArray(prop.newValue)) {
-				let delta = Diff.diffArrays(prop.prevValue, prop.newValue, {
-					comparator: compareArrayValue
-				})
-				d += '<label class="changes-diff"><div>'+propName+'</div>'+showArrayDiff(delta)+'</label>'
+				// let delta = Diff.diffArrays(prop.prevValue, prop.newValue, {
+				// 	comparator: compareArrayValue
+				// })
+				d += '<label class="changes-diff"><div>'+propName+'</div>'+showArrayDiff(prop.newValue)+'</label>'
 			} else if (typeof prop.newValue == 'string' || prop.newValue instanceof String) {
 				let delta = Diff.diffWords(prop.prevValue, prop.newValue)
 				d += '<label class="changes-diff"><div>'+propName+'</div>'+showTextDiff(delta)+'</label>'
@@ -368,29 +364,23 @@ const changes = (()=> {
 	}
 
 	class ChangedNode {
+		constructor(node) {
+			Object.assign(this, node)
+		}
+
 		applyChanges(prop, change) {
-/*			if (Array.isArray(change.newValue) || Array.isArray(change.prevValue)) {
-				const diff = getDiff(change.prevValue, change.newValue)
-				if (diff && diff.toBeRemoved) {
-					this[prop] = change.prevValue.map(n => {
-						let i = diff.toBeRemoved.indexOf(n)
-						if (i!=-1) {
-							return new DeletedLink(n)
-						}
-						return n
-					})
-				} else {
-					this[prop] = change.prevValue
-				}
-				if (diff && diff.toBeAdded) {
-					// FIXME: try to add elements at the correct spot
-					this[prop] = diff.toBeAdded.map(n => new InsertedLink(n)).concat(this[prop])
-				}
-			} else {
-*/
 			this[prop] = change.newValue
-//			}
-			console.log(this)
+		}
+	}
+
+	class ChangedLink {
+		#actualNode 
+
+		constructor(node) {
+			Object.assign(this, node)
+			let id = this.id ?? this.uuid
+			this.#actualNode = node
+			this.$mark = 'changed'
 		}
 	}
 
@@ -489,7 +479,9 @@ const changes = (()=> {
 			walk(node, 0, (n) => {
 				let id = n.id ?? n.uuid
 				if (local[id] && local[id] instanceof ChangedNode) {
-					n.$mark = 'changed'
+					if (!n.$mark) { // don't overwrite deleted or inserted marks, even if changes have been applied later
+						n.$mark = 'changed' 
+					}
 					let localNode = local[id]
 					for (let lprop of Object.keys(localNode)) {
 						n[lprop] = localNode[lprop]
