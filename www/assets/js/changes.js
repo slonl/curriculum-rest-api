@@ -132,6 +132,9 @@ const changes = (()=> {
 				if (property.prevValue[i].id != val.id) {
 					equal = false
 				}
+				if (property.prevValue[i].$mark != val.$mark) {
+					equal = false
+				}
 			} else if (JSONTag.getType(val)=='link') {
 				if (property.prevValue[i].value != val.value) {
 					equal = false
@@ -319,7 +322,7 @@ const changes = (()=> {
 		}
 
 		commit() {
-			let commit = []
+			let commits = []
 			for (let id in this) {
 				let e = this[id]
 				assert(e, {
@@ -328,17 +331,21 @@ const changes = (()=> {
 				})
 				let dirty = e.dirty ? true : false
 				for (let prop in e['@properties']) {
-					commit.push({
+					let commit = {
 						id,
 						'@type': e['@type'],
 						dirty, 
 						property: prop,
 						prevValue: e['@properties'][prop].prevValue,
 						newValue: e['@properties'][prop].newValue
-					})
+					}
+					if (Array.isArray(commit.newValue)) {
+						commit.newValue = commit.newValue.filter(v => v.$mark!=='deleted')
+					}
+					commits.push(commit)
 				}
 			}
-			return commit
+			return commits
 		}
 	}
 

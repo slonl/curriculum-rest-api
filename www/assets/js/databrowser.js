@@ -31,7 +31,7 @@ function arrayEquals(a, b) {
     if (a.length !== b.length) return false;
 
     for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
+        if (a[i] !== b[i]) return false;
     }
     return true;
 }
@@ -1268,7 +1268,13 @@ var browser = simply.app({
             let type = row.node['@type']
 
             let prevValue = parentNode[type].slice()
-            let newValue = prevValue.filter(e => (e.id !== row.node.id))
+            let newValue = prevValue.map(e => { 
+                if (e.id==row.node.id) {
+                    return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                } else {
+                    return e
+                }
+            }) //filter(e => (e.id !== row.node.id))
             let timestamp = new Date().toISOString()
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
