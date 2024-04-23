@@ -558,19 +558,33 @@ var browser = simply.app({
                 }
             },
             "Escape": (e) => {
-                e.preventDefault()
+                e.preventDefault();
+                console.log("trying to discard changes");
                 if (browser.view.user) {
-                    let el = document.querySelector('.document-editor')
-                    browser.view.sloDocument.deselect(el)
+                    let el = document.querySelector('.document-editor');
+                    browser.view.sloDocument.deselect(el);
                 }
-            },
+            }
+
+           
+        },
+        "document-edit": {
             "Control+Enter": async (e) => {
                 // save changes, close editor
-                e.preventDefault()
+                e.preventDefault();
+                console.log("saving changes");
                 if (browser.view.user) {
                     //await browser.view.sloDocument.saveChanges()
-                    let el = document.querySelector('.focus')
-                    browser.view.sloDocument.selector(el)
+                    let el = document.querySelector('.document-editor');
+                    browser.view.sloDocument.saveChange(el);
+                }
+            },
+            "Escape": (e) => {
+                e.preventDefault();
+                console.log("discarding changes");
+                if (browser.view.user) {
+                    let el = document.querySelector('.document-editor');
+                    browser.view.sloDocument.deselect(el);
                 }
             }
         },
@@ -1036,6 +1050,15 @@ var browser = simply.app({
                 browser.view.sloSpreadsheet.render()
             })
         },
+        documentUpdate: function() {
+            // @TODO : figure out what this does: 
+            changes.getLocalView(browser.view.root)
+            let defs = slo.treeToRows(browser.view.root)
+
+            // @TODO : idem.
+            browser.view.sloDocument.update({data:defs.rows})
+            browser.view.sloDocument.render()
+        },
         renderDocumentPage: async function(root, context, niveau) {
             browser.view.documentList = []
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
@@ -1046,11 +1069,15 @@ var browser = simply.app({
                 changes.getLocalView(json)
                 browser.view.view = 'document';
                 let pageData = await window.slo.documentPage(json)
-                browser.view.documentList =  [pageData.list]
-                browser.view.documentList.index = [pageData.index]
-                browser.view.sloDocument = sloDocument({
-                    container: document.getElementById('slo-document')
-                });
+                // @TODO : render the root instead of the array ( remove the "[]" )
+                browser.view.documentList =  [pageData.root]
+
+                // @TODO : might be replaced or removed if not needed anymore in the future.
+
+                browser.view.sloDocument = sloDocument(
+                    {container : document.getElementById('slo-document')},
+                    pageData
+                );
             })
         },
         doelniveauList: function(type) {

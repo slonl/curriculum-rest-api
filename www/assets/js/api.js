@@ -512,11 +512,9 @@
         },
        async documentPage(node){
             
-            let documentData = []
-            documentData.index = new Map();
-
-            //json as received from the database
-            //console.log(JSON.stringify(json, null, 4));
+            let documentData = {
+                index :  new Map()
+            }
 
             function formatDocumentData(node){
                 // @TODO : this leads to print issues as some arrays in the object, although empty still call an empty template, leading to an html element that meses up print.
@@ -566,36 +564,36 @@
                             //case 'ExamenprogrammaDomein':
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
+                                    // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
+
+                                    // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
+
                                     dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
-        // console.log("will not be added to the map?");
-        // console.log(ExamenprogrammaEindterm);
+                                    //console.log(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+
                                 };
                             break;
-
 
                             case 'Doelniveau':
                                 for(let doelNiveau of value){
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
                                         dataObj['documentLeafNode'].push(hoistedChild);
-        // console.log("will not be added to the map?");
-        // console.log(hoistedChild);
+
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
-        // console.log("will not be added to the map?");
-        // console.log(doelNiveau);
                                     }
                                 
                                 };
                             break;
 
-
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
-                                    console.log("will not be added to the map?");
-                                    console.log(child);
                                     dataObj['documentTextNode'].push(child);
+                                    documentData.index.set(child.id , child);
+
                                 };
                             break;
                             
@@ -609,8 +607,7 @@
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
                                         dataObj['documentNiveauIndex'].push(child.Niveau);
-        // console.log("will not be added to the map?");
-        // console.log(child.Niveau);
+                                        documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
                                     else {
                                         console.log("Found a NiveauIndex with something that wasn't a Niveau.");
@@ -620,7 +617,6 @@
 
                             case 'Niveau':
                                 for(let niveau of value){
-                                    //console.log(niveau.description);
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
                             break;
@@ -629,7 +625,6 @@
                             case 'Tag':
                                 for(let child of value){
                                     if (child.title == null){
-                                        //console.log("Found a Tag without a title");
                                     }
                                     else { 
                                         dataObj['documentSublist'].push(formatDocumentData(child));
@@ -657,6 +652,8 @@
                                 debugger;
                             }
                             dataObj[key] = value ;
+                            // @NOTE : need to figure the following out if it's needed/works
+                            //documentData.index.set(dataOj[key].id , value);
                         }
                     }
                 });
@@ -672,13 +669,9 @@
                 });
             
                 return dataObj;
-
             }
 
-            documentData.list = formatDocumentData(node);
-
-            //documentData is the json that will be sent to the client
-            //console.log(JSON.stringify(documentData, null, 4));
+            documentData.root = formatDocumentData(node);
 
             //documentData = JSON.parse(JSON.stringify(documentData));
 

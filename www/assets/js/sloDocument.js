@@ -1,5 +1,5 @@
 /*
-TODO:
+@TODO : 
 
 */
 
@@ -11,8 +11,63 @@ const sloDocument = (function() {
   return function(settings, data) {
     options.container = settings.container
 
-    function editDocument(el, value) {
-      showEditorDialog(el);
+    let selector = document.createElement('div');
+    let originalElement = '';
+    
+    /*
+    function getColumnDefinition(el) {
+      // column definitions are in options.columns
+      let visibleColumns = options.columns.filter(c => c.checked)
+      let siblingCells = Array.from(el.closest('tr').querySelectorAll('td'))
+      while (siblingCells[siblingCells.length-1]!==el) {
+        siblingCells.pop()
+      }
+      siblingCells.pop()
+      let focusColumn = siblingCells.length - 1 - (options.editMode ? 1 : 0)
+      let column = visibleColumns[focusColumn]
+      return column
+    }
+    */
+
+    function showSelector(rect, el) {
+      let titleContent = getTextDefinition(el)
+      
+      /*
+      if (!titleContent && typeof titleContent != 'undefined') {
+        return
+      }
+      */
+
+      //selector.dataset.simplyKeyboard = 'document-editor';
+      let currentUUID = browser.view.item.uuid
+      el.innerHTML = `<div><textarea name="${currentUUID}">${titleContent}</textarea></div>`
+      /*
+      let column = getColumnDefinition(el)
+      delete selector.dataset.simplyKeyboard
+      defaultViewer.call(selector, rect, offset, el)
+      if (column.viewer) {
+        column.viewer.call(selector, rect, offset, el)
+      }
+      */
+    }
+
+    function showEditor(el) {
+
+      originalElement = el;
+      console.log(originalElement);
+      let titleContent = getTextDefinition(el);
+      selector.dataset.simplyKeyboard = 'document-edit'; // @TODO : switch keyboard to 'document-edit' doesn't seem to work, as subsequently code in the databrowser.commands.document-edit with "ctrl+enter" doesn't work.
+      let currentUUID = browser.view.item.uuid;
+      el.innerHTML = `<div><form><textarea name="${currentUUID}" class="document-editor">${titleContent}</textarea></form></div>`;
+
+      // @TODO : maybe add a return element or something here so the ctrl+enter has an element to hook onto.
+    }
+
+    function hideEditor(el){
+      //el.innerHTML = "";
+      console.log(el)
+      console.log(originalElement);
+      el.innerHTML = originalElement;
     }
 
     function move(indexIncrement){
@@ -44,7 +99,7 @@ const sloDocument = (function() {
 
       scrollIntoView(nodes, itemIndex)
       nodes[itemIndex].classList.add("focus");
-      updateURL()
+      updateURL();
     }
 
     function scrollIntoView(nodes, itemIndex){
@@ -68,74 +123,87 @@ const sloDocument = (function() {
         browser.view.item.uuid = nextID
     }
 
-    function showEditorDialog(el) {
-      const dialog = el.querySelector("dialog");
-      dialog.showModal()
-      getTextDefinition(el)
-    }
-
-    function closeEditorDialog(dialog){
-      dialog.close();
-    }
-
-    async function getTextDefinition(el) {
+    function getTextDefinition(el) {
        let currentUUID = browser.view.item.uuid
-       console.log(currentUUID);
-       let currentContent = browser.view.documentList.index[0].get(currentUUID).title
-       console.log(currentContent);
+       let currentContent = data.index.get(currentUUID).title
        return currentContent;
     }
 
-    function saveChanges(dialogContent){
+    function saveChanges(el){
+      console.log("saving changes")
+      console.log(el)
+      focussedElement = document.getElementsByClassName("document-editor")[0];
+      console.log(focussedElement);
+
     }
+
+    // @TODO : figure out if this was the trick used to move the "click" "around".
+    // let clickListener
+    // function addClickSelectCell() {
+    //     if (clickListener) {
+    //         body.removeEventListener('click', clickListener)
+    //     }
+    //     clickListener = function(evt) {
+    //         let command = evt.target.closest('[data-simply-command]')
+    //         if (command) {
+    //             return
+    //         }
+    //         let cell = evt.target.closest('div')
+    //         if (cell) {
+    //             let current = body.querySelectorAll('.focus')
+    //             current.forEach(el => {
+    //                 el.classList.remove('focus')
+    //             })
+    //             cell.classList.add('focus')
+    //             cell.closest('span').classList.add('focus')
+    //             /*
+    //             let row = spreadsheet.findId(cell.closest('tr').id)
+    //             if (row!==null) {
+    //                 let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
+    //                 let column = columns.findIndex(td => td===cell)
+    //                 if (options.editMode) {
+    //                   column--
+    //                 }
+    //                 spreadsheet.goto(row,column)
+    //             }
+    //             */
+    //         }
+    //     }
+    //     body.addEventListener('click', clickListener)
+    // }
+    // addClickSelectCell();
 
 
     let sloDocument = {
-      /*
-      addClickSelectText: () => {
-        addClickSelectText()
-      },
-      */
       selector: (el) => {
         if (!el) {
           selector.style.display = 'none'
           return
         }
         selector.style.display = 'block'
-        let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
-        showSelector(rect, offset, el)
+        showSelector(rect, el)
+      },
+
+      saveChanges: (el) => {
+        saveChanges(el);
       },
 
       editor: async (el) => {
-        //let rect = el.getBoundingClientRect()
-        let boxContent = await getTextDefinition(el)
-        let currentUUID = browser.view.item.uuid      
-        //let title = el.closest('.slo-entity').querySelector('[data-simply-field="title"]').innerHTML
-        el.innerHTML = `<form><textarea name="${currentUUID}" class="document-editor">${boxContent}</textarea></form>`
-
-        /*
-        showEditorDialog(el)
-        // @TODO : will need some refactoring to move to propper functions
-        let addChangeButton = el.querySelector("#addChanges");
-
-        console.log("this works?")
-        console.log(addChangeButton)
-        addChangeButton.addEventListener('click', (event) => {
-          event.preventDefault();
-          let textBox = el.querySelector("input")
-          console.log("closed a dialog")
-          console.log(textBox.value)
-          console.log(el)
-          // closeEditorDialog(el)
-        })
-        */
+          if (!el) {
+            selector.style.display = 'none'
+            return
+          }
+          selector.style.display = 'block'
+          //let offset = table.getBoundingClientRect()
+          showEditor(el)
       },
      
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
         move(indexIncrement);
       },
+
       moveTo : (destination) => {
         let focussedElement;
         let nodes;
@@ -192,87 +260,13 @@ const sloDocument = (function() {
             updateURL()
           break;
           case 'left':{
-            move(-1);
-
-            // @NOTE: the following commented code was a WIP for when the prefix/title/description was selctable/editable by design, this will probably be a stretch goal at some point
-            /*
-            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
-              //console.log("No focussed field found, setting focus field to default")
-              let currentElement = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0]
-              //console.log(currentPosition)
-              currentElement.classList.add("focus-field")
-            }
-            
-            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
-            console.log(currentElement.dataset.simplyField)
-                    
-            switch (currentElement.dataset.simplyField){
-              case 'prefix':
-                //current element is already leftmost
-              break;
-              case 'title': {
-                let newPosition = currentElement.closest("focus-field")
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-              break;
-              case 'descirption':{
-                let newPosition = currentElement.closest("focus-field")
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-              break;
-              default:{
-                let newPosition = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0] //prefix is always the most left element
-                newPosition.classList.add("focus-field")
-              }
-            }
-            */
+            move(-1);  
           }
           break;
-            
           case 'right':{
-            move(1)
-
-            // @NOTE: the following commented code was a WIP for when the prefix/title/description was selctable/editable by design, this will probably be a stretch goal at some point
-            /*
-            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
-              //console.log("No focussed field found, setting focus field to default")
-              let currentElement = focussedElement.querySelectorAll('[data-simply-field="description"]')[0]
-              //console.log(currentPosition)
-              currentElement.classList.add("focus-field")
-            }
-
-            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
-            console.log(currentElement.dataset.simplyField)
-
-            switch (currentElement.dataset.simplyField){            //find current position focus
-              case 'prefix':{
-                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="title"]')
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-                //if on prefix move to title
-              break;
-              case 'title':{
-                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="description"]')
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-                 //if on title, move to description
-              break;
-              case 'descirption':{}
-                    //current element is already rightmost
-              break;
-              default:{
-                let newPosition = focussedElement.querySelectorAll('[data-simply-field="description"]')[0] //description is always the most right element
-                newPosition.classList.add("focus-field")
-              }
-            }
-            */
+            move(1)        
           }
           break;
-          
           default:
             itemIndex = Math.floor(nodes.length /2) //if all goes wrong just go to the middle of the page
             scrollIntoView(nodes, itemIndex)
@@ -281,25 +275,25 @@ const sloDocument = (function() {
         }
       },
       deselect: (el) => {
-        console.log(el);
-        if(el){
-          let currentSelection = el;
-          currentSelection.innerHTML = "";
-        }
+        console.log("deselecting");
+        hideEditor(el)
       },
-      setFocus: (el) =>{
+      setFocus: (el, value) =>{
         document.querySelectorAll('.focus').forEach(item => item.classList.remove('focus'));
+
         let newPosition = el.closest('.slo-entity');
         newPosition.classList.add("focus");
+
+        // @TODO : trigger a redraw or something if there is text being edited so as to "restore" that field in the DOM
+        //browser.actions.renderDocumentPage()
+
         updateURL()
       },
       saveChanges: (el) => {
-        addChanges(el)
-        hideEditor(el)
+        saveChanges(el)
+        rerenderView() // @TODO : still need to find a way that this works.
+        // hideEditor(el)
       },
-      hideEditorDialog: (el) => {
-        closeEditorDialog(el);
-      }
     }
 
     return sloDocument
