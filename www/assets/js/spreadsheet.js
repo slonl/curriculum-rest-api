@@ -251,7 +251,25 @@ const spreadsheet = (function() {
           value = htmlEscape(value)
           name = columnDef.value
           let selectorRect = selector.getBoundingClientRect()
-          selector.innerHTML = `<form><textarea name="${name}" class="spreadsheet-editor">${value}</textarea></form>`
+          let disabled = row.node.dirty ? 'disabled' : ''
+          let checked = browser.view.dirtyChecked ? 'checked' : ''
+          selector.innerHTML = `
+<form>
+  <div class="slo-form-header">
+    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+      </use></svg>
+    </button>
+    <div class="ds-form-group">
+      <label>
+        <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+        Inhoudelijke wijziging
+      </label>
+    </div>
+  </div>
+  <textarea name="${name}" class="spreadsheet-editor">${value}</textarea>
+</form>`
           selector.querySelector('textarea').style.height = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break
@@ -267,9 +285,16 @@ const spreadsheet = (function() {
       selector.style.width = rect.width+'px'
       selector.style['min-height'] = rect.height+'px'
       let value = row.columns[columnDef.value] || ''
+      let header = `
+<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+  <svg class="ds-icon ds-icon-feather">
+    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+  </use></svg>
+</button>
+`
       switch(columnDef.type) {
         case 'id':
-          selector.innerHTML = el.innerHTML
+          selector.innerHTML = header + el.innerHTML
         break
         case 'list':
           if (!Array.isArray(value)) {
@@ -283,10 +308,10 @@ const spreadsheet = (function() {
             html+='<li>'+htmlEscape(v)+'</li>'
           }
           html+= '</ul>'
-          selector.innerHTML = html
+          selector.innerHTML = header + html
         break
         default:
-          selector.innerHTML = htmlEscape(value)
+          selector.innerHTML = header + htmlEscape(value)
         break
       }
       let current = selector.getBoundingClientRect()

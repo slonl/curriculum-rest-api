@@ -68,7 +68,7 @@
 
     .slo-username span {
         line-height: var(--ds-button-line-height);
-        padding-left: 1em;
+        padding: 0 1em;
     }
     .slo-editmode .slo-index {
         margin-left: 1em;
@@ -277,4 +277,92 @@ dialog.commit-changes {
 }
 .slo-hidden {
     display: none;
+}
+.slo-form-header {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: -2em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    left: -2px;
+    border-bottom: none;
+}
+.slo-form-header .ds-form-group {
+    margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-header label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.slo-form-header .ds-button-close {
+    height: 2em;
+    line-height: 2em;
+    min-height: unset;
+    right: 0;
+}
+.slo-form-header .ds-button-close .ds-icon {
+    height: 1em;
+}
+label.changes-diff ins {
+    background-color: #eaf2c2;
+}
+label.changes-diff del {
+    background-color: #fadad7;
+}
+label.changes-diff ul {
+    margin-top: 0;
+}
+label.changes-diff {
+    padding-left: 2em;
+}
+.slo-mark-inserted {
+    background-color: #eaf2c2;
+    text-decoration: underline;
+}
+.slo-mark-deleted {
+    background-color: #fadad7;
+    text-decoration: line-through;
+}
+.slo-mark-changed {
+    background-color: #EEE;
+}
+.slo-header .ds-button-bar {
+    position: static;
+}
+.slo-buttonbars {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: flex-end;
+}
+.ds-paging .ds-paging-info {
+    line-height: var(--ds-button-line-height);
+}
+body.ds-paging .slo-header .ds-paging {
+    display: flex;
+}
+.slo-header .ds-paging {
+    display: none;
+}
+.ds-button-close {
+    right: 0;
+}
+.ds-alert:empty {
+    display: none;
+}
+.ds-hidden {
+    display: none;
+}
+.slo-cell-selector .slo-edit {
+    position: absolute;
+    margin-top: calc(-3px - var(--ds-button-line-height));
+}
+.slo-cell-selector .slo-edit:not(:hover) {
+    background-color: white;
 }

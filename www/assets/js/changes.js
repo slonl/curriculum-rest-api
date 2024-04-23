@@ -7,12 +7,13 @@ then ExamenprogrammaDomein n[Examenprogramma][X] should also be a DeletedLink
  */
 
 const walk = (node, indent, f) => {
-    if (!node) return;
+    if (!node) return node;
     if (node['@type']==='Niveau') {
-        return
+        return node
     }
+    let result = null
     if (Array.isArray(node)) {
-        node.forEach(n => walk(n,indent,f))
+        return node.map(n => walk(n,indent,f) ?? n)
     } else if (typeof node === 'object' ) {
         indent = f(node, indent)
         Object.entries(node)
@@ -23,10 +24,11 @@ const walk = (node, indent, f) => {
             return true
         })
         .forEach(([k,v]) => { 
-            walk(v,indent,f); 
             node.hasChildren=true; 
+            node[k] = walk(v,indent,f) ?? v;
         })
     }
+    return node
 }
 
 const changes = (()=> {
@@ -108,6 +110,27 @@ const changes = (()=> {
 		}
 	}
 
+	function arrayEquals(property) {
+		let equal = true
+		if (property.newValue.length != property.prevValue.length) {
+			return false
+		}
+		property.newValue.forEach((val, i) => {
+			if (JSONTag.getType(val)=='object') {
+				if (property.prevValue[i].id != val.id) {
+					equal = false
+				}
+			} else if (JSONTag.getType(val)=='link') {
+				if (property.prevValue[i].value != val.value) {
+					equal = false
+				}
+			} else if (val != property.prevValue[i]) {
+				equal = false
+			}
+		})
+		return equal
+	}
+
 	class Changes extends Array {
 		constructor(arr) {
 			if (!arr && localStorage.getItem('changeHistory')) {
@@ -137,6 +160,9 @@ const changes = (()=> {
 						'@properties': {}
 					}
 				}
+				if (ch.dirty) {
+					m[ch.id]['@dirty']=true
+				}
 				let me = m[ch.id]
 				if (!me['@properties'][ch.property]) {
 					me['@properties'][ch.property] = {
@@ -144,24 +170,15 @@ const changes = (()=> {
 					}
 				}
 				me['@properties'][ch.property].newValue = ch.newValue
-/*				if (ch.type=='insert') {
-					// add the new child to merged as well
-					m[ch.child.id] = {
-						'@id': ch.child.id,
-						'@type': ch.child.type,
-						'@context': ch.child.context,
-						'@title': ch.child.title ?? '',
-						'@properties': {}
-					}
-				}
-*/
 				return m
 			}, merged)
 			for (let id in merged) {
 				let m = merged[id]
 				// remove properties where newValue == prevValue
 				for (let prop of Object.keys(m['@properties'])) {
-					if (m['@properties'][prop].newValue === m['@properties'][prop].oldValue) {
+					if ((Array.isArray(m['@properties'][prop].newValue) && arrayEquals(m['@properties'][prop]))
+						|| (m['@properties'][prop].newValue == m['@properties'][prop].prevValue)
+					) {
 						delete m['@properties'][prop]
 					}
 				}
@@ -172,6 +189,70 @@ const changes = (()=> {
 			}
 			return merged
 		}
+	}
+
+	function getPreviewDiff(m) {
+		function showArrayDiff(delta) {
+			let s = '<ul>'
+			for (let d of delta) {
+				if (d.removed) {
+					d.value.forEach(v => {
+						let title = changes.local[v.id]?.title ?? v.title
+						s+='<li><del>'+title+'</del></li>'
+					})
+				} else if (d.added) {
+					d.value.forEach(v => {
+						let title = changes.local[v.id]?.title ?? v.title
+						s+='<li><ins>'+title+'</ins></li>'
+					})
+				// } else {
+				// 	d.value.forEach(v => {
+				// 		s+='<li>'+v.id+'</li>'
+				// 	})
+				}
+				s+='</li>'
+			}
+			s+='</ul>'
+			return s
+		}
+		function showTextDiff(delta) {
+			let s = ''
+			for (let d of delta) {
+				if (d.removed) {
+					s+='<del>'+d.value+'</del>'
+				} else if (d.added) {
+					s+='<ins>'+d.value+'</ins>'
+				} else {
+					s+=d.value
+				}
+			}
+			return s
+		}
+		function compareArrayValue(left,right) {
+			if (JSONTag.getType(left)=='object') {
+				return left.id==right?.id
+			} else if (JSONTag.getType(left)=='link') {
+				return left.value == right?.value
+			} else {
+				return left==right
+			}
+		} 
+		let d = ''
+		for (let propName in m['@properties']) {
+			let prop = m['@properties'][propName]
+			if (Array.isArray(prop.newValue)) {
+				let delta = Diff.diffArrays(prop.prevValue, prop.newValue, {
+					comparator: compareArrayValue
+				})
+				d += '<label class="changes-diff"><div>'+propName+'</div>'+showArrayDiff(delta)+'</label>'
+			} else if (typeof prop.newValue == 'string' || prop.newValue instanceof String) {
+				let delta = Diff.diffWords(prop.prevValue, prop.newValue)
+				d += '<label class="changes-diff"><div>'+propName+'</div>'+showTextDiff(delta)+'</label>'
+			} else {
+				throw new Error('Not Yet Implemented (diff only works on arrays and strings)')
+			}
+		}
+		return d
 	}
 
 	class MergedChanges {
@@ -205,7 +286,9 @@ const changes = (()=> {
 				}
 				contexts[context][type].push({
 					title: this[id]['@title'],
-					patch: this[id]
+					patch: this[id],
+					id: window.release.apiPath+'uuid/'+id,
+					diff: getPreviewDiff(this[id])
 				})
 			}
 			let result = []
@@ -235,10 +318,12 @@ const changes = (()=> {
 					'@type': _,
 					'@id': id
 				})
+				let dirty = e.dirty ? true : false
 				for (let prop in e['@properties']) {
 					commit.push({
 						id,
 						'@type': e['@type'],
+						dirty, 
 						property: prop,
 						prevValue: e['@properties'][prop].prevValue,
 						newValue: e['@properties'][prop].newValue
@@ -310,6 +395,7 @@ const changes = (()=> {
 				}
 			}
 			this.#actualNode = node
+			this.$mark = 'deleted'
 		}
 
 		undelete(parentArray) {
@@ -318,6 +404,7 @@ const changes = (()=> {
 				parentArray[index] = this.#actualNode
 			}
 		}
+
 	}
 
 	let insertedNodes = {}
@@ -329,7 +416,9 @@ const changes = (()=> {
 			this.#actualNode = node
 			let id = this.id ?? this.uuid
 			insertedNodes[id] = true
-		}	
+			this.$mark = 'inserted'
+		}
+
 	}
 
 	let changeHistory = new Changes()
@@ -387,11 +476,17 @@ const changes = (()=> {
 			walk(node, 0, (n) => {
 				let id = n.id ?? n.uuid
 				if (local[id] && local[id] instanceof ChangedNode) {
-					n['@mark'] = 'changed'
+					n.$mark = 'changed'
 					let localNode = local[id]
 					for (let lprop of Object.keys(localNode)) {
 						n[lprop] = localNode[lprop]
 					}
+				}
+				if (local[id] && local[id] instanceof InsertedLink) {
+					debugger
+				}
+				if (local[id] && local[id] instanceof DeletedLink) {
+					debugger
 				}
 			})
 		}
