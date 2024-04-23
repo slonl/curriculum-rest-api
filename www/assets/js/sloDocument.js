@@ -1,8 +1,3 @@
-/*
-@TODO : 
-
-*/
-
 const sloDocument = (function() {
   
   const options = {
@@ -11,63 +6,21 @@ const sloDocument = (function() {
   return function(settings, data) {
     options.container = settings.container
 
-    let selector = document.createElement('div');
-    let originalElement = '';
-    
-    /*
-    function getColumnDefinition(el) {
-      // column definitions are in options.columns
-      let visibleColumns = options.columns.filter(c => c.checked)
-      let siblingCells = Array.from(el.closest('tr').querySelectorAll('td'))
-      while (siblingCells[siblingCells.length-1]!==el) {
-        siblingCells.pop()
-      }
-      siblingCells.pop()
-      let focusColumn = siblingCells.length - 1 - (options.editMode ? 1 : 0)
-      let column = visibleColumns[focusColumn]
-      return column
-    }
-    */
 
-    function showSelector(rect, el) {
-      let titleContent = getTextDefinition(el)
-      
-      /*
-      if (!titleContent && typeof titleContent != 'undefined') {
-        return
-      }
-      */
-
-      //selector.dataset.simplyKeyboard = 'document-editor';
-      let currentUUID = browser.view.item.uuid
-      el.innerHTML = `<div><textarea name="${currentUUID}">${titleContent}</textarea></div>`
-      /*
-      let column = getColumnDefinition(el)
-      delete selector.dataset.simplyKeyboard
-      defaultViewer.call(selector, rect, offset, el)
-      if (column.viewer) {
-        column.viewer.call(selector, rect, offset, el)
-      }
-      */
+    function showEditor() {
+      let editBox = document.querySelector(".documentEditorWrapper");
+      editBox.style.display = "flex";
+      let title = getTitle()
+      let textEditor = editBox.querySelector("textarea");
+      document.body.dataset.simplyKeyboard = 'document-edit'  
+      textEditor.value = title;
+      textEditor.focus();
     }
 
-    function showEditor(el) {
-
-      originalElement = el;
-      console.log(originalElement);
-      let titleContent = getTextDefinition(el);
-      selector.dataset.simplyKeyboard = 'document-edit'; // @TODO : switch keyboard to 'document-edit' doesn't seem to work, as subsequently code in the databrowser.commands.document-edit with "ctrl+enter" doesn't work.
-      let currentUUID = browser.view.item.uuid;
-      el.innerHTML = `<div><form><textarea name="${currentUUID}" class="document-editor">${titleContent}</textarea></form></div>`;
-
-      // @TODO : maybe add a return element or something here so the ctrl+enter has an element to hook onto.
-    }
-
-    function hideEditor(el){
-      //el.innerHTML = "";
-      console.log(el)
-      console.log(originalElement);
-      el.innerHTML = originalElement;
+    function hideEditor(){
+      document.body.dataset.simplyKeyboard = 'document'
+      let editBox = document.querySelector(".documentEditorWrapper");
+      editBox.style.display = "none";
     }
 
     function move(indexIncrement){
@@ -123,7 +76,7 @@ const sloDocument = (function() {
         browser.view.item.uuid = nextID
     }
 
-    function getTextDefinition(el) {
+    function getTitle() {
        let currentUUID = browser.view.item.uuid
        let currentContent = data.index.get(currentUUID).title
        return currentContent;
@@ -134,70 +87,9 @@ const sloDocument = (function() {
       console.log(el)
       focussedElement = document.getElementsByClassName("document-editor")[0];
       console.log(focussedElement);
-
     }
 
-    // @TODO : figure out if this was the trick used to move the "click" "around".
-    // let clickListener
-    // function addClickSelectCell() {
-    //     if (clickListener) {
-    //         body.removeEventListener('click', clickListener)
-    //     }
-    //     clickListener = function(evt) {
-    //         let command = evt.target.closest('[data-simply-command]')
-    //         if (command) {
-    //             return
-    //         }
-    //         let cell = evt.target.closest('div')
-    //         if (cell) {
-    //             let current = body.querySelectorAll('.focus')
-    //             current.forEach(el => {
-    //                 el.classList.remove('focus')
-    //             })
-    //             cell.classList.add('focus')
-    //             cell.closest('span').classList.add('focus')
-    //             /*
-    //             let row = spreadsheet.findId(cell.closest('tr').id)
-    //             if (row!==null) {
-    //                 let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
-    //                 let column = columns.findIndex(td => td===cell)
-    //                 if (options.editMode) {
-    //                   column--
-    //                 }
-    //                 spreadsheet.goto(row,column)
-    //             }
-    //             */
-    //         }
-    //     }
-    //     body.addEventListener('click', clickListener)
-    // }
-    // addClickSelectCell();
-
-
     let sloDocument = {
-      selector: (el) => {
-        if (!el) {
-          selector.style.display = 'none'
-          return
-        }
-        selector.style.display = 'block'
-        let rect = el.getBoundingClientRect()
-        showSelector(rect, el)
-      },
-
-      saveChanges: (el) => {
-        saveChanges(el);
-      },
-
-      editor: async (el) => {
-          if (!el) {
-            selector.style.display = 'none'
-            return
-          }
-          selector.style.display = 'block'
-          //let offset = table.getBoundingClientRect()
-          showEditor(el)
-      },
      
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
@@ -274,25 +166,18 @@ const sloDocument = (function() {
             updateURL()
         }
       },
-      deselect: (el) => {
-        console.log("deselecting");
-        hideEditor(el)
-      },
+      showEditor,
+      hideEditor,
       setFocus: (el, value) =>{
         document.querySelectorAll('.focus').forEach(item => item.classList.remove('focus'));
-
         let newPosition = el.closest('.slo-entity');
         newPosition.classList.add("focus");
-
-        // @TODO : trigger a redraw or something if there is text being edited so as to "restore" that field in the DOM
-        //browser.actions.renderDocumentPage()
-
         updateURL()
       },
       saveChanges: (el) => {
         saveChanges(el)
-        rerenderView() // @TODO : still need to find a way that this works.
-        // hideEditor(el)
+        //rerenderView() // @TODO : still need to find a way that this works.
+        hideEditor()
       },
     }
 

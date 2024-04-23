@@ -551,44 +551,25 @@ var browser = simply.app({
                 browser.view.sloDocument.move(5)
             },
             "Enter": (e) => {
-                e.preventDefault()
-                if (browser.view.user) {
-                    let el = document.querySelector('.focus')
-                    browser.view.sloDocument.editor(el)
-                }
-            },
-            "Escape": (e) => {
                 e.preventDefault();
-                console.log("trying to discard changes");
-                if (browser.view.user) {
-                    let el = document.querySelector('.document-editor');
-                    browser.view.sloDocument.deselect(el);
-                }
-            }
-
-           
+                let weirdElement = e;
+                console.log(e);
+                browser.actions.documentShowEditor();
+            },           
         },
         "document-edit": {
             "Control+Enter": async (e) => {
                 // save changes, close editor
                 e.preventDefault();
-                console.log("saving changes");
-                if (browser.view.user) {
-                    //await browser.view.sloDocument.saveChanges()
-                    let el = document.querySelector('.document-editor');
-                    browser.view.sloDocument.saveChange(el);
-                }
+                browser.actions.documentSaveChanges()
             },
             "Escape": (e) => {
                 e.preventDefault();
-                console.log("discarding changes");
-                if (browser.view.user) {
-                    let el = document.querySelector('.document-editor');
-                    browser.view.sloDocument.deselect(el);
-                }
+                browser.actions.documentHideEditor()
             }
         },
     },
+
     commands: {
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
@@ -799,6 +780,9 @@ var browser = simply.app({
         },
         cancel: function(el, value){
             browser.actions.hideEditorDialog(el);
+        },
+        documentCloseEditor: function(){
+            browser.actions.documentHideEditor()
         }
     },
     actions: {
@@ -1067,15 +1051,6 @@ var browser = simply.app({
                 browser.view.sloSpreadsheet.render()
             })
         },
-        documentUpdate: function() {
-            // @TODO : figure out what this does: 
-            changes.getLocalView(browser.view.root)
-            let defs = slo.treeToRows(browser.view.root)
-
-            // @TODO : idem.
-            browser.view.sloDocument.update({data:defs.rows})
-            browser.view.sloDocument.render()
-        },
         renderDocumentPage: async function(root, context, niveau) {
             browser.view.documentList = []
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
@@ -1090,7 +1065,6 @@ var browser = simply.app({
                 browser.view.documentList =  [pageData.root]
 
                 // @TODO : might be replaced or removed if not needed anymore in the future.
-
                 browser.view.sloDocument = sloDocument(
                     {container : document.getElementById('slo-document')},
                     pageData
@@ -1404,10 +1378,18 @@ var browser = simply.app({
         editDocument(el, value){
             browser.view.sloDocument.setFocus(el, value);
         },
-        hideEditorDialog(el){
-            let buttonParentForm = el.parentElement;
-            let formParentDialog = buttonParentForm.parentElement
-            browser.view.sloDocument.hideEditorDialog(formParentDialog);
+        documentShowEditor(){
+            // @TODO: move code that agregates the data to be shown here and pass it as parameter(s) into showEditor()
+            // @NOTE : depending on context differen data will have to be displayed in the editor
+
+            browser.view.sloDocument.showEditor()
+        },
+        documentSaveChanges(){
+            // @TODO: documentSaveChanges should return the elements to be saved
+            browser.view.sloDocument.documentSaveChanges();
+        },
+        documentHideEditor(){
+            browser.view.sloDocument.hideEditor();
         }
         
     }
