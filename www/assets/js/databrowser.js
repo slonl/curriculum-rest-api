@@ -31,7 +31,7 @@ function arrayEquals(a, b) {
     if (a.length !== b.length) return false;
 
     for (var i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) return false;
+        if (a[i] !== b[i]) return false;
     }
     return true;
 }
@@ -752,14 +752,31 @@ var browser = simply.app({
             //find possible types for sibling and child of node
             //show popup with list of types
             browser.view.insertParentRow = el
-            let selectedType = await browser.actions.showTypeSelector(el)                
+            browser.actions.showTypeSelector(el)                
         },
-        selectType: async function(el, value) {
+        addChild: async function(el, value) {
             browser.actions.hideTypeSelector()
             //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
             el = browser.view.insertParentRow
             let row = await browser.actions.insertRow(el.closest('tr'),value)
             let line = browser.view.sloSpreadsheet.getLineByRow(row)
+            el = browser.view.sloSpreadsheet.goto(line-1, 1)
+            while (!browser.view.sloSpreadsheet.isEditable(el)) {
+                el = browser.view.sloSpreadsheet.moveNext()
+            }
+            browser.view.sloSpreadsheet.editor(el)
+        },
+        addSibling: async function(el, value) {
+            browser.actions.hideTypeSelector()
+            // find parent node
+            el = browser.view.insertParentRow
+            let row = browser.view.sloSpreadsheet.getRow(el)
+            let type = row.node.type
+            // add new sibling after current node
+            // update spreadsheet
+            let newrow = await browser.actions.appendRow(el.closest('tr'), type)
+            let line = browser.view.sloSpreadsheet.getLineByRow(newrow)
+            // show editor for first editable field in new node
             el = browser.view.sloSpreadsheet.goto(line-1, 1)
             while (!browser.view.sloSpreadsheet.isEditable(el)) {
                 el = browser.view.sloSpreadsheet.moveNext()
@@ -1144,12 +1161,9 @@ var browser = simply.app({
             var url = window.release.apiPath+'register/';
             window.slo.api.get(url + "?email=" + email);
         },
-        insertRow: async function(rowEl, type, parent=null) {
-            //FIXME: implement parent
+        insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
             let visibleRows = browser.view.sloSpreadsheet.visibleData
-            // rowNumber = browser.view.sloSpreadsheet.options.focus.row
-            // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
             let node = {
@@ -1162,16 +1176,9 @@ var browser = simply.app({
             if (!parentNode[type]) {
                 parentNode[type] = []
             }
-            //FIXME: add the node id to the index
             let prevValue = parentNode[type].slice()
             let newValue = parentNode[type].slice()
             newValue.unshift(new changes.InsertedLink(node))
-/*            parentNode[type].unshift(node)
-            let data = slo.treeToRows(browser.view.root)
-            browser.view.sloSpreadsheet.update({
-                data: data.rows
-            })
-*/
             // now add this to the change history
             let timestamp =  new Date().toISOString()
             let change = new changes.Change({
@@ -1187,25 +1194,57 @@ var browser = simply.app({
                 prevValue: prevValue,
                 newValue: newValue,
                 dirty: true,
-/*                child: {
-                    id: '/uuid/'+node.id,
-                    meta: {
-                        context: window.slo.getContextByType(node['@type']),
-                        type: node['@type']
-                    },
-                    uuid: node.uuid,
-                    prefix: node.prefix,
-                    unreleased: true
-                }
-*/
             })
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            // find inserted row, return it
-//            row = browser.view.sloSpreadsheet.getRowByNode(node)
-//            let line = browser.view.sloSpreadsheet.getLineByRow(row)
-//            return browser.view.sloSpreadsheet.getRowByLine(line+1)
+            let line = browser.view.sloSpreadsheet.findId(node['@id'])
+            return browser.view.sloSpreadsheet.getRowByLine(line+1)
+        },
+        appendRow: async function(rowEl) {
+            if (!browser.view.user) return
+            let visibleRows = browser.view.sloSpreadsheet.visibleData
+            let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let siblingNode = row.node
+            let type = siblingNode['@type']
+            let node = {
+                id: curriculum.uuid(),
+                '@type': type,
+                'prefix': siblingNode.prefix,
+                'unreleased': true
+            }
+            node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
+            let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+            let parentNode = parentRow.node
+            if (!parentNode[type]) {
+                parentNode[type] = []
+            }
+            let prevValue = parentNode[type].slice()
+            let newValue = parentNode[type].slice()
+            let index = parentNode[type].findIndex(n => n.id == siblingNode.id)
+            newValue.splice(index+1, 0, new changes.InsertedLink(node))
+
+            // now add this to the change history
+            let timestamp =  new Date().toISOString()
+            let change = new changes.Change({
+                id: parentNode.id ?? parentNode.uuid,
+                meta: {
+                    context: window.slo.getContextByType(parentNode['@type']),
+                    title: parentNode.title,
+                    type: parentNode['@type'],                    
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'insert',
+                property: type,
+                prevValue: prevValue,
+                newValue: newValue,
+                dirty: true,
+            })
+            changes.changes.push(change)
+            changes.update()
+            await browser.actions.spreadsheetUpdate()
+            let line = browser.view.sloSpreadsheet.findId(node['@id'])
+            return browser.view.sloSpreadsheet.getRowByLine(line+1)
         },
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
@@ -1248,7 +1287,13 @@ var browser = simply.app({
             let type = row.node['@type']
 
             let prevValue = parentNode[type].slice()
-            let newValue = prevValue.filter(e => (e.id !== row.node.id))
+            let newValue = prevValue.map(e => { 
+                if (e.id==row.node.id) {
+                    return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                } else {
+                    return e
+                }
+            }) //filter(e => (e.id !== row.node.id))
             let timestamp = new Date().toISOString()
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
@@ -1270,11 +1315,18 @@ var browser = simply.app({
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
-            let thisType = browser.view.sloSpreadsheet.getRow(el).node['@type']
+            let row = browser.view.sloSpreadsheet.getRow(el)
+            let thisType = row.node['@type']
             let childTypes = slo.getAvailableChildTypes(thisType)
-            // @FIXME: add parent types as well
+            let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+            let siblingTypes = []
+            if (parentRow) {
+                let parentType = parentRow.node['@type']
+                siblingTypes = slo.getAvailableChildTypes(parentType)
+            }
 
             browser.view.availableTypes = childTypes
+            browser.view.siblingTypes = siblingTypes
             document.body.dataset.simplyKeyboard = 'spreadsheet-types'
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
