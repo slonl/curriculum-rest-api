@@ -6,6 +6,9 @@ const sloDocument = (function() {
   return function(settings, data) {
     options.container = settings.container
 
+    // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
+    let currentIdentifier;
+
 
     function showEditor() {
       let editBox = document.querySelector(".documentEditorWrapper");
@@ -15,6 +18,8 @@ const sloDocument = (function() {
       document.body.dataset.simplyKeyboard = 'document-edit'  
       textEditor.value = title;
       textEditor.focus();
+      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
+
     }
 
     function hideEditor(){
@@ -52,7 +57,7 @@ const sloDocument = (function() {
 
       scrollIntoView(nodes, itemIndex)
       nodes[itemIndex].classList.add("focus");
-      updateURL();
+      
     }
 
     function scrollIntoView(nodes, itemIndex){
@@ -78,15 +83,26 @@ const sloDocument = (function() {
 
     function getTitle() {
        let currentUUID = browser.view.item.uuid
+       currentIdentifier = currentUUID;
        let currentContent = data.index.get(currentUUID).title
        return currentContent;
     }
 
-    function saveChanges(el){
-      console.log("saving changes")
-      console.log(el)
-      focussedElement = document.getElementsByClassName("document-editor")[0];
-      console.log(focussedElement);
+    function  documentSaveChanges(){
+      let editBox = document.querySelector(".documentEditorWrapper");
+      let textEditor = editBox.querySelector("textarea");
+      console.log(textEditor.value);
+      let dataToSave = textEditor.value;
+
+      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
+      // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
+      console.log(currentIdentifier);
+      console.log(dataToSave)
+      
+      // @TODO get the item type and UUID to save the data in the right place (right place TDB)
+      // @TODO write changes tot the "changes stack"
+      // data.index.get(currentIdentifier).title = dataToSave;     
+      console.log("saving changes");
     }
 
     let sloDocument = {
@@ -94,6 +110,7 @@ const sloDocument = (function() {
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
         move(indexIncrement);
+        updateURL();
       },
 
       moveTo : (destination) => {
@@ -125,7 +142,6 @@ const sloDocument = (function() {
             itemIndex = 0;
             scrollIntoView(nodes, itemIndex)
             nodes[itemIndex].classList.add("focus");
-            updateURL()
           break;
           case "bottom":
             focussedElement;
@@ -149,7 +165,6 @@ const sloDocument = (function() {
             itemIndex = nodes.length -1;
             scrollIntoView(nodes, itemIndex)
             nodes[itemIndex].classList.add("focus");
-            updateURL()
           break;
           case 'left':{
             move(-1);  
@@ -163,8 +178,8 @@ const sloDocument = (function() {
             itemIndex = Math.floor(nodes.length /2) //if all goes wrong just go to the middle of the page
             scrollIntoView(nodes, itemIndex)
             nodes[itemIndex].classList.add("focus");
-            updateURL()
         }
+        updateURL();
       },
       showEditor,
       hideEditor,
@@ -174,10 +189,11 @@ const sloDocument = (function() {
         newPosition.classList.add("focus");
         updateURL()
       },
-      saveChanges: (el) => {
-        saveChanges(el)
-        //rerenderView() // @TODO : still need to find a way that this works.
+      documentSaveChanges: () => {
+        documentSaveChanges()
         hideEditor()
+        // @TODO rerender page showing edits on inserted green lines and crowssed through red lines
+        updateURL(); // @TODO: check if it's needed
       },
     }
 

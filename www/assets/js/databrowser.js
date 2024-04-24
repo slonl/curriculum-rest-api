@@ -552,14 +552,11 @@ var browser = simply.app({
             },
             "Enter": (e) => {
                 e.preventDefault();
-                let weirdElement = e;
-                console.log(e);
                 browser.actions.documentShowEditor();
             },           
         },
         "document-edit": {
             "Control+Enter": async (e) => {
-                // save changes, close editor
                 e.preventDefault();
                 browser.actions.documentSaveChanges()
             },
@@ -1385,6 +1382,7 @@ var browser = simply.app({
             browser.view.sloDocument.showEditor()
         },
         documentSaveChanges(){
+            
             // @TODO: documentSaveChanges should return the elements to be saved
             browser.view.sloDocument.documentSaveChanges();
         },
