@@ -268,9 +268,11 @@ const spreadsheet = (function() {
       </label>
     </div>
   </div>
-  <textarea name="${name}" class="spreadsheet-editor">${value}</textarea>
+  <div class="spreadsheet-autosize">
+    <textarea name="${name}" data-simply-activate="autosize" rows="1" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}">${value}</textarea>
+  </div>
 </form>`
-          selector.querySelector('textarea').style.height = selectorRect.height + 'px'
+          selector.querySelector('textarea').style['height'] = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break
       }
@@ -694,6 +696,11 @@ const spreadsheet = (function() {
         if (params.data) {
           spreadsheet.data = params.data
         }
+        if (params.rows) {
+          options.rows = params.rows
+          datamodel.options.rows = params.rows
+          datamodel.update()
+        }
         renderBody()
       },
       render: () => {
@@ -855,3 +862,11 @@ const spreadsheet = (function() {
     return spreadsheet
   }
 })()
+
+simply.activate.addListener('autosize', function() {
+    this.addEventListener('input', () => {
+        this.parentNode.dataset.replicatedValue = this.value
+        //@TODO: this makes the textarea only grow, never shrink, but it is re-initialized on navigation, so all good for now
+        this.style.height = this.parentNode.getBoundingClientRect().height+'px'
+    })
+})
