@@ -370,6 +370,13 @@ var browser = simply.app({
                 browser.view.sloSpreadsheet.moveRight()
                 e.preventDefault()
             },
+            "F2": (e) => {
+                e.preventDefault()
+                if (browser.view.user) {
+                    let el = document.querySelector('td.focus')
+                    browser.view.sloSpreadsheet.editor(el)
+                }
+            },
             "Enter": (e) => {
                 e.preventDefault()
                 if (browser.view.user) {
@@ -512,6 +519,14 @@ var browser = simply.app({
                 await browser.view.sloSpreadsheet.saveChanges()
                 let el = document.querySelector('td.focus')
                 browser.view.sloSpreadsheet.selector(el)
+            },
+            "Enter": async (e) => {
+                let textarea = document.querySelector('.spreadsheet-editor')
+                if (textarea.classList.contains('spreadsheet-editor-type-text') ||
+                    textarea.classList.contains('.spreadsheet-editor-type-tree')
+                ) {
+                    e.preventDefault() // use shift-enter to add a linebreak
+                }
             }
         },
         document: {
@@ -582,6 +597,7 @@ var browser = simply.app({
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
           column.checked = el.checked
+          localStorage.setItem('spreadsheet-columns', JSON.stringify(browser.view.sloSpreadsheet.options.columns))
           browser.view.sloSpreadsheet.render()
         },
         toggleDirty: (el, value) => {
@@ -1052,9 +1068,14 @@ var browser = simply.app({
                 browser.view.root = json
                 changes.getLocalView(browser.view.root)
                 let defs = slo.treeToRows(browser.view.root)
+                let prevColumns = JSON.parse(localStorage.getItem('spreadsheet-columns') ?? '[]')
+                for (let column of prevColumns) {
+                    let c = defs.columns.find(c => c.name==column.name)
+                    if (c) {
+                        c.checked = column.checked
+                    }
+                }
                 browser.view.view = 'spreadsheet';
-                // @TODO : als browser.view.user, dan editmode enablen
-                // @TODO : on window resize, recalculate
                 let panel = document.querySelector('.slo-content-panel')
                 let rect = panel.getBoundingClientRect()
                 let rowHeight = 27
@@ -1068,6 +1089,16 @@ var browser = simply.app({
                 }, defs.rows)
                 browser.view.sloSpreadsheet.render()
             })
+        },
+        spreadsheetResize: async function() {
+            let panel = document.querySelector('.slo-content-panel')
+            let rect = panel.getBoundingClientRect()
+            let rowHeight = 27
+            let rows = Math.floor(rect.height / rowHeight) - 3
+            browser.view.sloSpreadsheet.update({
+                rows
+            })
+            browser.view.sloSpreadsheet.render()
         },
         renderDocumentPage: async function(root, context, niveau) {
             browser.view.documentList = []
@@ -1323,14 +1354,13 @@ var browser = simply.app({
             let thisType = row.node['@type']
             let childTypes = slo.getAvailableChildTypes(thisType)
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
-            let siblingTypes = []
+            let siblingType = ''
             if (parentRow) {
-                let parentType = parentRow.node['@type']
-                siblingTypes = slo.getAvailableChildTypes(parentType)
+                siblingType = parentRow.node['@type']
             }
 
             browser.view.availableTypes = childTypes
-            browser.view.siblingTypes = siblingTypes
+            browser.view.siblingType = siblingType
             document.body.dataset.simplyKeyboard = 'spreadsheet-types'
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
@@ -1470,3 +1500,9 @@ if (user && key) {
 
 browser.view.changes = changes
 browser.view.dirtyChecked = true
+
+window.addEventListener('resize', (e) => {
+    if (browser.view.view == 'spreadsheet') {
+        browser.actions.spreadsheetResize()
+    }
+})

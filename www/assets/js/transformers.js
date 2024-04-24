@@ -92,3 +92,9 @@
             return data
         }
     }
+
+    simply.activate.addListener('autosize', function() {
+        this.addEventListener('input', () => {
+            this.parentNode.dataset.replicatedValue = this.value
+        })
+    })
