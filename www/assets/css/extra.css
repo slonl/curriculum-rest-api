@@ -404,3 +404,11 @@ body.ds-paging .slo-header .ds-paging {
     z-index: -1;
     position: absolute;
 }
+
+.slo-menu:fullscreen {
+    xdisplay: none;
+    background-color: red;
+    xwidth: 0;
+    xtop: 0;
+    xleft: 0;
+}

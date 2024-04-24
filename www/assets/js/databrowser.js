@@ -663,9 +663,13 @@ var browser = simply.app({
             })
             el.closest('tr').classList.toggle('closed')
         },
-        openTree: function(el, value) {
-            browser.view.sloSpreadsheet.options.closed = {}
-            browser.view.sloSpreadsheet.update()
+        toggleFullscreen: function(el, value) {
+            let state = "open";
+            if (el.dataset.simplyState == "open") {
+                state = "close"
+            }
+            el.dataset.simplyState = state;
+            browser.actions.toggleFullScreen(state);
         },
         sort: (el,value) => {
           browser.view.sloSpreadsheet.update({
@@ -1424,6 +1428,9 @@ var browser = simply.app({
 
             return true
         },
+        toggleFullScreen(state){
+            browser.view.sloSpreadsheet.toggleFullScreen(state);
+        },
         editDocument(el, value){
             browser.view.sloDocument.setFocus(el, value);
         },
@@ -1463,4 +1470,3 @@ if (user && key) {
 
 browser.view.changes = changes
 browser.view.dirtyChecked = true
-

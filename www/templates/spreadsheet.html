@@ -15,10 +15,13 @@
                     <option data-simply-field="context"></option>
                 </template>
             </select>
-            <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
-                <svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
+            <button class="ds-button ds-icon-button ds-button-naked" data-simply-command="toggleFullscreen" data-simply-state="close">
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="close">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#minimize-2"></use>
                 </svg>
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="open">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2">
+                </use></svg>
             </button>
         </div>
         <nav class="ds-crumbs">

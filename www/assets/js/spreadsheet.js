@@ -154,6 +154,14 @@ const spreadsheet = (function() {
         };
     }
 
+    function toggleFullScreen(state) {
+      if (state == "open") {
+        document.querySelector(".slo-content-panel").requestFullscreen();  // @FIXME : should be in action and trasmitted as parameter
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    
     datamodel.addPlugin('order', createSort({
       name: 'sort',
       sortBy: 'prefix',
@@ -850,7 +858,8 @@ const spreadsheet = (function() {
       getLineByRow: (row) => {
         return datamodel.view.visibleData.findIndex(r => r==row)
       },
-      getColumnDefinition
+      getColumnDefinition,
+      toggleFullScreen
     }
     return spreadsheet
   }
