@@ -428,3 +428,17 @@ body.ds-paging .slo-header .ds-paging {
     padding: 0 0.5em;
     grid-area: 1 / 1 / 2 / 2;
 }
+
+:fullscreen .slo-menu {
+    display: none;
+}
+
+:fullscreen .slo-content-panel {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+:fullscreen footer {
+    display: none;
+}

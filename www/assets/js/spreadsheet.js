@@ -156,7 +156,7 @@ const spreadsheet = (function() {
 
     function toggleFullScreen(state) {
       if (state == "open") {
-        document.querySelector(".slo-content-panel").requestFullscreen();  // @FIXME : should be in action and trasmitted as parameter
+        document.body.requestFullscreen();  // @FIXME : should be in action and trasmitted as parameter
       } else {
         document.exitFullscreen();
       }
