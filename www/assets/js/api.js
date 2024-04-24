@@ -154,11 +154,11 @@
             'curriculum-fo':{
                 title: 'Curriculum Funderend onderwijs',
                 data: {
-                    fo_domein: 'Domein',
-                    fo_subdomein: 'Subdomein',
-                    fo_doelzin: 'Doelzin',
-                    fo_toelichting: 'Toelichting',
-                    fo_uitwerking: 'Uitwerking'
+                    fo_domein: 'FoDomein',
+                    fo_subdomein: 'FoSubdomein',
+                    fo_doelzin: 'FoDoelzin',
+                    fo_toelichting: 'FoToelichting',
+                    fo_uitwerking: 'FoUitwerking'
                 }
             },
             'curriculum-samenhang': {
@@ -324,7 +324,9 @@
             }
 
             function getColumns(n) {
-                let validColumns = Object.keys(n).filter(c => c[0].match(/[a-z]/))
+                let validColumns = Object.keys(n)
+                    .filter(c => c[0].match(/[a-z]/))
+                    .filter(c => ['uuid','dirty','unreleased','hasChildren'].indexOf(c)===-1)
                 let columns = {
                     id: n['@id'],
                     type: n['@type'],
@@ -485,7 +487,7 @@
                     sortable: true,
                     filterable: true
                 }
-                if (columnValues.length<=15) {
+                if (columnValues.length<=15 && columnDefinition.name!='Description') { //@FIXME: allow switch to textarea from list type that is set like this?
                     columnDefinition.type = 'list'
                     columnDefinition.values = Object.keys(allColumns[c]).map(name => {
                         return {

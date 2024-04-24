@@ -1331,14 +1331,13 @@ var browser = simply.app({
             let thisType = row.node['@type']
             let childTypes = slo.getAvailableChildTypes(thisType)
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
-            let siblingTypes = []
+            let siblingType = ''
             if (parentRow) {
-                let parentType = parentRow.node['@type']
-                siblingTypes = slo.getAvailableChildTypes(parentType)
+                siblingType = parentRow.node['@type']
             }
 
             browser.view.availableTypes = childTypes
-            browser.view.siblingTypes = siblingTypes
+            browser.view.siblingType = siblingType
             document.body.dataset.simplyKeyboard = 'spreadsheet-types'
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
