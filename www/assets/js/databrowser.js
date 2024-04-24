@@ -1506,3 +1506,22 @@ window.addEventListener('resize', (e) => {
         browser.actions.spreadsheetResize()
     }
 })
+
+// @TODO : change the fullscreen icon according to the fullscreen state:
+// @TODO : COuldn't get to the right el element to make the following work:
+/*
+document.addEventListener("fullscreenchange", (event) => {
+    console.log("changing screen mode")
+    console.log(document.fullscreenEnabled)
+    let el = document.body.querySelector('.fullscreenToggle')
+    console.log(el)
+    if(document.fullscreenElement !== null){
+      console.log("going to fullscreen")
+     el.dataset.simplyState = "close"
+    }
+    if (document.fullscreenElement == null){
+      console.log("leaving fullscreen")
+      el.dataset.simplyState = "close"
+    }
+});
+*/
