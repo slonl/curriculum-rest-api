@@ -442,3 +442,6 @@ body.ds-paging .slo-header .ds-paging {
 :fullscreen footer {
     display: none;
 }
+.ds-paging .ds-button {
+    display: unset; /* FIXME: slo.css incorrectly sets this to block */
+}
