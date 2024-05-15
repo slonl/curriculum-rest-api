@@ -715,11 +715,11 @@ var browser = simply.app({
             }
         },
         nextPage: function(el,value) {
-            page = Math.min(browser.view.max-1, parseInt(browser.view.page));
+            page = Math.min(browser.view.max, parseInt(browser.view.page)+1);
             browser.actions.updatePage(page);
         },
         previousPage: function(el,value) {
-            page = Math.max(0, browser.view.page-2);
+            page = Math.max(0, parseInt(browser.view.page)-1);
             browser.actions.updatePage(page);
         },
         register : function(el, value) {
@@ -1022,13 +1022,10 @@ var browser = simply.app({
             });
         },
         updatePage: function(page) {
-            window.location.search =
-            '?'+Object.keys(browser.view.params).map(function(key) {
-                if (key=='page') {
-                    return 'page='+page;
-                }
-                return encodeURIComponent(key)+'='+encodeURIComponent(browser.view.params[key]);
-            }).join('&');
+            browser.view.page = page
+            let url = new URL(document.location)
+            url.searchParams.set('page', page)
+            window.location = url.href
         },
         list: function(type) {
             browser.view['listTitle'] = titles[type];
@@ -1483,6 +1480,11 @@ var browser = simply.app({
 });
 
 browser.view.pageSize = 100;
+browser.view.page = 1;
+let url = new URL(document.location)
+if (url.searchParams.has('page')) {
+    browser.view.page = parseInt(url.searchParams.get('page'));
+}
 let user = localStorage.getItem('username')
 let key = localStorage.getItem('key')
 if (user && key) {
