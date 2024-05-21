@@ -531,39 +531,7 @@
                     if( Array.isArray(value)){
 
                         switch (key){
-     
-                            case 'Doel':
-                            case 'ErkLesidee':
-                            case 'ErkVoorbeeld':
-                            case 'FoToelichting':
-                            case 'FoUitwerking':
-                            case 'InhSubcluster':
-                            case 'KerndoelDomein':
-                            case 'KerndoelUitstroomprofiel':
-                            case 'LdkVakinhoud':
-                            case 'LdkVakbegrip':
-                            case 'Leerlingtekst':
-                            case 'LpibVakinhoud':
-                            case 'RefDeelonderwerp':
-                            case 'RefTekstkenmerk':
-                            case 'Vakleergebied':
-                                for(let child of value){
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
 
-                            // @TODO : this one might be broken: value is an empty array.
-                            case 'Examenprogramma':
-                                //console.log("Examenprogramma")
-                                //console.log(value)
-                                for(let child of value){
-                                    //console.log("Examenprogramma child:  ")
-                                    //console.log(child)
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
-                            
-                            //case 'ExamenprogrammaDomein':
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
                                     // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
@@ -578,16 +546,19 @@
                             break;
 
                             case 'Doelniveau':
-                                for(let doelNiveau of value){
+                                for(let doelNiveau of value){                     
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
+                                        //console.log("hoisting doelNiveau: ", doelNiveau.Doel[0].title); // @TODO: remove when done debugging
+                                        
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
-                                        dataObj['documentLeafNode'].push(hoistedChild);
 
+                                        console.log(hoistedChild)
+                                        dataObj['documentLeafNode'].push(hoistedChild);
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
-                                    }
-                                
+                                        //console.log("naar LeafNode", doelNiveau);
+                                    }         
                                 };
                             break;
 
@@ -595,7 +566,6 @@
                                 for(let child of value){
                                     dataObj['documentTextNode'].push(child);
                                     documentData.index.set(child.id , child);
-
                                 };
                             break;
                             
@@ -604,10 +574,11 @@
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                                
+
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
+                                        //console.log("hoisting child niveau: ", child.Niveau); // @TODO: remove when done debugging
                                         dataObj['documentNiveauIndex'].push(child.Niveau);
                                         documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
@@ -674,6 +645,7 @@
             }
 
             documentData.root = formatDocumentData(node);
+            console.log(JSON.stringify(documentData));
 
             //documentData = JSON.parse(JSON.stringify(documentData));
 
