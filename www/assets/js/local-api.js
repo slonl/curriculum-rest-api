@@ -16,11 +16,12 @@ window.localAPI = (function() {
                 niveau, context
             })
             .then(function(json) {
-                changes.getLocalView(browser.view.root)
+                changes.getLocalView(json)
                 //add inserted entities matching root, context, niveau
                 return json
             })
             .catch(function(error) {
+            	alert('nyi')
             	//if root is inserted entity, return it, filter children on context and niveau
             	//return json
             })
@@ -35,6 +36,7 @@ window.localAPI = (function() {
                 return json
             })
             .catch(function(error) {
+            	alert('nyi')
             	//if root is inserted entity, return it, filter children on context and niveau
             	//return json
             })
@@ -73,6 +75,7 @@ window.localAPI = (function() {
                 return json
             })
             .catch(function(error) {
+            	alert('nyi')
             	// return inserted entity matching id, niveau, type
 //                return json
             })
@@ -80,6 +83,7 @@ window.localAPI = (function() {
         roots: function(id) {
         	return window.slo.api.get(window.release.apiPath+'roots/'+id)
         	.catch(function(error) {
+            	alert('nyi')
         		//if id is inserted entity, return its roots property
         		//return json
         	})
