@@ -1188,7 +1188,7 @@ var browser = simply.app({
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
             let node = {
-                id: curriculum.uuid(),
+                id: uuid(),
                 '@type': type,
                 'prefix': parentNode.prefix,
                 'unreleased': true
@@ -1229,7 +1229,7 @@ var browser = simply.app({
             let siblingNode = row.node
             let type = siblingNode['@type']
             let node = {
-                id: curriculum.uuid(),
+                id: uuid(),
                 '@type': type,
                 'prefix': siblingNode.prefix,
                 'unreleased': true
