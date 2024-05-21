@@ -19,7 +19,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.Kerndoel.length
+				count: data.Kerndoel.length,
+				root: data.schema.types.Kerndoel.root
 			}
 
 			meta
@@ -49,7 +50,8 @@ module.exports = {
 		  const meta = {
 			data: results,
 			page: Page,
-			count: data.KerndoelDomein.length
+			count: data.KerndoelDomein.length,
+				root: data.schema.types.KerndoelDomein.root
 		}
 
 		meta
@@ -72,7 +74,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.KerndoelUitstroomprofiel.length
+				count: data.KerndoelUitstroomprofiel.length,
+				root: data.schema.types.KerndoelUitstroomprofiel.root
 			}
 
 			meta
@@ -91,7 +94,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.KerndoelVakleergebied.length
+				count: data.KerndoelVakleergebied.length,
+				root: data.schema.types.KerndoelVakleergebied.root
 			}
 
 			meta

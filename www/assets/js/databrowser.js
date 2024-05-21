@@ -833,26 +833,29 @@ var browser = simply.app({
             return true
         },
         loadSchemas: async function() {
-            let schemas = []
-            let baseURL = 'https://opendata.slo.nl/curriculum/schemas/'
-            window.curriculum = new Curriculum()
-            Object.entries(slo.contexts).forEach(([context,temp]) => {
-                schemas.push(
-                    fetch(baseURL+context+'/context.json')
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json()
-                        }
-                        console.error(baseURL+context+'/context.json: '+response.status+': '+response.statusText)
-                    })
-                    .then(json => curriculum.parseSchema(json))
-                )
-            })
-            return Promise.allSettled(schemas)
-            .then(values => values
-                .filter(schema => schema.status=='fulfilled')
-                .map(schema => schema.value)
-            )
+            slo.contexts = {}
+            let schemas = await window.localAPI.schemas()
+            for (let schemaName in schemas.contexts) {
+                let schema = schemas.contexts[schemaName]
+                if (!schema.label) {
+                    continue
+                }
+                let schemaLabel = 'curriculum-'+schema.label
+                delete schema.label
+                schema.name = schemaName
+                let contextData = {}
+                for (let typeName in schema) {
+                    let typeLabel = schema[typeName].label
+                    contextData[typeLabel] = typeName
+                }
+                slo.contexts[schemaLabel] = {
+                    title: schemaName,
+                    data: contextData,
+                    schema
+                }
+            }
+            initContexts()
+            return schemas
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
@@ -865,22 +868,24 @@ var browser = simply.app({
                 return
             }
 
-            let currentItem, currentId, roots, currentType, currrentContext;
+            let currentItem, currentId, currentType, currrentContext;
             
             switch(view) {
                 case 'item':
                     document.body.setAttribute('data-simply-keyboard','item')
+                    this.app.actions.updatePaging()
                     // get focused item
                     return this.app.actions.item(id)
                     // switch to that
                 break;
                 case 'spreadsheet':
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
+                    this.app.actions.updatePaging()
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                     //FIXME: uuid may not exist remote, but just been added
                     if (!root) {
-                        roots = await window.slo.api.get('/roots/'+currentItem)
+                        let roots = await window.localAPI.roots(currentItem)
                         if (roots) {
                             this.app.view.roots = roots
                         }
@@ -968,11 +973,12 @@ var browser = simply.app({
                 break;
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
+                    this.app.actions.updatePaging()
                     currentItem = id
                     currentId = this.app.view.item['@id']
                     // get roots of current item
                     try {
-                        let roots = await window.slo.api.get('/roots/'+currentItem)
+                        let roots = await window.localAPI.roots(currentItem)
                         if (roots) {
                             this.app.view.roots = roots
                         }
@@ -1001,7 +1007,7 @@ var browser = simply.app({
                     if (!this.app.view.niveaus) {
                         this.app.view.niveaus = [];
                     }
-                    await this.app.actions.renderDocumentPage(this.app.view.root.id,this.app.view.contexts,this.app.view.niveaus)
+                    await this.app.actions.document(this.app.view.root.id,this.app.view.contexts,this.app.view.niveaus)
                     
                     let documentModel = window.slo.getDataModel('items');
 
@@ -1028,24 +1034,24 @@ var browser = simply.app({
             window.location = url.href
         },
         list: function(type) {
-            browser.view['listTitle'] = titles[type];
+            browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
-            return window.slo.api.get(window.release.apiPath+type, {
-                pageSize: browser.view.pageSize,
-                page: parseInt(browser.view.page)-1
-            })
+            return window.localAPI.list(type)
             .then(function(json) {
+                browser.view.context = window.slo.getContextByType(window.titles[type])
+                browser.view.contextLink = {
+                    href: '/'+browser.view.context+'/',
+                    innerHTML: slo.contexts[browser.view.context].title
+                }
+
                 browser.view.view = 'list';
-                changes.getLocalView(json.data)
                 browser.view.list = json.data;
-                browser.view['listTitle'] = titles[type];
-                console.log(titles[type],browser.view['listTitle']);
+                browser.view['listTitle'] = window.titles[type];
+                browser.view.listIsRoot = json.root;
                 browser.actions.updatePaging(json.count);
-//                    editor.addDataSource('list', {
-//                        load: json
-//                    });
             })
             .catch(function(error) {
+                //FIXME: add error handling
             });
         },
         spreadsheetUpdate: function() {
@@ -1058,12 +1064,9 @@ var browser = simply.app({
         editText : function(){
         },
         spreadsheet: function(root, context, niveau) {
-            return window.slo.api.get(window.release.apiPath+'tree/'+root, {
-                niveau, context
-            })
+            return window.localAPI.spreadsheet(root, context, niveau)
             .then(function(json) {
                 browser.view.root = json
-                changes.getLocalView(browser.view.root)
                 let defs = slo.treeToRows(browser.view.root)
                 let prevColumns = JSON.parse(localStorage.getItem('spreadsheet-columns') ?? '[]')
                 for (let column of prevColumns) {
@@ -1097,14 +1100,11 @@ var browser = simply.app({
             })
             browser.view.sloSpreadsheet.render()
         },
-        renderDocumentPage: async function(root, context, niveau) {
+        document: async function(root, context, niveau) {
             browser.view.documentList = []
-            return window.slo.api.get(window.release.apiPath+'tree/'+root, {
-                niveau, context
-            })
+            return window.localAPI.document(root, context, niveau)
             .then(async function(json) {
                 browser.view.root = json
-                changes.getLocalView(json)
                 browser.view.view = 'document';
                 let pageData = await window.slo.documentPage(json)
                 // @TODO : render the root instead of the array ( remove the "[]" )
@@ -1118,58 +1118,47 @@ var browser = simply.app({
             })
         },
         doelniveauList: function(type) {
-            browser.view['listTitle'] = titles[type];
+            browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
-            return window.slo.api.get(window.release.apiPath+type)
+            return window.localAPI.doelniveauList(type)
             .then(function(json) {
-                changes.getLocalView(json.data)
                 browser.view.view = 'doelniveauList';
                 changes.getLocalView(json.data)
                 browser.view.list = json.data;
-                browser.view['listTitle'] = titles[type];
-                console.log(titles[type],browser.view['listTitle']);
+                browser.view['listTitle'] = window.titles[type];
+                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
             });
         },
         item: function(id) {
-            return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
+            return window.localAPI.item(id)
             .then(function(json) {
-                changes.getLocalView(json)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
-//                window.setTimeout(() => {
-                    //FIXME: browser.view.item can keep previous arrays if you don't
-                    //clear them first, then wait a short while and fill item again
-                    //that is either simplyview's view code, or simplyedits list code
-                    // setting a clone also fixes the issue it appears
-//                    browser.view.item = json;
-                    if (browser.view.preferedView && browser.view.preferedView!='item') {
-                        browser.actions.switchView(browser.view.preferedView)
-                        return
-                    }
-                    browser.view.view = 'item';
-                    browser.actions.updatePaging();
-//                }, 100) // don't decrease this, or you will get simplyedit errors dataParent undefined
+                if (browser.view.preferedView && browser.view.preferedView!='item') {
+                    browser.actions.switchView(browser.view.preferedView)
+                    return
+                }
+                browser.view.view = 'item';
+                browser.actions.updatePaging();
             });
         },
         listOpNiveau: function(niveau, type) {
-            browser.view['listTitle'] = titles[type];
+            browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
-            return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
+            return window.localAPI.listOpNiveau(niveau, type)
             .then(function(json) {
                 browser.view.view = 'list';
-                changes.getLocalView(json)
                 browser.view.list = json;
-                browser.view['listTitle'] = titles[type];
-                console.log(titles[type],browser.view['listTitle']);
+                browser.view['listTitle'] = window.titles[type];
+                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging();
             });
         },
         itemOpNiveau: function(niveau, type, id) {
-            return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
+            return window.localAPI.itemOpNiveau(niveau, type, id)
             .then(function(json) {
                 browser.view.view = 'item';
-                changes.getLocalView(json)
                 browser.view.item = json;
                 browser.actions.updatePaging();
             });
@@ -1491,16 +1480,15 @@ if (user && key) {
     browser.view.user = user
     browser.view.loggedIn = true
     slo.api.token = btoa(user+':'+key)
-    browser.actions.loadSchemas().then(schemas => {
-        browser.view.schemas = schemas
-        document.body.classList.remove('loading')
-    })
+    browser.view.changes = changes
 } else {
     browser.view.loggedIn = false
-    document.body.classList.remove('loading')
 }
+browser.actions.loadSchemas().then(schemas => {
+    browser.view.schemas = schemas
+    document.body.classList.remove('loading')
+})
 
-browser.view.changes = changes
 browser.view.dirtyChecked = true
 
 window.addEventListener('resize', (e) => {
@@ -1508,6 +1496,8 @@ window.addEventListener('resize', (e) => {
         browser.actions.spreadsheetResize()
     }
 })
+
+// @NOTE: templates/scripts.html contains some extra javascript
 
 // @TODO : change the fullscreen icon according to the fullscreen state:
 // @TODO : COuldn't get to the right el element to make the following work:

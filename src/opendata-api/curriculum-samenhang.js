@@ -16,26 +16,27 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.Tag.length
+				count: data.Tag.length,
+				root: data.schema.types.Tag.root
 			}
 
 			meta
 
 		`,
+		// @FIXME: make a correct query for Relatie
 		Relatie: `
-		const results = from(data.Syllabus)
+		const results = from(data.Relatie)
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				unreleased: _,
-				fo_toelichting_id: _,
-				fo_uitwerking_id: _,
+				unreleased: _
 			})
 
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.Syllabus.length
+				count: data.Relatie.length,
+				root: data.schema.types.Relatie.root
 			}
 
 			meta

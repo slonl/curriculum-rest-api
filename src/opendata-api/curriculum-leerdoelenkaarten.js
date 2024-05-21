@@ -36,7 +36,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.LdkVakleergebied.length
+				count: data.LdkVakleergebied.length,
+				root: data.schema.types.LdkVakleergebied.root
 			}
 
 			meta
@@ -63,7 +64,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.LdkVakkern.length
+				count: data.LdkVakkern.length,
+				root: data.schema.types.LdkVakkern.root
 			}
 
 			meta
@@ -92,7 +94,8 @@ module.exports = {
 		  	const meta = {
 				data: results,
 				page: Page,
-				count: data.LdkVaksubkern.length
+				count: data.LdkVaksubkern.length,
+				root: data.schema.types.LdkVaksubkern.root
 			}
 
 			meta
@@ -123,7 +126,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.LdkVakinhoud.length
+				count: data.LdkVakinhoud.length,
+				root: data.schema.types.LdkVakinhoud.root
 			}
 
 			meta
@@ -144,7 +148,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.LdkVakbegrip.length
+				count: data.LdkVakbegrip.length,
+				root: data.schema.types.LdkVakbegrip.root
 			}
 
 			meta

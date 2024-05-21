@@ -41,13 +41,13 @@
                 slo.api.token = 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ=='
                 return true
             },
-            get: function(path, params) {
+            get: function(path, params, jsontag=false) {
                 var url = new URL(window.apiURL + path);
                 if (!params && window.location.search) {
                     url.search = window.location.search;
                 }
                 if (params) {
-                    var args = Object.keys(params).map(function(param) {
+                    let args = Object.keys(params).map(function(param) {
                         if (Array.isArray(params[param])) {
                             return params[param].map(value => encodeURIComponent(param)+'='+encodeURIComponent(value)).join('&')
                         } else {
@@ -56,18 +56,31 @@
                     }).filter(Boolean).join('&');
                     url.search = '?' + args;
                 }
-                return fetch(url, {
+                let args = {
                     headers: {
-                        'Accept': 'application/json',
                         'Authorization': 'Basic '+slo.api.token
                     }
-                })
-                .then(function(response) {
-                    var json = response.json();
-                    if (response.ok) {
-                        return json;
+                }
+                if (jsontag) {
+                    args.headers.Accept = 'application/jsontag'
+                } else {
+                    args.headers.Accept = 'application/json'
+                }
+                return fetch(url, args)
+                .then(async function(response) {
+                    if (jsontag) {
+                        if (response.ok) {
+                            let jsontag = await response.text()
+                            return JSONTag.parse(jsontag)
+                        }
+                        throw new Error(response.status+': '+response.statusText)
+                    } else {
+                        var json = response.json();
+                        if (response.ok) {
+                            return json;
+                        }
+                        return json.then(Promise.reject.bind(Promise));
                     }
-                    return json.then(Promise.reject.bind(Promise));
                 })
                 .then(function(json) {
                     //FIXME: api must not know about browser.view
@@ -150,6 +163,7 @@
                 })
             }
         },
+/*
         contexts: {
             'curriculum-fo':{
                 title: 'Curriculum Funderend onderwijs',
@@ -198,7 +212,7 @@
                     examenprogramma_kop2: 'ExamenprogrammaKop2',
                     examenprogramma_kop3: 'ExamenprogrammaKop3',
                     examenprogramma_kop4: 'ExamenprogrammaKop4',
-                    examenprogramma_boyd: 'ExamenprogrammaBody'
+                    examenprogramma_body: 'ExamenprogrammaBody'
                 }
             },
             'curriculum-syllabus': {
@@ -280,6 +294,7 @@
     //            }
             }
         },
+*/
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -721,35 +736,6 @@
                     }
                 })
             return subtypes
-        },
-        async parseSchema(schema) {
-            // from https://github.com/mokkabonna/json-schema-merge-allof
-
-            const customizer = (objValue, srcValue) => {
-                if (Array.isArray(objValue)) {
-                    return _.union(objValue, srcValue)
-                }
-                return
-            }
-
-            const resolveAllOf = (inputSpec) => {
-                if (inputSpec && typeof inputSpec === 'object') {
-                    if (Object.keys(inputSpec).length > 0) {
-                        if (inputSpec.allOf) {
-                            const allOf  = inputSpec.allOf
-                            delete inputSpec.allOf
-                            const nested = _.mergeWith.apply(_, [{}].concat(allOf, [customizer]))
-                            inputSpec    = _.defaultsDeep(inputSpec, nested, customizer)
-                        }
-                        Object.keys(inputSpec).forEach((key) => {
-                            inputSpec[key] = resolveAllOf(inputSpec[key])
-                        })
-                    }
-                }
-                return inputSpec
-            }
-
-            return resolveAllOf(await $RefParser.dereference(schema))
         }
     }
 })()

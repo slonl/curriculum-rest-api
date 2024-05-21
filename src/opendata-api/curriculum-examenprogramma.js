@@ -36,7 +36,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaVakleergebied.length
+				count: data.ExamenprogrammaVakleergebied.length,
+				root: data.schema.types.ExamenprogrammaVakleergebied.root
 			}
 
 			meta
@@ -54,7 +55,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.Examenprogramma.length
+				count: data.Examenprogramma.length,
+				root: data.schema.types.Examenprogramma.root
 			}
 			
 			meta
@@ -76,7 +78,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaDomein.length
+				count: data.ExamenprogrammaDomein.length,
+				root: data.schema.types.ExamenprogrammaDomein.root
 			}
 
 			meta
@@ -102,7 +105,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaSubdomein.length
+				count: data.ExamenprogrammaSubdomein.length,
+				root: data.schema.types.ExamenprogrammaSubdomein.root
 			}
 
 			meta
@@ -119,7 +123,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaEindterm.length
+				count: data.ExamenprogrammaEindterm.length,
+				root: data.schema.types.ExamenprogrammaEindterm.root
 			}
 
 		meta
@@ -142,7 +147,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaKop1.length
+				count: data.ExamenprogrammaKop1.length,
+				root: data.schema.types.ExamenprogrammaKop1.root
 			}
 
 			meta
@@ -160,7 +166,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaKop2.length
+				count: data.ExamenprogrammaKop2.length,
+				root: data.schema.types.ExamenprogrammaKop2.root
 			}
 
 			meta
@@ -177,7 +184,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaKop3.length
+				count: data.ExamenprogrammaKop3.length,
+				root: data.schema.types.ExamenprogrammaKop3.root
 			}
 
 			meta
@@ -194,7 +202,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaKop4.length
+				count: data.ExamenprogrammaKop4.length,
+				root: data.schema.types.ExamenprogrammaKop4.root
 			}
 
 			meta
@@ -211,7 +220,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.ExamenprogrammaBody.length
+				count: data.ExamenprogrammaBody.length,
+				root: data.schema.types.ExamenprogrammaBody.root
 			}
 
 			meta

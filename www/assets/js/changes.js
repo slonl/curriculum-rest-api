@@ -89,7 +89,7 @@ const changes = (()=> {
 			assert(ch, {
 				id: _,
 				meta: {
-					context: oneOf(...Object.keys(slo.contexts)),
+					context: _, //oneOf(...Object.keys(slo.contexts)),
 					type: _,
 					title: _,
 					timestamp: _
@@ -430,6 +430,7 @@ const changes = (()=> {
 		}
 
 	}
+
 
 	let changeHistory = new Changes()
 	let merged = changeHistory.merge()
