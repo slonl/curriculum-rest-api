@@ -722,19 +722,15 @@
         getAvailableChildTypes(type) {
             let context = slo.getContextByType(type)
             let _type = slo.getTypeNameByType(type)
-            let schema = browser.view.schemas
-                .find(s => s['$id'] == 'https://opendata.slo.nl/curriculum/schemas/'+context+'/context.json')
-            let props = schema.properties[_type].items.properties
-            let subtypes = Object.keys(props)
-                .filter(k => k.substr(k.length-3)=='_id')
-                .map(k => {
-                    let type = k.substr(0, k.length-3)
-                    let name = slo.getTypeByTypeName(type, context)
-                    return {
-                        name,
-                        type: name
-                    }
-                })
+            let schema = slo.contexts[context].schema
+            let children = schema[type].children
+            let childTypeNames = Object.keys(children).filter(k => k[0]>='A' && k[0]<='Z')
+            let subtypes = childTypeNames.map(name => {
+                return {
+                    name,
+                    type: slo.getTypeByTypeName(name)
+                }
+            })
             return subtypes
         }
     }
