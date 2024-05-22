@@ -90,6 +90,13 @@ from(Index('${variables.id}')?.root)
 	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+query, variables, urlQuery)
 }
 
+opendata.api.Schemas = async (variables, urlQuery) => {
+	let query = `
+data.schema
+`
+	return storeQuery(opendata.url+'/query/', query)
+}
+
 const treeQuery = fs.readFileSync(__dirname+'/tree-query.js')
 opendata.api.Tree = async (variables, urlQuery) => {
 	// variables.id naar request.query.id?

@@ -204,7 +204,8 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: data.Vakleergebied.length
+			count: data.Vakleergebied.length,
+			root: data.schema.types.Vakleergebied.root
 		}
 
 		meta
@@ -227,7 +228,8 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: data.Niveau.length
+			count: data.Niveau.length,
+			root: data.schema.types.Niveau.root
 		}
 
 		meta
@@ -247,7 +249,8 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: data.Doel.length
+			count: data.Doel.length,
+			root: data.schema.types.Doel.root
 		}
 
 		meta
@@ -277,7 +280,8 @@ module.exports = {
 		const meta = {
 			data: results,
 			page: Page,
-			count: data.Doelniveau.length
+			count: data.Doelniveau.length,
+			root: data.schema.types.Doelniveau.root
 		}
 
 		meta

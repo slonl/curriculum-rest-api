@@ -17,7 +17,8 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: data.FoDomein.length
+				count: data.FoDomein.length,
+				root: data.schema.types.FoDomein.root
 			}
 	
 			meta
@@ -35,7 +36,8 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: data.FoSubdomein.length
+				count: data.FoSubdomein.length,
+				root: data.schema.types.FoSubdomein.root
 			}
 	
 			meta
@@ -54,7 +56,8 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: data.FoDoelzin.length
+				count: data.FoDoelzin.length,
+				root: data.schema.types.FoDoelzin.root
 			}
 	
 			meta
@@ -73,7 +76,8 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: data.FoToelichting.length
+				count: data.FoToelichting.length,
+				root: data.schema.types.FoToelichting.root
 			}
 	
 			meta
@@ -92,7 +96,8 @@ module.exports = {
 				type: 'Doelniveau',
 				data: results,
 				page: Page,
-				count: data.FoUitwerking.length
+				count: data.FoUitwerking.length,
+				root: data.schema.types.FoUitwerking.root
 			}
 	
 			meta
