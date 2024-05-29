@@ -8,7 +8,7 @@ const sloDocument = (function() {
 
     // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
     let currentIdentifier;
-
+    let editListeners = [];
 
     function showEditor() {
       let editBox = document.querySelector(".documentEditorWrapper");
@@ -84,26 +84,42 @@ const sloDocument = (function() {
     function getTitle() {
        let currentUUID = browser.view.item.uuid
        currentIdentifier = currentUUID;
+       //console.log(data.index)
        let currentContent = data.index.get(currentUUID).title
        return currentContent;
+    }
+
+    async function render(){
+        //window.location.reload()
+        browser.actions.switchView('Documentweergave')
     }
 
     function  documentSaveChanges(){
       let editBox = document.querySelector(".documentEditorWrapper");
       let textEditor = editBox.querySelector("textarea");
-      console.log(textEditor.value);
-      let dataToSave = textEditor.value;
-
-      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
-      // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
-      console.log(currentIdentifier);
-      console.log(dataToSave)
-      
-      // @TODO get the item type and UUID to save the data in the right place (right place TDB)
-      // @TODO write changes tot the "changes stack"
-      // data.index.get(currentIdentifier).title = dataToSave;     
-      console.log("saving changes");
-    }
+      let newValue = textEditor.value;
+      let prevValue = getTitle();
+      let dirty = browser.view.dirtyChecked==1
+      let timestamp = new Date().toISOString()
+      let change = new changes.Change({
+          id: currentIdentifier,
+          meta: {
+              context: window.slo.getContextByType(data.root["@type"]),
+              title: prevValue ?? '[Geen titel]',
+              type: data.root["@type"],
+              timestamp: timestamp.substring(0, timestamp.indexOf('.')),
+          },
+          type: 'patch',
+          property: 'title',
+          prevValue : prevValue,
+          newValue : newValue,
+          $mark : 'changed',
+          dirty
+      })
+      changes.changes.push(change)
+      changes.update()
+      render();
+    };
 
     let sloDocument = {
      
@@ -189,10 +205,15 @@ const sloDocument = (function() {
         newPosition.classList.add("focus");
         updateURL()
       },
+      onEdit : () => {
+        //documentSaveChanges()
+        //hideEditor()
+        //updateURL()
+      },
       documentSaveChanges: () => {
         documentSaveChanges()
         hideEditor()
-        // @TODO rerender page showing edits on inserted green lines and crowssed through red lines
+        // @TODO rerender page showing edits on inserted green lines and crowssed through red lines <- this will happen automagically by css
         updateURL(); // @TODO: check if it's needed
       },
     }
