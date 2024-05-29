@@ -89,41 +89,37 @@ const sloDocument = (function() {
        return currentContent;
     }
 
+    async function render(){
+        
+      
+    }
+
     function  documentSaveChanges(){
       let editBox = document.querySelector(".documentEditorWrapper");
       let textEditor = editBox.querySelector("textarea");
       let newValue = textEditor.value;
       let prevValue = getTitle();
-      
-      // @TODO : here is the data to send to changes:
-      // console.log("identifier")
-      // console.log(currentIdentifier);
-      // console.log("new value")
-      // console.log(newValue)
-      // console.log("previous value")
-      // console.log(prevValue)
-      
       let dirty = browser.view.dirtyChecked==1
-      
       let timestamp = new Date().toISOString()
-      
       let change = new changes.Change({
           id: currentIdentifier,
           meta: {
-              context: window.slo.getContextByType(data.root["@type"]), // @TODO no idea what this is supposed to be
+              context: window.slo.getContextByType(data.root["@type"]),
               title: prevValue ?? '[Geen titel]',
-              type: data.root["@type"], // @TODO check if this is the right type to get
-              timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+              type: data.root["@type"],
+              timestamp: timestamp.substring(0, timestamp.indexOf('.')),
           },
           type: 'patch',
           property: 'title',
           prevValue : prevValue,
           newValue : newValue,
+          $mark : 'changed',
           dirty
       })
       changes.changes.push(change)
-      changes.update()     
-    }
+      changes.update()
+      render();
+    };
 
     let sloDocument = {
      

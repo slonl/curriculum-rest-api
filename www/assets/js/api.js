@@ -609,6 +609,22 @@
                                 };
                             break;
 
+                            case '$mark':
+                                switch(value){
+                                    case 'changed':
+                                        dataObj['documentSublist'].push({$mark:'changed'}); //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'deleted':
+                                        dataObj['documentSublist'].push({$mark:'deleted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'inserted':
+                                        dataObj['documentSublist'].push({$mark:'inserted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    default:
+                                        console.log("found an unknown type of $mark")
+                                }
+                            break;
+
                             // @TODO : check if tag data is complete
                             case 'Tag':
                                 for(let child of value){
