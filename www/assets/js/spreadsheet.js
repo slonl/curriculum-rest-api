@@ -154,6 +154,14 @@ const spreadsheet = (function() {
         };
     }
 
+    function toggleFullScreen(state) {
+      if (state == "open") {
+        document.body.requestFullscreen();  // @FIXME : should be in action and trasmitted as parameter
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    
     datamodel.addPlugin('order', createSort({
       name: 'sort',
       sortBy: 'prefix',
@@ -251,8 +259,28 @@ const spreadsheet = (function() {
           value = htmlEscape(value)
           name = columnDef.value
           let selectorRect = selector.getBoundingClientRect()
-          selector.innerHTML = `<form><textarea name="${name}" class="spreadsheet-editor">${value}</textarea></form>`
-          selector.querySelector('textarea').style.height = selectorRect.height + 'px'
+          let disabled = row.node.dirty ? 'disabled' : ''
+          let checked = browser.view.dirtyChecked ? 'checked' : ''
+          selector.innerHTML = `
+<form>
+  <div class="slo-form-header">
+    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+      </use></svg>
+    </button>
+    <div class="ds-form-group">
+      <label>
+        <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+        Inhoudelijke wijziging
+      </label>
+    </div>
+  </div>
+  <div class="spreadsheet-autosize">
+    <textarea name="${name}" data-simply-activate="autosize" rows="1" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}">${value}</textarea>
+  </div>
+</form>`
+          selector.querySelector('textarea').style['height'] = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break
       }
@@ -267,9 +295,16 @@ const spreadsheet = (function() {
       selector.style.width = rect.width+'px'
       selector.style['min-height'] = rect.height+'px'
       let value = row.columns[columnDef.value] || ''
+      let header = `
+<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+  <svg class="ds-icon ds-icon-feather">
+    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+  </use></svg>
+</button>
+`
       switch(columnDef.type) {
         case 'id':
-          selector.innerHTML = el.innerHTML
+          selector.innerHTML = header + el.innerHTML
         break
         case 'list':
           if (!Array.isArray(value)) {
@@ -283,10 +318,10 @@ const spreadsheet = (function() {
             html+='<li>'+htmlEscape(v)+'</li>'
           }
           html+= '</ul>'
-          selector.innerHTML = html
+          selector.innerHTML = header + html
         break
         default:
-          selector.innerHTML = htmlEscape(value)
+          selector.innerHTML = header + htmlEscape(value)
         break
       }
       let current = selector.getBoundingClientRect()
@@ -669,6 +704,11 @@ const spreadsheet = (function() {
         if (params.data) {
           spreadsheet.data = params.data
         }
+        if (params.rows) {
+          options.rows = params.rows
+          datamodel.options.rows = params.rows
+          datamodel.update()
+        }
         renderBody()
       },
       render: () => {
@@ -825,8 +865,17 @@ const spreadsheet = (function() {
       getLineByRow: (row) => {
         return datamodel.view.visibleData.findIndex(r => r==row)
       },
-      getColumnDefinition
+      getColumnDefinition,
+      toggleFullScreen
     }
     return spreadsheet
   }
 })()
+
+simply.activate.addListener('autosize', function() {
+    this.addEventListener('input', () => {
+        this.parentNode.dataset.replicatedValue = this.value
+        //@TODO: this makes the textarea only grow, never shrink, but it is re-initialized on navigation, so all good for now
+        this.style.height = this.parentNode.getBoundingClientRect().height+'px'
+    })
+})

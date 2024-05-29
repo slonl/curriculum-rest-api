@@ -319,6 +319,22 @@ app.route('/tree/:id').get(async (req, res) => {
 	}
 })
 
+app.route('/schemas/').get(async (req, res) => {
+	try {
+		let result = await opendata.api.Schemas()
+		if (!result) {
+			res.status(404).send({ error: 404, message: '404: not found' });
+		} else {
+			res.setHeader('content-type', 'application/jsontag');
+			res.send(JSONTag.stringify(result));
+		}
+	} catch(err) {
+		res.setHeader('content-type', 'application/json');
+		res.status(500).send({ error: 500, message: err.message });
+		console.log('/schemas/', err);
+	}
+})
+
 async function getById(id) {
 	return await opendata.api.Id({id: id})
 }

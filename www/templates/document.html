@@ -26,6 +26,26 @@
             </ul>
         </nav>
         
+        <div class="documentEditorWrapper">
+            <div class="documentEditor">
+                <div class="slo-form-header">
+                    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="documentCloseEditor">
+                    <svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+                    </use></svg>
+                    </button>
+                
+                    <div class="ds-form-group">
+                        <label>
+                            <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+                            Inhoudelijke wijziging
+                        </label>
+                    </div>
+                </div>
+                <textarea name="textEdit"></textarea>
+            </div>
+        </div>
+
         <div data-simply-list="documentList" id="slo-document">
             <template rel="documentTemplate"></template>
         </div>
@@ -38,14 +58,6 @@
                         <span class="slo-title" data-simply-field="title" data-simply-content="text" ></span>
                     </h1>
                     <p class="ds-margin-up slo-prefix slo-description" data-simply-field="description" data-simply-content="text"></p>
-                    <dialog>
-                        <form>
-                            <label>Change content</label>
-                                <input type="text" id="content">
-                            <button id="addChanges" data-simply-command="showChange">add changes</button>
-                            <button data-simply-command="cancel">cancel</button>
-                        </form>
-                    </dialog>
                     <!--
                     <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                         <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -62,14 +74,6 @@
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="ds-badge slo-title" data-simply-field="title" data-simply-content="text"></span>
                             <span class="slo-prefix" data-simply-field="description" data-simply-content="text"></span>
-                            <dialog>
-                                <form>
-                                    <label>Change content</label>
-                                    <input type="text" id="content">
-                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
-                                    <button data-simply-command="cancel">cancel</button>
-                                </form>
-                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -88,14 +92,6 @@
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="ds-badge niveau" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
-                            <dialog>
-                                <form>
-                                    <label>Change content</label>
-                                    <input type="text" id="content">
-                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
-                                    <button data-simply-command="cancel">cancel</button>
-                                </form>
-                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -116,14 +112,6 @@
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
-                            <dialog>
-                                <form>
-                                    <label>Change content</label>
-                                    <input type="text" id="content">
-                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
-                                    <button data-simply-command="cancel">cancel</button>
-                                </form>
-                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -142,14 +130,6 @@
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
-                            <dialog>
-                                <form>
-                                    <label>Change content</label>
-                                    <input type="text" id="content">
-                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
-                                    <button data-simply-command="cancel">cancel</button>
-                                </form>
-                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -168,14 +148,6 @@
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
-                            <dialog>
-                                <form>
-                                    <label>Change content</label>
-                                    <input type="text" id="content">
-                                    <button id="addChanges" data-simply-command="showChange">add changes</button>
-                                    <button data-simply-command="cancel">cancel</button>
-                                </form>
-                            </dialog>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>

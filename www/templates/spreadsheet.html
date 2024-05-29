@@ -15,10 +15,13 @@
                     <option data-simply-field="context"></option>
                 </template>
             </select>
-            <button data-simply-command="openTree" class="ds-button ds-icon-button ds-button-naked" title="Klap Uit">
-                <svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2"></use>
+            <button class="ds-button ds-icon-button ds-button-naked" data-simply-command="toggleFullscreen" data-simply-state="close">
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="close">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#minimize-2"></use>
                 </svg>
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="open">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2">
+                </use></svg>
             </button>
         </div>
         <nav class="ds-crumbs">
@@ -38,22 +41,26 @@
                     </use></svg>
                 </button>
                 <div class="ds-space">
-                    <h2>Selecteer type</h2>
+                    <h2>Voeg relatie toe</h2>
                 </div>
             </header>
-            <div class="ds-dialog-content">
-                <div class="ds-space" data-simply-list="availableTypes">
-                    <template>
-                        <label class="slo-type">
-                            <input data-simply-command="selectType"
-                                name="type" type="radio"
-                               data-simply-field="type" 
-                               data-simply-content="attributes" 
-                               data-simply-attributes="value">
-                            <span data-simply-field="name"></span>
-                        </label>
-                    </template>
-                </ul>
+            <div class="ds-dialog-content ds-margin-up">
+                <div class="ds-space">
+                    <label class="slo-type" data-simply-command="addSibling">Erna: <span data-simply-field="siblingType"></span></label>
+                    <label>Erin: selecteer type:</label>
+                    <div class="ds-space-horizontal" data-simply-list="availableTypes">
+                        <template>
+                            <label class="slo-type">
+                                <input data-simply-command="addChild"
+                                    name="type" type="radio"
+                                   data-simply-field="type" 
+                                   data-simply-content="attributes" 
+                                   data-simply-attributes="value">
+                                <span data-simply-field="name"></span>
+                            </label>
+                        </template>
+                    </div>
+                </div>
             </form>
         </dialog>
     </div>

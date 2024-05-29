@@ -26,7 +26,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefVakleergebied.length
+				count: data.RefVakleergebied.length,
+				root: data.schema.types.RefVakleergebied.root
 			}
 
 			meta
@@ -53,7 +54,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefDomein.length
+				count: data.RefDomein.length,
+				root: data.schema.types.RefDomein.root
 			}
 
 			meta
@@ -81,7 +83,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefSubdomein.length
+				count: data.RefSubdomein.length,
+				root: data.schema.types.RefSubdomein.root
 			}
 
 			meta
@@ -111,7 +114,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefOnderwerp.length
+				count: data.RefOnderwerp.length,
+				root: data.schema.types.RefOnderwerp.root
 			}
 
 			meta
@@ -143,7 +147,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefDeelonderwerp.length
+				count: data.RefDeelonderwerp.length,
+				root: data.schema.types.RefDeelonderwerp.root
 			}
 
 			meta
@@ -177,7 +182,8 @@ module.exports = {
 			const meta = {
 				data: results,
 				page: Page,
-				count: data.RefTekstkenmerk.length
+				count: data.RefTekstkenmerk.length,
+				root: data.schema.types.RefTekstkenmerk.root
 			}
 
 			meta

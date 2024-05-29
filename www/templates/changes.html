@@ -1,29 +1,18 @@
-<div data-simply-field="changes.undoSize" data-simply-content="template" data-simply-default-template="list" data-simply-default-value="0">
+<nav data-simply-field="changes.undoSize" data-simply-content="template" data-simply-default-template="list" data-simply-default-value="0">
 	<template data-simply-template="0"></template>
 	<template data-simply-template="list">
-		<div class="ds-space">
-			<h3>Wijzigingen</h3>
-			<div class="ds-button-group ds-button-bar">
-				<button class="ds-button ds-icon-button" data-simply-command="showAllChanges" title="Toon alles">
-					<svg class="ds-icon ds-icon-feather">
-			            <use xlink:href="/assets/icons/feather-sprite.svg#eye"></use>
-			        </svg>
-				</button>
-				<div class="slo-changes-size"><span data-simply-field="changes.undoSize"></span> wijzigingen</div>
-				<button class="ds-button-bar-right ds-button ds-icon-button" data-simply-command="showCommitChanges" title="Opslaan">
-					<svg class="ds-icon ds-icon-feather">
-			            <use xlink:href="/assets/icons/feather-sprite.svg#save"></use>
-			        </svg>
-				</button>
-			</div>
-			<ul id="changeHistory" class="slo-undo-history" data-simply-list="changes.undoHistory" data-simply-entry="change">
-			<template>
-				<li><a data-simply-field="change.id" data-simply-content="fixed" data-simply-command="showChange">
-					<span class="slo-changes-property" data-simply-field="change.property"></span>
-					<span class="slo-changes-timestamp" data-simply-field="change.timestamp"></span>
-				</a></li>
-			</template>
-			</ul>
+		<div class="ds-button-group ds-button-bar">
+			<button class="ds-button ds-icon-button" data-simply-command="showAllChanges" title="Toon alles">
+				<svg class="ds-icon ds-icon-feather">
+		            <use xlink:href="/assets/icons/feather-sprite.svg#eye"></use>
+		        </svg>
+			</button>
+			<div class="slo-changes-size"><span data-simply-field="changes.undoSize"></span> wijzigingen</div>
+			<button class="ds-button-bar-right ds-button ds-icon-button" data-simply-command="showCommitChanges" title="Opslaan">
+				<svg class="ds-icon ds-icon-feather">
+		            <use xlink:href="/assets/icons/feather-sprite.svg#save"></use>
+		        </svg>
+			</button>
 		</div>
 	</template>
-</div>
+</nav>

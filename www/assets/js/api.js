@@ -41,13 +41,13 @@
                 slo.api.token = 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ=='
                 return true
             },
-            get: function(path, params) {
+            get: function(path, params, jsontag=false) {
                 var url = new URL(window.apiURL + path);
                 if (!params && window.location.search) {
                     url.search = window.location.search;
                 }
                 if (params) {
-                    var args = Object.keys(params).map(function(param) {
+                    let args = Object.keys(params).map(function(param) {
                         if (Array.isArray(params[param])) {
                             return params[param].map(value => encodeURIComponent(param)+'='+encodeURIComponent(value)).join('&')
                         } else {
@@ -56,18 +56,31 @@
                     }).filter(Boolean).join('&');
                     url.search = '?' + args;
                 }
-                return fetch(url, {
+                let args = {
                     headers: {
-                        'Accept': 'application/json',
                         'Authorization': 'Basic '+slo.api.token
                     }
-                })
-                .then(function(response) {
-                    var json = response.json();
-                    if (response.ok) {
-                        return json;
+                }
+                if (jsontag) {
+                    args.headers.Accept = 'application/jsontag'
+                } else {
+                    args.headers.Accept = 'application/json'
+                }
+                return fetch(url, args)
+                .then(async function(response) {
+                    if (jsontag) {
+                        if (response.ok) {
+                            let jsontag = await response.text()
+                            return JSONTag.parse(jsontag)
+                        }
+                        throw new Error(response.status+': '+response.statusText)
+                    } else {
+                        var json = response.json();
+                        if (response.ok) {
+                            return json;
+                        }
+                        return json.then(Promise.reject.bind(Promise));
                     }
-                    return json.then(Promise.reject.bind(Promise));
                 })
                 .then(function(json) {
                     //FIXME: api must not know about browser.view
@@ -150,15 +163,16 @@
                 })
             }
         },
+/*
         contexts: {
             'curriculum-fo':{
                 title: 'Curriculum Funderend onderwijs',
                 data: {
-                    fo_domein: 'Domein',
-                    fo_subdomein: 'Subdomein',
-                    fo_doelzin: 'Doelzin',
-                    fo_toelichting: 'Toelichting',
-                    fo_uitwerking: 'Uitwerking'
+                    fo_domein: 'FoDomein',
+                    fo_subdomein: 'FoSubdomein',
+                    fo_doelzin: 'FoDoelzin',
+                    fo_toelichting: 'FoToelichting',
+                    fo_uitwerking: 'FoUitwerking'
                 }
             },
             'curriculum-samenhang': {
@@ -198,7 +212,7 @@
                     examenprogramma_kop2: 'ExamenprogrammaKop2',
                     examenprogramma_kop3: 'ExamenprogrammaKop3',
                     examenprogramma_kop4: 'ExamenprogrammaKop4',
-                    examenprogramma_boyd: 'ExamenprogrammaBody'
+                    examenprogramma_body: 'ExamenprogrammaBody'
                 }
             },
             'curriculum-syllabus': {
@@ -280,6 +294,7 @@
     //            }
             }
         },
+*/
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -324,7 +339,9 @@
             }
 
             function getColumns(n) {
-                let validColumns = Object.keys(n).filter(c => c[0].match(/[a-z]/))
+                let validColumns = Object.keys(n)
+                    .filter(c => c[0].match(/[a-z]/))
+                    .filter(c => ['uuid','dirty','unreleased','hasChildren'].indexOf(c)===-1)
                 let columns = {
                     id: n['@id'],
                     type: n['@type'],
@@ -485,7 +502,7 @@
                     sortable: true,
                     filterable: true
                 }
-                if (columnValues.length<=15) {
+                if (columnValues.length<=15 && columnDefinition.name!='Description') { //@FIXME: allow switch to textarea from list type that is set like this?
                     columnDefinition.type = 'list'
                     columnDefinition.values = Object.keys(allColumns[c]).map(name => {
                         return {
@@ -510,17 +527,21 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async documentPage(json){
-            let documentData = []
+       async documentPage(node){
             
-            //json as received from the database
-            //console.log(JSON.stringify(json, null, 4));
+            let documentData = {
+                index :  new Map()
+            }
 
-            function formatDocumentData(json){
+            function formatDocumentData(node){
                 // @TODO : this leads to print issues as some arrays in the object, although empty still call an empty template, leading to an html element that meses up print.
                 let dataObj = { documentSublist : [], documentLeafNode: [],  documentTextNode: [],  documentNiveaus : [], documentNiveauIndex: [], documentExamenprogrammaEindterm:[] };
+                
+                dataObj["node"] = node;
 
-                 Object.entries(json).forEach(([key, value]) => {
+                documentData.index.set(node.id, dataObj);
+
+                 Object.entries(node).forEach(([key, value]) => {
 
                     if( Array.isArray(value)){
 
@@ -560,16 +581,23 @@
                             //case 'ExamenprogrammaDomein':
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
+                                    // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
+
+                                    // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
+
                                     dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
+                                    //console.log(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+
                                 };
                             break;
-
 
                             case 'Doelniveau':
                                 for(let doelNiveau of value){
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
-                                        dataObj['documentLeafNode'].push(hoistedChild);//child.Doel[0].title);
+                                        dataObj['documentLeafNode'].push(hoistedChild);
+
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
@@ -578,10 +606,11 @@
                                 };
                             break;
 
-
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
                                     dataObj['documentTextNode'].push(child);
+                                    documentData.index.set(child.id , child);
+
                                 };
                             break;
                             
@@ -594,7 +623,8 @@
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
-                                        dataObj['documentNiveauIndex'].push(child.Niveau); //'documentNiveauIndex'
+                                        dataObj['documentNiveauIndex'].push(child.Niveau);
+                                        documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
                                     else {
                                         console.log("Found a NiveauIndex with something that wasn't a Niveau.");
@@ -604,7 +634,6 @@
 
                             case 'Niveau':
                                 for(let niveau of value){
-                                    //console.log(niveau.description);
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
                             break;
@@ -613,7 +642,6 @@
                             case 'Tag':
                                 for(let child of value){
                                     if (child.title == null){
-                                        //console.log("Found a Tag without a title");
                                     }
                                     else { 
                                         dataObj['documentSublist'].push(formatDocumentData(child));
@@ -635,14 +663,21 @@
                             dataObj['documentSublist'].push(formatDocumentData(value));
                         }
                         else {
+                            // if no capital Eindexamen instead of title and things.
+                            if(key[0] >= "A" && key[0] <= "Z")
+                            { 
+                                debugger;
+                            }
                             dataObj[key] = value ;
+                            // @NOTE : need to figure the following out if it's needed/works
+                            //documentData.index.set(dataOj[key].id , value);
                         }
                     }
                 });
 
                 // remove object that have empty arrays as values:
                 Object.entries(dataObj).forEach(([key, value]) => {
-
+   
                     if (Array.isArray(value) && value.length == 0){
                         delete dataObj[key];
                         return dataObj
@@ -651,17 +686,13 @@
                 });
             
                 return dataObj;
-
             }
 
-            documentData = formatDocumentData(json);
+            documentData.root = formatDocumentData(node);
 
-            //documentData is the json that will be sent to the client
-            //console.log(JSON.stringify(documentData, null, 4));
+            //documentData = JSON.parse(JSON.stringify(documentData));
 
-            documentData = JSON.parse(JSON.stringify(documentData));
-
-            return [documentData];
+            return documentData;
 
         },
         getDataModel(name) {
@@ -691,49 +722,16 @@
         getAvailableChildTypes(type) {
             let context = slo.getContextByType(type)
             let _type = slo.getTypeNameByType(type)
-            let schema = browser.view.schemas
-                .find(s => s['$id'] == 'https://opendata.slo.nl/curriculum/schemas/'+context+'/context.json')
-            let props = schema.properties[_type].items.properties
-            let subtypes = Object.keys(props)
-                .filter(k => k.substr(k.length-3)=='_id')
-                .map(k => {
-                    let type = k.substr(0, k.length-3)
-                    let name = slo.getTypeByTypeName(type, context)
-                    return {
-                        name,
-                        type: name
-                    }
-                })
+            let schema = slo.contexts[context].schema
+            let children = schema[type].children
+            let childTypeNames = Object.keys(children).filter(k => k[0]>='A' && k[0]<='Z')
+            let subtypes = childTypeNames.map(name => {
+                return {
+                    name,
+                    type: slo.getTypeByTypeName(name)
+                }
+            })
             return subtypes
-        },
-        async parseSchema(schema) {
-            // from https://github.com/mokkabonna/json-schema-merge-allof
-
-            const customizer = (objValue, srcValue) => {
-                if (Array.isArray(objValue)) {
-                    return _.union(objValue, srcValue)
-                }
-                return
-            }
-
-            const resolveAllOf = (inputSpec) => {
-                if (inputSpec && typeof inputSpec === 'object') {
-                    if (Object.keys(inputSpec).length > 0) {
-                        if (inputSpec.allOf) {
-                            const allOf  = inputSpec.allOf
-                            delete inputSpec.allOf
-                            const nested = _.mergeWith.apply(_, [{}].concat(allOf, [customizer]))
-                            inputSpec    = _.defaultsDeep(inputSpec, nested, customizer)
-                        }
-                        Object.keys(inputSpec).forEach((key) => {
-                            inputSpec[key] = resolveAllOf(inputSpec[key])
-                        })
-                    }
-                }
-                return inputSpec
-            }
-
-            return resolveAllOf(await $RefParser.dereference(schema))
         }
     }
 })()

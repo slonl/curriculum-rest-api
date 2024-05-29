@@ -7,51 +7,47 @@
 <base href="{@NODE_DATA_URL}">
 <div class="slo-header">
     <img class="slo-logo" src="/img/header-logo-opendata.svg" alt="SLO / opendata">
-    <div class="slo-weergave-switch ds-button-group ds-button-bar">
-        <button class="ds-button ds-button-primary ds-icon-button" title="Entiteitweergave" data-simply-command="switchView" data-simply-value="item"><svg class="ds-icon ds-icon-feather">
-            <use xlink:href="/assets/icons/feather-sprite.svg#columns"></use>
-        </svg></button>
-        <button class="ds-button ds-button-naked ds-icon-button" title="Documentweergave" data-simply-command="switchView" data-simply-value="document"><svg class="ds-icon ds-icon-feather">
-            <use xlink:href="/assets/icons/feather-sprite.svg#book-open"></use>
-        </svg></button>
-        <button class="ds-button ds-button-naked ds-icon-button" title="Tabelweergave" data-simply-command="switchView" data-simply-value="spreadsheet"><svg class="ds-icon ds-icon-feather">
-            <use xlink:href="/assets/icons/feather-sprite.svg#grid"></use>
-        </svg></button>
-    </div>
-    <nav class="ds-align-right" data-simply-field="loggedIn" data-simply-content="template">
-        <template data-simply-template="false"></template>
-        <template data-simply-template="true">
-            <ul class="ds-navbar-nav">
-                <li>
+    <nav class="ds-align-right slo-buttonbars">
+        <link rel="simply-include" href="/templates/changes.html">
+        <span data-simply-field="loggedIn" data-simply-content="template">
+            <template data-simply-template="false"></template>
+            <template data-simply-template="true">
+                <div class="ds-button-bar ds-button-group">
                     <button data-simply-command="logoff"
-                    class="ds-button ds-button-naked" title="Afmelden"><svg
-                    class="ds-icon ds-icon-feather"><use
-                    xlink:href="/assets/icons/feather-sprite.svg#log-out"></use></svg></button>
-                </li>
-                <li class="slo-username">
-                    <span data-simply-field="user"></span>
-                </li>
-            </ul>
-        </template>
-    </nav>
-    <nav class="ds-align-right">
-        <ul class="ds-navbar-nav ds-paging">
-            <li>
-                <button data-simply-command="previousPage"
+                        class="ds-button" title="Afmelden"><svg
+                        class="ds-icon ds-icon-feather"><use
+                        xlink:href="/assets/icons/feather-sprite.svg#log-out"></use></svg></button>
+                    <div class="slo-username">
+                        <span data-simply-field="user"></span>
+                    </div>
+                </div>
+            </template>
+        </span>
+        <div class="ds-button-bar ds-button-group ds-paging">
+            <button data-simply-command="previousPage"
                 class="ds-button" title="vorige pagina"><svg
                 class="ds-icon ds-icon-feather"><use
                 xlink:href="/assets/icons/feather-sprite.svg#chevron-left"></use></svg></button>
-            </li>
-            <li class="ds-paging-info">
+            <div class="ds-paging-info">
                 <span data-simply-field="page"></span> /
                 <span data-simply-field="max"></span>
-            <li>
-                <button data-simply-command="nextPage" class="ds-button"
+            </div>
+            <button data-simply-command="nextPage" class="ds-button"
                 title="volgende pagina"><svg
                 class="ds-icon ds-icon-feather"><use
-                xlink:href="/assets/icons/feather-sprite.svg#chevron-right"></use></svg></button>
-            </li>
-        </ul>
+                xlink:href="/assets/icons/feather-sprite.svg#chevron-right"></use></svg></button>            
+        </div>
+        <div class="ds-button-group ds-button-bar slo-weergave-switch">
+            <button class="ds-button ds-button-primary ds-icon-button" title="Entiteitweergave" data-simply-command="switchView" data-simply-value="item"><svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#columns"></use>
+            </svg></button>
+            <button class="ds-button ds-button-naked ds-icon-button" title="Documentweergave" data-simply-command="switchView" data-simply-value="document"><svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#book-open"></use>
+            </svg></button>
+            <button class="ds-button ds-button-naked ds-icon-button" title="Tabelweergave" data-simply-command="switchView" data-simply-value="spreadsheet"><svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#grid"></use>
+            </svg></button>
+        </div>
     </nav>
     <input type="checkbox" id="slo-search-state" class="slo-search-state">
     <label class="slo-search-button" for="slo-search-state"></label>
@@ -83,7 +79,6 @@
                  data-simply-command="simply-select">Contact</a></li>
             </template>
         </ul>
-        <link rel="simply-include" href="/templates/changes.html">
     </nav>
     <div class="slo-content-panel">
         <div class="error" data-simply-field="error" data-simply-content="template" data-simply-transformer="truthy">
@@ -138,6 +133,12 @@
                     </ul>
                 </nav>
                 <h1 data-simply-field="listTitle"></h1>
+                <div data-simply-field="listIsRoot" data-simply-content="template">
+                    <template></template>
+                    <template data-simply-template="true">
+                        <button>Nieuw</button>
+                    </template>
+                </div>
                 <ul data-simply-list="list" xdata-simply-data="list">
                     <template rel="links"></template>
                 </ul>

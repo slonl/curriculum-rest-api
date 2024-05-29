@@ -21,12 +21,14 @@
 
 </script>
 <script src="/assets/js/api.js"></script>
+<script src="https://unpkg.com/@muze-nl/jsontag@0.9.2/dist/browser.js"></script>
+<script src="/assets/js/local-api.js"></script>
 <script src="/assets/js/changes.js"></script>
 <script src="/assets/js/spreadsheet.js"></script>
 <script src="/assets/js/sloDocument.js"></script>
 <script src="/assets/js/transformers.js"></script>
 <script src="https://unpkg.com/curriculum-js@0.4.1/dist/browser.js"></script>
-<script src="https://unpkg.com/@muze-nl/jsontag@0.9.2/dist/browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/diff"></script>
 <script src="/assets/js/databrowser.js"></script>
 <script src="/assets/js/datasources.js"></script>
 <script src="/assets/js/vanillaSelectBox.js"></script>
@@ -39,27 +41,6 @@
         }
     });
     
-    var parseQueryString = function( queryString ) {
-        var params = {}, queries, temp, i, l;
-        if (queryString) {
-            // Split into key/value pairs
-            queries = queryString.split("&");
-            // Convert the array of strings into an object
-            for ( i = 0, l = queries.length; i < l; i++ ) {
-                temp = queries[i].split('=');
-                params[temp[0]] = temp[1];
-            }
-        }
-        return params;
-    };
-    
-    var args = parseQueryString(window.location.search.substring(1, window.location.search.length));
-    if (!args.page) {
-        args.page = 0;
-    }
-    browser.view.page = parseInt(args.page)+1;
-    browser.view.params = args;
-
     var treeviewNiveaus, treeviewSchemas;
     simply.activate.addListener('niveaus-select', function() {
         treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus'});

@@ -1,8 +1,3 @@
-/*
-TODO:
-
-*/
-
 const sloDocument = (function() {
   
   const options = {
@@ -11,44 +6,58 @@ const sloDocument = (function() {
   return function(settings, data) {
     options.container = settings.container
 
+    // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
+    let currentIdentifier;
 
-    // @TODO : need to move the clicklistener to command / action
-    let clickListener
-   
-    // // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
-    // function addClickSelectText() {
-    //     if (clickListener) {
-    //         options.container.removeEventListener('click', clickListener)
-    //     }
-    //     clickListener = function(evt) {
-    //       let clickedText = evt.target.closest('.slo-entity')
 
-    //       // templates occasionally generate without any content, only select if there is an ID to select
-    //       if(clickedText?.id){
-    //         //console.log(clickedText.id)
-    //         //console.log(clickedText.innerHTML)
-    //         let focussedElement = document.getElementsByClassName("focus")[0];
-    //         focussedElement?.classList.remove("focus")
-    //         clickedText.classList.add("focus")
-              
-    //          // replace URL with the new URL
-    //          let nextFocussedElement = document.querySelector(".focus");                 
-    //          let nextDocumentLocation = new URL(document.location.href);
-    //          let idPath = new URL(nextFocussedElement.id);
-    //          let nextID = idPath.pathname.split("/").pop();
-    //          idPath.pathname = "/uuid/" + nextID;
-    //          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-    //          window.history.replaceState({}, '', idPath.href);
-    //          browser.view.item.uuid = nextID
-    //       }
+    function showEditor() {
+      let editBox = document.querySelector(".documentEditorWrapper");
+      editBox.style.display = "flex";
+      let title = getTitle()
+      let textEditor = editBox.querySelector("textarea");
+      document.body.dataset.simplyKeyboard = 'document-edit'  
+      textEditor.value = title;
+      textEditor.focus();
+      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
 
-    //     }
-    //     options.container.addEventListener('click', clickListener)
-    // }
-    // addClickSelectText()
+    }
 
-    function editDocument(el, value) {
-      showEditorDialog(el);
+    function hideEditor(){
+      document.body.dataset.simplyKeyboard = 'document'
+      let editBox = document.querySelector(".documentEditorWrapper");
+      editBox.style.display = "none";
+    }
+
+    function move(indexIncrement){
+      let focussedElement;
+      let nodes = getAllNodes()
+
+      //find current element to move to the next one
+      if(document.getElementsByClassName("focus")[0]){
+          focussedElement = document.getElementsByClassName("focus")[0];
+      }
+      else{
+          focussedElement = nodes[0];
+          focussedElement.classList.add("focus")
+      }
+
+      let itemIndex = nodes.indexOf(focussedElement);
+      nodes[itemIndex].classList.remove("focus");
+      
+      // moving around
+      itemIndex = itemIndex + indexIncrement;
+      
+      if( itemIndex > (nodes.length -1)) {
+          itemIndex = nodes.length -1;
+      }
+      
+      if ( itemIndex < 0) {
+        itemIndex = 0;
+      }
+
+      scrollIntoView(nodes, itemIndex)
+      nodes[itemIndex].classList.add("focus");
+      
     }
 
     function scrollIntoView(nodes, itemIndex){
@@ -72,216 +81,120 @@ const sloDocument = (function() {
         browser.view.item.uuid = nextID
     }
 
-    function showEditorDialog(el) {
-      const dialog = el.querySelector("dialog");
-      dialog.showModal()
-      getTextDefinition(el)
-    }
-
-    function closeEditorDialog(dialog){
-      dialog.close();
-    }
-
-    function getTextDefinition(el) {
+    function getTitle() {
        let currentUUID = browser.view.item.uuid
-       let textBox = el.querySelector("input")
-       textBox.value = currentUUID
+       currentIdentifier = currentUUID;
+       let currentContent = data.index.get(currentUUID).title
+       return currentContent;
     }
 
-    function saveChanges(dialogContent){
-    }
+    function  documentSaveChanges(){
+      let editBox = document.querySelector(".documentEditorWrapper");
+      let textEditor = editBox.querySelector("textarea");
+      console.log(textEditor.value);
+      let dataToSave = textEditor.value;
 
+      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
+      // @TODO : check with senior dev if using this instead of reading the URL to get the UUID to save the data is a workable solution
+      console.log(currentIdentifier);
+      console.log(dataToSave)
+      
+      // @TODO get the item type and UUID to save the data in the right place (right place TDB)
+      // @TODO write changes tot the "changes stack"
+      // data.index.get(currentIdentifier).title = dataToSave;     
+      console.log("saving changes");
+    }
 
     let sloDocument = {
-      addClickSelectText: () => {
-        addClickSelectText()
-      },
-      selector: (el) => {
-        if (!el) {
-          selector.style.display = 'none'
-          return
-        }
-        selector.style.display = 'block'
-        let offset = table.getBoundingClientRect()
-        let rect = el.getBoundingClientRect()
-        showSelector(rect, offset, el)
-      },
-      editor: (el) => {
-        if (!el) {
-          selector.style.display = 'none' // @TODO find out if this is needed
-          return
-        }
-        showEditorDialog(el)
-        // @TODO : will need some refactoring to move to propper functions
-        let addChangeButton = el.querySelector("#addChanges");
-
-        console.log("this works?")
-        console.log(addChangeButton)
-        addChangeButton.addEventListener('click', (event) => {
-          event.preventDefault();
-          let textBox = el.querySelector("input")
-          console.log("closed a dialog")
-          console.log(textBox.value)
-          console.log(el)
-          // closeEditorDialog(el)
-        })
-      },
      
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
-
-        let focussedElement;
-        let nodes = getAllNodes()
-
-        //find current element to move to the next one
-        if(document.getElementsByClassName("focus")[0]){
-            focussedElement = document.getElementsByClassName("focus")[0];
-        }
-        else{
-            focussedElement = nodes[0];
-            focussedElement.classList.add("focus")
-        }
-
-        let itemIndex = nodes.indexOf(focussedElement);
-        nodes[itemIndex].classList.remove("focus");
-        
-        // moving around
-        itemIndex = itemIndex + indexIncrement;
-        
-        if( itemIndex > (nodes.length -1)) {
-            itemIndex = nodes.length -1;
-        }
-        
-        if ( itemIndex < 0) {
-          itemIndex = 0;
-        }
-
-        scrollIntoView(nodes, itemIndex)
-        nodes[itemIndex].classList.add("focus");
-        updateURL()
-        
+        move(indexIncrement);
+        updateURL();
       },
+
       moveTo : (destination) => {
         let focussedElement;
-        let nodes = getAllNodes()
-      
-        //find current element to move to the next one
-        if(document.getElementsByClassName("focus")[0]){
-            focussedElement = document.getElementsByClassName("focus")[0];
-        }
-        // if no element is focussed, focus the first one
-        else{
-            focussedElement = nodes[0];
-            focussedElement.classList.add("focus")
-        }
-        
-        let itemIndex = nodes.indexOf(focussedElement);
-        
-        nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
-        
-        let newPosition;
+        let nodes;
+        let itemIndex;
                 
         // moving around
         switch(destination){
           case "top":
+            focussedElement;
+            nodes = getAllNodes()
+          
+            //find current element to move to the next one
+            if(document.getElementsByClassName("focus")[0]){
+                focussedElement = document.getElementsByClassName("focus")[0];
+            }
+            // if no element is focussed, focus the first one
+            else{
+                focussedElement = nodes[0];
+                focussedElement.classList.add("focus")
+            }
+            
+            itemIndex = nodes.indexOf(focussedElement);
+            
+            nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
+            
+            //let newPosition;
             itemIndex = 0;
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
           break;
           case "bottom":
+            focussedElement;
+            nodes = getAllNodes()
+          
+            //find current element to move to the next one
+            if(document.getElementsByClassName("focus")[0]){
+                focussedElement = document.getElementsByClassName("focus")[0];
+            }
+            // if no element is focussed, focus the first one
+            else{
+                focussedElement = nodes[0];
+                focussedElement.classList.add("focus")
+            }
+            
+            itemIndex = nodes.indexOf(focussedElement);
+            
+            nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
+            
+            //let newPosition;
             itemIndex = nodes.length -1;
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
           break;
           case 'left':{
-
-            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
-              //console.log("No focussed field found, setting focus field to default")
-              let currentElement = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0]
-              //console.log(currentPosition)
-              currentElement.classList.add("focus-field")
-            }
-            
-            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
-            console.log(currentElement.dataset.simplyField)
-                    
-            switch (currentElement.dataset.simplyField){
-              case 'prefix':
-                //current element is already leftmost
-              break;
-              case 'title': {
-                let newPosition = currentElement.closest("focus-field")
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-              break;
-              case 'descirption':{
-                let newPosition = currentElement.closest("focus-field")
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-              break;
-              default:{
-                let newPosition = focussedElement.querySelectorAll('[data-simply-field="prefix"]')[0] //prefix is always the most left element
-                newPosition.classList.add("focus-field")
-              }
-            }
+            move(-1);  
           }
           break;
-            
           case 'right':{
-
-            if(typeof focussedElement.getElementsByClassName('focus-field')[0]==="undefined"){
-              //console.log("No focussed field found, setting focus field to default")
-              let currentElement = focussedElement.querySelectorAll('[data-simply-field="description"]')[0]
-              //console.log(currentPosition)
-              currentElement.classList.add("focus-field")
-            }
-
-            let currentElement = focussedElement.getElementsByClassName('focus-field')[0]
-            console.log(currentElement.dataset.simplyField)
-
-            switch (currentElement.dataset.simplyField){            //find current position focus
-              case 'prefix':{
-                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="title"]')
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-                //if on prefix move to title
-              break;
-              case 'title':{
-                let newPosition = currentElement.closest('.slo-entity').querySelector('[data-simply-field="description"]')
-                currentElement.classList.remove("focus-field")
-                newPosition.classList.add("focus-field")
-              }
-                 //if on title, move to description
-              break;
-              case 'descirption':{}
-                    //current element is already rightmost
-              break;
-              default:{
-                let newPosition = focussedElement.querySelectorAll('[data-simply-field="description"]')[0] //description is always the most right element
-                newPosition.classList.add("focus-field")
-              }
-            }
+            move(1)        
           }
           break;
-          
           default:
             itemIndex = Math.floor(nodes.length /2) //if all goes wrong just go to the middle of the page
+            scrollIntoView(nodes, itemIndex)
+            nodes[itemIndex].classList.add("focus");
         }
-
-        scrollIntoView(nodes, itemIndex)
-        nodes[itemIndex].classList.add("focus");
+        updateURL();
+      },
+      showEditor,
+      hideEditor,
+      setFocus: (el, value) =>{
+        document.querySelectorAll('.focus').forEach(item => item.classList.remove('focus'));
+        let newPosition = el.closest('.slo-entity');
+        newPosition.classList.add("focus");
         updateURL()
-        
       },
-      editDocument: (el) =>{
-        editDocument(el);
+      documentSaveChanges: () => {
+        documentSaveChanges()
+        hideEditor()
+        // @TODO rerender page showing edits on inserted green lines and crowssed through red lines
+        updateURL(); // @TODO: check if it's needed
       },
-      saveChanges: (el) => {
-        addChanges(el)
-        hideEditor(el)
-      },
-      hideEditorDialog: (el) => {
-        closeEditorDialog(el);
-      }
     }
 
     return sloDocument

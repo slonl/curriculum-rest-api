@@ -48,6 +48,9 @@
         color: var(--ds-white);
         background: var(--ds-primary);
     }
+    .slo-spreadsheet {
+        --ds-datatable-ruler-color: var(--ds-grey-30);
+    }
     .slo-spreadsheet .ds-scrollbox {
         --ds-scrollbox-height: calc(100vh - 280px);
         min-height: 400px;
@@ -68,7 +71,7 @@
 
     .slo-username span {
         line-height: var(--ds-button-line-height);
-        padding-left: 1em;
+        padding: 0 1em;
     }
     .slo-editmode .slo-index {
         margin-left: 1em;
@@ -277,4 +280,168 @@ dialog.commit-changes {
 }
 .slo-hidden {
     display: none;
+}
+.slo-form-header {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: -2em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    left: -2px;
+    border-bottom: none;
+}
+.slo-form-header .ds-form-group {
+    margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-header label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.slo-form-header .ds-button-close {
+    height: 2em;
+    line-height: 2em;
+    min-height: unset;
+    right: 0;
+}
+.slo-form-header .ds-button-close .ds-icon {
+    height: 1em;
+}
+label.changes-diff ins {
+    background-color: #eaf2c2;
+}
+label.changes-diff del {
+    background-color: #fadad7;
+}
+label.changes-diff ul {
+    margin-top: 0;
+}
+label.changes-diff {
+    padding-left: 2em;
+}
+.slo-mark-inserted {
+    background-color: #eaf2c2;
+    text-decoration: underline;
+}
+.slo-mark-deleted {
+    background-color: #fadad7;
+    text-decoration: line-through;
+}
+.slo-mark-changed {
+    background-color: #EEE;
+}
+.slo-header .ds-button-bar {
+    position: static;
+}
+.slo-buttonbars {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: flex-end;
+}
+.ds-paging .ds-paging-info {
+    line-height: var(--ds-button-line-height);
+}
+body.ds-paging .slo-header .ds-paging {
+    display: flex;
+}
+.slo-header .ds-paging {
+    display: none;
+}
+.ds-button-close {
+    right: 0;
+}
+.ds-alert:empty {
+    display: none;
+}
+.ds-hidden {
+    display: none;
+}
+.slo-cell-selector .slo-edit {
+    position: absolute;
+    margin-top: calc(-3px - var(--ds-button-line-height));
+}
+.slo-cell-selector .slo-edit:not(:hover) {
+    background-color: white;
+}
+
+.documentEditor {
+    outline: 2px solid blue;
+    opacity: 1;
+    width: 30em;
+    height: 10em;
+    max-width: 80%;
+    max-height: 50%;
+    position: relative;
+}
+
+.documentEditor textarea {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.documentEditorWrapper {
+    z-index: 99;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+}
+
+.documentEditorWrapper::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.5;
+    z-index: -1;
+    position: absolute;
+}
+
+.spreadsheet-autosize {
+    display: grid;   
+}
+.spreadsheet-autosize::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    visibility: hidden;
+}
+.spreadsheet-autosize > textarea {
+    resize: none;
+    overflow: hidden;
+}
+.spreadsheet-autosize > textarea,
+.spreadsheet-autosize::after {
+    border: 0;
+    font-family: var(--ds-input-font);
+    margin-bottom: cal(0.5 * var(--ds-line-height));
+    padding: 0 0.5em;
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+:fullscreen .slo-menu {
+    display: none;
+}
+
+:fullscreen .slo-content-panel {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+:fullscreen footer {
+    display: none;
+}
+.ds-paging .ds-button {
+    display: unset; /* FIXME: slo.css incorrectly sets this to block */
 }
