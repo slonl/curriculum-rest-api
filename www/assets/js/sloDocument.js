@@ -90,8 +90,8 @@ const sloDocument = (function() {
     }
 
     async function render(){
-        
-      
+        //window.location.reload()
+        browser.actions.switchView('Documentweergave')
     }
 
     function  documentSaveChanges(){
