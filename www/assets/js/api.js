@@ -164,138 +164,7 @@
                 })
             }
         },
-/*
-        contexts: {
-            'curriculum-fo':{
-                title: 'Curriculum Funderend onderwijs',
-                data: {
-                    fo_domein: 'FoDomein',
-                    fo_subdomein: 'FoSubdomein',
-                    fo_doelzin: 'FoDoelzin',
-                    fo_toelichting: 'FoToelichting',
-                    fo_uitwerking: 'FoUitwerking'
-                }
-            },
-            'curriculum-samenhang': {
-                title: 'Samenhang',
-                data: {
-                    tag: 'Begrippen',
-                    relatie: 'Relaties'
-                }
-            },
-            'curriculum-basis': {
-                title: 'Basis',
-                data: {
-                    vakleergebied: 'Vakleergebied',
-                    niveau: 'Niveau',
-                    doelniveau: 'DoelNiveau',
-                    doel: 'Doel'
-                }
-            },
-            'curriculum-kerndoelen': {
-                title: 'Kerndoelen',
-                data: {
-                    kerndoel_vakleergebied: 'KerndoelVakleergebied',
-                    kerndoel_domein: 'KerndoelDomein',
-                    kerndoel: 'Kerndoel',
-                    kerndoel_uitstroomprofiel: 'KerndoelUitstroomprofiel'
-                }
-            },
-            'curriculum-examenprogramma': {
-                title: 'Examenprogramma',
-                data: {
-                    examenprogramma: 'Examenprogramma',
-                    examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
-                    examenprogramma_domein: 'ExamenprogrammaDomein',
-                    examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
-                    examenprogramma_eindterm: 'ExamenprogrammaEindterm',
-                    examenprogramma_kop1: 'ExamenprogrammaKop1',
-                    examenprogramma_kop2: 'ExamenprogrammaKop2',
-                    examenprogramma_kop3: 'ExamenprogrammaKop3',
-                    examenprogramma_kop4: 'ExamenprogrammaKop4',
-                    examenprogramma_body: 'ExamenprogrammaBody'
-                }
-            },
-            'curriculum-syllabus': {
-                title: 'Syllabus',
-                data: {
-                    syllabus: 'Syllabus',
-                    syllabus_vakleergebied: 'SyllabusVakleergebied',
-                    syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
-                    syllabus_toelichting: 'SyllabusToelichting',
-                    syllabus_vakbegrip: 'SyllabusVakbegrip'
-                }
-            },
-            'curriculum-examenprogramma-bg': {
-                title: 'Examenprogramma Beroepsgericht',
-                data: {
-                    examenprogramma_bg_profiel: 'ExamenprogrammaBgProfiel',
-                    examenprogramma_bg_kern: 'ExamenprogrammaBgKern',
-                    examenprogramma_bg_kerndeel: 'ExamenprogrammaBgKerndeel',
-                    examenprogramma_bg_globale_eindterm: 'ExamenprogrammaBgGlobaleEindterm',
-                    examenprogramma_bg_module: 'ExamenprogrammaBgModule',
-                    examenprogramma_bg_keuzevak: 'ExamenprogrammaBgKeuzevak',
-                    examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
-                    examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
-                    examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
-                }
-            },
-            'curriculum-referentiekader': {
-                title: 'Referentiekader',
-                data: {
-                    ref_vakleergebied: 'RefVakleergebied',
-                    ref_domein: 'RefDomein',
-                    ref_subdomein: 'RefSubdomein',
-                    ref_onderwerp: 'RefOnderwerp',
-                    ref_deelonderwerp: 'RefDeelonderwerp',
-                    ref_tekstkenmerk: 'RefTekstkenmerk'
-                }
-            },
-            'curriculum-erk': {
-                title: 'Europees referentiekader',
-                data: {
-                    erk_vakleergebied: 'ErkVakleergebied',
-                    erk_gebied: 'ErkGebied',
-                    erk_categorie: 'ErkCategorie',
-                    erk_taalactiviteit: 'ErkTaalactiviteit',
-                    erk_schaal: 'ErkSchaal',
-                    erk_candobeschrijving: 'ErkCandobeschrijving',
-                    erk_voorbeeld: 'ErkVoorbeeld',
-                    erk_lesidee: 'ErkLesidee'
-                }
-            },
-            'curriculum-leerdoelenkaarten': {
-                title: 'Leerdoelenkaarten',
-                data: {
-                    ldk_vakleergebied: 'LdkVakleergebied',
-                    ldk_vakkern: 'LdkVakkern',
-                    ldk_vaksubkern: 'LdkVaksubkern',
-                    ldk_vakinhoud: 'LdkVakinhoud',
-                    ldk_vakbegrip: 'LdkVakbegrip'
-                }
-            },
-            'curriculum-inhoudslijnen': {
-                title: 'Inhoudslijnen',
-                data: {
-                    inh_vakleergebied: 'InhVakleergebied',
-                    inh_inhoudslijn: 'InhInhoudslijn',
-                    inh_cluster: 'InhCluster',
-                    inh_subcluster: 'InhSubcluster'
-                }
-    //        },
-    //        'curriculum-niveauhierarchie':{
-    //            title: 'Niveau Hierarchie',
-    //            data: {
-    //                nh_categorie: 'NhCategorie',
-    //                nh_sector: 'NhSector',
-    //                nh_schoolsoort: 'NhSchoolsoort',
-    //                nh_leerweg: 'NhLeerweg',
-    //                nh_bouw: 'NhBouw',
-    //                nh_niveau: 'NhNiveau'
-    //            }
-            }
-        },
-*/
+
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -418,11 +287,21 @@
                     className: 'slo-small',
                     type: 'tree',
                     viewer: function(rect, offset, el) {
+                        let columnDef = browser.view.sloSpreadsheet.getColumnDefinition(el)
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        let value = row.columns[columnDef.value] || ''
                         let span = el.querySelector('span.slo-indent')
                         let spanRect = span.getBoundingClientRect()
                         this.style.left = (spanRect.left - offset.left)+'px'
                         this.style.width = rect.width - (spanRect.left - rect.left)+'px'
-                        this.innerHTML = span.innerHTML
+                        let header = `
+<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+  <svg class="ds-icon ds-icon-feather">
+    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+  </use></svg>
+</button>
+`
+                        this.innerHTML = header + value
                     }
                 },
                 title: {
