@@ -580,6 +580,9 @@ var browser = simply.app({
                 browser.actions.documentHideEditor()
             }
         },
+        default: {
+            // needed to switch back to default keyboard browser integreation
+        },
     },
 
     commands: {
@@ -589,6 +592,9 @@ var browser = simply.app({
         },
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
+            // @TODO : find a way to see which view we're in to switch the keyboard layout to that view.
+            let currentView = this.app.view.view
+            switchKeyboard(currentView)
         },
         closeEditor: (el, value) => {
             el = document.querySelector('td.focus')
@@ -743,6 +749,7 @@ var browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
+            browser.actions.switchKeyboard('default')
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
             }
@@ -1463,6 +1470,9 @@ var browser = simply.app({
         },
         documentHideEditor(){
             browser.view.sloDocument.hideEditor();
+        },
+        switchKeyboard(keyboard){
+            document.body.dataset.simplyKeyboard = keyboard
         }
         
     }
