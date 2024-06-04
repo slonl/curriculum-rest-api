@@ -97,11 +97,12 @@
                     }
                     return json;
                 })
-                .catch(error => {
+/*                .catch(error => {
                     //FIXME: api must not know about browser.view
                     browser.view.error = error.error;
                     browser.view.errorMessage = error.message;
                 });
+*/
             },
             runCommand: function(command) {
                 return fetch(window.apiURL+'/command/', {
@@ -694,6 +695,14 @@
             })
             .pop()
         },
+        getContextByTypeName(typeName) {
+            return Object.keys(slo.contexts)
+            .filter(c => {
+                let types = Object.keys(slo.contexts[c].data)
+                return types.includes(typeName)
+            })
+            .pop()
+        },
         getTypeNameByType(type) {
             let context = slo.getContextByType(type)
             return Object.entries(slo.contexts[context].data)
@@ -707,11 +716,10 @@
             }
             return _type
         },
-        getAvailableChildTypes(type) {
-            let context = slo.getContextByType(type)
-            let _type = slo.getTypeNameByType(type)
+        getAvailableChildTypes(typeName) {
+            let context = slo.getContextByTypeName(typeName)
             let schema = slo.contexts[context].schema
-            let children = schema[type].children
+            let children = schema[typeName].children
             let childTypeNames = Object.keys(children).filter(k => k[0]>='A' && k[0]<='Z')
             let subtypes = childTypeNames.map(name => {
                 return {

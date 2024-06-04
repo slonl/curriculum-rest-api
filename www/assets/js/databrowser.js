@@ -2,23 +2,21 @@ simply.route.init({
     root: window.release.apiPath
 });
 
-/*    (function() {       
-    var match = simply.route.match;
-    simply.route.match = function(path, options) {
-        if (path.indexOf(release.apiPath)===0) {
-            path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
-        } else if (path.indexOf(release.basePath+'uuid/')===0) {
-            path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
-        }
-        return match(path, options);
-    };
-})();
-*/    
+var routeMatch = simply.route.match
+simply.route.match = function() {
+    // do nothing, slo.contexts is not yet loaded, so all routes are on hold, wait for loadSchemas to finish
+}
 
 function uuid() {
   return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
 }
 
 function isString(s) {
@@ -332,8 +330,8 @@ var browser = simply.app({
                 load: Object.entries(slo.contexts['curriculum-'+params.context].data).map(([key,value]) => {
                     return {
                         link: {
-                            href: key+'/',
-                            innerHTML: value
+                            href: value+'/',
+                            innerHTML: key
                         }
                     }
                 })
@@ -768,6 +766,9 @@ var browser = simply.app({
         showChange: async function(el, value) {
             alert('nog niet geimplementeerd')
         },
+        addNewRoot: async function(el, value) {
+            browser.actions.addNewRoot(browser.view.listType)
+        },
         insertRow: async function(el, value) {
             //find possible types for sibling and child of node
             //show popup with list of types
@@ -846,7 +847,7 @@ var browser = simply.app({
                 let contextData = {}
                 for (let typeName in schema) {
                     let typeLabel = schema[typeName].label
-                    contextData[typeLabel] = typeName
+                    contextData[typeName] = typeLabel
                 }
                 slo.contexts[schemaLabel] = {
                     title: schemaName,
@@ -883,14 +884,18 @@ var browser = simply.app({
                     this.app.actions.updatePaging()
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
-                    //FIXME: uuid may not exist remote, but just been added
                     if (!root) {
-                        let roots = await window.localAPI.roots(currentItem)
-                        if (roots) {
-                            this.app.view.roots = roots
+                        try {
+                            let roots = await window.localAPI.roots(currentItem)
+                            if (roots) {
+                                this.app.view.roots = roots
+                            }
+                        } catch(e) {
+                            //FIXME: should never happen... but...
+                            root = { id: currentItem }
                         }
                     }
-                    if (root && !this.app.view.roots.includes(root)) {
+                    if (root && !this.app.view.roots?.includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
@@ -899,10 +904,10 @@ var browser = simply.app({
                     }
                     // get roots of current item
                     // pick one
-                    this.app.view.root = this.app.view.roots[0]
+                    this.app.view.root = this.app.view.roots?.[0] || {id: currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
-                    currentContext = window.slo.getContextByType(currentType)
+                    currentContext = window.slo.getContextByTypeName(currentType)
                     if (!this.app.view.contexts) {
                         this.app.view.contexts = ['curriculum-basis'];
                     }
@@ -955,7 +960,7 @@ var browser = simply.app({
                         let change = new changes.Change({
                             id: node.id ?? node.uuid,
                             meta: {
-                                context: window.slo.getContextByType(node['@type']),
+                                context: window.slo.getContextByTypeName(node['@type']),
                                 title: node.title ?? '[Geen titel]',
                                 type: node['@type'],
                                 timestamp: timestamp.substring(0, timestamp.indexOf('.'))
@@ -997,7 +1002,7 @@ var browser = simply.app({
                     this.app.view.root = this.app.view.roots[0]
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
-                    currentContext = window.slo.getContextByType(currentType)
+                    currentContext = window.slo.getContextByTypeName(currentType)
                     if (!this.app.view.contexts) {
                         this.app.view.contexts = ['curriculum-basis'];
                     }
@@ -1033,20 +1038,51 @@ var browser = simply.app({
             url.searchParams.set('page', page)
             window.location = url.href
         },
+        addNewRoot: async function(type) {
+            // @TODO: check that type is a root type, error if not
+
+            // add change to add new type entity
+            let node = {
+                    id: uuid(),
+                    '@type': type,
+                    unreleased: true
+            }
+            node['@id'] = window.release.apiPath+'uuid/'+node.id
+            let change = new changes.Change({
+                id: node.id,
+                meta: {
+                    context: window.slo.getContextByTypeName(type),
+                    title: 'Adding '+type,
+                    type,
+                    timestamp: mkTimestamp()
+                },
+                type: 'new',
+                newValue: node
+            })
+            changes.changes.push(change)
+            changes.update()
+            // switch to spreadsheet view of that entity
+            history.pushState({}, null, node['@id']) //window.release.apiPath+'uuid/'+node.id)
+            this.app.view.item = node
+            let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
+            await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
+            window.setTimeout(browser.commands.cellEditor, 100)
+        },
         list: function(type) {
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.list(type)
             .then(function(json) {
-                browser.view.context = window.slo.getContextByType(window.titles[type])
+                type = type.substring(0, type.length-1)
+                browser.view.context = window.slo.getContextByType(type)
                 browser.view.contextLink = {
                     href: '/'+browser.view.context+'/',
                     innerHTML: slo.contexts[browser.view.context].title
                 }
 
                 browser.view.view = 'list';
+                browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view['listTitle'] = window.titles[type];
                 browser.view.listIsRoot = json.root;
                 browser.actions.updatePaging(json.count);
             })
@@ -1149,6 +1185,7 @@ var browser = simply.app({
             return window.localAPI.listOpNiveau(niveau, type)
             .then(function(json) {
                 browser.view.view = 'list';
+                browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
@@ -1187,31 +1224,32 @@ var browser = simply.app({
             let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
+            let typeName = window.slo.getTypeNameByType(type)
             let node = {
                 id: uuid(),
-                '@type': type,
+                '@type': typeName,
                 'prefix': parentNode.prefix,
                 'unreleased': true
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
-            if (!parentNode[type]) {
-                parentNode[type] = []
+            if (!parentNode[typeName]) {
+                parentNode[typeName] = []
             }
-            let prevValue = parentNode[type].slice()
-            let newValue = parentNode[type].slice()
+            let prevValue = parentNode[typeName].slice()
+            let newValue = parentNode[typeName].slice()
             newValue.unshift(new changes.InsertedLink(node))
             // now add this to the change history
             let timestamp =  new Date().toISOString()
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
-                property: type,
+                property: typeName,
                 prevValue: prevValue,
                 newValue: newValue,
                 dirty: true,
@@ -1227,22 +1265,22 @@ var browser = simply.app({
             let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let siblingNode = row.node
-            let type = siblingNode['@type']
+            let typeName = siblingNode['@type']
             let node = {
                 id: uuid(),
-                '@type': type,
+                '@type': typeName,
                 'prefix': siblingNode.prefix,
                 'unreleased': true
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parentRow.node
-            if (!parentNode[type]) {
-                parentNode[type] = []
+            if (!parentNode[typeName]) {
+                parentNode[typeName] = []
             }
-            let prevValue = parentNode[type].slice()
-            let newValue = parentNode[type].slice()
-            let index = parentNode[type].findIndex(n => n.id == siblingNode.id)
+            let prevValue = parentNode[typeName].slice()
+            let newValue = parentNode[typeName].slice()
+            let index = parentNode[typeName].findIndex(n => n.id == siblingNode.id)
             newValue.splice(index+1, 0, new changes.InsertedLink(node))
 
             // now add this to the change history
@@ -1250,13 +1288,13 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
-                property: type,
+                property: typeName,
                 prevValue: prevValue,
                 newValue: newValue,
                 dirty: true,
@@ -1272,21 +1310,21 @@ var browser = simply.app({
             if (row.deleted) {
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
-                let type = row.node['@type']
-                let newValue = parentNode[type].slice()
+                let typeName = row.node['@type']
+                let newValue = parentNode[typeName].slice()
                 row.node.undelete(newValue)
-                let prevValue = parentNode[type].slice()
+                let prevValue = parentNode[typeName].slice()
                 let timestamp = new Date().toISOString()
                 let change = new changes.Change({
                     id: parentNode.id ?? parentNode.uuid,
                     meta: {
-                        context: window.slo.getContextByType(parentNode['@type']),
+                        context: window.slo.getContextByTypeName(parentNode['@type']),
                         title: parentNode.title,
                         type: parentNode['@type'],   
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'undelete',
-                    property: type,
+                    property: typeName,
                     prevValue,
                     newValue,
                     dirty: true
@@ -1305,9 +1343,9 @@ var browser = simply.app({
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
-            let type = row.node['@type']
+            let typeName = row.node['@type']
 
-            let prevValue = parentNode[type].slice()
+            let prevValue = parentNode[typeName].slice()
             let newValue = prevValue.map(e => { 
                 if (e.id==row.node.id) {
                     return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
@@ -1319,13 +1357,13 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'delete',
-                property: type,
+                property: typeName,
                 prevValue,
                 newValue,
                 dirty: true,
@@ -1384,7 +1422,7 @@ var browser = simply.app({
             let selector = document.querySelector('.slo-type-selector')
             selector.close(); //removeAttribute('open')
         },
-        'commitChanges': async function(message) {
+        commitChanges: async function(message) {
             const linkArray = (list) => {
                 let links = []
                 for (let v of list) {
@@ -1484,8 +1522,11 @@ if (user && key) {
 } else {
     browser.view.loggedIn = false
 }
+
 browser.actions.loadSchemas().then(schemas => {
     browser.view.schemas = schemas
+    simply.route.match = routeMatch // restore route.match now slo.contexts is available, and restart route matching
+    simply.route.match(document.location.href)
     document.body.classList.remove('loading')
 })
 
@@ -1498,22 +1539,3 @@ window.addEventListener('resize', (e) => {
 })
 
 // @NOTE: templates/scripts.html contains some extra javascript
-
-// @TODO : change the fullscreen icon according to the fullscreen state:
-// @TODO : COuldn't get to the right el element to make the following work:
-/*
-document.addEventListener("fullscreenchange", (event) => {
-    console.log("changing screen mode")
-    console.log(document.fullscreenEnabled)
-    let el = document.body.querySelector('.fullscreenToggle')
-    console.log(el)
-    if(document.fullscreenElement !== null){
-      console.log("going to fullscreen")
-     el.dataset.simplyState = "close"
-    }
-    if (document.fullscreenElement == null){
-      console.log("leaving fullscreen")
-      el.dataset.simplyState = "close"
-    }
-});
-*/
