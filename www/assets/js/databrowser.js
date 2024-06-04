@@ -591,8 +591,11 @@ var browser = simply.app({
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
             // @TODO : find a way to see which view we're in to switch the keyboard layout to that view.
-            let currentView = this.app.view.view
-            switchKeyboard(currentView)
+            let currentView = browser.view.view
+            console.log("switching keyboard")
+            console.log(currentView)
+            //browser.actions.switchKeyboard(currentView) // @TODO decide whether to use switchkeyboard or opdateView to re enable the right keyboard.
+            browser.actions.updateView()
         },
         closeEditor: (el, value) => {
             el = document.querySelector('td.focus')
@@ -1512,6 +1515,7 @@ var browser = simply.app({
             browser.view.sloDocument.hideEditor();
         },
         switchKeyboard(keyboard){
+            //browser.actions.switchKeyboard(keyboard)
             document.body.dataset.simplyKeyboard = keyboard
         }
         
