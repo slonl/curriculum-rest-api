@@ -791,7 +791,7 @@ const spreadsheet = (function() {
           spreadsheet.selector(el)
           let id = datamodel.view.visibleData[row]?.columns.id
           if (id) {
-              id = new URL(id)
+              id = new URL(id, document.location.href)
               if (changeListeners) {
                   changeListeners.forEach(listener => listener.call(spreadsheet, id))
               }
