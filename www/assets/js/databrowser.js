@@ -670,7 +670,6 @@ var browser = simply.app({
             this.app.actions.switchView(value)
         },
         toggleTree: function(el,value) {
-            return // disabled for now because of some navigation bugs
             let id = el.closest('tr').id
             browser.view.sloSpreadsheet.update({
                 toggle: id
@@ -705,6 +704,9 @@ var browser = simply.app({
               el.closest('table').classList.add('sorted')
               el.closest('th').classList.add('ds-datatable-sorted-'+value)
           }
+        },
+        selectTreeCell: (el, value) => {
+            browser.view.sloSpreadsheet.focus(el.closest('td'))
         },
         cellEditor: (el, value) => {
             if (browser.view.user) {
@@ -1526,7 +1528,7 @@ if (user && key) {
 browser.actions.loadSchemas().then(schemas => {
     browser.view.schemas = schemas
     simply.route.match = routeMatch // restore route.match now slo.contexts is available, and restart route matching
-    simply.route.match(document.location.href)
+    simply.route.match(document.location.pathname)
     document.body.classList.remove('loading')
 })
 
