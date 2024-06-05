@@ -864,7 +864,9 @@ var browser = simply.app({
                 let contextData = {}
                 for (let typeName in schema) {
                     let typeLabel = schema[typeName].label
-                    contextData[typeName] = typeLabel
+                    if (typeLabel) {
+                        contextData[typeName] = typeLabel
+                    }
                 }
                 slo.contexts[schemaLabel] = {
                     title: schemaName,
