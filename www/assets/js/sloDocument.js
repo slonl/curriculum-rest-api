@@ -98,7 +98,7 @@ const sloDocument = (function() {
        let currentContent = data.index.get(currentUUID).title
        return currentContent
       } catch {
-        let warning = "geselecteerd veld kan niet worden aangepast omdat het niet verwijst naar een UUID"
+        let warning = "Geselecteerd veld in de document weergave kan niet worden aangepast omdat het niet verwijst naar een UUID"
         console.log(warning)
         return warning
       }
