@@ -34,9 +34,6 @@
     .slo-tree-table .closed [data-simply-field="indent"]::before {
         content: "\25B8";
     }
-    .slo-tree-table.sorted [data-simply-field="indent"] {
-        display: none;
-    }
     label.slo-column-name {
         display: inline;
     }
@@ -170,9 +167,11 @@
     tr.closed .slo-has-children.slo-indent::before {
         content: "\25B8";
     }
+    table.fitlered .slo-indent.slo-has-children::before,
     table.sorted .slo-indent.slo-has-children::before {
         content: "";
     }
+    table.filtered .slo-indent,
     table.sorted .slo-indent {
         margin-left: 0;
     }
