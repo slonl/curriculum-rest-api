@@ -71,22 +71,37 @@ const sloDocument = (function() {
 
     function updateURL(){
         // replace URL with the new URL
-        let nextFocussedElement = document.querySelector(".focus");                   
-        let nextDocumentLocation = new URL(document.location.href);
-        let idPath = new URL(nextFocussedElement.id);
-        let nextID = idPath.pathname.split("/").pop();
-        idPath.pathname = "/uuid/" + nextID;
-        idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID;
-        window.history.replaceState({}, '', idPath.href);
-        browser.view.item.uuid = nextID
+        let nextFocussedElement = document.querySelector(".focus");
+        
+        try {
+          let nextDocumentLocation = new URL(document.location.href)
+          let idPath = URL.parse(nextFocussedElement.id) // @TODO: check if parse is accepteable or if "new URL()" is needed.
+          let nextID = idPath.pathname.split("/").pop()
+          idPath.pathname = "/uuid/" + nextID
+          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID
+          window.history.replaceState({}, '', idPath.href)
+          browser.view.item.uuid = nextID  
+        } catch {
+          let path = "/uuid/unknown"
+          let nextID = "/uuid/unknown"
+          window.history.replaceState({}, '', path)
+          browser.view.item.uuid = nextID  
+        } //no catch: sometimes the elements focussed do not have a uuid so we try catch
+
     }
 
     function getTitle() {
+      try {
        let currentUUID = browser.view.item.uuid
        currentIdentifier = currentUUID;
        //console.log(data.index)
        let currentContent = data.index.get(currentUUID).title
-       return currentContent;
+       return currentContent
+      } catch {
+        let warning = "geselecteerd veld kan niet worden aangepast omdat het niet verwijst naar een UUID"
+        console.log(warning)
+        return warning
+      }
     }
 
     async function render(){
