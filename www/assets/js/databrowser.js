@@ -671,7 +671,13 @@ var browser = simply.app({
                 el.classList.remove('ds-button-naked')
                 el.classList.add('ds-button-primary')
             }
-            this.app.actions.switchView(value)
+            return this.app.actions.switchView(value)
+        },
+        selectRoot: function(el, value) {
+            // either in spreadsheet of document view, check which one
+            // FIXME: support document view
+            let root = this.app.view.roots.find(r => r.id==value)
+            return this.app.actions.switchView(this.app.view.view, root)
         },
         toggleTree: function(el,value) {
             let id = el.closest('tr').id
@@ -924,16 +930,27 @@ var browser = simply.app({
                             root = { id: currentItem }
                         }
                     }
-                    if (root && !this.app.view.roots?.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
                     // get roots of current item
                     // pick one
-                    this.app.view.root = this.app.view.roots?.[0] || {id: currentItem}
+                    this.app.view.root = root ?? this.app.view.roots?.[0] ?? {id: currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
                     currentContext = window.slo.getContextByTypeName(currentType)
@@ -1019,16 +1036,27 @@ var browser = simply.app({
                     } catch(e) {
                         // ignore
                     }
-                    if (root && !this.app.view.roots.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //.includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
 
                     // pick one
-                    this.app.view.root = this.app.view.roots[0]
+                    this.app.view.root = root ?? this.app.view.roots[0] ?? {id:currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
                     currentContext = window.slo.getContextByTypeName(currentType)

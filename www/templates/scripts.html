@@ -42,8 +42,21 @@
     });
     
     var treeviewNiveaus, treeviewSchemas;
+    simply.activate.addListener('roots-select', function() {
+        if (!browser.view.roots || browser.view.roots.length<2) {
+            document.querySelector('.slo-roots-select').style.display = 'none'
+        } else {
+            treeviewNiveaus = new vanillaSelectBox('.slo-roots-select');
+            if (browser.view.root) {
+                let selectedIndex = browser.view.roots.findIndex(v => v.id==browser.view.root?.id)
+                if (selectedIndex>-1) {
+                    treeviewNiveaus.setValue(browser.view.roots[selectedIndex].id)
+                }
+            }
+        }
+    });
     simply.activate.addListener('niveaus-select', function() {
-        treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus'});
+        treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus', 'search':true});
     });
     simply.activate.addListener('contexts-select', function() {
         if (browser.view.contexts) {
