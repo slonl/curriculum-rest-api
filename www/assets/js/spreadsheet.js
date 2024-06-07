@@ -68,6 +68,12 @@ const spreadsheet = (function() {
           }
         }
       }
+      if (params.toggleAllOpen) {
+        if (Object.keys(this.options.closed).length) {
+          cache.etag = null
+          this.options.closed = []
+        }
+      }
       if (data.etag !== cache.etag) {
         cache.etag = data.etag
         let closedSubtree = []
@@ -515,6 +521,8 @@ const spreadsheet = (function() {
       title="Boomweergave" data-simply-command="sort" 
       data-simply-value="descending" data-name="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#columns"></use>
+    </svg></a><a class="ds-button ds-button-naked ds-icon-button" title="Open alle rows" data-simply-command="toggleAllOpen"><svg class="ds-icon ds-icon-feather">
+        <use xlink:href="${options.icons}#maximize-2"></use>
     </svg></a>
     ${selectButton}
     ${closeButton}

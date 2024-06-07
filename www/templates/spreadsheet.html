@@ -1,6 +1,13 @@
 <template data-simply-template="spreadsheet">
     <div class="slo-spreadsheet">
-        <div class="slo-form-inline slo-context-filter" data-simply-collection="niveaus-contexts">
+        <div class="slo-form-inline slo-context-filter">
+            <select class="slo-roots-select" data-simply-field="roots-selectie"
+            data-simply-list="roots" data-simply-data="roots" data-simply-entry="title" 
+            data-simply-activate="roots-select" data-simply-command="selectRoot">
+                <template>
+                    <option data-simply-field="title"></option>
+                </template>
+            </select>
             <select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
             data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
             data-simply-activate="niveaus-select" data-simply-element="niveaus">

@@ -106,13 +106,16 @@ const changes = (()=> {
 			}
 			function hydrate(e) {
 				if (e.$mark=='inserted') {
+					delete e.$mark
 					return new InsertedLink(e)
 				}
 				if (e.$mark=='deleted') {
+					delete e.$mark
 					return new DeletedLink(e)
 				}
 				if (e.$mark=='changed') {
-					return e; //new ChangedLink(e)
+					delete e.$mark
+					return new ChangedLink(e)
 				}
 				return e
 			}
@@ -462,6 +465,10 @@ const changes = (()=> {
 			this.#actualNode = node
 			this.$mark = 'changed'
 		}
+
+		unwrap() {
+			return this.#actualNode
+		}
 	}
 
 	class DeletedLink {
@@ -481,11 +488,15 @@ const changes = (()=> {
 			this.$mark = 'deleted'
 		}
 
-		undelete(parentArray) {
+		undelete(parentArray) {	
 			let index = parentArray.indexOf(this)
 			if (index!=-1) {
-				parentArray[index] = this.#actualNode
+				parentArray[index] = this.unwrap()
 			}
+		}
+
+		unwrap() {
+			return this.#actualNode
 		}
 
 	}
@@ -502,6 +513,9 @@ const changes = (()=> {
 			this.$mark = 'inserted'
 		}
 
+		unwrap() {
+			return this.#actualNode
+		}
 	}
 
 

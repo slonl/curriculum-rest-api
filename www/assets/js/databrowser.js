@@ -350,8 +350,6 @@ var browser = simply.app({
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
-            //TODO: calculate prev/next row while skipping over
-            //closed trees. So find the prev/next visible row.
             "ArrowDown": (e) => {
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
@@ -386,6 +384,10 @@ var browser = simply.app({
                 e.preventDefault()
                 let dropdowns = document.querySelectorAll('.ds-dropdown-state:checked')
                 dropdowns.forEach(d => d.checked = false)
+            },
+            " ": (e) => { //Spacebar
+                e.preventDefault()
+                browser.commands.toggleTree(document.querySelector('td.focus'))
             },
             "Home": (e) => {
                 e.preventDefault()
@@ -626,6 +628,7 @@ var browser = simply.app({
             browser.view.sloSpreadsheet.update({
                 filter
             })
+            browser.actions.updateFilterStatus()
         },
         filterText: (el, value) => {
             let filter = {}
@@ -638,6 +641,7 @@ var browser = simply.app({
                 filter[el.name] = ''
                 browser.view.sloSpreadsheet.update({filter})
             }
+            browser.actions.updateFilterStatus()
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -676,7 +680,13 @@ var browser = simply.app({
                 el.classList.remove('ds-button-naked')
                 el.classList.add('ds-button-primary')
             }
-            this.app.actions.switchView(value)
+            return this.app.actions.switchView(value)
+        },
+        selectRoot: function(el, value) {
+            // either in spreadsheet of document view, check which one
+            // FIXME: support document view
+            let root = this.app.view.roots.find(r => r.id==value)
+            return this.app.actions.switchView(this.app.view.view, root)
         },
         toggleTree: function(el,value) {
             let id = el.closest('tr').id
@@ -684,6 +694,11 @@ var browser = simply.app({
                 toggle: id
             })
             el.closest('tr').classList.toggle('closed')
+        },
+        toggleAllOpen: function(el, value) {
+            browser.view.sloSpreadsheet.update({
+                toggleAllOpen: true
+            })
         },
         toggleFullscreen: function(el, value) {
             let state = "open";
@@ -759,6 +774,12 @@ var browser = simply.app({
             browser.view.commitError = ''
             browser.view.mergedChanges = changes.merged.preview()
             document.getElementById('commitChanges').showModal()
+        },
+        removeAllChanges: async function(el, value) {
+            if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
+                browser.actions.removeAllChanges()
+                browser.commands.closeDialog(el, value)
+            }
         },
         commitChanges: async function(form, values) {
             if (!values['message']) {
@@ -859,7 +880,9 @@ var browser = simply.app({
                 let contextData = {}
                 for (let typeName in schema) {
                     let typeLabel = schema[typeName].label
-                    contextData[typeName] = typeLabel
+                    if (typeLabel) {
+                        contextData[typeName] = typeLabel
+                    }
                 }
                 slo.contexts[schemaLabel] = {
                     title: schemaName,
@@ -872,6 +895,16 @@ var browser = simply.app({
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
+        },
+        updateFilterStatus: async function() {
+            // if any filters are non-empty, add the 'filtered' class
+            // otherwise remove it from the slo-tree-table
+            let filters = browser.view.sloSpreadsheet.options?.filter
+            if (filters && Object.values(filters).find(v => v)) {
+                document.querySelector('table.slo-tree-table').classList.add('filtered')
+            } else {
+                document.querySelector('table.slo-tree-table').classList.remove('filtered')
+            }
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
@@ -907,16 +940,27 @@ var browser = simply.app({
                             root = { id: currentItem }
                         }
                     }
-                    if (root && !this.app.view.roots?.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
                     // get roots of current item
                     // pick one
-                    this.app.view.root = this.app.view.roots?.[0] || {id: currentItem}
+                    this.app.view.root = root ?? this.app.view.roots?.[0] ?? {id: currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
                     currentContext = window.slo.getContextByTypeName(currentType)
@@ -1002,16 +1046,27 @@ var browser = simply.app({
                     } catch(e) {
                         // ignore
                     }
-                    if (root && !this.app.view.roots.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //.includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
 
                     // pick one
-                    this.app.view.root = this.app.view.roots[0]
+                    this.app.view.root = root ?? this.app.view.roots[0] ?? {id:currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
                     currentContext = window.slo.getContextByTypeName(currentType)
@@ -1042,7 +1097,10 @@ var browser = simply.app({
                     return JSON.parse(data)
                 }
                 return data
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         updatePage: function(page) {
             browser.view.page = page
@@ -1099,8 +1157,8 @@ var browser = simply.app({
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
-                //FIXME: add error handling
-            });
+                browser.actions.handleAPIError(error)
+            })
         },
         spreadsheetUpdate: function() {
             changes.getLocalView(browser.view.root)
@@ -1137,6 +1195,9 @@ var browser = simply.app({
                 }, defs.rows)
                 browser.view.sloSpreadsheet.render()
             })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         spreadsheetResize: async function() {
             let panel = document.querySelector('.slo-content-panel')
@@ -1164,6 +1225,9 @@ var browser = simply.app({
                     pageData
                 );
             })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         doelniveauList: function(type) {
             browser.view['listTitle'] = window.titles[type];
@@ -1176,7 +1240,10 @@ var browser = simply.app({
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         item: function(id) {
             return window.localAPI.item(id)
@@ -1189,7 +1256,10 @@ var browser = simply.app({
                 }
                 browser.view.view = 'item';
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         listOpNiveau: function(niveau, type) {
             browser.view['listTitle'] = window.titles[type];
@@ -1202,7 +1272,10 @@ var browser = simply.app({
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         itemOpNiveau: function(niveau, type, id) {
             return window.localAPI.itemOpNiveau(niveau, type, id)
@@ -1210,7 +1283,10 @@ var browser = simply.app({
                 browser.view.view = 'item';
                 browser.view.item = json;
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         notfound: function(remainder) {
             browser.view.view = 'notfound';
@@ -1229,7 +1305,10 @@ var browser = simply.app({
         },
         register : function(email) {
             var url = window.release.apiPath+'register/';
-            window.slo.api.get(url + "?email=" + email);
+            window.slo.api.get(url + "?email=" + email)
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
@@ -1434,6 +1513,9 @@ var browser = simply.app({
             let selector = document.querySelector('.slo-type-selector')
             selector.close(); //removeAttribute('open')
         },
+        removeAllChanges: async function() {
+            changes.clear()
+        },
         commitChanges: async function(message) {
             const linkArray = (list) => {
                 let links = []
@@ -1514,11 +1596,32 @@ var browser = simply.app({
         documentHideEditor(){
             browser.view.sloDocument.hideEditor();
         },
+        handleAPIError(error) {
+            if (error.error) {
+                switch(error.error) {
+                    case 404:
+                        browser.actions.notfound()
+                    break
+                    default:
+                        if (error.message) {
+                            alert('Probleem: '+error.error+': '+error.message)
+                        } else {
+                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
+                            console.error(error)
+                        }
+                    break
+                }
+            } else {
+                alert('Probleem: er is een onbekend probleem opgetreden.')
+                console.error(error)
+            }
+       }, 
+
         switchKeyboard(keyboard){
             //browser.actions.switchKeyboard(keyboard)
             document.body.dataset.simplyKeyboard = keyboard
         }
-        
+
     }
 });
 
