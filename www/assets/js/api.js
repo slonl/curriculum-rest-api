@@ -433,7 +433,6 @@
 
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
                                     //if(value.title !== ""){
-                                        console.log(ExamenprogrammaEindterm)
                                         dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
                                         documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
                                     //}
@@ -552,7 +551,7 @@
             }
 
             documentData.root = formatDocumentData(node);
-            console.log(JSON.stringify(documentData));
+            //console.log(JSON.stringify(documentData)); // NOTE: used for debugging
 
             //documentData = JSON.parse(JSON.stringify(documentData));
 

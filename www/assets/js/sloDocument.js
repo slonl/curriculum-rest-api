@@ -119,17 +119,17 @@ const sloDocument = (function() {
       let change = new changes.Change({
           id: currentIdentifier,
           meta: {
-              context: window.slo.getContextByType(data.root["@type"]),
-              title: prevValue ?? '[Geen titel]',
+              context: window.slo.getContextByTypeName(data.root["@type"]),
               type: data.root["@type"],
+              title: prevValue ?? '[Geen titel]',
               timestamp: timestamp.substring(0, timestamp.indexOf('.')),
           },
           type: 'patch',
+          newValue : newValue,
           property: 'title',
           prevValue : prevValue,
-          newValue : newValue,
+          dirty,
           $mark : 'changed',
-          dirty
       })
       changes.changes.push(change)
       changes.update()
