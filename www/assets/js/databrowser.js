@@ -2,23 +2,21 @@ simply.route.init({
     root: window.release.apiPath
 });
 
-/*    (function() {       
-    var match = simply.route.match;
-    simply.route.match = function(path, options) {
-        if (path.indexOf(release.apiPath)===0) {
-            path = path.substring(release.apiPath.length); // handle /curriculum/2019/api/v1/*
-        } else if (path.indexOf(release.basePath+'uuid/')===0) {
-            path = path.substring(release.basePath.length); // handle /curriculum/2019/uuid/
-        }
-        return match(path, options);
-    };
-})();
-*/    
+var routeMatch = simply.route.match
+simply.route.match = function() {
+    // do nothing, slo.contexts is not yet loaded, so all routes are on hold, wait for loadSchemas to finish
+}
 
 function uuid() {
   return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
 }
 
 function isString(s) {
@@ -332,8 +330,8 @@ var browser = simply.app({
                 load: Object.entries(slo.contexts['curriculum-'+params.context].data).map(([key,value]) => {
                     return {
                         link: {
-                            href: key+'/',
-                            innerHTML: value
+                            href: value+'/',
+                            innerHTML: key
                         }
                     }
                 })
@@ -352,8 +350,6 @@ var browser = simply.app({
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
-            //TODO: calculate prev/next row while skipping over
-            //closed trees. So find the prev/next visible row.
             "ArrowDown": (e) => {
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
@@ -388,6 +384,10 @@ var browser = simply.app({
                 e.preventDefault()
                 let dropdowns = document.querySelectorAll('.ds-dropdown-state:checked')
                 dropdowns.forEach(d => d.checked = false)
+            },
+            " ": (e) => { //Spacebar
+                e.preventDefault()
+                browser.commands.toggleTree(document.querySelector('td.focus'))
             },
             "Home": (e) => {
                 e.preventDefault()
@@ -580,6 +580,9 @@ var browser = simply.app({
                 browser.actions.documentHideEditor()
             }
         },
+        default: {
+            // needed to switch back to default keyboard browser integreation
+        },
     },
 
     commands: {
@@ -589,6 +592,12 @@ var browser = simply.app({
         },
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
+            // @TODO : find a way to see which view we're in to switch the keyboard layout to that view.
+            let currentView = browser.view.view
+            console.log("switching keyboard")
+            console.log(currentView)
+            //browser.actions.switchKeyboard(currentView) // @TODO decide whether to use switchkeyboard or opdateView to re enable the right keyboard.
+            browser.actions.updateView()
         },
         closeEditor: (el, value) => {
             el = document.querySelector('td.focus')
@@ -619,6 +628,7 @@ var browser = simply.app({
             browser.view.sloSpreadsheet.update({
                 filter
             })
+            browser.actions.updateFilterStatus()
         },
         filterText: (el, value) => {
             let filter = {}
@@ -631,6 +641,7 @@ var browser = simply.app({
                 filter[el.name] = ''
                 browser.view.sloSpreadsheet.update({filter})
             }
+            browser.actions.updateFilterStatus()
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -669,15 +680,25 @@ var browser = simply.app({
                 el.classList.remove('ds-button-naked')
                 el.classList.add('ds-button-primary')
             }
-            this.app.actions.switchView(value)
+            return this.app.actions.switchView(value)
+        },
+        selectRoot: function(el, value) {
+            // either in spreadsheet of document view, check which one
+            // FIXME: support document view
+            let root = this.app.view.roots.find(r => r.id==value)
+            return this.app.actions.switchView(this.app.view.view, root)
         },
         toggleTree: function(el,value) {
-            return // disabled for now because of some navigation bugs
             let id = el.closest('tr').id
             browser.view.sloSpreadsheet.update({
                 toggle: id
             })
             el.closest('tr').classList.toggle('closed')
+        },
+        toggleAllOpen: function(el, value) {
+            browser.view.sloSpreadsheet.update({
+                toggleAllOpen: true
+            })
         },
         toggleFullscreen: function(el, value) {
             let state = "open";
@@ -707,6 +728,9 @@ var browser = simply.app({
               el.closest('table').classList.add('sorted')
               el.closest('th').classList.add('ds-datatable-sorted-'+value)
           }
+        },
+        selectTreeCell: (el, value) => {
+            browser.view.sloSpreadsheet.focus(el.closest('td'))
         },
         cellEditor: (el, value) => {
             if (browser.view.user) {
@@ -743,12 +767,19 @@ var browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
+            browser.actions.switchKeyboard('default')
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
             }
             browser.view.commitError = ''
             browser.view.mergedChanges = changes.merged.preview()
             document.getElementById('commitChanges').showModal()
+        },
+        removeAllChanges: async function(el, value) {
+            if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
+                browser.actions.removeAllChanges()
+                browser.commands.closeDialog(el, value)
+            }
         },
         commitChanges: async function(form, values) {
             if (!values['message']) {
@@ -767,6 +798,9 @@ var browser = simply.app({
         },
         showChange: async function(el, value) {
             alert('nog niet geimplementeerd')
+        },
+        addNewRoot: async function(el, value) {
+            browser.actions.addNewRoot(browser.view.listType)
         },
         insertRow: async function(el, value) {
             //find possible types for sibling and child of node
@@ -846,7 +880,9 @@ var browser = simply.app({
                 let contextData = {}
                 for (let typeName in schema) {
                     let typeLabel = schema[typeName].label
-                    contextData[typeLabel] = typeName
+                    if (typeLabel) {
+                        contextData[typeName] = typeLabel
+                    }
                 }
                 slo.contexts[schemaLabel] = {
                     title: schemaName,
@@ -859,6 +895,16 @@ var browser = simply.app({
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
+        },
+        updateFilterStatus: async function() {
+            // if any filters are non-empty, add the 'filtered' class
+            // otherwise remove it from the slo-tree-table
+            let filters = browser.view.sloSpreadsheet.options?.filter
+            if (filters && Object.values(filters).find(v => v)) {
+                document.querySelector('table.slo-tree-table').classList.add('filtered')
+            } else {
+                document.querySelector('table.slo-tree-table').classList.remove('filtered')
+            }
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
@@ -883,26 +929,41 @@ var browser = simply.app({
                     this.app.actions.updatePaging()
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
-                    //FIXME: uuid may not exist remote, but just been added
                     if (!root) {
-                        let roots = await window.localAPI.roots(currentItem)
-                        if (roots) {
-                            this.app.view.roots = roots
+                        try {
+                            let roots = await window.localAPI.roots(currentItem)
+                            if (roots) {
+                                this.app.view.roots = roots
+                            }
+                        } catch(e) {
+                            //FIXME: should never happen... but...
+                            root = { id: currentItem }
                         }
                     }
-                    if (root && !this.app.view.roots.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
                     // get roots of current item
                     // pick one
-                    this.app.view.root = this.app.view.roots[0]
+                    this.app.view.root = root ?? this.app.view.roots?.[0] ?? {id: currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
-                    currentContext = window.slo.getContextByType(currentType)
+                    currentContext = window.slo.getContextByTypeName(currentType)
                     if (!this.app.view.contexts) {
                         this.app.view.contexts = ['curriculum-basis'];
                     }
@@ -955,7 +1016,7 @@ var browser = simply.app({
                         let change = new changes.Change({
                             id: node.id ?? node.uuid,
                             meta: {
-                                context: window.slo.getContextByType(node['@type']),
+                                context: window.slo.getContextByTypeName(node['@type']),
                                 title: node.title ?? '[Geen titel]',
                                 type: node['@type'],
                                 timestamp: timestamp.substring(0, timestamp.indexOf('.'))
@@ -985,19 +1046,30 @@ var browser = simply.app({
                     } catch(e) {
                         // ignore
                     }
-                    if (root && !this.app.view.roots.includes(root)) {
+                    if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //.includes(root)) {
                         this.app.view.item.id = root.id
                         this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
                     }
+                    if (!this.app.view.roots) {
+                        this.app.view.roots = []
+                    }
+                    editor.addDataSource('roots', {
+                        load: this.app.view.roots.map(root => {
+                            return {
+                                value: root.id,
+                                innerHTML: root.prefix ? root.prefix+' '+root.title : root.title
+                            }
+                        })
+                    })
 
                     // pick one
-                    this.app.view.root = this.app.view.roots[0]
+                    this.app.view.root = root ?? this.app.view.roots[0] ?? {id:currentItem}
                     // switch to spreadsheet of that root
                     currentType = this.app.view.item['@type']
-                    currentContext = window.slo.getContextByType(currentType)
+                    currentContext = window.slo.getContextByTypeName(currentType)
                     if (!this.app.view.contexts) {
                         this.app.view.contexts = ['curriculum-basis'];
                     }
@@ -1025,7 +1097,10 @@ var browser = simply.app({
                     return JSON.parse(data)
                 }
                 return data
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         updatePage: function(page) {
             browser.view.page = page
@@ -1033,26 +1108,57 @@ var browser = simply.app({
             url.searchParams.set('page', page)
             window.location = url.href
         },
+        addNewRoot: async function(type) {
+            // @TODO: check that type is a root type, error if not
+
+            // add change to add new type entity
+            let node = {
+                    id: uuid(),
+                    '@type': type,
+                    unreleased: true
+            }
+            node['@id'] = window.release.apiPath+'uuid/'+node.id
+            let change = new changes.Change({
+                id: node.id,
+                meta: {
+                    context: window.slo.getContextByTypeName(type),
+                    title: 'Adding '+type,
+                    type,
+                    timestamp: mkTimestamp()
+                },
+                type: 'new',
+                newValue: node
+            })
+            changes.changes.push(change)
+            changes.update()
+            // switch to spreadsheet view of that entity
+            history.pushState({}, null, node['@id']) //window.release.apiPath+'uuid/'+node.id)
+            this.app.view.item = node
+            let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
+            await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
+            window.setTimeout(browser.commands.cellEditor, 100)
+        },
         list: function(type) {
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.list(type)
             .then(function(json) {
-                browser.view.context = window.slo.getContextByType(window.titles[type])
+                type = type.substring(0, type.length-1)
+                browser.view.context = window.slo.getContextByType(type)
                 browser.view.contextLink = {
                     href: '/'+browser.view.context+'/',
                     innerHTML: slo.contexts[browser.view.context].title
                 }
 
                 browser.view.view = 'list';
+                browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view['listTitle'] = window.titles[type];
                 browser.view.listIsRoot = json.root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
-                //FIXME: add error handling
-            });
+                browser.actions.handleAPIError(error)
+            })
         },
         spreadsheetUpdate: function() {
             changes.getLocalView(browser.view.root)
@@ -1089,6 +1195,9 @@ var browser = simply.app({
                 }, defs.rows)
                 browser.view.sloSpreadsheet.render()
             })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         spreadsheetResize: async function() {
             let panel = document.querySelector('.slo-content-panel')
@@ -1116,6 +1225,9 @@ var browser = simply.app({
                     pageData
                 );
             })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         doelniveauList: function(type) {
             browser.view['listTitle'] = window.titles[type];
@@ -1128,7 +1240,10 @@ var browser = simply.app({
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         item: function(id) {
             return window.localAPI.item(id)
@@ -1141,7 +1256,10 @@ var browser = simply.app({
                 }
                 browser.view.view = 'item';
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         listOpNiveau: function(niveau, type) {
             browser.view['listTitle'] = window.titles[type];
@@ -1149,11 +1267,15 @@ var browser = simply.app({
             return window.localAPI.listOpNiveau(niveau, type)
             .then(function(json) {
                 browser.view.view = 'list';
+                browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         itemOpNiveau: function(niveau, type, id) {
             return window.localAPI.itemOpNiveau(niveau, type, id)
@@ -1161,7 +1283,10 @@ var browser = simply.app({
                 browser.view.view = 'item';
                 browser.view.item = json;
                 browser.actions.updatePaging();
-            });
+            })
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         notfound: function(remainder) {
             browser.view.view = 'notfound';
@@ -1180,38 +1305,42 @@ var browser = simply.app({
         },
         register : function(email) {
             var url = window.release.apiPath+'register/';
-            window.slo.api.get(url + "?email=" + email);
+            window.slo.api.get(url + "?email=" + email)
+            .catch(function(error) {
+                browser.actions.handleAPIError(error)
+            })
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
             let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
+            let typeName = window.slo.getTypeNameByType(type)
             let node = {
                 id: uuid(),
-                '@type': type,
+                '@type': typeName,
                 'prefix': parentNode.prefix,
                 'unreleased': true
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
-            if (!parentNode[type]) {
-                parentNode[type] = []
+            if (!parentNode[typeName]) {
+                parentNode[typeName] = []
             }
-            let prevValue = parentNode[type].slice()
-            let newValue = parentNode[type].slice()
+            let prevValue = parentNode[typeName].slice()
+            let newValue = parentNode[typeName].slice()
             newValue.unshift(new changes.InsertedLink(node))
             // now add this to the change history
             let timestamp =  new Date().toISOString()
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
-                property: type,
+                property: typeName,
                 prevValue: prevValue,
                 newValue: newValue,
                 dirty: true,
@@ -1227,22 +1356,22 @@ var browser = simply.app({
             let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let siblingNode = row.node
-            let type = siblingNode['@type']
+            let typeName = siblingNode['@type']
             let node = {
                 id: uuid(),
-                '@type': type,
+                '@type': typeName,
                 'prefix': siblingNode.prefix,
                 'unreleased': true
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parentRow.node
-            if (!parentNode[type]) {
-                parentNode[type] = []
+            if (!parentNode[typeName]) {
+                parentNode[typeName] = []
             }
-            let prevValue = parentNode[type].slice()
-            let newValue = parentNode[type].slice()
-            let index = parentNode[type].findIndex(n => n.id == siblingNode.id)
+            let prevValue = parentNode[typeName].slice()
+            let newValue = parentNode[typeName].slice()
+            let index = parentNode[typeName].findIndex(n => n.id == siblingNode.id)
             newValue.splice(index+1, 0, new changes.InsertedLink(node))
 
             // now add this to the change history
@@ -1250,13 +1379,13 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
-                property: type,
+                property: typeName,
                 prevValue: prevValue,
                 newValue: newValue,
                 dirty: true,
@@ -1272,21 +1401,21 @@ var browser = simply.app({
             if (row.deleted) {
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
-                let type = row.node['@type']
-                let newValue = parentNode[type].slice()
+                let typeName = row.node['@type']
+                let newValue = parentNode[typeName].slice()
                 row.node.undelete(newValue)
-                let prevValue = parentNode[type].slice()
+                let prevValue = parentNode[typeName].slice()
                 let timestamp = new Date().toISOString()
                 let change = new changes.Change({
                     id: parentNode.id ?? parentNode.uuid,
                     meta: {
-                        context: window.slo.getContextByType(parentNode['@type']),
+                        context: window.slo.getContextByTypeName(parentNode['@type']),
                         title: parentNode.title,
                         type: parentNode['@type'],   
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'undelete',
-                    property: type,
+                    property: typeName,
                     prevValue,
                     newValue,
                     dirty: true
@@ -1305,9 +1434,9 @@ var browser = simply.app({
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
-            let type = row.node['@type']
+            let typeName = row.node['@type']
 
-            let prevValue = parentNode[type].slice()
+            let prevValue = parentNode[typeName].slice()
             let newValue = prevValue.map(e => { 
                 if (e.id==row.node.id) {
                     return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
@@ -1319,13 +1448,13 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByType(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(parentNode['@type']),
                     title: parentNode.title,
                     type: parentNode['@type'],
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'delete',
-                property: type,
+                property: typeName,
                 prevValue,
                 newValue,
                 dirty: true,
@@ -1384,7 +1513,10 @@ var browser = simply.app({
             let selector = document.querySelector('.slo-type-selector')
             selector.close(); //removeAttribute('open')
         },
-        'commitChanges': async function(message) {
+        removeAllChanges: async function() {
+            changes.clear()
+        },
+        commitChanges: async function(message) {
             const linkArray = (list) => {
                 let links = []
                 for (let v of list) {
@@ -1463,8 +1595,33 @@ var browser = simply.app({
         },
         documentHideEditor(){
             browser.view.sloDocument.hideEditor();
+        },
+        handleAPIError(error) {
+            if (error.error) {
+                switch(error.error) {
+                    case 404:
+                        browser.actions.notfound()
+                    break
+                    default:
+                        if (error.message) {
+                            alert('Probleem: '+error.error+': '+error.message)
+                        } else {
+                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
+                            console.error(error)
+                        }
+                    break
+                }
+            } else {
+                alert('Probleem: er is een onbekend probleem opgetreden.')
+                console.error(error)
+            }
+       }, 
+
+        switchKeyboard(keyboard){
+            //browser.actions.switchKeyboard(keyboard)
+            document.body.dataset.simplyKeyboard = keyboard
         }
-        
+
     }
 });
 
@@ -1484,8 +1641,11 @@ if (user && key) {
 } else {
     browser.view.loggedIn = false
 }
+
 browser.actions.loadSchemas().then(schemas => {
     browser.view.schemas = schemas
+    simply.route.match = routeMatch // restore route.match now slo.contexts is available, and restart route matching
+    simply.route.match(document.location.pathname)
     document.body.classList.remove('loading')
 })
 
@@ -1498,22 +1658,3 @@ window.addEventListener('resize', (e) => {
 })
 
 // @NOTE: templates/scripts.html contains some extra javascript
-
-// @TODO : change the fullscreen icon according to the fullscreen state:
-// @TODO : COuldn't get to the right el element to make the following work:
-/*
-document.addEventListener("fullscreenchange", (event) => {
-    console.log("changing screen mode")
-    console.log(document.fullscreenEnabled)
-    let el = document.body.querySelector('.fullscreenToggle')
-    console.log(el)
-    if(document.fullscreenElement !== null){
-      console.log("going to fullscreen")
-     el.dataset.simplyState = "close"
-    }
-    if (document.fullscreenElement == null){
-      console.log("leaving fullscreen")
-      el.dataset.simplyState = "close"
-    }
-});
-*/

@@ -3,24 +3,19 @@ TODO:
 + open/close tree
 + recalculate row index nr after sort
   (count over hidden rows - so 1,2,10,11,etc. hidden rows get counted)
-
+- check etag in plugins - if changed redo plugin, otherwise use cached value for data
 - select cell / focus cell - open hidden rows if needed
   focus cell by its uuid? set uuid id attribute on row
   keep track of node (and thus parents) in row
-- cursor navigation - skip hidden rows
-- add editors to column definitions
-  - text
-  - list (many of x)
-  - select (one of x)
-- tab to next cel
-- shift-tab to prev cel
  */
 
 const spreadsheet = (function() {
+
   const options = {
     rows: 15,
     container: null
   }
+
   return function(settings, data) {
     options.container = settings.container
     options.columns   = settings.columns
@@ -48,89 +43,126 @@ const spreadsheet = (function() {
       }
     })
 
+    let pluginCache = new Map()
+
     // tree toggle filter
-    datamodel.addPlugin('select', function(params) {
+    datamodel.addPlugin('select', function(params, data) {
+      if (!pluginCache.has(this)) {
+        pluginCache.set(this, {
+          etag: null,
+          data: null
+        })
+      }
+      let cache = pluginCache.get(this)
       if (params.toggle) {
-        if (this.options.closed[params.toggle]) {
-          delete this.options.closed[params.toggle]
-          let row = this.view.data.find(r => r.columns.id==params.toggle)
-          if (row) {
-            row.hidden = 0
+        let row = data.find(r => r.columns.id==params.toggle)
+        if (row.node.hasChildren) {
+          cache.etag = null
+          if (this.options.closed[params.toggle]) {
+            delete this.options.closed[params.toggle]
+            if (row) {
+              row.hidden = 0
+            }
+          } else {
+            this.options.closed[params.toggle]=true
           }
-        } else {
-          this.options.closed[params.toggle]=true
         }
       }
-      let closedSubtree = []
-      let lastVisibleRow = null
-      this.view.data = this.view.data.filter(r => {
-        let closed = closedSubtree.length?closedSubtree[closedSubtree.length-1]:0
-        let indent = r.indent+1 // make indent start at 1, not 0
-        if (closed && closed<indent) {
-          lastVisibleRow.hidden = lastVisibleRow.hidden ? lastVisibleRow.hidden+1 : 1
-          return false
+      if (params.toggleAllOpen) {
+        if (Object.keys(this.options.closed).length) {
+          cache.etag = null
+          this.options.closed = []
         }
-        if (closed && closed>=indent) {
-          closedSubtree.pop()
-        }
-        if (this.options.closed[r.columns.id]) {
-          r.closed = 'closed'
-          closedSubtree.push(indent)
-        } else {
-          r.closed = ''
-        }
-        lastVisibleRow = r
-        return true
-      })
-      this.view.visibleData = this.view.data.slice()
+      }
+      if (data.etag !== cache.etag) {
+        cache.etag = data.etag
+        let closedSubtree = []
+        let lastVisibleRow = null
+        cache.data = data.filter(r => {
+          let closed = closedSubtree.length?closedSubtree[closedSubtree.length-1]:0
+          let indent = r.indent+1 // make indent start at 1, not 0
+          if (closed && closed<indent) {
+            lastVisibleRow.hidden = lastVisibleRow.hidden ? lastVisibleRow.hidden+1 : 1
+            return false
+          }
+          if (closed && closed>=indent) {
+            closedSubtree.pop()
+          }
+          if (this.options.closed[r.columns.id]) {
+            r.closed = 'closed'
+            closedSubtree.push(indent)
+          } else {
+            r.closed = ''
+          }
+          lastVisibleRow = r
+          return true
+        })
+        cache.data.etag = simply.viewmodel.etag()
+
+      }
+      this.view.visibleData = cache.data.slice()
+      return cache.data
     })
 
     // cell value filter
-    datamodel.addPlugin('select', function(params) {
-      if (!this.options.filter) {
-        this.options.filter = {}
+    datamodel.addPlugin('select', function(params, data) {
+      if (!pluginCache.has(this)) {
+        pluginCache.set(this, {
+          etag: null,
+          data: null
+        })
+      }
+      let cache = pluginCache.get(this)
+      if (!datamodel.options.filter) {
+        datamodel.options.filter = {}
       }
       if (typeof params.filter != 'undefined') {
+        cache.etag = null
         for (let f in params.filter) {
           if (params.filter[f].length) {
-            this.options.filter[f] = params.filter[f]
+            datamodel.options.filter[f] = params.filter[f]
           } else {
-            delete this.options.filter[f]
+            delete datamodel.options.filter[f]
           }
         }
       }
-      this.view.data = this.view.data.filter(row => {
-        for(let name in this.options.filter) {
-          let filter = this.options.filter[name]
-          if (Array.isArray(filter)) {
-            if (Array.isArray(row.columns[name])) {
-              if (filter.filter(value => row.columns[name].includes(value)).length==0) {
-                return false
+      if (data.etag !== cache.etag) {
+        cache.etag = data.etag
+        cache.data = data.filter(row => {
+          for(let name in datamodel.options.filter) {
+            let filter = datamodel.options.filter[name]
+            if (Array.isArray(filter)) {
+              if (Array.isArray(row.columns[name])) {
+                if (filter.filter(value => row.columns[name].includes(value)).length==0) {
+                  return false
+                }
+              } else {
+                if (!filter.includes(row.columns[name])) {
+                  return false
+                }
               }
             } else {
-              if (!filter.includes(row.columns[name])) {
-                return false
-              }
-            }
-          } else {
-            filter = filter.toLowerCase()
-            if (Array.isArray(row.columns[name])) {
-              if (!row.columns[name] || row.columns[name].filter(value => value.toLowerCase().search(filter)>-1).length) {
-                return false
-              }
-            } else {
-              if (!row.columns[name] || row.columns[name].toLowerCase().search(filter)==-1) {
-                return false
+              filter = filter.toLowerCase()
+              if (Array.isArray(row.columns[name])) {
+                if (!row.columns[name] || row.columns[name].filter(value => value.toLowerCase().search(filter)>-1).length) {
+                  return false
+                }
+              } else {
+                if (!row.columns[name] || row.columns[name].toLowerCase().search(filter)==-1) {
+                  return false
+                }
               }
             }
           }
-        }
-        return true
-      })
-      this.view.visibleData = this.view.data.slice()
+          return true
+        })
+        cache.data.etag = simply.viewmodel.etag()
+      }
+      this.view.visibleData = cache.data.slice()
+      return cache.data
     })
 
-    // adds caching of sorted list
+  
     function createSort(options) {
         var defaultOptions = {
             name: 'sort',
@@ -139,18 +171,24 @@ const spreadsheet = (function() {
             }
         };
         options = Object.assign(defaultOptions, options || {});
-        let sorted = []
-        let reference = datamodel.view.data
-        return function(params) {
-            this.options[options.name] = options;
-            if (params[options.name] || sorted.length!=this.view.data.length || reference != this.view.data) {
-                reference = this.view.data
-                options = Object.assign(options, params[options.name]);
-                this.view.data.sort(options.getSort.call(this, options));
-                sorted = this.view.data.slice()
+
+        return function(params, data) {
+            if (!pluginCache.has(this)) {
+              pluginCache.set(this, {
+                etag: null,
+                data: null
+              })
             }
-            this.view.data = sorted
-            this.view.visibleData = this.view.data.slice()
+            let cache = pluginCache.get(this)
+            this.options[options.name] = options;
+            if (params[options.name] || cache.etag!==data.etag) {
+                options = Object.assign(options, params[options.name]);
+                cache.etag = data.etag
+                cache.data = data.toSorted(options.getSort.call(this, options))
+                cache.data.etag = simply.viewmodel.etag()
+            }
+            this.view.visibleData = cache.data.slice()
+            return cache.data
         };
     }
 
@@ -178,30 +216,43 @@ const spreadsheet = (function() {
       }
     }))
 
-    datamodel.addPlugin('render', function(params) {
+    datamodel.addPlugin('render', function(params, data) {
+      if (!pluginCache.has(this)) {
+        pluginCache.set(this, {
+          etag: null,
+          data: null
+        })
+      }
+      let cache = pluginCache.get(this)
       if (typeof params.offset != 'undefined') {
-        this.options.offset = Math.min(params.offset, this.data.length-1)
+        cache.etag = null
+        this.options.offset = Math.min(params.offset, data.length-1)
       }
-      start = this.options.offset
-      end = start + this.options.rows
-      if (end>this.view.data.length) {
-        end = this.view.data.length;
-        start = Math.max(0, end - this.options.rows);
-      }
-      this.view.data = this.view.data.slice(start, end)
-      // add row numbers
-      let count = 0
-      for (let row of this.view.data) {
-        row.id = start+count
-        if (row.hidden) {
-          count+=row.hidden
+      if (cache.etag !== data.etag) {
+        cache.etag = data.etag
+        start = this.options.offset
+        end = start + this.options.rows
+        if (end>data.length) {
+          end = data.length;
+          start = Math.max(0, end - this.options.rows);
         }
-        count++
+        cache.data = data.slice(start, end)
+        // add row numbers
+        let count = 0
+        for (let row of cache.data) {
+          row.id = start+count
+//          if (row.hidden) {
+//            count+=row.hidden
+//          }
+          count++
+        }
+        cache.data.etag = simply.viewmodel.etag()
       }
       //check focus
       if (typeof params.focus != 'undefined') {
         this.options.focus = params.focus
       }
+      return cache.data
     });
 
     options.container.innerHTML = ''
@@ -295,13 +346,16 @@ const spreadsheet = (function() {
       selector.style.width = rect.width+'px'
       selector.style['min-height'] = rect.height+'px'
       let value = row.columns[columnDef.value] || ''
-      let header = `
+      let header = ''
+      if (columnDef.editor!==false) {
+        header = `
 <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
   <svg class="ds-icon ds-icon-feather">
     <use xlink:href="/assets/icons/feather-sprite.svg#edit">
   </use></svg>
 </button>
 `
+      }
       switch(columnDef.type) {
         case 'id':
           selector.innerHTML = header + el.innerHTML
@@ -349,9 +403,10 @@ const spreadsheet = (function() {
 
     function getColumnDefinition(el) {
       // column definitions are in options.columns
+      let td = el.closest('td')
       let visibleColumns = options.columns.filter(c => c.checked)
-      let siblingCells = Array.from(el.closest('tr').querySelectorAll('td'))
-      while (siblingCells[siblingCells.length-1]!==el) {
+      let siblingCells = Array.from(td.closest('tr').querySelectorAll('td'))
+      while (siblingCells[siblingCells.length-1]!==td) {
         siblingCells.pop()
       }
       siblingCells.pop()
@@ -466,6 +521,8 @@ const spreadsheet = (function() {
       title="Boomweergave" data-simply-command="sort" 
       data-simply-value="descending" data-name="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#columns"></use>
+    </svg></a><a class="ds-button ds-button-naked ds-icon-button" title="Open alle rows" data-simply-command="toggleAllOpen"><svg class="ds-icon ds-icon-feather">
+        <use xlink:href="${options.icons}#maximize-2"></use>
     </svg></a>
     ${selectButton}
     ${closeButton}
@@ -561,7 +618,7 @@ const spreadsheet = (function() {
               hasChildren = ' slo-has-children'
             }
             html+=`<td class="${colClass}" data-simply-command="toggleTree">
-    <span class="slo-indent slo-indent-${row.indent} ${hasChildren}">${value}</span>
+    <span class="slo-indent slo-indent-${row.indent} ${hasChildren}"><span data-simply-command="selectTreeCell">${value}&nbsp;</span></span>
 </td>`
             break
           case 'text':
@@ -670,21 +727,7 @@ const spreadsheet = (function() {
             }
             let cell = evt.target.closest('td')
             if (cell) {
-                let current = body.querySelectorAll('.focus')
-                current.forEach(el => {
-                    el.classList.remove('focus')
-                })
-                cell.classList.add('focus')
-                cell.closest('tr').classList.add('focus')
-                let row = spreadsheet.findId(cell.closest('tr').id)
-                if (row!==null) {
-                    let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
-                    let column = columns.findIndex(td => td===cell)
-                    if (options.editMode) {
-                      column--
-                    }
-                    spreadsheet.goto(row,column)
-                }
+                spreadsheet.focus(cell)
             }
         }
         body.addEventListener('click', clickListener)
@@ -765,6 +808,23 @@ const spreadsheet = (function() {
         } while (visibleColumns[column-1]?.editor === false)
         return spreadsheet.goto(row, column)
       },
+      focus: (cell) => {
+        let current = body.querySelectorAll('.focus')
+        current.forEach(el => {
+            el.classList.remove('focus')
+        })
+        cell.classList.add('focus')
+        cell.closest('tr').classList.add('focus')
+        let row = spreadsheet.findId(cell.closest('tr').id)
+        if (row!==null) {
+            let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
+            let column = columns.findIndex(td => td===cell)
+            if (options.editMode) {
+              column--
+            }
+            spreadsheet.goto(row,column)
+        }
+      },
       goto: (row, column) => {
           // row/column only count visible rows and columns
           row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
@@ -791,7 +851,7 @@ const spreadsheet = (function() {
           spreadsheet.selector(el)
           let id = datamodel.view.visibleData[row]?.columns.id
           if (id) {
-              id = new URL(id)
+              id = new URL(id, document.location.href)
               if (changeListeners) {
                   changeListeners.forEach(listener => listener.call(spreadsheet, id))
               }

@@ -115,7 +115,7 @@ function inContexts(e, contexts) {
     }
     let className = JSONTag.getAttribute(e, 'class')
     let context = getContextByType(className)
-    return contexts.indexOf(context)!==-1; //s.some(context)
+    return contexts.indexOf(context)!==-1 || className=='Niveau'; //s.some(context)
 }
 
 from(Index(request.query.id))

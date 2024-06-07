@@ -32,14 +32,14 @@
                     load: Object.entries(context.data).map(([key,value]) => {
                         return {
                             link: {
-                                href: key+'/',
-                                innerHTML: value
+                                href: value+'/',
+                                innerHTML: key
                             }
                         }
                     })
                 })
                 Object.entries(context.data).forEach(([key,value]) => {
-                    titles[key+'/'] = value;
+                    titles[value+'/'] = key;
                 })
             }); // leave this ;, otherwise the (function() ) below is parsed incorrectly
     }

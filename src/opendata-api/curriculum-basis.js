@@ -216,7 +216,7 @@ module.exports = {
 		.orderBy({ 
 			title:asc
 		})
-		.slice(Paging.start,Paging.end)
+		//.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			...shortInfo,

@@ -97,11 +97,12 @@
                     }
                     return json;
                 })
-                .catch(error => {
+/*                .catch(error => {
                     //FIXME: api must not know about browser.view
                     browser.view.error = error.error;
                     browser.view.errorMessage = error.message;
                 });
+*/
             },
             runCommand: function(command) {
                 return fetch(window.apiURL+'/command/', {
@@ -163,138 +164,7 @@
                 })
             }
         },
-/*
-        contexts: {
-            'curriculum-fo':{
-                title: 'Curriculum Funderend onderwijs',
-                data: {
-                    fo_domein: 'FoDomein',
-                    fo_subdomein: 'FoSubdomein',
-                    fo_doelzin: 'FoDoelzin',
-                    fo_toelichting: 'FoToelichting',
-                    fo_uitwerking: 'FoUitwerking'
-                }
-            },
-            'curriculum-samenhang': {
-                title: 'Samenhang',
-                data: {
-                    tag: 'Begrippen',
-                    relatie: 'Relaties'
-                }
-            },
-            'curriculum-basis': {
-                title: 'Basis',
-                data: {
-                    vakleergebied: 'Vakleergebied',
-                    niveau: 'Niveau',
-                    doelniveau: 'DoelNiveau',
-                    doel: 'Doel'
-                }
-            },
-            'curriculum-kerndoelen': {
-                title: 'Kerndoelen',
-                data: {
-                    kerndoel_vakleergebied: 'KerndoelVakleergebied',
-                    kerndoel_domein: 'KerndoelDomein',
-                    kerndoel: 'Kerndoel',
-                    kerndoel_uitstroomprofiel: 'KerndoelUitstroomprofiel'
-                }
-            },
-            'curriculum-examenprogramma': {
-                title: 'Examenprogramma',
-                data: {
-                    examenprogramma: 'Examenprogramma',
-                    examenprogramma_vakleergebied: 'ExamenprogrammaVakleergebied',
-                    examenprogramma_domein: 'ExamenprogrammaDomein',
-                    examenprogramma_subdomein: 'ExamenprogrammaSubdomein',
-                    examenprogramma_eindterm: 'ExamenprogrammaEindterm',
-                    examenprogramma_kop1: 'ExamenprogrammaKop1',
-                    examenprogramma_kop2: 'ExamenprogrammaKop2',
-                    examenprogramma_kop3: 'ExamenprogrammaKop3',
-                    examenprogramma_kop4: 'ExamenprogrammaKop4',
-                    examenprogramma_body: 'ExamenprogrammaBody'
-                }
-            },
-            'curriculum-syllabus': {
-                title: 'Syllabus',
-                data: {
-                    syllabus: 'Syllabus',
-                    syllabus_vakleergebied: 'SyllabusVakleergebied',
-                    syllabus_specifieke_eindterm: 'SyllabusSpecifiekeEindterm',
-                    syllabus_toelichting: 'SyllabusToelichting',
-                    syllabus_vakbegrip: 'SyllabusVakbegrip'
-                }
-            },
-            'curriculum-examenprogramma-bg': {
-                title: 'Examenprogramma Beroepsgericht',
-                data: {
-                    examenprogramma_bg_profiel: 'ExamenprogrammaBgProfiel',
-                    examenprogramma_bg_kern: 'ExamenprogrammaBgKern',
-                    examenprogramma_bg_kerndeel: 'ExamenprogrammaBgKerndeel',
-                    examenprogramma_bg_globale_eindterm: 'ExamenprogrammaBgGlobaleEindterm',
-                    examenprogramma_bg_module: 'ExamenprogrammaBgModule',
-                    examenprogramma_bg_keuzevak: 'ExamenprogrammaBgKeuzevak',
-                    examenprogramma_bg_deeltaak: 'ExamenprogrammaBgDeeltaak',
-                    examenprogramma_bg_moduletaak: 'ExamenprogrammaBgModuletaak',
-                    examenprogramma_bg_keuzevaktaak: 'ExamenprogrammaBgKeuzevaktaak'
-                }
-            },
-            'curriculum-referentiekader': {
-                title: 'Referentiekader',
-                data: {
-                    ref_vakleergebied: 'RefVakleergebied',
-                    ref_domein: 'RefDomein',
-                    ref_subdomein: 'RefSubdomein',
-                    ref_onderwerp: 'RefOnderwerp',
-                    ref_deelonderwerp: 'RefDeelonderwerp',
-                    ref_tekstkenmerk: 'RefTekstkenmerk'
-                }
-            },
-            'curriculum-erk': {
-                title: 'Europees referentiekader',
-                data: {
-                    erk_vakleergebied: 'ErkVakleergebied',
-                    erk_gebied: 'ErkGebied',
-                    erk_categorie: 'ErkCategorie',
-                    erk_taalactiviteit: 'ErkTaalactiviteit',
-                    erk_schaal: 'ErkSchaal',
-                    erk_candobeschrijving: 'ErkCandobeschrijving',
-                    erk_voorbeeld: 'ErkVoorbeeld',
-                    erk_lesidee: 'ErkLesidee'
-                }
-            },
-            'curriculum-leerdoelenkaarten': {
-                title: 'Leerdoelenkaarten',
-                data: {
-                    ldk_vakleergebied: 'LdkVakleergebied',
-                    ldk_vakkern: 'LdkVakkern',
-                    ldk_vaksubkern: 'LdkVaksubkern',
-                    ldk_vakinhoud: 'LdkVakinhoud',
-                    ldk_vakbegrip: 'LdkVakbegrip'
-                }
-            },
-            'curriculum-inhoudslijnen': {
-                title: 'Inhoudslijnen',
-                data: {
-                    inh_vakleergebied: 'InhVakleergebied',
-                    inh_inhoudslijn: 'InhInhoudslijn',
-                    inh_cluster: 'InhCluster',
-                    inh_subcluster: 'InhSubcluster'
-                }
-    //        },
-    //        'curriculum-niveauhierarchie':{
-    //            title: 'Niveau Hierarchie',
-    //            data: {
-    //                nh_categorie: 'NhCategorie',
-    //                nh_sector: 'NhSector',
-    //                nh_schoolsoort: 'NhSchoolsoort',
-    //                nh_leerweg: 'NhLeerweg',
-    //                nh_bouw: 'NhBouw',
-    //                nh_niveau: 'NhNiveau'
-    //            }
-            }
-        },
-*/
+
         treeToRows: function(data) {
             let allRows = []
             let allColumns = {}
@@ -417,11 +287,21 @@
                     className: 'slo-small',
                     type: 'tree',
                     viewer: function(rect, offset, el) {
+                        let columnDef = browser.view.sloSpreadsheet.getColumnDefinition(el)
+                        let row = browser.view.sloSpreadsheet.getRow(el)
+                        let value = row.columns[columnDef.value] || ''
                         let span = el.querySelector('span.slo-indent')
                         let spanRect = span.getBoundingClientRect()
                         this.style.left = (spanRect.left - offset.left)+'px'
                         this.style.width = rect.width - (spanRect.left - rect.left)+'px'
-                        this.innerHTML = span.innerHTML
+                        let header = `
+<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+  <svg class="ds-icon ds-icon-feather">
+    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+  </use></svg>
+</button>
+`
+                        this.innerHTML = header + value
                     }
                 },
                 title: {
@@ -543,66 +423,33 @@
 
                  Object.entries(node).forEach(([key, value]) => {
 
-                    if( Array.isArray(value)){
+                    if(Array.isArray(value)){
 
                         switch (key){
-     
-                            case 'Doel':
-                            case 'ErkLesidee':
-                            case 'ErkVoorbeeld':
-                            case 'FoToelichting':
-                            case 'FoUitwerking':
-                            case 'InhSubcluster':
-                            case 'KerndoelDomein':
-                            case 'KerndoelUitstroomprofiel':
-                            case 'LdkVakinhoud':
-                            case 'LdkVakbegrip':
-                            case 'Leerlingtekst':
-                            case 'LpibVakinhoud':
-                            case 'RefDeelonderwerp':
-                            case 'RefTekstkenmerk':
-                            case 'Vakleergebied':
-                                for(let child of value){
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
 
-                            // @TODO : this one might be broken: value is an empty array.
-                            case 'Examenprogramma':
-                                //console.log("Examenprogramma")
-                                //console.log(value)
-                                for(let child of value){
-                                    //console.log("Examenprogramma child:  ")
-                                    //console.log(child)
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
-                            
-                            //case 'ExamenprogrammaDomein':
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
-                                    // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
+                                    // @TODO : some elements are only used as strings, like Niveau, when the loop is not recursed these nodes are not mapped BY DESIGN
 
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
-
-                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
-                                    //console.log(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
-                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+                                    //if(value.title !== ""){
+                                        console.log(ExamenprogrammaEindterm)
+                                        dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
+                                        documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
+                                    //}
 
                                 };
                             break;
 
                             case 'Doelniveau':
-                                for(let doelNiveau of value){
+                                for(let doelNiveau of value){                     
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
                                         dataObj['documentLeafNode'].push(hoistedChild);
-
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
-                                    }
-                                
+                                    }         
                                 };
                             break;
 
@@ -610,7 +457,6 @@
                                 for(let child of value){
                                     dataObj['documentTextNode'].push(child);
                                     documentData.index.set(child.id , child);
-
                                 };
                             break;
                             
@@ -619,10 +465,11 @@
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                                
+
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
+                                        //console.log("hoisting child niveau: ", child.Niveau); // @TODO: remove when done debugging
                                         dataObj['documentNiveauIndex'].push(child.Niveau);
                                         documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
@@ -636,6 +483,22 @@
                                 for(let niveau of value){
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
+                            break;
+
+                            case '$mark':
+                                switch(value){
+                                    case 'changed':
+                                        dataObj['documentSublist'].push({$mark:'changed'}); //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'deleted':
+                                        dataObj['documentSublist'].push({$mark:'deleted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'inserted':
+                                        dataObj['documentSublist'].push({$mark:'inserted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    default:
+                                        console.log("found an unknown type of $mark")
+                                }
                             break;
 
                             // @TODO : check if tag data is complete
@@ -689,6 +552,7 @@
             }
 
             documentData.root = formatDocumentData(node);
+            console.log(JSON.stringify(documentData));
 
             //documentData = JSON.parse(JSON.stringify(documentData));
 
@@ -706,6 +570,14 @@
             })
             .pop()
         },
+        getContextByTypeName(typeName) {
+            return Object.keys(slo.contexts)
+            .filter(c => {
+                let types = Object.keys(slo.contexts[c].data)
+                return types.includes(typeName)
+            })
+            .pop()
+        },
         getTypeNameByType(type) {
             let context = slo.getContextByType(type)
             return Object.entries(slo.contexts[context].data)
@@ -719,11 +591,10 @@
             }
             return _type
         },
-        getAvailableChildTypes(type) {
-            let context = slo.getContextByType(type)
-            let _type = slo.getTypeNameByType(type)
+        getAvailableChildTypes(typeName) {
+            let context = slo.getContextByTypeName(typeName)
             let schema = slo.contexts[context].schema
-            let children = schema[type].children
+            let children = schema[typeName].children
             let childTypeNames = Object.keys(children).filter(k => k[0]>='A' && k[0]<='Z')
             let subtypes = childTypeNames.map(name => {
                 return {

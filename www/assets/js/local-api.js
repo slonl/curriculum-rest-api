@@ -1,17 +1,26 @@
 window.localAPI = (function() {
 	return {
-        list: function(type) {
+        list: async function(type) {
             return window.slo.api.get(window.release.apiPath+type, {
                 pageSize: browser.view.pageSize,
                 page: parseInt(browser.view.page)-1
             })
             .then(function(json) {
                 changes.getLocalView(json.data)
-                //add inserted entities matching type
+                let typeName = window.titles[type]
+                //add inserted entities matching type -> get typeName from type
+                Object.values(changes.merged)
+                .filter(e => e['@type']==typeName && e['@newValue'])
+                .forEach(e => {
+                    json.data.unshift(new changes.InsertedLink(changes.local[e['@id']]))
+                })
                 return json
             })
         },
-        spreadsheet: function(root, context, niveau) {
+        spreadsheet: async function(root, context, niveau) {
+            if (changes.local[root] && changes.merged[root]['@newValue']) {
+                return changes.local[root]
+            }
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
             })
@@ -20,13 +29,11 @@ window.localAPI = (function() {
                 //add inserted entities matching root, context, niveau
                 return json
             })
-            .catch(function(error) {
-            	alert('nyi')
-            	//if root is inserted entity, return it, filter children on context and niveau
-            	//return json
-            })
         },
-        document: function(root, context, niveau) {
+        document: async function(root, context, niveau) {
+            if (changes.local[root] && changes.merged[root]['@newValue']) {
+                return changes.local[root]
+            }
 	        return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
             })
@@ -35,13 +42,8 @@ window.localAPI = (function() {
                 //add inserted entities matching root, context, niveau
                 return json
             })
-            .catch(function(error) {
-            	alert('nyi')
-            	//if root is inserted entity, return it, filter children on context and niveau
-            	//return json
-            })
         },
-        doelniveauList: function(type) {
+        doelniveauList: async function(type) {
 	        return window.slo.api.get(window.release.apiPath+type)
             .then(function(json) {
                 changes.getLocalView(json.data)
@@ -49,18 +51,17 @@ window.localAPI = (function() {
                 return json
             })
         },
-        item: function(id) {
+        item: async function(id) {
+            if (changes.local[id] && changes.merged[id]['@newValue']) {
+                return changes.local[id]
+            }
 	        return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
             .then(function(json) {
                 changes.getLocalView(json)
                 return json
             })
-            .catch(function(error) {
-            	// return inserted entity matching id
-//                return json
-            })
         },
-        listOpNiveau: function(niveau, type) {
+        listOpNiveau: async function(niveau, type) {
             return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
             .then(function(json) {
                 changes.getLocalView(json)
@@ -68,27 +69,17 @@ window.localAPI = (function() {
                 return json
             })
         },
-        itemOpNiveau: function(niveau, type, id) {
+        itemOpNiveau: async function(niveau, type, id) {
         	return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
             .then(function(json) {
                 changes.getLocalView(json)
                 return json
             })
-            .catch(function(error) {
-            	alert('nyi')
-            	// return inserted entity matching id, niveau, type
-//                return json
-            })
         },
-        roots: function(id) {
+        roots: async function(id) {
         	return window.slo.api.get(window.release.apiPath+'roots/'+id)
-        	.catch(function(error) {
-            	alert('nyi')
-        		//if id is inserted entity, return its roots property
-        		//return json
-        	})
         },
-        schemas: function() {
+        schemas: async function() {
         	return window.slo.api.get(window.release.apiPath+'schemas/', null, true) //jsontag
         }
 	}

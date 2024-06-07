@@ -34,9 +34,6 @@
     .slo-tree-table .closed [data-simply-field="indent"]::before {
         content: "\25B8";
     }
-    .slo-tree-table.sorted [data-simply-field="indent"] {
-        display: none;
-    }
     label.slo-column-name {
         display: inline;
     }
@@ -54,6 +51,10 @@
     .slo-spreadsheet .ds-scrollbox {
         --ds-scrollbox-height: calc(100vh - 280px);
         min-height: 400px;
+    }
+    .slo-spreadsheet .scrollbar {
+        position: absolute;
+        top: 0;
     }
     .vsb-menu {
         left: auto !important;
@@ -162,6 +163,17 @@
     }
     .slo-indent:not(.slo-has-children)::before {
         content: "";
+    }
+    tr.closed .slo-has-children.slo-indent::before {
+        content: "\25B8";
+    }
+    table.fitlered .slo-indent.slo-has-children::before,
+    table.sorted .slo-indent.slo-has-children::before {
+        content: "";
+    }
+    table.filtered .slo-indent,
+    table.sorted .slo-indent {
+        margin-left: 0;
     }
     .focus .slo-add,
     .focus .slo-delete,
@@ -364,12 +376,13 @@ body.ds-paging .slo-header .ds-paging {
 }
 .slo-cell-selector .slo-edit {
     position: absolute;
-    margin-top: calc(-3px - var(--ds-button-line-height));
+    margin-right: 0;
+    margin-top: -4px;
+    background-color: transparent;
 }
-.slo-cell-selector .slo-edit:not(:hover) {
-    background-color: white;
+.slo-cell-selector .slo-edit:hover {
+    background-color: var(--ds-button-primary-bg-color);
 }
-
 .documentEditor {
     outline: 2px solid blue;
     opacity: 1;

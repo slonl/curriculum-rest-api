@@ -136,7 +136,11 @@
                 <div data-simply-field="listIsRoot" data-simply-content="template">
                     <template></template>
                     <template data-simply-template="true">
-                        <button>Nieuw</button>
+                        <button class="ds-button" data-simply-command="addNewRoot">
+                            <svg class="ds-icon ds-icon-feather"><use
+                                xlink:href="/assets/icons/feather-sprite.svg#plus"></use></svg>
+                            Nieuw
+                        </button>
                     </template>
                 </div>
                 <ul data-simply-list="list" xdata-simply-data="list">
@@ -199,7 +203,7 @@
 <link rel="simply-include" href="/templates/login.html">
 <link rel="simply-include" href="/templates/preview-changes.html">
 <link rel="simply-include" href="/templates/commit-changes.html">
-<script src="//unpkg.com/simplyview@2.0.3/dist/simply.everything.js"></script>
+<script src="//unpkg.com/simplyview@2.1.0/dist/simply.everything.js"></script>
 <script>
     function getPath(url) {
         var anchor = document.createElement('a');
