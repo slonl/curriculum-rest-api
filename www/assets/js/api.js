@@ -423,66 +423,33 @@
 
                  Object.entries(node).forEach(([key, value]) => {
 
-                    if( Array.isArray(value)){
+                    if(Array.isArray(value)){
 
                         switch (key){
-     
-                            case 'Doel':
-                            case 'ErkLesidee':
-                            case 'ErkVoorbeeld':
-                            case 'FoToelichting':
-                            case 'FoUitwerking':
-                            case 'InhSubcluster':
-                            case 'KerndoelDomein':
-                            case 'KerndoelUitstroomprofiel':
-                            case 'LdkVakinhoud':
-                            case 'LdkVakbegrip':
-                            case 'Leerlingtekst':
-                            case 'LpibVakinhoud':
-                            case 'RefDeelonderwerp':
-                            case 'RefTekstkenmerk':
-                            case 'Vakleergebied':
-                                for(let child of value){
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
 
-                            // @TODO : this one might be broken: value is an empty array.
-                            case 'Examenprogramma':
-                                //console.log("Examenprogramma")
-                                //console.log(value)
-                                for(let child of value){
-                                    //console.log("Examenprogramma child:  ")
-                                    //console.log(child)
-                                    dataObj['documentSublist'].push(formatDocumentData(child));
-                                };
-                            break;
-                            
-                            //case 'ExamenprogrammaDomein':
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
-                                    // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
+                                    // @TODO : some elements are only used as strings, like Niveau, when the loop is not recursed these nodes are not mapped BY DESIGN
 
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
-
-                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
-                                    //console.log(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
-                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+                                    //if(value.title !== ""){
+                                        console.log(ExamenprogrammaEindterm)
+                                        dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
+                                        documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
+                                    //}
 
                                 };
                             break;
 
                             case 'Doelniveau':
-                                for(let doelNiveau of value){
+                                for(let doelNiveau of value){                     
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
                                         dataObj['documentLeafNode'].push(hoistedChild);
-
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
-                                    }
-                                
+                                    }         
                                 };
                             break;
 
@@ -490,7 +457,6 @@
                                 for(let child of value){
                                     dataObj['documentTextNode'].push(child);
                                     documentData.index.set(child.id , child);
-
                                 };
                             break;
                             
@@ -499,10 +465,11 @@
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
-                                
+
                             case 'NiveauIndex':
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
+                                        //console.log("hoisting child niveau: ", child.Niveau); // @TODO: remove when done debugging
                                         dataObj['documentNiveauIndex'].push(child.Niveau);
                                         documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
@@ -516,6 +483,22 @@
                                 for(let niveau of value){
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
                                 };
+                            break;
+
+                            case '$mark':
+                                switch(value){
+                                    case 'changed':
+                                        dataObj['documentSublist'].push({$mark:'changed'}); //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'deleted':
+                                        dataObj['documentSublist'].push({$mark:'deleted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    case 'inserted':
+                                        dataObj['documentSublist'].push({$mark:'inserted'}) //not sure if I should instead put the CSS here somehow
+                                    break;
+                                    default:
+                                        console.log("found an unknown type of $mark")
+                                }
                             break;
 
                             // @TODO : check if tag data is complete
@@ -569,6 +552,7 @@
             }
 
             documentData.root = formatDocumentData(node);
+            console.log(JSON.stringify(documentData));
 
             //documentData = JSON.parse(JSON.stringify(documentData));
 

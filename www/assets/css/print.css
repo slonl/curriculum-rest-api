@@ -29,7 +29,19 @@
     embed {
         display: none;
     }
-    .slo-footer{
+    .ds-button {
+        display: none;
+    }
+    .ds-buttonbars {
+        display: none;
+    }
+    .slo-username {
+        display:none;
+    }
+    .slo-footer {
+        display: none;
+    }
+    button {
         display: none;
     }
     img {
