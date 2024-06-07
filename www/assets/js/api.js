@@ -423,19 +423,20 @@
 
                  Object.entries(node).forEach(([key, value]) => {
 
-                    if( Array.isArray(value)){
+                    if(Array.isArray(value)){
 
                         switch (key){
 
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
-                                    // @TODO : some elements are only uses as strings, like Niveau, when the loop is not recursed these nodes are not mappen BY DESIGN
+                                    // @TODO : some elements are only used as strings, like Niveau, when the loop is not recursed these nodes are not mapped BY DESIGN
 
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
-
-                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm);
-                                    //console.log(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
-                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm);
+                                    //if(value.title !== ""){
+                                        console.log(ExamenprogrammaEindterm)
+                                        dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
+                                        documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
+                                    //}
 
                                 };
                             break;
@@ -443,16 +444,11 @@
                             case 'Doelniveau':
                                 for(let doelNiveau of value){                     
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
-                                        //console.log("hoisting doelNiveau: ", doelNiveau.Doel[0].title); // @TODO: remove when done debugging
-                                        
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title })
-
-                                        console.log(hoistedChild)
                                         dataObj['documentLeafNode'].push(hoistedChild);
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
-                                        //console.log("naar LeafNode", doelNiveau);
                                     }         
                                 };
                             break;

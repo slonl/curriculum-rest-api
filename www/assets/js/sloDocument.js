@@ -82,8 +82,8 @@ const sloDocument = (function() {
           window.history.replaceState({}, '', idPath.href)
           browser.view.item.uuid = nextID  
         } catch {
-          let path = "/uuid/unknown"
-          let nextID = "/uuid/unknown"
+          let path = "/uuid/"
+          let nextID = "/uuid/"
           window.history.replaceState({}, '', path)
           browser.view.item.uuid = nextID  
         } //no catch: sometimes the elements focussed do not have a uuid so we try catch
