@@ -129,6 +129,7 @@ module.exports = {
 			 prefix: _,
 			 type: _
 		}
+		const NiveauIndex = o => from(o.NiveauIndex).select(Niveau)
 		const NiveauShort = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,

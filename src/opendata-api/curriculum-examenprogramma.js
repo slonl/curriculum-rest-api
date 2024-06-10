@@ -231,9 +231,7 @@ module.exports = {
 		from(Index(request.query.id))
 		.select({
 			...shortInfo,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex,
 			Syllabus: {
 				...shortInfo,
 				ce_se: _,
@@ -402,9 +400,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		ExamenprogrammaSubdomein:`
@@ -431,9 +427,7 @@ module.exports = {
 				Niveau: NiveauShort,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex
 		})
 		`,
 		ExamenprogrammaEindterm:`
