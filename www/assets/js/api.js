@@ -546,7 +546,14 @@
                     }
 
                 });
-            
+                // @TODO : Timely solution, double check later.
+                if(!dataObj['@id']){
+                    dataObj['@id'] = getId(node)
+                }
+                if(!dataObj['@type']){
+                    dataObj['@type'] = getType(node)
+                }
+
                 return dataObj;
             }
 

@@ -33,8 +33,8 @@ const sloDocument = (function() {
       let nodes = getAllNodes()
 
       //find current element to move to the next one
-      if(document.getElementsByClassName("focus")[0]){
-          focussedElement = document.getElementsByClassName("focus")[0];
+      if(document.querySelector(".focus")){
+          focussedElement = document.querySelector(".focus");
       }
       else{
           focussedElement = nodes[0];
@@ -72,7 +72,7 @@ const sloDocument = (function() {
     function updateURL(){
         // replace URL with the new URL
         let nextFocussedElement = document.querySelector(".focus");
-        
+
         try {
           let nextDocumentLocation = new URL(document.location.href)
           let idPath = URL.parse(nextFocussedElement.id) // @TODO: check if parse is accepteable or if "new URL()" is needed.
@@ -91,6 +91,7 @@ const sloDocument = (function() {
     }
 
     function getTitle() {
+      console.log()
       try {
        let currentUUID = browser.view.item.uuid
        currentIdentifier = currentUUID;
