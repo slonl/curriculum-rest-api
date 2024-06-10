@@ -15,9 +15,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort	
-				}
+				Niveau: NiveauIndex	
 			})
 
 			const meta = {
@@ -42,9 +40,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 
 			const meta = {
@@ -72,9 +68,7 @@ module.exports = {
 						deprecated: _,
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 
 			const meta = {
@@ -120,9 +114,7 @@ module.exports = {
 		const results = from(data.InhVakleergebied)
 			.select({
 				...shortInfo,
-				NiveauIndex:{
-					Niveau: NiveauShort
-				},
+				Niveau: NiveauIndex
 				InhInhoudslijn: {
 					...shortInfo,
 					deprecated: _,
@@ -154,14 +146,8 @@ module.exports = {
 				...shortInfo,
 				deprecated: _, 
 			},
-			Doelniveau: {
-				Doelniveau
-			},
-			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
-			}
+			Doelniveau,
+			Niveau: NiveauIndex
 		})
 		`,
 		InhInhoudslijn: `
@@ -172,14 +158,8 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			Doelniveau: {
-				Doelniveau
-			},	
-			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
-			}
+			Doelniveau,	
+			Niveau: NiveauIndex
 		})
 		`,
 		InhCluster: `
@@ -190,14 +170,8 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			Doelniveau: {
-				Doelniveau
-			},
-			NiveauIndex: {
-				Niveau: {
-					NiveauShort
-				}
-			}
+			Doelniveau,
+			Niveau: NiveauIndex
 		})
 		`,
 		InhSubcluster: `
@@ -208,9 +182,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			Doelniveau: {
-				Doelniveau
-			}
+			Doelniveau
 		})   
 		`
 	},

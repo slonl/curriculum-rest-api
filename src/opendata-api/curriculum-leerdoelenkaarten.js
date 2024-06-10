@@ -28,9 +28,7 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 		  	})
 
 			const meta = {
@@ -86,9 +84,7 @@ module.exports = {
 						deprecated: _,
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 			
 		  	const meta = {
@@ -342,14 +338,10 @@ module.exports = {
 			LdkVakkern: {
 				...shortInfo,
 				deprecated: _,
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex,
 			Vakleergebied: {
 				...shortInfo,
 				deprecated: _,
@@ -363,18 +355,14 @@ module.exports = {
 			LdkVaksubkern: {
 				...shortInfo,
 				deprecated: _,
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			},
 			Doelniveau: Doelniveau,
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		LdkVaksubkern: `
@@ -385,9 +373,7 @@ module.exports = {
 			LdkVakinhoud: {
 				...shortInfo,
 				deprecated: _,
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			},
 			Doelniveau: Doelniveau,
 			LdkVakkern: {
@@ -398,9 +384,7 @@ module.exports = {
 					deprecated: _,
 				}
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		LdkVakinhoud: `
@@ -420,9 +404,7 @@ module.exports = {
 					}
 				}
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})	
 		`,
 		LdkVakbegrip: `
