@@ -386,8 +386,12 @@ var browser = simply.app({
                 dropdowns.forEach(d => d.checked = false)
             },
             " ": (e) => { //Spacebar
-                e.preventDefault()
-                browser.commands.toggleTree(document.querySelector('td.focus'))
+                if (['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+                    // do nothing
+                } else {
+                    e.preventDefault()
+                    browser.commands.toggleTree(document.querySelector('td.focus'))
+                }
             },
             "Home": (e) => {
                 e.preventDefault()
@@ -678,6 +682,14 @@ var browser = simply.app({
             // FIXME: support document view
             let root = this.app.view.roots.find(r => r.id==value)
             return this.app.actions.switchView(this.app.view.view, root)
+        },
+        selectNiveaus: function(el, value) {
+            this.app.view.niveaus = Array.from(el.options).filter(o => o.selected).map(o => o.value)
+            this.app.actions.switchView(this.app.view.view)
+        },
+        selectContexts: function(el, value) {
+            this.app.view.contexts = Array.from(el.options).filter(o => o.selected).map(o => o.value)
+            this.app.actions.switchView(this.app.view.view)
         },
         toggleTree: function(el,value) {
             let id = el.closest('tr').id

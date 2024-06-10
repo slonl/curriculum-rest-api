@@ -1,7 +1,7 @@
 (function() {
     const walk = (node, indent, f) => {
         if (!node) return;
-        if (node['@type']==='Niveau') {
+        if (JSONTag.getAttribute(node, 'class')==='Niveau') {
             return
         }
         if (Array.isArray(node)) {
@@ -213,8 +213,8 @@
                     .filter(c => c[0].match(/[a-z]/))
                     .filter(c => ['uuid','dirty','unreleased','hasChildren'].indexOf(c)===-1)
                 let columns = {
-                    id: n['@id'],
-                    type: n['@type'],
+                    id: new URL(window.release.apiPath+JSONTag.getAttribute(n, 'id'), document.location).href,
+                    type: JSONTag.getAttribute(n, 'class'),
                     niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
                 validColumns.forEach(column => { if (column!='id') { columns[column] = n[column]}})
