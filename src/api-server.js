@@ -310,12 +310,15 @@ app.route('/tree/:id').get(async (req, res) => {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
 			addReference(result);
-			res.send(jsonLD(result));
+			result = jsonLD(result);
+			result = JSONTag.stringify(result);
+			res.set('Content-Type','application/jsontag');
+			res.send(result)
 		}
 	} catch(err) {
-		res.setHeader('content-type', 'application/json');
-		res.status(500).send({ error: 500, message: err.message });
-		console.log('/roots/'+req.params.id, err);
+		res.setHeader('content-type', 'application/jsontag');
+		res.status(500).send(JSONTag.stringify({ error: 500, message: err.message }));
+		console.log('/tree/'+req.params.id, err);
 	}
 })
 
