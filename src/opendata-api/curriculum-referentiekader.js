@@ -18,9 +18,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 			
 			const meta = {
@@ -46,9 +44,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 				
 			const meta = {
@@ -75,9 +71,7 @@ module.exports = {
 						deprecated: _,
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}				
+				Niveau: NiveauIndex
 			})
 			
 			const meta = {
@@ -106,9 +100,7 @@ module.exports = {
 						}
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 
 			const meta = {
@@ -139,9 +131,7 @@ module.exports = {
 						}
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 
 			const meta = {
@@ -174,9 +164,7 @@ module.exports = {
 						}
 					}
 				},
-				NiveauIndex: {
-					Niveau: NiveauShort
-				}
+				Niveau: NiveauIndex
 			})
 
 			const meta = {
@@ -198,9 +186,7 @@ module.exports = {
 			prefix: _,
 			title: _,
 			deprecated: _,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex,
 			RefDomein {
 				'@id': Id,
 				uuid: _.id,
@@ -249,9 +235,7 @@ module.exports = {
 					deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex
 		})
 		`,
 		RefDomein: `
@@ -267,9 +251,7 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort,
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		RefSubdomein: `
@@ -285,9 +267,7 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		RefOnderwerp: `
@@ -307,9 +287,7 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		RefDeelonderwerp: `
@@ -321,9 +299,7 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		RefTekstkenmerk: `
@@ -335,12 +311,9 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau: Doelniveau,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})	
-		`,
-	
+		`,	
 	},
 	routes: {
 		'ref_vakleergebied/': (req) => opendata.api["RefVakleergebied"](req.params, req.query),

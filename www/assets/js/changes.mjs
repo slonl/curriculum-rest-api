@@ -563,6 +563,7 @@ const changes = (()=> {
 			globalThis.localStorage.removeItem('changeHistory')
 		}
 		changes.changes = new Changes()
+		insertedNodes = changes.insertedNodes = {}
 		changes.update()
 	}
 

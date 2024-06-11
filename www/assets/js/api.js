@@ -1,7 +1,7 @@
 (function() {
     const walk = (node, indent, f) => {
         if (!node) return;
-        if (node['@type']==='Niveau') {
+        if (getType(node)==='Niveau') {
             return
         }
         if (Array.isArray(node)) {
@@ -213,8 +213,8 @@
                     .filter(c => c[0].match(/[a-z]/))
                     .filter(c => ['uuid','dirty','unreleased','hasChildren'].indexOf(c)===-1)
                 let columns = {
-                    id: n['@id'],
-                    type: n['@type'],
+                    id: getId(n),
+                    type: getType(n),
                     niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
                 validColumns.forEach(column => { if (column!='id') { columns[column] = n[column]}})
@@ -384,13 +384,14 @@
                 }
                 if (columnValues.length<=15 && columnDefinition.name!='Description') { //@FIXME: allow switch to textarea from list type that is set like this?
                     columnDefinition.type = 'list'
+                }
                     columnDefinition.values = Object.keys(allColumns[c]).map(name => {
                         return {
                             name,
                             count: allColumns[c][name]
                         }
                     })
-                }
+                //}
                 if (columnDefinitions[c]) {
                     columnDefinitions[c].values = columnDefinition.values
                 } else {

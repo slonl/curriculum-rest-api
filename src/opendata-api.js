@@ -97,10 +97,11 @@ data.schema
 	return storeQuery(opendata.url+'/query/', query)
 }
 
-const treeQuery = fs.readFileSync(__dirname+'/tree-query.js')
 opendata.api.Tree = async (variables, urlQuery) => {
-	// variables.id naar request.query.id?
-	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+treeQuery, variables, urlQuery)
+	const treeQuery = `
+const Index = id => meta.index.id.get('/uuid/'+id)
+Index(request.query.id)`
+	return storeQuery(opendata.url+'/query/', treeQuery, variables, urlQuery)
 }
 
 opendata.api.runCommand = async (commandStr) => {

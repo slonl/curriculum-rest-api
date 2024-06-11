@@ -198,9 +198,9 @@ function jsonLD(entry) {
 		entry.Niveau
 		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
 		.map(child => {
-			child['$ref'] = niveauURL + child.uuid;
+			child['$ref'] = niveauURL + (child.uuid ?? child.id);
 			if (entry['@type']=='Vakleergebied') {
-				child['$ref'] += '/vakleergebied/' + entry.uuid;
+				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
 			}
 			return child;
 		});
@@ -310,12 +310,15 @@ app.route('/tree/:id').get(async (req, res) => {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
 			addReference(result);
-			res.send(jsonLD(result));
+			result = jsonLD(result);
+			result = JSONTag.stringify(result);
+			res.set('Content-Type','application/jsontag');
+			res.send(result)
 		}
 	} catch(err) {
-		res.setHeader('content-type', 'application/json');
-		res.status(500).send({ error: 500, message: err.message });
-		console.log('/roots/'+req.params.id, err);
+		res.setHeader('content-type', 'application/jsontag');
+		res.status(500).send(JSONTag.stringify({ error: 500, message: err.message }));
+		console.log('/tree/'+req.params.id, err);
 	}
 })
 

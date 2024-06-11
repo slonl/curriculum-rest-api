@@ -47,6 +47,7 @@
     }
     .slo-spreadsheet {
         --ds-datatable-ruler-color: var(--ds-grey-30);
+        position: relative;
     }
     .slo-spreadsheet .ds-scrollbox {
         --ds-scrollbox-height: calc(100vh - 280px);
@@ -55,6 +56,10 @@
     .slo-spreadsheet .scrollbar {
         position: absolute;
         top: 0;
+    }
+    .slo-helper {
+        max-height: 50vh;
+        overflow: auto;
     }
     .vsb-menu {
         left: auto !important;
@@ -111,7 +116,7 @@
         font-weight: normal;
         line-height: var(--ds-line-height);
         padding: 0 1px;
-        overflow: visible;
+        overflow: auto;
         height: auto;
         display: none;
     }

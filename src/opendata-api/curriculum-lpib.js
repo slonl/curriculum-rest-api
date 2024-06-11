@@ -85,11 +85,7 @@ module.exports = {
 			  id
 			  title
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		  _allLpibVakkernMeta {
 			count
@@ -112,11 +108,7 @@ module.exports = {
 			  id
 			  title
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		}`,
 		LpibVaksubkern: `query LpibVaksubkern($page:Int,$perPage:Int) {
@@ -131,11 +123,7 @@ module.exports = {
 				title
 			  }
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		  _allLpibVaksubkernMeta {
 			count
@@ -159,11 +147,7 @@ module.exports = {
 			  id
 			  title
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		}`,
 		LpibVakinhoud: `query LpibVakinhoud($page:Int,$perPage:Int) {
@@ -190,11 +174,7 @@ module.exports = {
 				title
 			  }
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		  _allLpibVakinhoudMeta {
 			count
@@ -213,11 +193,7 @@ module.exports = {
 			  id
 			  title
 			}
-			NiveauIndex {
-			  Niveau {
-				...NiveauShort
-			  }
-			}
+			Niveau: NiveauIndex
 		  }
 		}`,
 		LpibVakleergebiedOpNiveau: `query LpibVakleergebiedOpNiveau($niveau:ID) {

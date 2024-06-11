@@ -144,7 +144,7 @@ const spreadsheet = (function() {
             } else {
               filter = filter.toLowerCase()
               if (Array.isArray(row.columns[name])) {
-                if (!row.columns[name] || row.columns[name].filter(value => value.toLowerCase().search(filter)>-1).length) {
+                if (!row.columns[name] || !row.columns[name].filter(value => value.toLowerCase().search(filter)>-1).length) {
                   return false
                 }
               } else {
@@ -341,7 +341,7 @@ const spreadsheet = (function() {
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
-      selector.style.top = (rect.top - offset.top)+'px'
+      selector.style.top = Math.max(2, (rect.top - offset.top))+'px'
       selector.style.left = (rect.left - offset.left)+'px'
       selector.style.width = rect.width+'px'
       selector.style['min-height'] = rect.height+'px'
@@ -380,7 +380,14 @@ const spreadsheet = (function() {
       }
       let current = selector.getBoundingClientRect()
       if (current.top+current.height > offset.top+offset.height) {
-        selector.style.top = (offset.height - current.height)+'px'
+        if ((offset.height-current.height)<2) {
+          selector.style.top = '2px'
+//          selector.style.height = 'calc(100% - 40px)'
+        } else {
+          selector.style.top = (offset.height - current.height)+'px'
+        }
+      } else {
+
       }
       selector.style.display = 'block'
     }

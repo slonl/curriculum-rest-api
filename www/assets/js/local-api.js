@@ -1,4 +1,15 @@
+
 window.localAPI = (function() {
+
+    const walk = (e, callback) => {
+        callback(e)
+        Object.entries(e).forEach(([prop, values]) => {
+            if (Array.isArray(values)) {
+                values.forEach(v => walk(v, callback))
+            }
+        })
+    }
+
 	return {
         list: async function(type) {
             return window.slo.api.get(window.release.apiPath+type, {
@@ -23,8 +34,14 @@ window.localAPI = (function() {
             }
             return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
-            })
+            }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
+                walk(json, e => {
+                    let id = getId(e);
+                    let type = getType(e);
+                    e['@id'] = id;
+                    e['@type'] = type
+                })
                 changes.getLocalView(json)
                 //add inserted entities matching root, context, niveau
                 return json

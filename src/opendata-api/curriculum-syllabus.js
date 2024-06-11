@@ -134,9 +134,7 @@ module.exports = {
 			examenjaar: _,
 			status: _,
 			ce_se: _,
-			NiveauIndex: {
-				Niveau: NiveauShort
-			},
+			Niveau: NiveauIndex,
 			SyllabusSpecifiekeEindterm: {
 				...shortInfo,
 				ce_se: _,
@@ -223,9 +221,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		SyllabusVakleergebied: `
@@ -259,9 +255,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		SyllabusToelichting: `
@@ -289,9 +283,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`,
 		SyllabusSpecifiekeEindterm: `
@@ -323,9 +315,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			NiveauIndex: {
-				Niveau: NiveauShort
-			}
+			Niveau: NiveauIndex
 		})
 		`
 	},
