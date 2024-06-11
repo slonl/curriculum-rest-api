@@ -198,9 +198,9 @@ function jsonLD(entry) {
 		entry.Niveau
 		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
 		.map(child => {
-			child['$ref'] = niveauURL + child.uuid;
+			child['$ref'] = niveauURL + (child.uuid ?? child.id);
 			if (entry['@type']=='Vakleergebied') {
-				child['$ref'] += '/vakleergebied/' + entry.uuid;
+				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
 			}
 			return child;
 		});
