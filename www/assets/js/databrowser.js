@@ -494,9 +494,9 @@ var browser = simply.app({
                 } while (el && !browser.view.sloSpreadsheet.isEditable(el))
             },
             "ArrowDown": (e) => {
+                e.preventDefault()
                 let target = document.activeElement
                 if (target && (target.type=='checkbox' || target.type=='radio')) {
-                    e.preventDefault()
                     let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
                     let current = targets.findIndex(input => input==e.target)
                     if (current>=0) {
@@ -506,9 +506,9 @@ var browser = simply.app({
                 }
             },
             "ArrowUp": (e) => {
+                e.preventDefault()
                 let target = document.activeElement
                 if (target && (target.type=='checkbox' || target.type=='radio')) {
-                    e.preventDefault()
                     let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
                     let current = targets.findIndex(input => input==e.target)
                     if (current>0) {
@@ -1018,9 +1018,9 @@ var browser = simply.app({
                         let change = new changes.Change({
                             id: node.id ?? node.uuid,
                             meta: {
-                                context: window.slo.getContextByTypeName(node['@type']),
+                                context: window.slo.getContextByTypeName(getType(node)),
                                 title: node.title ?? '[Geen titel]',
-                                type: node['@type'],
+                                type: getType(node),
                                 timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                             },
                             type: 'patch',
@@ -1336,9 +1336,9 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByTypeName(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(getType(parentNode)),
                     title: parentNode.title,
-                    type: parentNode['@type'],                    
+                    type: getType(parentNode),                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
@@ -1358,7 +1358,7 @@ var browser = simply.app({
             let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let siblingNode = row.node
-            let typeName = siblingNode['@type']
+            let typeName = getType(siblingNode)
             let node = {
                 id: uuid(),
                 '@type': typeName,
@@ -1381,9 +1381,9 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByTypeName(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(getType(parentNode)),
                     title: parentNode.title,
-                    type: parentNode['@type'],                    
+                    type: getType(parentNode),
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
@@ -1403,7 +1403,7 @@ var browser = simply.app({
             if (row.deleted) {
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
-                let typeName = row.node['@type']
+                let typeName = getType(row.node)
                 let newValue = parentNode[typeName].slice()
                 row.node.undelete(newValue)
                 let prevValue = parentNode[typeName].slice()
@@ -1411,9 +1411,9 @@ var browser = simply.app({
                 let change = new changes.Change({
                     id: parentNode.id ?? parentNode.uuid,
                     meta: {
-                        context: window.slo.getContextByTypeName(parentNode['@type']),
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
                         title: parentNode.title,
-                        type: parentNode['@type'],   
+                        type: getType(parentNode),   
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'undelete',
@@ -1436,7 +1436,7 @@ var browser = simply.app({
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
-            let typeName = row.node['@type']
+            let typeName = getType(row.node)
 
             let prevValue = parentNode[typeName].slice()
             let newValue = prevValue.map(e => { 
@@ -1450,9 +1450,9 @@ var browser = simply.app({
             let change = new changes.Change({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
-                    context: window.slo.getContextByTypeName(parentNode['@type']),
+                    context: window.slo.getContextByTypeName(getType(parentNode)),
                     title: parentNode.title,
-                    type: parentNode['@type'],
+                    type: getType(parentNode),
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'delete',
@@ -1468,12 +1468,12 @@ var browser = simply.app({
         },
         showTypeSelector: async function(el) {
             let row = browser.view.sloSpreadsheet.getRow(el)
-            let thisType = row.node['@type']
+            let thisType = getType(row.node)
             let childTypes = slo.getAvailableChildTypes(thisType)
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
             let siblingType = ''
             if (parentRow) {
-                siblingType = parentRow.node['@type']
+                siblingType = getType(parentRow.node)
             }
 
             browser.view.availableTypes = childTypes
@@ -1557,7 +1557,19 @@ var browser = simply.app({
 
             // create and send command
             let commit = changes.merged.commit()
-
+            const walk = e => {
+                if (e.id) {
+                    JSONTag.setAttribute(e, 'id', e.id)
+                    Object.entries(e).forEach(([prop, values]) => {
+                        if (Array.isArray(values)) {
+                            values.forEach(v => walk(v))
+                        } else if (JSONTag.getType(values)=='object') {
+                            Object.values(values).forEach(v => walk(v))
+                        }
+                    })
+                }
+            }
+            walk(commit)
             let command = {
                 id: uuid(),
                 name: 'patch',
@@ -1653,4 +1665,12 @@ window.addEventListener('resize', (e) => {
     }
 })
 
+function getType(node) {
+    return JSONTag.getAttribute(node, 'class') || node['@type']
+} 
+
+function getId(node) {
+    let id = JSONTag.getAttribute(node, 'id')
+    return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
+}
 // @NOTE: templates/scripts.html contains some extra javascript
