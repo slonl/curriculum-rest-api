@@ -419,6 +419,7 @@
                 let dataObj = { documentSublist : [], documentLeafNode: [],  documentTextNode: [],  documentNiveaus : [], documentNiveauIndex: [], documentExamenprogrammaEindterm:[] };
                 
                 dataObj["node"] = node;
+ 
 
                 documentData.index.set(node.id, dataObj);
 
@@ -431,11 +432,17 @@
                             case 'ExamenprogrammaEindterm':
                                 for(let ExamenprogrammaEindterm of value){
                                     // @TODO : some elements are only used as strings, like Niveau, when the loop is not recursed these nodes are not mapped BY DESIGN
-
+                                    if(!ExamenprogrammaEindterm['@id']){
+                                        ExamenprogrammaEindterm['@id'] = getId(ExamenprogrammaEindterm)
+                                    }
+                                    if(!ExamenprogrammaEindterm['@type']){
+                                        ExamenprogrammaEindterm['@type'] = getType(ExamenprogrammaEindterm)
+                                    }
+                                    
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
                                     //if(value.title !== ""){
-                                        dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
-                                        documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
+                                    dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
+                                    documentData.index.set(ExamenprogrammaEindterm.id , ExamenprogrammaEindterm)
                                     //}
 
                                 };
@@ -455,6 +462,12 @@
 
                             case 'ExamenprogrammaBody':
                                 for(let child of value){
+                                    if(!child['@id']){
+                                        child['@id'] = getId(child)
+                                    }
+                                    if(!child['@type']){
+                                        child['@type'] = getType(child)
+                                    }
                                     dataObj['documentTextNode'].push(child);
                                     documentData.index.set(child.id , child);
                                 };
@@ -462,6 +475,12 @@
                             
                             case 'ExamenprogrammaKop1':
                                 for(let child of value){
+                                    if(!child['@id']){
+                                        child['@id'] = getId(child)
+                                    }
+                                    if(!child['@type']){
+                                        child['@type'] = getType(child)
+                                    }
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
                                 };
                             break;
@@ -470,6 +489,12 @@
                                 for(let child of value){
                                     if (typeof child.Niveau != "undefined") {
                                         //console.log("hoisting child niveau: ", child.Niveau); // @TODO: remove when done debugging
+                                        if(!child['@id']){
+                                            child['@id'] = getId(child)
+                                        }
+                                        if(!child['@type']){
+                                            child['@type'] = getType(child)
+                                        }
                                         dataObj['documentNiveauIndex'].push(child.Niveau);
                                         documentData.index.set(child.Niveau.id , child.Niveau);
                                     }
@@ -554,7 +579,6 @@
                 if(!dataObj['@type']){
                     dataObj['@type'] = getType(node)
                 }
-
                 return dataObj;
             }
 
