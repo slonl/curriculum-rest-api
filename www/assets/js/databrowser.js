@@ -596,11 +596,7 @@ var browser = simply.app({
         },
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
-            // @TODO : find a way to see which view we're in to switch the keyboard layout to that view.
-            let currentView = browser.view.view
-            console.log("switching keyboard")
-            console.log(currentView)
-            //browser.actions.switchKeyboard(currentView) // @TODO decide whether to use switchkeyboard or opdateView to re enable the right keyboard.
+            browser.actions.switchKeyboard()
             browser.actions.updateView()
         },
         closeEditor: (el, value) => {
@@ -1642,10 +1638,19 @@ var browser = simply.app({
        }, 
 
         switchKeyboard(keyboard){
-            //browser.actions.switchKeyboard(keyboard)
-            document.body.dataset.simplyKeyboard = keyboard
-        }
+            if(!keyboard){
+                if(document.querySelector(".slo-document")){
+                    document.body.dataset.simplyKeyboard = 'document'
+                } else if(document.querySelector(".slo-spreadsheet")){
+                    document.body.dataset.simplyKeyboard = 'spreadsheet'
+                } else {
+                    document.body.dataset.simplyKeyboard = 'default'
+                }
+            } else {
+                document.body.dataset.simplyKeyboard = keyboard
+            }
 
+        }
     }
 });
 

@@ -53,11 +53,11 @@ window.localAPI = (function() {
             }
 	        return window.slo.api.get(window.release.apiPath+'tree/'+root, {
                 niveau, context
-            })
+            }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
                 changes.getLocalView(json)
                 //add inserted entities matching root, context, niveau
-                return json
+                return json 
             })
         },
         doelniveauList: async function(type) {
