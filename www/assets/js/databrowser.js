@@ -799,16 +799,30 @@ browser = simply.app({
             browser.actions.showTypeSelector(el)                
         },
         addChild: async function(el, value) {
-            browser.actions.hideTypeSelector()
-            //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
-            el = browser.view.insertParentRow
-            let row = await browser.actions.insertRow(el.closest('tr'),value)
-            let line = browser.view.sloSpreadsheet.getLineByRow(row)
-            el = browser.view.sloSpreadsheet.goto(line, 1)
-            while (!browser.view.sloSpreadsheet.isEditable(el)) {
-                el = browser.view.sloSpreadsheet.moveNext()
+            if (value=='niveau') {
+                let typelist = el.closest('div')
+                let form = typelist.parentElement.querySelector('form')
+                form.classList.remove('slo-hidden')
+                typelist.classList.add('slo-hidden')
+                // FIXME: reset this in showTypeSelector
+            } else {
+                browser.actions.hideTypeSelector()
+                //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
+                el = browser.view.insertParentRow
+                let row = await browser.actions.insertRow(el.closest('tr'),value)
+                let line = browser.view.sloSpreadsheet.getLineByRow(row)
+                el = browser.view.sloSpreadsheet.goto(line, 1)
+                while (!browser.view.sloSpreadsheet.isEditable(el)) {
+                    el = browser.view.sloSpreadsheet.moveNext()
+                }
+                browser.view.sloSpreadsheet.editor(el)
             }
-            browser.view.sloSpreadsheet.editor(el)
+        },
+        addNiveau: async function(form, values) {
+            browser.actions.hideTypeSelector()
+            el = browser.view.insertParentRow
+            let parentRow = browser.view.sloSpreadsheet.getRow(el.closest('tr'))
+            return browser.actions.addNiveau(parentRow, values.niveau)
         },
         addSibling: async function(el, value) {
             browser.actions.hideTypeSelector()
@@ -1100,6 +1114,39 @@ browser = simply.app({
             let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
             await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
             window.setTimeout(browser.commands.cellEditor, 100)
+        },
+        addNiveau: async function(row, niveau) {
+            let prop, prevValue, newValue
+            let dirty = browser.view.dirtyChecked==1
+            let node = row.node
+            prop = row.columns.niveaus
+            prevValue = prop
+            newValue = Array.from(new Set([...prop, niveau])) // Set so the array is unique
+            dirty = true
+            if (newValue == prevValue) {
+                return // no change failsave
+            } else if (!newValue && !prevValue) {
+                return // check if both are empty
+            }
+
+            let timestamp = new Date().toISOString()
+            let change = new changes.Change({
+                id: node.id ?? node.uuid,
+                meta: {
+                    context: window.slo.getContextByTypeName(getType(node)),
+                    title: node.title ?? '[Geen titel]',
+                    type: getType(node),
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'patch',
+                property: 'niveaus',
+                prevValue,
+                newValue,
+                dirty
+            })
+            changes.changes.push(change)
+            changes.update()
+            return browser.actions.spreadsheetUpdate()
         },
         list: function(type) {
             browser.view['listTitle'] = window.titles[type];
