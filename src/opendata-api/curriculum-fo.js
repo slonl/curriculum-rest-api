@@ -3,22 +3,40 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-fo/context.json',
 	queries: {
+		FoSet: `
+		const results = from(data.FoSet)
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				FoDomein: shortInfo,
+				unreleased: _,
+			})
+
+			const meta = {
+				type: 'FoSet',
+				data: results,
+				page: Page,
+				count: data.FoSet.length
+			}
+	
+			meta
+
+		`,
 		FoDomein: `
 		const results = from(data.FoDomein)
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				Vakleergebied: _,
-				FoSubdomein: _,
+				Vakleergebied: shortInfo,
+				FoSubdomein: shortInfo,
 				unreleased: _,
 			})
 
 			const meta = {
-				type: 'Doelniveau',
+				type: 'FoDomein',
 				data: results,
 				page: Page,
-				count: data.FoDomein.length,
-				root: data.schema.types.FoDomein.root
+				count: data.FoDomein.length
 			}
 	
 			meta
@@ -29,15 +47,14 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				FoDoelzin: _
+				FoDoelzin: shortInfo
 			})
 	
 			const meta = {
-				type: 'Doelniveau',
+				type: 'FoSubdomein',
 				data: results,
 				page: Page,
-				count: data.FoSubdomein.length,
-				root: data.schema.types.FoSubdomein.root
+				count: data.FoSubdomein.length
 			}
 	
 			meta
@@ -48,16 +65,15 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				FoToelichting: _,
-				FoUitwerking: _
+				FoToelichting: shortInfo,
+				FoUitwerking: shortInfo
 			})
 
 			const meta = {
-				type: 'Doelniveau',
+				type: 'FoDoelzin',
 				data: results,
 				page: Page,
-				count: data.FoDoelzin.length,
-				root: data.schema.types.FoDoelzin.root
+				count: data.FoDoelzin.length
 			}
 	
 			meta
@@ -68,16 +84,15 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				FoDoelzin: _,
-				unreleased: _
+				FoDoelzin: shortInfo,
+				unreleased: shortInfo
 			})
 
 			const meta = {
-				type: 'Doelniveau',
+				type: 'FoToelichting',
 				data: results,
 				page: Page,
-				count: data.FoToelichting.length,
-				root: data.schema.types.FoToelichting.root
+				count: data.FoToelichting.length
 			}
 	
 			meta
@@ -88,16 +103,15 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				FoDoelzin: _,
+				FoDoelzin: shortInfo,
 				unreleased: _,
 			})
 	
 			const meta = {
-				type: 'Doelniveau',
+				type: 'FoUitwerking',
 				data: results,
 				page: Page,
-				count: data.FoUitwerking.length,
-				root: data.schema.types.FoUitwerking.root
+				count: data.FoUitwerking.length
 			}
 	
 			meta
@@ -105,6 +119,16 @@ module.exports = {
 			`
 	},
 	typedQueries: {
+		FoSet: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoSet',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoDomein: shortInfo
+			})
+		`,
 		FoDomein: `
 			from(Index(request.query.id))
 			.select({
@@ -158,6 +182,7 @@ module.exports = {
 		`
 	},
 	routes: {
+		'fo_set/': (req) => opendata.api["FoSet"](req.params, req.query),
 		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
 		'fo_doelzin/': (req) => opendata.api["FoDoelzin"](req.params, req.query),
