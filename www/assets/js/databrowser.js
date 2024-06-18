@@ -1,40 +1,16 @@
+let meta = {}
+var browser = {}
+
+slo.api.loadSchemas()
+.then(schemas => {
+    meta.schemas = schemas
+    document.body.classList.remove('loading')
+
 simply.route.init({
     root: window.release.apiPath
 });
 
-var routeMatch = simply.route.match
-simply.route.match = function() {
-    // do nothing, slo.contexts is not yet loaded, so all routes are on hold, wait for loadSchemas to finish
-}
-
-function uuid() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
-
-function mkTimestamp() {
-    let timestamp =  new Date().toISOString()
-    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
-    return timestamp
-}
-
-function isString(s) {
-    return typeof s === 'string' || s instanceof String
-}
-
-function arrayEquals(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
-var browser = simply.app({
+browser = simply.app({
     container: document.body,
 
     view: {
@@ -874,33 +850,6 @@ var browser = simply.app({
             localStorage.setItem('key',key)
             return true
         },
-        loadSchemas: async function() {
-            slo.contexts = {}
-            let schemas = await window.localAPI.schemas()
-            for (let schemaName in schemas.contexts) {
-                let schema = schemas.contexts[schemaName]
-                if (!schema.label) {
-                    continue
-                }
-                let schemaLabel = 'curriculum-'+schema.label
-                delete schema.label
-                schema.name = schemaName
-                let contextData = {}
-                for (let typeName in schema) {
-                    let typeLabel = schema[typeName].label
-                    if (typeLabel) {
-                        contextData[typeName] = typeLabel
-                    }
-                }
-                slo.contexts[schemaLabel] = {
-                    title: schemaName,
-                    data: contextData,
-                    schema
-                }
-            }
-            initContexts()
-            return schemas
-        },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
         },
@@ -1161,7 +1110,7 @@ var browser = simply.app({
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view.listIsRoot = browser.view.schemas.types[browser.view.listType].root;
+                browser.view.listIsRoot = meta.schemas.types[browser.view.listType].root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
@@ -1664,12 +1613,6 @@ if (user && key) {
     browser.view.loggedIn = false
 }
 
-browser.actions.loadSchemas().then(schemas => {
-    browser.view.schemas = schemas
-    simply.route.match = routeMatch // restore route.match now slo.contexts is available, and restart route matching
-    simply.route.match(document.location.pathname)
-    document.body.classList.remove('loading')
-})
 
 browser.view.dirtyChecked = true
 
@@ -1679,6 +1622,8 @@ window.addEventListener('resize', (e) => {
     }
 })
 
+}); // end promise.then
+
 function getType(node) {
     return JSONTag.getAttribute(node, 'class') || node['@type']
 } 
@@ -1687,4 +1632,32 @@ function getId(node) {
     let id = JSONTag.getAttribute(node, 'id')
     return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
 }
+
+function uuid() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
+}
+
+function isString(s) {
+    return typeof s === 'string' || s instanceof String
+}
+
+function arrayEquals(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
 // @NOTE: templates/scripts.html contains some extra javascript

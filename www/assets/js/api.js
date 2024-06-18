@@ -85,9 +85,8 @@
                 .then(function(json) {
                     //FIXME: api must not know about browser.view
                     if (json.error) {
-                        browser.view.error = json.error;
+                        throw new Error(json.error)
                     } else {
-                        browser.view.error = '';
                         function fixId(node, indent, parent) {
                             if (node.uuid) {
                                 node.id = node.uuid
@@ -97,12 +96,6 @@
                     }
                     return json;
                 })
-/*                .catch(error => {
-                    //FIXME: api must not know about browser.view
-                    browser.view.error = error.error;
-                    browser.view.errorMessage = error.message;
-                });
-*/
             },
             runCommand: function(command) {
                 return fetch(window.apiURL+'/command/', {
@@ -123,9 +116,7 @@
                 })
                 .then(function(json) {
                     if (json.error) {
-                        browser.view.error = json.error;
-                    } else {
-                        browser.view.error = '';
+                        throw new Error(json.error)
                     }
                     return json;
                 })
@@ -162,6 +153,33 @@
                         })
                     }, 1000)
                 })
+            },
+            loadSchemas: async function() {
+                slo.contexts = {}
+                let schemas = await window.localAPI.schemas()
+                for (let schemaName in schemas.contexts) {
+                    let schema = schemas.contexts[schemaName]
+                    if (!schema.label) {
+                        continue
+                    }
+                    let schemaLabel = 'curriculum-'+schema.label
+                    delete schema.label
+                    schema.name = schemaName
+                    let contextData = {}
+                    for (let typeName in schema) {
+                        let typeLabel = schema[typeName].label
+                        if (typeLabel) {
+                            contextData[typeName] = typeLabel
+                        }
+                    }
+                    slo.contexts[schemaLabel] = {
+                        title: schemaName,
+                        data: contextData,
+                        schema
+                    }
+                }
+                initContexts()
+                return schemas
             }
         },
 
