@@ -822,7 +822,7 @@ var browser = simply.app({
             el = browser.view.insertParentRow
             let row = await browser.actions.insertRow(el.closest('tr'),value)
             let line = browser.view.sloSpreadsheet.getLineByRow(row)
-            el = browser.view.sloSpreadsheet.goto(line-1, 1)
+            el = browser.view.sloSpreadsheet.goto(line, 1)
             while (!browser.view.sloSpreadsheet.isEditable(el)) {
                 el = browser.view.sloSpreadsheet.moveNext()
             }
@@ -839,7 +839,7 @@ var browser = simply.app({
             let newrow = await browser.actions.appendRow(el.closest('tr'), type)
             let line = browser.view.sloSpreadsheet.getLineByRow(newrow)
             // show editor for first editable field in new node
-            el = browser.view.sloSpreadsheet.goto(line-1, 1)
+            el = browser.view.sloSpreadsheet.goto(line, 1)
             while (!browser.view.sloSpreadsheet.isEditable(el)) {
                 el = browser.view.sloSpreadsheet.moveNext()
             }
@@ -1161,7 +1161,7 @@ var browser = simply.app({
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view.listIsRoot = json.root;
+                browser.view.listIsRoot = browser.view.schemas.types[browser.view.listType].root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
@@ -1320,7 +1320,6 @@ var browser = simply.app({
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
-            let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let parentNode = row.node
             let typeName = window.slo.getTypeNameByType(type)
@@ -1343,7 +1342,7 @@ var browser = simply.app({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: parentNode.title,
+                    title: 'addChild to '+parentNode.title,
                     type: getType(parentNode),                    
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
@@ -1356,12 +1355,10 @@ var browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            let line = browser.view.sloSpreadsheet.findId(node['@id'])
-            return browser.view.sloSpreadsheet.getRowByLine(line+1)
+            return browser.view.sloSpreadsheet.getRowById(node['@id'])
         },
         appendRow: async function(rowEl) {
             if (!browser.view.user) return
-            let visibleRows = browser.view.sloSpreadsheet.visibleData
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
             let siblingNode = row.node
             let typeName = getType(siblingNode)
@@ -1388,7 +1385,7 @@ var browser = simply.app({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: parentNode.title,
+                    title: 'append child to '+parentNode.title,
                     type: getType(parentNode),
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
@@ -1401,8 +1398,7 @@ var browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            let line = browser.view.sloSpreadsheet.findId(node['@id'])
-            return browser.view.sloSpreadsheet.getRowByLine(line+1)
+            return browser.view.sloSpreadsheet.getRowById(node['@id'])
         },
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
@@ -1418,7 +1414,7 @@ var browser = simply.app({
                     id: parentNode.id ?? parentNode.uuid,
                     meta: {
                         context: window.slo.getContextByTypeName(getType(parentNode)),
-                        title: parentNode.title,
+                        title: 'undelete child in '+parentNode.title,
                         type: getType(parentNode),   
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
@@ -1436,9 +1432,6 @@ var browser = simply.app({
         },
         deleteRow: function(row) {
             if (!browser.view.user) return
-            let visibleRows = browser.view.sloSpreadsheet.visibleData
-            // rowNumber = browser.view.sloSpreadsheet.options.focus.row
-            // row = browser.view.sloSpreadsheet.getRowByLine(rowNumber)
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
             let parentNode = parent.node
@@ -1457,7 +1450,7 @@ var browser = simply.app({
                 id: parentNode.id ?? parentNode.uuid,
                 meta: {
                     context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: parentNode.title,
+                    title: 'delete child of '+parentNode.title,
                     type: getType(parentNode),
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
