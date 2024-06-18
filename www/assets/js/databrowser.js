@@ -1161,7 +1161,7 @@ var browser = simply.app({
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view.listIsRoot = json.root;
+                browser.view.listIsRoot = browser.view.schemas.types[browser.view.listType].root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
