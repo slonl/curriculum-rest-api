@@ -390,7 +390,7 @@ body.ds-paging .slo-header .ds-paging {
 }
 .slo-list-selector {
     overflow: auto;
-    max-height: 75vh;
+    max-height: 45vh;
 }
 
 .documentEditor {
