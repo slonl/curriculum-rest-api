@@ -344,7 +344,14 @@
                         let disabled = !row.node.Niveau?.length ? ' disabled' : ''
                         let value = row.columns[column.value] || []
                         let allNiveaus = column.values
-                        let html = '<form><ul>'
+                        let html = `
+<button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+    <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+        </use>
+    </svg>
+</button>
+<form><ul class="slo-list-selector">`
                         allNiveaus.forEach(n => {
                             if (!n.name) {
                                 return

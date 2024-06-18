@@ -116,7 +116,7 @@
         font-weight: normal;
         line-height: var(--ds-line-height);
         padding: 0 1px;
-        overflow: auto;
+        overflow: visible;
         height: auto;
         display: none;
     }
@@ -386,8 +386,13 @@ body.ds-paging .slo-header .ds-paging {
     background-color: transparent;
 }
 .slo-cell-selector .slo-edit:hover {
-    background-color: var(--ds-button-primary-bg-color);
+    background-color: var(--ds-button-primary-bg-color); 
 }
+.slo-list-selector {
+    overflow: auto;
+    max-height: 75vh;
+}
+
 .documentEditor {
     outline: 2px solid blue;
     opacity: 1;
@@ -427,7 +432,9 @@ body.ds-paging .slo-header .ds-paging {
 }
 
 .spreadsheet-autosize {
-    display: grid;   
+    display: grid;
+    overflow: auto;
+    max-height: 75vh;   
 }
 .spreadsheet-autosize::after {
     content: attr(data-replicated-value) " ";
@@ -445,6 +452,8 @@ body.ds-paging .slo-header .ds-paging {
     margin-bottom: cal(0.5 * var(--ds-line-height));
     padding: 0 0.5em;
     grid-area: 1 / 1 / 2 / 2;
+    overflow: auto;
+    max-height: 200px;
 }
 
 :fullscreen .slo-menu {
