@@ -394,6 +394,10 @@ const spreadsheet = (function() {
 
     function getRow(el) {
       let id = el.closest('tr').id
+      return getRowById(id)
+    }
+
+    function getRowById(id) {
       let row = datamodel.data.filter(r => r.columns.id==id).pop()
       return row
     }
@@ -923,6 +927,7 @@ const spreadsheet = (function() {
       },
       findParentRow,
       getRow,
+      getRowById,
       getRowByLine: (line) => {
         return datamodel.view.visibleData[line]
       },
