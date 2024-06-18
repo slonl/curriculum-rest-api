@@ -4,6 +4,9 @@ var browser = {}
 slo.api.loadSchemas()
 .then(schemas => {
     meta.schemas = schemas
+
+    let typeRoutes = getTypeRoutes()
+
     document.body.classList.remove('loading')
 
 simply.route.init({
@@ -22,7 +25,7 @@ browser = simply.app({
         }
     },
 
-    routes: {
+    routes: Object.assign(typeRoutes, {
         '/login/': function() {
             document.getElementById('login').setAttribute('open','open')
         },
@@ -60,14 +63,19 @@ browser = simply.app({
         '/niveau/:niveau/ldk_vakinhoud/': function(params) {
             browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
         },
+        '/doelniveau/': function(params) {
+            browser.actions.doelniveauList('doelniveau/')
+        },
+        '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
+            browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
+        },
+
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
         },
+/*
         '/niveau/': function(params) {
             browser.actions.list('niveau/')
-        },
-        '/doelniveau/': function(params) {
-            browser.actions.doelniveauList('doelniveau/')
         },
         '/doel/': function(params) {
             browser.actions.list('doel/')
@@ -95,9 +103,6 @@ browser = simply.app({
             browser.actions.list('ldk_vakbegrip/')
         },
 
-        '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
-            browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
-        },
         '/kerndoel/': function(params) {
             browser.actions.list('kerndoel/')
         },
@@ -284,6 +289,7 @@ browser = simply.app({
         '/relatie/': function(params) {
             browser.actions.list('relatie/')
         },
+*/
 
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
@@ -322,7 +328,7 @@ browser = simply.app({
                 browser.actions.notfound(params.remainder);
             }
         }
-    },
+    }),
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
@@ -1660,4 +1666,14 @@ function arrayEquals(a, b) {
     return true;
 }
 
+function getTypeRoutes() {
+    let routes = {}
+    for (let typeName in meta.schemas.types) {
+        let type = meta.schemas.types[typeName].label
+        routes['/'+type+'/'] = function(params) {
+            browser.actions.list(type+'/')
+        }
+    }
+    return routes
+}
 // @NOTE: templates/scripts.html contains some extra javascript
