@@ -1,40 +1,19 @@
+let meta = {}
+var browser = {}
+
+slo.api.loadSchemas()
+.then(schemas => {
+    meta.schemas = schemas
+
+    let typeRoutes = getTypeRoutes()
+
+    document.body.classList.remove('loading')
+
 simply.route.init({
     root: window.release.apiPath
 });
 
-var routeMatch = simply.route.match
-simply.route.match = function() {
-    // do nothing, slo.contexts is not yet loaded, so all routes are on hold, wait for loadSchemas to finish
-}
-
-function uuid() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
-
-function mkTimestamp() {
-    let timestamp =  new Date().toISOString()
-    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
-    return timestamp
-}
-
-function isString(s) {
-    return typeof s === 'string' || s instanceof String
-}
-
-function arrayEquals(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
-var browser = simply.app({
+browser = simply.app({
     container: document.body,
 
     view: {
@@ -46,7 +25,7 @@ var browser = simply.app({
         }
     },
 
-    routes: {
+    routes: Object.assign(typeRoutes, {
         '/login/': function() {
             document.getElementById('login').setAttribute('open','open')
         },
@@ -84,14 +63,19 @@ var browser = simply.app({
         '/niveau/:niveau/ldk_vakinhoud/': function(params) {
             browser.actions.listOpNiveau(params.niveau, 'ldk_vakinhoud/');
         },
+        '/doelniveau/': function(params) {
+            browser.actions.doelniveauList('doelniveau/')
+        },
+        '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
+            browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
+        },
+
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
         },
+/*
         '/niveau/': function(params) {
             browser.actions.list('niveau/')
-        },
-        '/doelniveau/': function(params) {
-            browser.actions.doelniveauList('doelniveau/')
         },
         '/doel/': function(params) {
             browser.actions.list('doel/')
@@ -119,9 +103,6 @@ var browser = simply.app({
             browser.actions.list('ldk_vakbegrip/')
         },
 
-        '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
-            browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
-        },
         '/kerndoel/': function(params) {
             browser.actions.list('kerndoel/')
         },
@@ -308,6 +289,7 @@ var browser = simply.app({
         '/relatie/': function(params) {
             browser.actions.list('relatie/')
         },
+*/
 
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
@@ -346,7 +328,7 @@ var browser = simply.app({
                 browser.actions.notfound(params.remainder);
             }
         }
-    },
+    }),
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
@@ -817,16 +799,30 @@ var browser = simply.app({
             browser.actions.showTypeSelector(el)                
         },
         addChild: async function(el, value) {
-            browser.actions.hideTypeSelector()
-            //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
-            el = browser.view.insertParentRow
-            let row = await browser.actions.insertRow(el.closest('tr'),value)
-            let line = browser.view.sloSpreadsheet.getLineByRow(row)
-            el = browser.view.sloSpreadsheet.goto(line, 1)
-            while (!browser.view.sloSpreadsheet.isEditable(el)) {
-                el = browser.view.sloSpreadsheet.moveNext()
+            if (value=='niveau') {
+                let typelist = el.closest('div')
+                let form = typelist.parentElement.querySelector('form')
+                form.classList.remove('slo-hidden')
+                typelist.classList.add('slo-hidden')
+                // FIXME: reset this in showTypeSelector
+            } else {
+                browser.actions.hideTypeSelector()
+                //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
+                el = browser.view.insertParentRow
+                let row = await browser.actions.insertRow(el.closest('tr'),value)
+                let line = browser.view.sloSpreadsheet.getLineByRow(row)
+                el = browser.view.sloSpreadsheet.goto(line, 1)
+                while (!browser.view.sloSpreadsheet.isEditable(el)) {
+                    el = browser.view.sloSpreadsheet.moveNext()
+                }
+                browser.view.sloSpreadsheet.editor(el)
             }
-            browser.view.sloSpreadsheet.editor(el)
+        },
+        addNiveau: async function(form, values) {
+            browser.actions.hideTypeSelector()
+            el = browser.view.insertParentRow
+            let parentRow = browser.view.sloSpreadsheet.getRow(el.closest('tr'))
+            return browser.actions.addNiveau(parentRow, values.niveau)
         },
         addSibling: async function(el, value) {
             browser.actions.hideTypeSelector()
@@ -873,33 +869,6 @@ var browser = simply.app({
             localStorage.setItem('username',email)
             localStorage.setItem('key',key)
             return true
-        },
-        loadSchemas: async function() {
-            slo.contexts = {}
-            let schemas = await window.localAPI.schemas()
-            for (let schemaName in schemas.contexts) {
-                let schema = schemas.contexts[schemaName]
-                if (!schema.label) {
-                    continue
-                }
-                let schemaLabel = 'curriculum-'+schema.label
-                delete schema.label
-                schema.name = schemaName
-                let contextData = {}
-                for (let typeName in schema) {
-                    let typeLabel = schema[typeName].label
-                    if (typeLabel) {
-                        contextData[typeName] = typeLabel
-                    }
-                }
-                slo.contexts[schemaLabel] = {
-                    title: schemaName,
-                    data: contextData,
-                    schema
-                }
-            }
-            initContexts()
-            return schemas
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
@@ -1146,6 +1115,39 @@ var browser = simply.app({
             await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
             window.setTimeout(browser.commands.cellEditor, 100)
         },
+        addNiveau: async function(row, niveau) {
+            let prop, prevValue, newValue
+            let dirty = browser.view.dirtyChecked==1
+            let node = row.node
+            prop = row.columns.niveaus
+            prevValue = prop
+            newValue = Array.from(new Set([...prop, niveau])) // Set so the array is unique
+            dirty = true
+            if (newValue == prevValue) {
+                return // no change failsave
+            } else if (!newValue && !prevValue) {
+                return // check if both are empty
+            }
+
+            let timestamp = new Date().toISOString()
+            let change = new changes.Change({
+                id: node.id ?? node.uuid,
+                meta: {
+                    context: window.slo.getContextByTypeName(getType(node)),
+                    title: node.title ?? '[Geen titel]',
+                    type: getType(node),
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'patch',
+                property: 'niveaus',
+                prevValue,
+                newValue,
+                dirty
+            })
+            changes.changes.push(change)
+            changes.update()
+            return browser.actions.spreadsheetUpdate()
+        },
         list: function(type) {
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
@@ -1161,7 +1163,7 @@ var browser = simply.app({
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view.listIsRoot = browser.view.schemas.types[browser.view.listType].root;
+                browser.view.listIsRoot = meta.schemas.types[browser.view.listType].root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
@@ -1664,12 +1666,6 @@ if (user && key) {
     browser.view.loggedIn = false
 }
 
-browser.actions.loadSchemas().then(schemas => {
-    browser.view.schemas = schemas
-    simply.route.match = routeMatch // restore route.match now slo.contexts is available, and restart route matching
-    simply.route.match(document.location.pathname)
-    document.body.classList.remove('loading')
-})
 
 browser.view.dirtyChecked = true
 
@@ -1679,6 +1675,8 @@ window.addEventListener('resize', (e) => {
     }
 })
 
+}); // end promise.then
+
 function getType(node) {
     return JSONTag.getAttribute(node, 'class') || node['@type']
 } 
@@ -1686,5 +1684,43 @@ function getType(node) {
 function getId(node) {
     let id = JSONTag.getAttribute(node, 'id')
     return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
+}
+
+function uuid() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
+}
+
+function isString(s) {
+    return typeof s === 'string' || s instanceof String
+}
+
+function arrayEquals(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
+function getTypeRoutes() {
+    let routes = {}
+    for (let typeName in meta.schemas.types) {
+        let type = meta.schemas.types[typeName].label
+        routes['/'+type+'/'] = function(params) {
+            browser.actions.list(type+'/')
+        }
+    }
+    return routes
 }
 // @NOTE: templates/scripts.html contains some extra javascript

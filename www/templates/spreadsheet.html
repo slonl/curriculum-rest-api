@@ -8,20 +8,6 @@
                     <option data-simply-field="title"></option>
                 </template>
             </select>
-            <!-- select class="slo-niveaus-select" multiple data-simply-field="niveau-selectie"
-            data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title" 
-            data-simply-activate="niveaus-select" data-simply-element="niveaus" data-simply-command="selectNiveaus">
-                <template>
-                    <option data-simply-field="title"></option>
-                </template>
-            </select>
-            <select class="slo-contexts-select" multiple data-simply-field="context-selectie"
-            data-simply-list="contexts" data-simply-data="contexts-select" data-simply-entry="context" 
-            data-simply-activate="contexts-select" data-simply-element="contexts" data-simply-command="selectContexts">
-                <template>
-                    <option data-simply-field="context"></option>
-                </template>
-            </select -->
             <button class="ds-button ds-icon-button ds-button-naked" data-simply-command="toggleFullscreen" data-simply-state="close">
                 <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="close">
                     <use xlink:href="/assets/icons/feather-sprite.svg#minimize-2"></use>
@@ -67,6 +53,16 @@
                             </label>
                         </template>
                     </div>
+                    <form class="ds-space-horizontal slo-hidden" data-simply-command="addNiveau">
+                        <label for="niveau">Selecteer Niveau:</label>
+                        <input name="niveau" list="niveaus">
+                        <button type="submit">Link</button>
+                    </form>
+                    <datalist id="niveaus" data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title">
+                        <template>
+                            <option data-simply-field="title"></option>
+                        </template>
+                    </datalist>
                 </div>
             </form>
         </dialog>
