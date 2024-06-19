@@ -73,223 +73,6 @@ browser = simply.app({
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
         },
-/*
-        '/niveau/': function(params) {
-            browser.actions.list('niveau/')
-        },
-        '/doel/': function(params) {
-            browser.actions.list('doel/')
-        },
-        '/vakleergebied/': function(params) {
-            browser.actions.list('vakleergebied/')
-        },
-
-        '/ldk_vak/': function(params) {
-            browser.actions.list('ldk_vakleergebied/')
-        },
-        '/ldk_vakleergebied/': function(params) {
-            browser.actions.list('ldk_vakleergebied/')
-        },
-        '/ldk_vakkern/': function(params) {
-            browser.actions.list('ldk_vakkern/')
-        },
-        '/ldk_vaksubkern/': function(params) {
-            browser.actions.list('ldk_vaksubkern/')
-        },
-        '/ldk_vakinhoud/': function(params) {
-            browser.actions.list('ldk_vakinhoud/')
-        },
-        '/ldk_vakbegrip/': function(params) {
-            browser.actions.list('ldk_vakbegrip/')
-        },
-
-        '/kerndoel/': function(params) {
-            browser.actions.list('kerndoel/')
-        },
-        '/kerndoel_domein/': function(params) {
-            browser.actions.list('kerndoel_domein/')
-        },
-        '/kerndoel_uitstroomprofiel/': function(params) {
-            browser.actions.list('kerndoel_uitstroomprofiel/')
-        },
-        '/kerndoel_vakleergebied/': function(params) {
-            browser.actions.list('kerndoel_vakleergebied/')
-        },
-
-        '/examenprogramma_vakleergebied/': function(params) {
-            browser.actions.list('examenprogramma_vakleergebied/')
-        },
-        '/examenprogramma/': function(params) {
-            browser.actions.list('examenprogramma/')
-        },
-        '/examenprogramma_domein/': function(params) {
-            browser.actions.list('examenprogramma_domein/')
-        },
-        '/examenprogramma_subdomein/': function(params) {
-            browser.actions.list('examenprogramma_subdomein/')
-        },
-        '/examenprogramma_eindterm/': function(params) {
-            browser.actions.list('examenprogramma_eindterm/')
-        },
-        '/examenprogramma_kop1/': function(params) {
-            browser.actions.list('examenprogramma_kop1/')
-        },
-        '/examenprogramma_kop2/': function(params) {
-            browser.actions.list('examenprogramma_kop2/')
-        },
-        '/examenprogramma_kop3/': function(params) {
-            browser.actions.list('examenprogramma_kop3/')
-        },
-        '/examenprogramma_kop4/': function(params) {
-            browser.actions.list('examenprogramma_kop4/')
-        },
-        '/examenprogramma_body/': function(params) {
-            browser.actions.list('examenprogramma_body/')
-        },
-
-        '/examenprogramma_bg_profiel/': function(params) {
-            browser.actions.list('examenprogramma_bg_profiel/')
-        },
-        '/examenprogramma_bg_kern/': function(params) {
-            browser.actions.list('examenprogramma_bg_kern/')
-        },
-        '/examenprogramma_bg_kerndeel/': function(params) {
-            browser.actions.list('examenprogramma_bg_kerndeel/')
-        },
-        '/examenprogramma_bg_globale_eindterm/': function(params) {
-            browser.actions.list('examenprogramma_bg_globale_eindterm/')
-        },
-        '/examenprogramma_bg_module/': function(params) {
-            browser.actions.list('examenprogramma_bg_module/')
-        },
-        '/examenprogramma_bg_keuzevak/': function(params) {
-            browser.actions.list('examenprogramma_bg_keuzevak/')
-        },
-        '/examenprogramma_bg_deeltaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_deeltaak/')
-        },
-        '/examenprogramma_bg_moduletaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_moduletaak/')
-        },
-        '/examenprogramma_bg_keuzevaktaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_keuzevaktaak/')
-        },
-
-        '/syllabus/': function(params) {
-            browser.actions.list('syllabus/')
-        },
-        '/syllabus_vakleergebied/': function(params) {
-            browser.actions.list('syllabus_vakleergebied/')
-        },
-        '/syllabus_specifieke_eindterm/': function(params) {
-            browser.actions.list('syllabus_specifieke_eindterm/')
-        },
-        '/syllabus_toelichting/': function(params) {
-            browser.actions.list('syllabus_toelichting/')
-        },
-        '/syllabus_vakbegrip/': function(params) {
-            browser.actions.list('syllabus_vakbegrip/')
-        },
-
-        '/inh_vakleergebied/': function(params) {
-            browser.actions.list('inh_vakleergebied/')
-        },
-        '/inh_inhoudslijn/': function(params) {
-            browser.actions.list('inh_inhoudslijn/')
-        },
-        '/inh_cluster/': function(params) {
-            browser.actions.list('inh_cluster/')
-        },            
-        '/inh_subcluster/': function(params) {
-            browser.actions.list('inh_subcluster/')
-        },
-
-        '/ref_vakleergebied/': function(params) {
-            browser.actions.list('ref_vakleergebied/')
-        },
-        '/ref_domein/': function(params) {
-            browser.actions.list('ref_domein/')
-        },
-        '/ref_subdomein/': function(params) {
-            browser.actions.list('ref_subdomein/')
-        },
-        '/ref_onderwerp/': function(params) {
-            browser.actions.list('ref_onderwerp/')
-        },
-        '/ref_deelonderwerp/': function(params) {
-            browser.actions.list('ref_deelonderwerp/')
-        },
-        '/ref_tekstkenmerk/': function(params) {
-            browser.actions.list('ref_tekstkenmerk/')
-        },
-
-        '/erk_vakleergebied/': function(params) {
-            browser.actions.list('erk_vakleergebied/')
-        },
-        '/erk_gebied/': function(params) {
-            browser.actions.list('erk_gebied/')
-        },
-        '/erk_categorie/': function(params) {
-            browser.actions.list('erk_categorie/')
-        },
-        '/erk_taalactiviteit/': function(params) {
-            browser.actions.list('erk_taalactiviteit/')
-        },
-        '/erk_schaal/': function(params) {
-            browser.actions.list('erk_schaal/')
-        },
-        '/erk_candobeschrijving/': function(params) {
-            browser.actions.list('erk_candobeschrijving/')
-        },
-        '/erk_voorbeeld/': function(params) {
-            browser.actions.list('erk_voorbeeld/')
-        },
-        '/erk_lesidee/': function(params) {
-            browser.actions.list('erk_lesidee/')
-        },
-
-        '/nh_categorie/': function(params) {
-            browser.actions.list('nh_categorie/')
-        },
-        '/nh_sector/': function(params) {
-            browser.actions.list('nh_sector/')
-        },
-        '/nh_schoolsoort/': function(params) {
-            browser.actions.list('nh_schoolsoort/')
-        },
-        '/nh_leerweg/': function(params) {
-            browser.actions.list('nh_leerweg/')
-        },
-        '/nh_bouw/': function(params) {
-            browser.actions.list('nh_bouw/')
-        },
-        '/nh_niveau/': function(params) {
-            browser.actions.list('nh_niveau/')
-        },
-        
-        '/fo_domein/': function(params) {
-            browser.actions.list('fo_domein/')
-        },
-        '/fo_subdomein/': function(params) {
-            browser.actions.list('fo_subdomein/')
-        },
-        '/fo_doelzin/': function(params) {
-            browser.actions.list('fo_doelzin/')
-        },
-        '/fo_toelichting/': function(params) {
-            browser.actions.list('fo_toelichting/')
-        },
-        '/fo_uitwerking/': function(params) {
-            browser.actions.list('fo_uitwerking/')
-        },
-        
-        '/tag/': function(params) {
-            browser.actions.list('tag/')
-        },
-        '/relatie/': function(params) {
-            browser.actions.list('relatie/')
-        },
-*/
 
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
@@ -1729,4 +1512,50 @@ function getTypeRoutes() {
     }
     return routes
 }
+
+let dragging = false
+simply.activate.addListener('slip', function() {
+    if (browser.view.user) {
+        new Slip(this)
+        this.addEventListener('slip:reorder', function(e) {
+            dragging = true
+            let node = browser.view.item
+            let prop, prevValue, newValue
+            let list = e.target.closest('ul')
+            let property = list.dataset.simplyList.substr(5)
+            prevValue = node[property].slice()
+            e.target.parentNode.insertBefore(e.target, e.detail.insertBefore)
+            newValue = Array.from(list.querySelectorAll('li a')).map(e => e.href).map(href => prevValue.find(s => s['@references']==href))
+            if (arrayEquals(newValue, prevValue)) {
+                return // no change failsave
+            } else if (!newValue && !prevValue) {
+                return // check if both are empty
+            }
+            let timestamp = new Date().toISOString()
+            let change = new changes.Change({
+                id: node.id ?? node.uuid,
+                meta: {
+                    context: window.slo.getContextByTypeName(getType(node)),
+                    title: 'Reorder '+property+' of '+node.title,
+                    type: getType(node),
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'patch',
+                property,
+                prevValue,
+                newValue,
+                dirty: true
+            })
+            changes.changes.push(change)
+            changes.update()
+        })
+        this.addEventListener('click', function(e) {
+            if (dragging) {
+                e.preventDefault()
+                e.stopPropagation()
+                dragging = false
+            }
+        }, true)
+    }
+})
 // @NOTE: templates/scripts.html contains some extra javascript
