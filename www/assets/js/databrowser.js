@@ -1116,6 +1116,8 @@ browser = simply.app({
             window.setTimeout(browser.commands.cellEditor, 100)
         },
         addNiveau: async function(row, niveau) {
+            //TODO: deze code is duplicaat van code in onEdit
+            //functie abstraheren en in beide plekken aanroepen
             let prop, prevValue, newValue
             let dirty = browser.view.dirtyChecked==1
             let node = row.node
@@ -1483,6 +1485,10 @@ browser = simply.app({
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
             let bodySize = document.body.getBoundingClientRect()
+            let form = selector.querySelector('form')
+            let typelist = selector.querySelector('[data-simply-list="availableTypes"]')
+            form.classList.add('slo-hidden')
+            typelist.classList.remove('slo-hidden')
             selector.showModal()
             if (rect.bottom > (bodySize.height/2)) {
                 let b = selector.getBoundingClientRect()
