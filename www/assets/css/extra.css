@@ -393,6 +393,12 @@ body.ds-paging .slo-header .ds-paging {
     max-height: 27vh;
 }
 
+.slo-niveau-index{
+    display: inline;
+    list-style-type: none;
+   margin: 0px;
+}
+
 .documentEditor {
     outline: 2px solid blue;
     opacity: 1;
