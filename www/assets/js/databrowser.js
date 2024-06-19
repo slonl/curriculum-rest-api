@@ -1,3 +1,51 @@
+function getType(node) {
+    return JSONTag.getAttribute(node, 'class') || node['@type']
+} 
+
+function getId(node) {
+    let id = JSONTag.getAttribute(node, 'id')
+    return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
+}
+
+function uuid() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
+}
+
+function isString(s) {
+    return typeof s === 'string' || s instanceof String
+}
+
+function arrayEquals(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
+function getTypeRoutes() {
+    let routes = {}
+    for (let typeName in meta.schemas.types) {
+        let type = meta.schemas.types[typeName].label
+        routes['/'+type+'/'] = function(params) {
+            browser.actions.list(type+'/')
+        }
+    }
+    return routes
+}
+
+
 let meta = {}
 var browser = {}
 
@@ -1466,96 +1514,55 @@ window.addEventListener('resize', (e) => {
 
 }); // end promise.then
 
-function getType(node) {
-    return JSONTag.getAttribute(node, 'class') || node['@type']
-} 
-
-function getId(node) {
-    let id = JSONTag.getAttribute(node, 'id')
-    return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
-}
-
-function uuid() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
-
-function mkTimestamp() {
-    let timestamp =  new Date().toISOString()
-    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
-    return timestamp
-}
-
-function isString(s) {
-    return typeof s === 'string' || s instanceof String
-}
-
-function arrayEquals(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
-}
-
-function getTypeRoutes() {
-    let routes = {}
-    for (let typeName in meta.schemas.types) {
-        let type = meta.schemas.types[typeName].label
-        routes['/'+type+'/'] = function(params) {
-            browser.actions.list(type+'/')
-        }
-    }
-    return routes
-}
 
 let dragging = false
+/*
 simply.activate.addListener('slip', function() {
     if (browser.view.user) {
         new Slip(this)
-        this.addEventListener('slip:reorder', function(e) {
-            dragging = true
-            let node = browser.view.item
-            let prop, prevValue, newValue
-            let list = e.target.closest('ul')
-            let property = list.dataset.simplyList.substr(5)
-            prevValue = node[property].slice()
-            e.target.parentNode.insertBefore(e.target, e.detail.insertBefore)
-            newValue = Array.from(list.querySelectorAll('li a')).map(e => e.href).map(href => prevValue.find(s => s['@references']==href))
-            if (arrayEquals(newValue, prevValue)) {
-                return // no change failsave
-            } else if (!newValue && !prevValue) {
-                return // check if both are empty
-            }
-            let timestamp = new Date().toISOString()
-            let change = new changes.Change({
-                id: node.id ?? node.uuid,
-                meta: {
-                    context: window.slo.getContextByTypeName(getType(node)),
-                    title: 'Reorder '+property+' of '+node.title,
-                    type: getType(node),
-                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                },
-                type: 'patch',
-                property,
-                prevValue,
-                newValue,
-                dirty: true
-            })
-            changes.changes.push(change)
-            changes.update()
-        })
-        this.addEventListener('click', function(e) {
-            if (dragging) {
-                e.preventDefault()
-                e.stopPropagation()
-                dragging = false
-            }
-        }, true)
     }
 })
+*/
+document.addEventListener('slip:reorder', function(e) {
+    dragging = true
+    let node = browser.view.item
+    let prop, prevValue, newValue
+    let list = e.target.closest('ul')
+    let property = list.dataset.simplyList.substr(5)
+    prevValue = node[property].slice()
+    e.target.parentNode.insertBefore(e.target, e.detail.insertBefore)
+    newValue = Array.from(list.querySelectorAll('li a')).map(e => e.href).map(href => prevValue.find(s => s['@references']==href))
+    //FIXME: get id values in each entry in newValue/prevValue, otherwise commit won't work
+    //commit will not change the values to JSONTag.Link if no .id field is set
+    if (arrayEquals(newValue, prevValue)) {
+        return // no change failsave
+    } else if (!newValue && !prevValue) {
+        return // check if both are empty
+    }
+
+    let timestamp = new Date().toISOString()
+    let change = new changes.Change({
+        id: node.id ?? node.uuid,
+        meta: {
+            context: window.slo.getContextByTypeName(getType(node)),
+            title: node.title,
+            type: getType(node),
+            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+        },
+        type: 'patch',
+        property,
+        prevValue,
+        newValue,
+        dirty: true
+    })
+    changes.changes.push(change)
+    changes.update()
+})
+document.addEventListener('click', function(e) {
+    if (dragging) {
+        e.preventDefault()
+        e.stopPropagation()
+        dragging = false
+    }
+}, true)
 // @NOTE: templates/scripts.html contains some extra javascript
