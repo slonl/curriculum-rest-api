@@ -1,6 +1,8 @@
-export async function importXLSX(file, schemas) {
+let niveaus = []
+export async function importXLSX(file, schemas, levels) {
 	var errors = []
 	let state = {}
+	niveaus = levels
 
 	let f = await readFile(file)
 	console.log(f)
@@ -61,6 +63,11 @@ const aliases = {
 
 const TypeAliases = {}
 
+function parseLevels(levels) {
+	let nodeNiveaus = levels.split(',').map(level => level.trim().toLowerCase())
+	return niveaus.filter(n => nodeNiveaus.includes(n.title))
+}
+
 function createNode(row, line, tree) {
 	let node = {}
 	node.$row = row
@@ -103,12 +110,55 @@ function createNode(row, line, tree) {
 		// check that all properties are known
 		let schema = tree.schemas.types[node['@type']]
 		Object.keys(node).forEach(property => {
-			if (property=='level' || property=='$parentId') {
+			if (property=='level') {
+				node.Niveau = parseLevels(node.level)
+				delete node.level
 				return
 			}
 			if (property[0]!='@' && property[0]!='$') {
 				if (!schema.properties[property]) {
 					tree.errors.push(new Error('Onbekende property: '+property, {cause:node}))
+				} else {
+					switch(schema.properties[property].type) {
+						case 'string':
+							node[property] = ''+node[property]
+							if (schema.properties[property].enum) {
+								if (!schema.properties[property].enum.includes(node[property])) {
+									tree.errors.push(new Error('Onbekende waarde voor property (enum): '+property, {cause:node}))
+									return
+								}
+							}
+							break
+						case 'array':
+							if (!Array.isArray(node[property])) {
+								tree.errors.push(new Error('Property is geen array: '+property, {cause:node}))
+								return
+							}
+							break
+						case 'boolean':
+							node[property] = !!node[property]
+							break
+						case 'integer':
+							if (typeof node[property] === 'string' || node[property] instanceof String) {
+								if (isNaN(Number(node[property]))) {
+									tree.errors.push(new Error('Property is geen integer: '+property, {cause: node}))
+									return
+								} else {
+									node[property] = +node[property]
+								}
+							}
+							if (typeof schema.properties[property].minimum!='undefined') {
+								if (node[property] < schema.properties[property].minimum) {
+									tree.errors.push(new Error('Property is kleiner dan opgegeven minimum: '+property, {cause: node}))
+								}
+							} 
+							if (typeof schema.properties[property].maximum!='undefined') {
+								if (node[property] > schema.properties[property].maximum) {
+									tree.errors.push(new Error('Property is froter dan opgegeven maximum: '+property, {cause: node}))
+								}
+							}
+							break
+					}
 				}
 			}
 		})
@@ -160,7 +210,11 @@ function linkNodes(tree) {
 				if (!parent[node['@type']]) {
 					parent[node['@type']] = []
 				}
-				parent[node['@type']].push(node)
+				if (tree.schemas.types[parent['@type']].properties[node['@type']]?.type=='object') {
+					parent[node['@type']] = node // erk_vakleergebied.vakleergebied_id is not an array, for example.
+				} else {
+					parent[node['@type']].push(node)
+				}
 			})
 		}
 	})

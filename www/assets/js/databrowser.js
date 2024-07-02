@@ -709,7 +709,7 @@ browser = simply.app({
         },
         importXLSX: async function(file) {
 //            try {
-                const tree = await slo.importXLSX(file, meta.schemas)
+                const tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.errors) {
                     // collect errors by message
                     let errorMap = new Map()
