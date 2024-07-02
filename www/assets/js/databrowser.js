@@ -403,6 +403,12 @@ browser = simply.app({
     },
 
     commands: {
+        import: (el, value) => {
+            document.getElementById('importDialog').showModal()            
+        },
+        importXLSX: (form, values) => {
+            browser.actions.importXLSX(form.file.files[0])
+        },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
             el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
@@ -700,6 +706,16 @@ browser = simply.app({
             localStorage.setItem('username',email)
             localStorage.setItem('key',key)
             return true
+        },
+        importXLSX: async function(file) {
+//            try {
+                const tree = await slo.importXLSX(file, meta.schemas)
+                debugger
+//            } catch(errors) {
+                // FIXME: check for errors
+//                debugger
+//            }
+            // TODO: insert roots as changes
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
@@ -1533,7 +1549,7 @@ document.addEventListener('slip:reorder', function(e) {
     e.target.parentNode.insertBefore(e.target, e.detail.insertBefore)
     newValue = Array.from(list.querySelectorAll('li a')).map(e => e.href).map(href => prevValue.find(s => s['@references']==href))
     //FIXME: get id values in each entry in newValue/prevValue, otherwise commit won't work
-    //commit will not change the values to JSONTag.Link if no .id field is set
+    //commit will not change the values to JSONTag.Link if no .id field is
     if (arrayEquals(newValue, prevValue)) {
         return // no change failsave
     } else if (!newValue && !prevValue) {

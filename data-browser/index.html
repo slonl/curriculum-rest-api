@@ -12,6 +12,16 @@
         <span data-simply-field="loggedIn" data-simply-content="template">
             <template data-simply-template="false"></template>
             <template data-simply-template="true">
+                <div class="ds-button-bar slo-import-button">
+                    <button class="ds-button ds-icon-button" title="import" data-simply-command="import"><svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#upload"></use>
+                    </svg> Importeer</button>
+                </div>
+            </template>
+        </span>
+        <span data-simply-field="loggedIn" data-simply-content="template">
+            <template data-simply-template="false"></template>
+            <template data-simply-template="true">
                 <div class="ds-button-bar ds-button-group">
                     <button data-simply-command="logoff"
                         class="ds-button" title="Afmelden"><svg
@@ -190,6 +200,7 @@
     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
 </div>
 
+<link rel="simply-include" href="/templates/import.html">
 <link rel="simply-include" href="/templates/deprecated.html">
 <link rel="simply-include" href="/templates/links.html">
 <link rel="simply-include" href="/templates/doelniveau.html">
