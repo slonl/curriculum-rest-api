@@ -17,5 +17,21 @@
 		    </label>
 		    <button class="ds-button ds-button-primary" type="submit">Upload</button>
 		</form>
+        <div class="ds-space slo-errors" data-simply-list="importErrors">
+            <template>
+                <div class="ds-error">
+                    <div class="slo-error-message" data-simply-field="message"></div>
+                    <table class="slo-error-table" data-simply-list="errors">
+                        <template>
+                            <tr class="slo-excel-row">
+                                <td class="slo-excel-row-nr" data-simply-field="cause.$line"></td>
+                                <td class="slo-excel-prefix" data-simply-field="cause.prefix"></td>
+                                <td class="slo-excel-title" data-simply-field="cause.title"></td>
+                            </tr>
+                        </template>
+                    </table>
+                </div>
+            </template>
+        </div>
 	</div>
 </dialog>

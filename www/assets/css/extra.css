@@ -478,3 +478,30 @@ body.ds-paging .slo-header .ds-paging {
 .ds-paging .ds-button {
     display: unset; /* FIXME: slo.css incorrectly sets this to block */
 }
+
+.slo-error-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 2px;
+}
+
+.slo-error-table td {
+    border: 1px solid blue;
+    padding: 2px;
+}
+
+.slo-excel-row-nr {
+    width: 3em;
+}
+.slo-excel-prefix {
+    width: 6em;
+}
+.slo-excel-prefix,
+.slo-excel-row-nr,
+.slo-excel-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px;
+}

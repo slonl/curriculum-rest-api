@@ -710,6 +710,18 @@ browser = simply.app({
         importXLSX: async function(file) {
 //            try {
                 const tree = await slo.importXLSX(file, meta.schemas)
+                if (tree.errors) {
+                    // collect errors by message
+                    let errorMap = new Map()
+                    for(error of tree.errors) {
+                        if (!errorMap.has(error.message)) {
+                            errorMap.set(error.message, { message: error.message, errors: []})
+                        }
+                        let em = errorMap.get(error.message)
+                        em.errors.push(error)
+                    }
+                    this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
+                }
                 debugger
 //            } catch(errors) {
                 // FIXME: check for errors
