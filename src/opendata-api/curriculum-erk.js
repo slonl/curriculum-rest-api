@@ -112,6 +112,12 @@ module.exports = {
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofieltekst',
 				...shortInfo,
+				Niveau: {
+					...shortInfo,
+					deprecated: _,
+                  	description: _,
+                  	type: _,
+				},
 			})
 			
 
