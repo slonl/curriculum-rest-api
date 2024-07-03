@@ -56,7 +56,7 @@ const spreadsheet = (function() {
       let cache = pluginCache.get(this)
       if (params.toggle) {
         let row = data.find(r => r.columns.id==params.toggle)
-        if (row.node.hasChildren) {
+        if (row.node.$hasChildren) {
           cache.etag = null
           if (this.options.closed[params.toggle]) {
             delete this.options.closed[params.toggle]
@@ -624,12 +624,12 @@ const spreadsheet = (function() {
             html+= `<td class="${colClass}"><a href="${value}" target="sloSide">#</a></td>`
             break
           case 'tree':
-            let hasChildren = ''
-            if (row.node.hasChildren) {
-              hasChildren = ' slo-has-children'
+            let $hasChildren = ''
+            if (row.node.$hasChildren) {
+              $hasChildren = ' slo-has-children'
             }
             html+=`<td class="${colClass}" data-simply-command="toggleTree">
-    <span class="slo-indent slo-indent-${row.indent} ${hasChildren}"><span data-simply-command="selectTreeCell">${value}&nbsp;</span></span>
+    <span class="slo-indent slo-indent-${row.indent} ${$hasChildren}"><span data-simply-command="selectTreeCell">${value}&nbsp;</span></span>
 </td>`
             break
           case 'text':
