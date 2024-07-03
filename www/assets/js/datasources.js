@@ -44,11 +44,10 @@
             }); // leave this ;, otherwise the (function() ) below is parsed incorrectly
     }
 
-    let niveaus = []
     window.slo.api.get('/niveau/')
     .then(niveaus => {
-        niveaus = niveaus.data.map(n => n.title)
+        window.slo.niveaus = niveaus.data
         editor.addDataSource('niveaus', {
-            load: niveaus
+            load: niveaus.data.map(n => n.title)
         })
     })

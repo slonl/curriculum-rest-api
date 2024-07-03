@@ -1,3 +1,51 @@
+function getType(node) {
+    return JSONTag.getAttribute(node, 'class') || node['@type']
+} 
+
+function getId(node) {
+    let id = JSONTag.getAttribute(node, 'id')
+    return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
+}
+
+function uuid() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function mkTimestamp() {
+    let timestamp =  new Date().toISOString()
+    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
+    return timestamp
+}
+
+function isString(s) {
+    return typeof s === 'string' || s instanceof String
+}
+
+function arrayEquals(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
+}
+
+function getTypeRoutes() {
+    let routes = {}
+    for (let typeName in meta.schemas.types) {
+        let type = meta.schemas.types[typeName].label
+        routes['/'+type+'/'] = function(params) {
+            browser.actions.list(type+'/')
+        }
+    }
+    return routes
+}
+
+
 let meta = {}
 var browser = {}
 
@@ -73,223 +121,6 @@ browser = simply.app({
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
         },
-/*
-        '/niveau/': function(params) {
-            browser.actions.list('niveau/')
-        },
-        '/doel/': function(params) {
-            browser.actions.list('doel/')
-        },
-        '/vakleergebied/': function(params) {
-            browser.actions.list('vakleergebied/')
-        },
-
-        '/ldk_vak/': function(params) {
-            browser.actions.list('ldk_vakleergebied/')
-        },
-        '/ldk_vakleergebied/': function(params) {
-            browser.actions.list('ldk_vakleergebied/')
-        },
-        '/ldk_vakkern/': function(params) {
-            browser.actions.list('ldk_vakkern/')
-        },
-        '/ldk_vaksubkern/': function(params) {
-            browser.actions.list('ldk_vaksubkern/')
-        },
-        '/ldk_vakinhoud/': function(params) {
-            browser.actions.list('ldk_vakinhoud/')
-        },
-        '/ldk_vakbegrip/': function(params) {
-            browser.actions.list('ldk_vakbegrip/')
-        },
-
-        '/kerndoel/': function(params) {
-            browser.actions.list('kerndoel/')
-        },
-        '/kerndoel_domein/': function(params) {
-            browser.actions.list('kerndoel_domein/')
-        },
-        '/kerndoel_uitstroomprofiel/': function(params) {
-            browser.actions.list('kerndoel_uitstroomprofiel/')
-        },
-        '/kerndoel_vakleergebied/': function(params) {
-            browser.actions.list('kerndoel_vakleergebied/')
-        },
-
-        '/examenprogramma_vakleergebied/': function(params) {
-            browser.actions.list('examenprogramma_vakleergebied/')
-        },
-        '/examenprogramma/': function(params) {
-            browser.actions.list('examenprogramma/')
-        },
-        '/examenprogramma_domein/': function(params) {
-            browser.actions.list('examenprogramma_domein/')
-        },
-        '/examenprogramma_subdomein/': function(params) {
-            browser.actions.list('examenprogramma_subdomein/')
-        },
-        '/examenprogramma_eindterm/': function(params) {
-            browser.actions.list('examenprogramma_eindterm/')
-        },
-        '/examenprogramma_kop1/': function(params) {
-            browser.actions.list('examenprogramma_kop1/')
-        },
-        '/examenprogramma_kop2/': function(params) {
-            browser.actions.list('examenprogramma_kop2/')
-        },
-        '/examenprogramma_kop3/': function(params) {
-            browser.actions.list('examenprogramma_kop3/')
-        },
-        '/examenprogramma_kop4/': function(params) {
-            browser.actions.list('examenprogramma_kop4/')
-        },
-        '/examenprogramma_body/': function(params) {
-            browser.actions.list('examenprogramma_body/')
-        },
-
-        '/examenprogramma_bg_profiel/': function(params) {
-            browser.actions.list('examenprogramma_bg_profiel/')
-        },
-        '/examenprogramma_bg_kern/': function(params) {
-            browser.actions.list('examenprogramma_bg_kern/')
-        },
-        '/examenprogramma_bg_kerndeel/': function(params) {
-            browser.actions.list('examenprogramma_bg_kerndeel/')
-        },
-        '/examenprogramma_bg_globale_eindterm/': function(params) {
-            browser.actions.list('examenprogramma_bg_globale_eindterm/')
-        },
-        '/examenprogramma_bg_module/': function(params) {
-            browser.actions.list('examenprogramma_bg_module/')
-        },
-        '/examenprogramma_bg_keuzevak/': function(params) {
-            browser.actions.list('examenprogramma_bg_keuzevak/')
-        },
-        '/examenprogramma_bg_deeltaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_deeltaak/')
-        },
-        '/examenprogramma_bg_moduletaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_moduletaak/')
-        },
-        '/examenprogramma_bg_keuzevaktaak/': function(params) {
-            browser.actions.list('examenprogramma_bg_keuzevaktaak/')
-        },
-
-        '/syllabus/': function(params) {
-            browser.actions.list('syllabus/')
-        },
-        '/syllabus_vakleergebied/': function(params) {
-            browser.actions.list('syllabus_vakleergebied/')
-        },
-        '/syllabus_specifieke_eindterm/': function(params) {
-            browser.actions.list('syllabus_specifieke_eindterm/')
-        },
-        '/syllabus_toelichting/': function(params) {
-            browser.actions.list('syllabus_toelichting/')
-        },
-        '/syllabus_vakbegrip/': function(params) {
-            browser.actions.list('syllabus_vakbegrip/')
-        },
-
-        '/inh_vakleergebied/': function(params) {
-            browser.actions.list('inh_vakleergebied/')
-        },
-        '/inh_inhoudslijn/': function(params) {
-            browser.actions.list('inh_inhoudslijn/')
-        },
-        '/inh_cluster/': function(params) {
-            browser.actions.list('inh_cluster/')
-        },            
-        '/inh_subcluster/': function(params) {
-            browser.actions.list('inh_subcluster/')
-        },
-
-        '/ref_vakleergebied/': function(params) {
-            browser.actions.list('ref_vakleergebied/')
-        },
-        '/ref_domein/': function(params) {
-            browser.actions.list('ref_domein/')
-        },
-        '/ref_subdomein/': function(params) {
-            browser.actions.list('ref_subdomein/')
-        },
-        '/ref_onderwerp/': function(params) {
-            browser.actions.list('ref_onderwerp/')
-        },
-        '/ref_deelonderwerp/': function(params) {
-            browser.actions.list('ref_deelonderwerp/')
-        },
-        '/ref_tekstkenmerk/': function(params) {
-            browser.actions.list('ref_tekstkenmerk/')
-        },
-
-        '/erk_vakleergebied/': function(params) {
-            browser.actions.list('erk_vakleergebied/')
-        },
-        '/erk_gebied/': function(params) {
-            browser.actions.list('erk_gebied/')
-        },
-        '/erk_categorie/': function(params) {
-            browser.actions.list('erk_categorie/')
-        },
-        '/erk_taalactiviteit/': function(params) {
-            browser.actions.list('erk_taalactiviteit/')
-        },
-        '/erk_schaal/': function(params) {
-            browser.actions.list('erk_schaal/')
-        },
-        '/erk_candobeschrijving/': function(params) {
-            browser.actions.list('erk_candobeschrijving/')
-        },
-        '/erk_voorbeeld/': function(params) {
-            browser.actions.list('erk_voorbeeld/')
-        },
-        '/erk_lesidee/': function(params) {
-            browser.actions.list('erk_lesidee/')
-        },
-
-        '/nh_categorie/': function(params) {
-            browser.actions.list('nh_categorie/')
-        },
-        '/nh_sector/': function(params) {
-            browser.actions.list('nh_sector/')
-        },
-        '/nh_schoolsoort/': function(params) {
-            browser.actions.list('nh_schoolsoort/')
-        },
-        '/nh_leerweg/': function(params) {
-            browser.actions.list('nh_leerweg/')
-        },
-        '/nh_bouw/': function(params) {
-            browser.actions.list('nh_bouw/')
-        },
-        '/nh_niveau/': function(params) {
-            browser.actions.list('nh_niveau/')
-        },
-        
-        '/fo_domein/': function(params) {
-            browser.actions.list('fo_domein/')
-        },
-        '/fo_subdomein/': function(params) {
-            browser.actions.list('fo_subdomein/')
-        },
-        '/fo_doelzin/': function(params) {
-            browser.actions.list('fo_doelzin/')
-        },
-        '/fo_toelichting/': function(params) {
-            browser.actions.list('fo_toelichting/')
-        },
-        '/fo_uitwerking/': function(params) {
-            browser.actions.list('fo_uitwerking/')
-        },
-        
-        '/tag/': function(params) {
-            browser.actions.list('tag/')
-        },
-        '/relatie/': function(params) {
-            browser.actions.list('relatie/')
-        },
-*/
 
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
@@ -572,6 +403,14 @@ browser = simply.app({
     },
 
     commands: {
+        import: (el, value) => {
+            document.getElementById('importDialog').showModal()            
+        },
+        importXLSX: async (form, values) => {
+            if (await browser.actions.importXLSX(form.file.files[0])) {
+                document.getElementById('importDialog').close()
+            }
+        },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
             el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
@@ -872,6 +711,77 @@ browser = simply.app({
             localStorage.setItem('key',key)
             return true
         },
+        importXLSX: async function(file) {
+            try {
+                const tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
+                if (tree.roots.length>1) {
+                    tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
+                }
+                if (tree.errors.length) {
+                    // collect errors by message
+                    let errorMap = new Map()
+                    for(error of tree.errors) {
+                        if (!errorMap.has(error.message)) {
+                            errorMap.set(error.message, { message: error.message, errors: []})
+                        }
+                        let em = errorMap.get(error.message)
+                        em.errors.push(error)
+                    }
+                    this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
+                    return false
+                } else {
+                    // check if root is a new entity or existing one
+                    let root = tree.roots[0]
+                    let change = null
+                    let current = null
+                    try {
+                        current = await localAPI.item(root.id)
+                    } catch(e) {
+                        // ignore errors
+                    }
+                    if (current) {
+                        throw new Error('Aanpassen van bestaande data via import is nog niet geimplementeerd')
+                        // do an update
+                        change = new changes.Change({
+                            id: root.id,
+                            meta: {
+                                context: window.slo.getContextByTypeName(root['@type']),
+                                title: root.title,
+                                type: root['@type'],
+                                timestamp: mkTimestamp()
+                            },
+                            type: 'update',
+                            prevValue: current,
+                            newValue: root
+                        })
+                    } else {
+                        // do a new
+                        change = new changes.Change({
+                            id: root.id,
+                            meta: {
+                                context: window.slo.getContextByTypeName(root['@type']),
+                                title: 'Importing '+root['@type'],
+                                type: root['@type'],
+                                timestamp: mkTimestamp()
+                            },
+                            type: 'new',
+                            newValue: root
+                        })
+                    }
+                    changes.changes.push(change)
+                    changes.update()
+                    // switch to spreadsheet view of that entity
+                    history.pushState({}, null, root['@id']) //window.release.apiPath+'uuid/'+node.id)
+                    this.app.view.item = root
+                    let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
+                    await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
+                }
+            } catch(errors) {
+                this.app.view.importErrors = errors
+                return false
+            }
+            return true
+        },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
         },
@@ -921,7 +831,7 @@ browser = simply.app({
                     }
                     if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //includes(root)) {
                         this.app.view.item.id = root.id
-                        this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
@@ -959,7 +869,7 @@ browser = simply.app({
                         let url = new URL(id)
                         let uuid = id.pathname.split('/').pop()
                         this.app.view.item.id = uuid
-                        this.app.view.item.uuid = uuid //TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = uuid //TODO: remove this when no longer needed
                         history.replaceState({}, '', new URL(uuid, window.location))
                     })
                     this.app.view.sloSpreadsheet.onEdit((update) => {
@@ -1027,7 +937,7 @@ browser = simply.app({
                     }
                     if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //.includes(root)) {
                         this.app.view.item.id = root.id
-                        this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
@@ -1118,6 +1028,8 @@ browser = simply.app({
             window.setTimeout(browser.commands.cellEditor, 100)
         },
         addNiveau: async function(row, niveau) {
+            //TODO: deze code is duplicaat van code in onEdit
+            //functie abstraheren en in beide plekken aanroepen
             let prop, prevValue, newValue
             let dirty = browser.view.dirtyChecked==1
             let node = row.node
@@ -1485,6 +1397,10 @@ browser = simply.app({
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
             let bodySize = document.body.getBoundingClientRect()
+            let form = selector.querySelector('form')
+            let typelist = selector.querySelector('[data-simply-list="availableTypes"]')
+            form.classList.add('slo-hidden')
+            typelist.classList.remove('slo-hidden')
             selector.showModal()
             if (rect.bottom > (bodySize.height/2)) {
                 let b = selector.getBoundingClientRect()
@@ -1679,50 +1595,55 @@ window.addEventListener('resize', (e) => {
 
 }); // end promise.then
 
-function getType(node) {
-    return JSONTag.getAttribute(node, 'class') || node['@type']
-} 
 
-function getId(node) {
-    let id = JSONTag.getAttribute(node, 'id')
-    return id ? 'https://opendata.slo.nl/curriculum'+id : node['@id']
-}
-
-function uuid() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
-
-function mkTimestamp() {
-    let timestamp =  new Date().toISOString()
-    timestamp = timestamp.substring(0, timestamp.indexOf('.'))
-    return timestamp
-}
-
-function isString(s) {
-    return typeof s === 'string' || s instanceof String
-}
-
-function arrayEquals(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
+let dragging = false
+/*
+simply.activate.addListener('slip', function() {
+    if (browser.view.user) {
+        new Slip(this)
     }
-    return true;
-}
-
-function getTypeRoutes() {
-    let routes = {}
-    for (let typeName in meta.schemas.types) {
-        let type = meta.schemas.types[typeName].label
-        routes['/'+type+'/'] = function(params) {
-            browser.actions.list(type+'/')
-        }
+})
+*/
+document.addEventListener('slip:reorder', function(e) {
+    dragging = true
+    let node = browser.view.item
+    let prop, prevValue, newValue
+    let list = e.target.closest('ul')
+    let property = list.dataset.simplyList.substr(5)
+    prevValue = node[property].slice()
+    e.target.parentNode.insertBefore(e.target, e.detail.insertBefore)
+    newValue = Array.from(list.querySelectorAll('li a')).map(e => e.href).map(href => prevValue.find(s => s['@references']==href))
+    //FIXME: get id values in each entry in newValue/prevValue, otherwise commit won't work
+    //commit will not change the values to JSONTag.Link if no .id field is
+    if (arrayEquals(newValue, prevValue)) {
+        return // no change failsave
+    } else if (!newValue && !prevValue) {
+        return // check if both are empty
     }
-    return routes
-}
+
+    let timestamp = new Date().toISOString()
+    let change = new changes.Change({
+        id: node.id ?? node.uuid,
+        meta: {
+            context: window.slo.getContextByTypeName(getType(node)),
+            title: node.title,
+            type: getType(node),
+            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+        },
+        type: 'patch',
+        property,
+        prevValue,
+        newValue,
+        dirty: true
+    })
+    changes.changes.push(change)
+    changes.update()
+})
+document.addEventListener('click', function(e) {
+    if (dragging) {
+        e.preventDefault()
+        e.stopPropagation()
+        dragging = false
+    }
+}, true)
 // @NOTE: templates/scripts.html contains some extra javascript

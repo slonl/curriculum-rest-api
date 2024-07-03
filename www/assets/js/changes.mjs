@@ -24,7 +24,7 @@ const walk = (node, indent, f) => {
             return true
         })
         .forEach(([k,v]) => { 
-            node.hasChildren=true; 
+            node.$hasChildren=true;
             node[k] = walk(v,indent,f) ?? v;
         })
     }
@@ -130,13 +130,14 @@ const changes = (()=> {
 	}
 
 	function arrayEquals(property) {
+		const getId = v => v.id ?? v['@id'] ?? v['@references']
 		let equal = true
 		if (property.newValue.length != property.prevValue.length) {
 			return false
 		}
 		property.newValue.forEach((val, i) => {
 			if (JSONTag.getType(val)=='object') {
-				if (property.prevValue[i].id != val.id) {
+				if (getId(property.prevValue[i]) != getId(val)) {
 					equal = false
 				}
 				if (property.prevValue[i].$mark != val.$mark) {
