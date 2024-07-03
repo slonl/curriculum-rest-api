@@ -75,8 +75,9 @@ function createNode(row, line, tree) {
 	node.id = row.ID
 	delete row.ID
 	if (!isUUID(node.id)) {
-		node.id = createUUID(node.id, tree) //FIXME: use /uuid/:id here?
+		node.id = createUUID(node.id, tree)
 	}
+	node['@id'] = window.release.apiPath+'uuid/'+node.id
 	if (row.ParentID) {
 		node.$parentId = row.ParentID
 		delete row.ParentID
