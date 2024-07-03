@@ -476,7 +476,7 @@
                             case 'Doelniveau':
                                 for(let doelNiveau of value){                     
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
-                                        let hoistedID = "https://opendata.slo.nl/curriculum/uuid/" + doelNiveau.Doel[0].id
+                                        let hoistedID = window.release.apiPath + "uuid/" + doelNiveau.Doel[0].id // @TODO check if document.baseURI needs to be used instead
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title}, { '@id' : hoistedID})
                                         dataObj['documentLeafNode'].push(hoistedChild);
                                     }
