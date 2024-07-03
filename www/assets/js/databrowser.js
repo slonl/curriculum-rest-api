@@ -406,8 +406,10 @@ browser = simply.app({
         import: (el, value) => {
             document.getElementById('importDialog').showModal()            
         },
-        importXLSX: (form, values) => {
-            browser.actions.importXLSX(form.file.files[0])
+        importXLSX: async (form, values) => {
+            if (await browser.actions.importXLSX(form.file.files[0])) {
+                document.getElementById('importDialog').close()
+            }
         },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
@@ -708,9 +710,12 @@ browser = simply.app({
             return true
         },
         importXLSX: async function(file) {
-//            try {
+            try {
                 const tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
-                if (tree.errors) {
+                if (tree.roots.length>1) {
+                    tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
+                }
+                if (tree.errors.length) {
                     // collect errors by message
                     let errorMap = new Map()
                     for(error of tree.errors) {
@@ -721,13 +726,59 @@ browser = simply.app({
                         em.errors.push(error)
                     }
                     this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
+                    return false
+                } else {
+                    // check if root is a new entity or existing one
+                    let root = tree.roots[0]
+                    let change = null
+                    let current = null
+                    try {
+                        current = await localAPI.item(root.id)
+                    } catch(e) {
+                        // ignore errors
+                    }
+                    if (current) {
+                        throw new Error('Aanpassen van bestaande data via import is nog niet geimplementeerd')
+                        // do an update
+                        change = new changes.Change({
+                            id: root.id,
+                            meta: {
+                                context: window.slo.getContextByTypeName(root['@type']),
+                                title: root.title,
+                                type: root['@type'],
+                                timestamp: mkTimestamp()
+                            },
+                            type: 'update',
+                            prevValue: current,
+                            newValue: root
+                        })
+                    } else {
+                        // do a new
+                        change = new changes.Change({
+                            id: root.id,
+                            meta: {
+                                context: window.slo.getContextByTypeName(root['@type']),
+                                title: 'Importing '+root['@type'],
+                                type: root['@type'],
+                                timestamp: mkTimestamp()
+                            },
+                            type: 'new',
+                            newValue: root
+                        })
+                    }
+                    changes.changes.push(change)
+                    changes.update()
+                    // switch to spreadsheet view of that entity
+                    history.pushState({}, null, root['@id']) //window.release.apiPath+'uuid/'+node.id)
+                    this.app.view.item = root
+                    let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
+                    await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
                 }
-                debugger
-//            } catch(errors) {
-                // FIXME: check for errors
-//                debugger
-//            }
-            // TODO: insert roots as changes
+            } catch(errors) {
+                this.app.view.importErrors = errors
+                return false
+            }
+            return true
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
@@ -778,7 +829,7 @@ browser = simply.app({
                     }
                     if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //includes(root)) {
                         this.app.view.item.id = root.id
-                        this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = root.id // TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
@@ -816,7 +867,7 @@ browser = simply.app({
                         let url = new URL(id)
                         let uuid = id.pathname.split('/').pop()
                         this.app.view.item.id = uuid
-                        this.app.view.item.uuid = uuid //TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = uuid //TODO: remove this when no longer needed
                         history.replaceState({}, '', new URL(uuid, window.location))
                     })
                     this.app.view.sloSpreadsheet.onEdit((update) => {
@@ -884,7 +935,7 @@ browser = simply.app({
                     }
                     if (root && !this.app.view.roots?.find(r => r.id==root.id)) { //.includes(root)) {
                         this.app.view.item.id = root.id
-                        this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
+//                        this.app.view.item.uuid = root.id //TODO: remove this when no longer needed
                         currentItem = root.id
                         currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                         this.app.view.roots = [root]
