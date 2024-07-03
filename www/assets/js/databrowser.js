@@ -768,7 +768,9 @@ browser = simply.app({
         removeAllChanges: async function(el, value) {
             if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
                 browser.actions.removeAllChanges()
+                browser.actions.switchView(browser.view.preferedView)
                 browser.commands.closeDialog(el, value)
+
             }
         },
         commitChanges: async function(form, values) {
