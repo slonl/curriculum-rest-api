@@ -24,7 +24,7 @@ const walk = (node, indent, f) => {
             return true
         })
         .forEach(([k,v]) => { 
-            node.hasChildren=true; 
+            node.$hasChildren=true;
             node[k] = walk(v,indent,f) ?? v;
         })
     }
