@@ -17,7 +17,7 @@
             })
             .forEach(([k,v]) => { 
                 walk(v,indent,f); 
-                node.hasChildren=true; 
+                node.$hasChildren=true; 
             })
         }
     }
@@ -229,7 +229,7 @@
             function getColumns(n) {
                 let validColumns = Object.keys(n)
                     .filter(c => c[0].match(/[a-z]/))
-                    .filter(c => ['uuid','dirty','unreleased','hasChildren'].indexOf(c)===-1)
+                    .filter(c => ['uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
                 let columns = {
                     id: getId(n),
                     type: getType(n),
