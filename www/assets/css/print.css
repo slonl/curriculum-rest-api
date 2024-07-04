@@ -1,4 +1,10 @@
 @media print {
+    @page {
+        size: A4 portrait;
+    }
+    footer {
+        display: none;
+    }
     .slo-weergave-switch {
         display: none;
     }
@@ -8,13 +14,16 @@
     button {
         display: none;
     }
+    main{
+        display:block;
+    }
     head {
         display: none;
     }
-    nav {
-        display: none;
+    body {
+        display: block;
     }
-    footer {
+    nav {
         display: none;
     }
     video {
@@ -29,32 +38,32 @@
     embed {
         display: none;
     }
-    .ds-button {
+    img {
+        max-width: 100%;
+    }
+    ul {
+        break-inside: auto;
+    }
+    section {
+        break-inside: avoid-page;
+    }
+    section > div > section {
+        break-inside: avoid-page;
+    }
+     .ds-button {
         display: none;
     }
     .ds-buttonbars {
         display: none;
     }
     .slo-username {
-        display:none;
+        display: none;
     }
     .slo-footer {
         display: none;
     }
-    button {
-        display: none;
-    }
-    img {
-        max-width: 100%;
-    }
-    h1 {
-        break-after: avoid;
-    }
-    ul {
-        break-before: avoid;
-    }
-    section {
-        break-inside: avoid;
+    .slo-header {
+        display:none;
     }
     .slo-document .focus {
         outline: 0 solid rgba(0,0,0,0);

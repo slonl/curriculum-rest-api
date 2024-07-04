@@ -80,6 +80,56 @@ module.exports = {
 	
 			meta
 		`,
+		ErkTaalprofiel:`
+		const results = from(data.ErkTaalprofiel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofiel',
+					...shortInfo,
+  				ErkTaalprofieltekst: _,
+  				ErkSchaal: _,
+			})
+			
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.ErkTaalprofiel.length,
+				root: data.schema.types.ErkTaalprofiel.root
+			}
+	
+			meta
+		`,
+		ErkTaalprofieltekst:`
+		const results = from(data.ErkTaalprofieltekst)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofieltekst',
+				...shortInfo,
+				Niveau: {
+					...shortInfo,
+					deprecated: _,
+                  	description: _,
+                  	type: _,
+				},
+			})
+			
+
+			const meta = {
+				data: results,
+				page: Page,
+				count: data.ErkTaalprofieltekst.length,
+				root: data.schema.types.ErkTaalprofieltekst.root
+			}
+	
+			meta
+		`,
 		ErkTaalactiviteit: `
 		const results = from(data.ErkTaalactiviteit)
 			.orderBy({
@@ -302,6 +352,22 @@ module.exports = {
 			},
 		})
 		`,
+		ErkTaalprofiel: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkSchaal: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ErkTaalprofieltekst: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
+		`,
 		ErkTaalactiviteit: `
 		from(Index(request.query.id))
 		.select({
@@ -364,6 +430,8 @@ module.exports = {
 		'erk_vakleergebied/:id': (req) => opendata.api["ErkVolledig"](req.params, req.query),
 		'erk_gebied/': (req) =>  opendata.api["ErkGebied"](req.params, req.query),
 		'erk_categorie/': (req) => opendata.api["ErkCategorie"](req.params, req.query),
+		'erk_taalprofiel/': (req) =>	opendata.api["ErkTaalprofiel"](req.params, req.query),
+		'erk_taalprofieltekst/': (req) =>	opendata.api["ErkTaalprofieltekst"](req.params, req.query),
 		'erk_taalactiviteit/': (req) =>	opendata.api["ErkTaalactiviteit"](req.params, req.query),
 		'erk_schaal/': (req) => opendata.api["ErkSchaal"](req.params, req.query),
 		'erk_candobeschrijving/': (req) => opendata.api["ErkCandobeschrijving"](req.params, req.query),
