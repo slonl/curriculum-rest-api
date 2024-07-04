@@ -18,7 +18,7 @@ sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
 const port      = process.env.NODE_PORT || 4800;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2022/api/";
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2024/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
 const storeUrl  = process.env.NODE_SIMPLYSTORE_URL || "http://localhost:3500";
 const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3501";
@@ -329,7 +329,7 @@ app.route('/schemas/').get(async (req, res) => {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
 			res.setHeader('content-type', 'application/jsontag');
-			res.send(JSONTag.stringify(result));
+			res.send(JSONTag.stringify(result, null, "\t"));
 		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
