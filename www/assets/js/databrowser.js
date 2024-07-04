@@ -981,7 +981,7 @@ browser = simply.app({
         },
         search: function(text) {
             document.body.classList.remove('ds-paging');
-            return window.slo.api.get(window.release.apiPath+'search', {text: text}).then(data => {
+            return window.slo.api.get('search', {text: text}).then(data => {
                 if (typeof data === 'string') {
                     return JSON.parse(data)
                 }
@@ -1228,8 +1228,7 @@ browser = simply.app({
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         },
         register : function(email) {
-            var url = window.release.apiPath+'register/';
-            window.slo.api.get(url + "?email=" + email)
+            window.slo.api.get("register/?email=" + email)
             .catch(function(error) {
                 browser.actions.handleAPIError(error)
             })
