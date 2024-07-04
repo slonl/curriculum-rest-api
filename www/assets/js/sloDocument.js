@@ -71,17 +71,15 @@ const sloDocument = (function() {
 
     function updateURL(){
         let FocussedElement = document.querySelector(".focus");
+        // @NOTE: the try-catch was here because sometimes there is no id in the focussed element.
         try {
           let idPath = URL.parse(FocussedElement.id, document.location.href)
           let currentUUID = idPath.pathname.split("/").pop()
-          window.history.replaceState({}, '', idPath.href)
-          browser.view.item.uuid = currentUUID  
-        } catch {
-          let path = "/uuid/"
-          window.history.replaceState({}, '', path)
-          browser.view.item.uuid = path  
+          history.replaceState({}, '', new URL(currentUUID, window.location))
+          //browser.view.item.uuid = currentUUID // @NOTE : no idea what this was for.
+        } catch(e) {
+          console.error(e)
         }
-
     }
 
     function getTitle() {
