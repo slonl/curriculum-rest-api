@@ -479,9 +479,12 @@
                                         let hoistedID = window.release.apiPath + "uuid/" + doelNiveau.Doel[0].id // @TODO check if document.baseURI needs to be used instead
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title}, { '@id' : hoistedID})
                                         dataObj['documentLeafNode'].push(hoistedChild);
+                                        documentData.index.set(doelNiveau.Doel[0].id, doelNiveau.Doel[0]);
+
                                     }
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
+                                        documentData.index.set(doelNiveau.id, doelNiveau)
                                     }         
                                 };
                             break;
@@ -508,6 +511,7 @@
                                         child['@type'] = getType(child)
                                     }
                                     dataObj['documentSublist'].unshift(formatDocumentData(child));
+                                    documentData.index.set(child.id, child)
                                 };
                             break;
 
@@ -533,6 +537,7 @@
                             case 'Niveau':
                                 for(let niveau of value){
                                     dataObj['documentNiveauIndex'].push(formatDocumentData(niveau)); //'documentNiveauIndex'
+                                    documentData.index.set(niveau.id , niveau);
                                 };
                             break;
 

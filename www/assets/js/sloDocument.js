@@ -70,37 +70,32 @@ const sloDocument = (function() {
     }
 
     function updateURL(){
-        // replace URL with the new URL
-        let nextFocussedElement = document.querySelector(".focus");
-
+        let FocussedElement = document.querySelector(".focus");
         try {
-          let nextDocumentLocation = new URL(document.location.href)
-          let idPath = URL.parse(nextFocussedElement.id) // @TODO: check if parse is accepteable or if "new URL()" is needed.
-          let nextID = idPath.pathname.split("/").pop()
-          idPath.pathname = "/uuid/" + nextID
-          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID
+          let idPath = URL.parse(FocussedElement.id, document.location.href)
+          let currentUUID = idPath.pathname.split("/").pop()
           window.history.replaceState({}, '', idPath.href)
-          browser.view.item.uuid = nextID  
+          browser.view.item.uuid = currentUUID  
         } catch {
           let path = "/uuid/"
-          let nextID = "/uuid/"
           window.history.replaceState({}, '', path)
-          browser.view.item.uuid = nextID  
-        } //no catch: sometimes the elements focussed do not have a uuid so we try catch
+          browser.view.item.uuid = path  
+        }
 
     }
 
     function getTitle() {
-      console.log()
       try {
-       let currentUUID = browser.view.item.uuid
-       currentIdentifier = currentUUID;
-       //console.log(data.index)
-       let currentContent = data.index.get(currentUUID).title
-       return currentContent
-      } catch {
+        let FocussedElement = document.querySelector(".focus");
+        let idPath = URL.parse(FocussedElement.id, document.location.href)
+        let currentUUID = idPath.pathname.split("/").pop()
+        currentIdentifier = currentUUID // @Note: needed for the documentSaveChanges.
+        let currentContent = data.index.get(currentUUID).title 
+        return currentContent
+      } catch(e){
         let warning = "Geselecteerd veld in de document weergave kan niet worden aangepast omdat het niet verwijst naar een UUID"
         console.log(warning)
+        console.error(e)
         return warning
       }
     }
