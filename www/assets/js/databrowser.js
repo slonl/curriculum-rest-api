@@ -333,9 +333,7 @@ browser = simply.app({
             "Control+Enter": async (e) => {
                 // save changes, close editor
                 e.preventDefault()
-                await browser.view.sloSpreadsheet.saveChanges()
-                let el = document.querySelector('td.focus')
-                browser.view.sloSpreadsheet.selector(el)
+                await browser.commands.saveChanges(e)
             },
             "Enter": async (e) => {
                 let textarea = document.querySelector('.spreadsheet-editor')
@@ -403,6 +401,13 @@ browser = simply.app({
     },
 
     commands: {
+        saveChangesDocument:()=>{
+            browser.actions.documentSaveChanges()
+        },
+        saveChangesSpreadsheet: () => {
+            let el = document.querySelector('td.focus')
+            browser.actions.saveChangesSpreadsheet(el)
+        },
         import: (el, value) => {
             document.getElementById('importDialog').showModal()            
         },
@@ -699,6 +704,10 @@ browser = simply.app({
         }
     },
     actions: {
+        saveChangesSpreadsheet: async function(el){
+           browser.view.sloSpreadsheet.saveChanges()
+           browser.view.sloSpreadsheet.selector(el)
+        },
         login: async function(email, key) {
             // check if email/key are valid
             if (!await slo.api.login(email, key)) {

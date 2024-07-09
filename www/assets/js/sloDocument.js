@@ -20,6 +20,36 @@ const sloDocument = (function() {
       textEditor.focus();
       // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
 
+// @NOTE WIP
+/*
+value = htmlEscape(value)
+          name = columnDef.value
+          let selectorRect = selector.getBoundingClientRect()
+          let disabled = row.node.dirty ? 'disabled' : ''
+          let checked = browser.view.dirtyChecked ? 'checked' : ''
+          selector.innerHTML = `
+<form>
+  <div class="slo-form-header">
+    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+      </use></svg>
+    </button>
+    <div class="ds-form-group">
+      <label>
+        <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+        Inhoudelijke wijziging
+      </label>
+    </div>
+  </div>
+  <div class="spreadsheet-autosize">
+    <textarea name="${name}" data-simply-activate="autosize" rows="1" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}">${value}</textarea>
+  </div>
+</form>`
+*/
+// @NOTE END WIP
+
+
     }
 
     function hideEditor(){

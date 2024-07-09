@@ -28,21 +28,35 @@
         
         <div class="documentEditorWrapper">
             <div class="documentEditor">
-                <div class="slo-form-header">
-                    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="documentCloseEditor">
-                    <svg class="ds-icon ds-icon-feather">
-                        <use xlink:href="/assets/icons/feather-sprite.svg#x">
-                    </use></svg>
-                    </button>
-                
-                    <div class="ds-form-group">
-                        <label>
-                            <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
-                            Inhoudelijke wijziging
-                        </label>
+                <form>
+                    <div class="slo-form-header">
+                        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="documentCloseEditor">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#x">
+                        </use></svg>
+                        </button>
+                    
+                        <div class="ds-form-group">
+                            <label>
+                                <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+                                Inhoudelijke wijziging
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <textarea name="textEdit"></textarea>
+                    
+                    <div>
+                        <textarea name="textEdit"></textarea>
+                    </div>
+                    
+                    <div class="slo-form-footer">
+                        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="saveChangesDocument">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#save">
+                        </use></svg>
+                        </button>
+                    </div>
+                </form>
+              
             </div>
         </div>
 
@@ -82,7 +96,7 @@
                                 <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
                             </svg>
                         -->
-                    </li>
+                        </li>
                     </template>
                 </ul>
 
