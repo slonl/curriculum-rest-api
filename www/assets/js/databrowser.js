@@ -272,13 +272,17 @@ browser = simply.app({
                 }
             },
             "Enter": (e) => {
-                e.preventDefault()
                 if (browser.view.user) {
                     let el = document.querySelector('td.focus')
                     let selector = document.querySelector('.slo-type-selector')
                     let type = selector.querySelector('input:checked')
-                    browser.actions.hideTypeSelector()
-                    return browser.actions.insertRow(el.closest('tr'), type.value)
+                    if (type) {
+                        //FIXME: check for addNiveau, so do form submit which triggers form command
+                        //FIXME: check that .slo-type-selector is visible
+                        e.preventDefault()
+                        browser.actions.hideTypeSelector()
+                        return browser.actions.insertRow(el.closest('tr'), type.value)
+                    }
                 }
             }
         },
@@ -639,13 +643,31 @@ browser = simply.app({
             browser.view.insertParentRow = el
             browser.actions.showTypeSelector(el)                
         },
+        showLinkForm: async function(el, value) {
+            let dialog = el.closest('dialog')
+            let typelist = dialog.querySelector('.slo-types')
+            dialog.querySelectorAll('form').forEach(form => form.classList.add('slo-hidden'))
+            let form = dialog.querySelector('form.slo-link')
+            form.classList.remove('slo-hidden')
+            typelist.classList.add('slo-hidden')
+            form.querySelector('input[name="link"]').focus()
+        },
+        showAvailableTypes: async function(el, value) {
+            let dialog = el.closest('dialog')
+            let typelist = dialog.querySelector('.slo-types')
+            dialog.querySelectorAll('form').forEach(form => form.classList.add('slo-hidden'))
+            typelist.classList.remove('slo-hidden')
+            typelist.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false)
+        },
         addChild: async function(el, value) {
             if (value=='niveau') {
-                let typelist = el.closest('div')
-                let form = typelist.parentElement.querySelector('form')
+                let dialog = el.closest('dialog')
+                let typelist = dialog.querySelector('.slo-types')
+                dialog.querySelectorAll('form').forEach(form => form.classList.add('slo-hidden'))
+                let form = dialog.querySelector('form.slo-niveau')
                 form.classList.remove('slo-hidden')
                 typelist.classList.add('slo-hidden')
-                // FIXME: reset this in showTypeSelector
+                form.querySelector('input[name="niveau"]').focus()
             } else {
                 browser.actions.hideTypeSelector()
                 //el = document.querySelector('td.focus') //FIXME: use el set when starting dialog
@@ -659,11 +681,25 @@ browser = simply.app({
                 browser.view.sloSpreadsheet.editor(el)
             }
         },
+        addLink: async function(form, values) {
+            try {
+                el = browser.view.insertParentRow
+                let parentRow = browser.view.sloSpreadsheet.getRow(el.closest('tr'))
+                await browser.actions.addLink(parentRow, values.link)
+                browser.actions.spreadsheetUpdate()
+                browser.actions.hideTypeSelector()
+            } catch(e) {
+                browser.view.addEntityError = e.message || e.error || e
+            }
+        },
         addNiveau: async function(form, values) {
             browser.actions.hideTypeSelector()
             el = browser.view.insertParentRow
             let parentRow = browser.view.sloSpreadsheet.getRow(el.closest('tr'))
-            return browser.actions.addNiveau(parentRow, values.niveau)
+            if (await browser.actions.addNiveau(parentRow, values.niveau)) {
+                browser.actions.spreadsheetUpdate()
+                browser.actions.hideTypeSelector()
+            }
         },
         addSibling: async function(el, value) {
             browser.actions.hideTypeSelector()
@@ -1027,6 +1063,113 @@ browser = simply.app({
             await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
             window.setTimeout(browser.commands.cellEditor, 100)
         },
+        addLink: async function(row, id) {
+            // turn values.link into an id or error
+            id = new URL(id, document.location)
+            id = id.pathname.split('/').filter(Boolean).pop()
+            // fetch the entity with this id or error
+            let entity = await localAPI.item(id)
+            // check the type of the entity with the row.node 
+            let parentType = getType(row.node)
+            let entityType = getType(entity)
+            // item() also adds parent links, but these must not be kept or the tree will become a graph
+            for (let prop of Object.keys(entity)) {
+                if (prop[0]>='A' && prop[0]<='Z') {
+                    if (!meta.schemas.types[entityType].children[prop]) {
+                        delete entity[prop]
+                    }
+                }
+            }
+            // if allowed child - addChild link
+            if (meta.schemas.types[parentType]?.children[entityType]) {
+                // TODO: create a function to add this change, so we can re-use it 
+                // create change to add this entity here
+                let prop, prevValue, newValue
+                let dirty = true
+                let node = row.node
+                prop = node[entityType]
+                prevValue = prop
+                newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
+                dirty = true
+                if (newValue == prevValue) {
+                    return // no change failsave
+                } else if (!newValue && !prevValue) {
+                    return // check if both are empty
+                }
+
+                let timestamp = new Date().toISOString()
+                let change = new changes.Change({
+                    id: node.id ?? node.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(node)),
+                        title: node.title,
+                        type: getType(node),
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'patch',
+                    property: entityType,
+                    prevValue,
+                    newValue,
+                    dirty
+                })
+                changes.changes.push(change)
+                changes.update()
+                return browser.actions.spreadsheetUpdate()
+            } else {
+                let siblingNode = row.node
+                parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+                if (parentRow) {
+                    parentType = getType(parentRow.node)
+                    // if not, but row.node.parent allows it, addSibling link
+                    if (meta.schemas.types[parentType]?.children[entityType]) {
+                        // create change to add this entity here
+                        let prop, prevValue, newValue
+                        let dirty = true
+                        let node = parentRow.node
+                        prop = node[entityType]
+                        prevValue = prop
+                        //FIXME: add entity directly after siblingNode
+                        let siblingIndex = prevValue.findIndex(n => n===siblingNode)
+                        if (siblingIndex==-1) { // should never happen
+                            newValue = Array.from(new Set([...prop, entity])) // Set so the array is unique
+                        } else {
+                            newValue = prevValue.slice()
+                            newValue.splice(siblingIndex+1, 0, entity)
+                            newValue = Array.from(new Set(newValue)) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
+                        }
+                        dirty = true
+                        if (newValue == prevValue) {
+                            return // no change failsave
+                        } else if (!newValue && !prevValue) {
+                            return // check if both are empty
+                        }
+
+                        let timestamp = new Date().toISOString()
+                        let change = new changes.Change({
+                            id: node.id,
+                            meta: {
+                                context: window.slo.getContextByTypeName(getType(node)),
+                                title: node.title,
+                                type: getType(node),
+                                timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                            },
+                            type: 'patch',
+                            property: entityType,
+                            prevValue,
+                            newValue,
+                            dirty
+                        })
+                        changes.changes.push(change)
+                        changes.update()
+                        return browser.actions.spreadsheetUpdate()
+                    } else {
+                        throw new Error('Entiteit type '+entityType+' mag niet onder of naast deze rij geplaatst worden')
+                    }
+                } else {
+                    throw new Error('Entiteit type '+entityType+' mag niet onder of naast deze rij geplaatst worden')
+                }
+            }
+        },
         addNiveau: async function(row, niveau) {
             //TODO: deze code is duplicaat van code in onEdit
             //functie abstraheren en in beide plekken aanroepen
@@ -1060,7 +1203,7 @@ browser = simply.app({
             })
             changes.changes.push(change)
             changes.update()
-            return browser.actions.spreadsheetUpdate()
+            return true
         },
         list: function(type) {
             browser.view['listTitle'] = window.titles[type];
@@ -1087,7 +1230,7 @@ browser = simply.app({
         spreadsheetUpdate: function() {
             changes.getLocalView(browser.view.root)
             let defs = slo.treeToRows(browser.view.root)
-            browser.view.sloSpreadsheet.update({data:defs.rows})
+            browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
         },
         // functions for editing documentView
@@ -1321,9 +1464,10 @@ browser = simply.app({
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
                 let parentNode = parent.node
                 let typeName = getType(row.node)
+                let prevValue = parentNode[typeName].slice()
                 let newValue = parentNode[typeName].slice()
                 row.node.undelete(newValue)
-                let prevValue = parentNode[typeName].slice()
+                parentNode[typeName] = newValue //Makes sure current datamodel is up to date
                 let timestamp = new Date().toISOString()
                 let change = new changes.Change({
                     id: parentNode.id ?? parentNode.uuid,
@@ -1381,6 +1525,7 @@ browser = simply.app({
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
+            browser.view.addEntityError = ''
             let row = browser.view.sloSpreadsheet.getRow(el)
             let thisType = getType(row.node)
             let childTypes = slo.getAvailableChildTypes(thisType)
@@ -1396,9 +1541,9 @@ browser = simply.app({
             let rect = el.getBoundingClientRect()
             let selector = document.querySelector('.slo-type-selector')
             let bodySize = document.body.getBoundingClientRect()
-            let form = selector.querySelector('form')
+            let forms = selector.querySelectorAll('form')
             let typelist = selector.querySelector('[data-simply-list="availableTypes"]')
-            form.classList.add('slo-hidden')
+            forms.forEach(form => form.classList.add('slo-hidden'))
             typelist.classList.remove('slo-hidden')
             selector.showModal()
             if (rect.bottom > (bodySize.height/2)) {
@@ -1412,11 +1557,18 @@ browser = simply.app({
             if (!selector.hasClickListener) {
                 selector.addEventListener('click', (evt) => {
                     selector.hasClickListener = true
-                    let rect = selector.getBoundingClientRect()
-                    let isInDialog = (rect.top<=evt.clientY 
-                        && rect.bottom >= evt.clientY
-                        && rect.left <= evt.clientX
-                        && rect.right >= evt.clientX)
+                    let isInDialog = true
+                    if (evt.target) {
+                        if (evt.target.closest('dialog')!=selector) {
+                            isInDialog = false
+                        }
+                    } else {
+                        let rect = selector.getBoundingClientRect()
+                        isInDialog = (rect.top<=evt.clientY 
+                            && rect.bottom >= evt.clientY
+                            && rect.left <= evt.clientX
+                            && rect.right >= evt.clientX)
+                    }
                     if (!isInDialog) {
                         browser.actions.hideTypeSelector()
                     }
