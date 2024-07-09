@@ -505,3 +505,8 @@ body.ds-paging .slo-header .ds-paging {
     text-overflow: ellipsis;
     padding: 2px;
 }
+.slo-errors:empty {
+    height: 0;
+    margin-bottom: -27px;
+    display: block;
+}
