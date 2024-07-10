@@ -337,7 +337,7 @@ browser = simply.app({
             "Control+Enter": async (e) => {
                 // save changes, close editor
                 e.preventDefault()
-                await browser.commands.saveChanges(e)
+                await browser.actions.saveChanges(e)
             },
             "Enter": async (e) => {
                 let textarea = document.querySelector('.spreadsheet-editor')
@@ -392,7 +392,7 @@ browser = simply.app({
         "document-edit": {
             "Control+Enter": async (e) => {
                 e.preventDefault();
-                browser.actions.documentSaveChanges()
+                browser.actions.saveChangesDocument()
             },
             "Escape": (e) => {
                 e.preventDefault();
@@ -406,7 +406,7 @@ browser = simply.app({
 
     commands: {
         saveChangesDocument:()=>{
-            browser.actions.documentSaveChanges()
+            browser.actions.saveChangesDocument()
         },
         saveChangesSpreadsheet: () => {
             let el = document.querySelector('td.focus')
@@ -1681,10 +1681,10 @@ browser = simply.app({
 
             browser.view.sloDocument.showEditor()
         },
-        documentSaveChanges(){
+        saveChangesDocument(){
             
-            // @TODO: documentSaveChanges should return the elements to be saved
-            browser.view.sloDocument.documentSaveChanges();
+            // @TODO: saveChangesDocument should return the elements to be saved
+            browser.view.sloDocument.saveChangesDocument();
         },
         documentHideEditor(){
             browser.view.sloDocument.hideEditor();
