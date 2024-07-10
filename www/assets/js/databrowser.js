@@ -337,7 +337,7 @@ browser = simply.app({
             "Control+Enter": async (e) => {
                 // save changes, close editor
                 e.preventDefault()
-                await browser.actions.saveChanges(e)
+                await browser.actions.saveChangesSpreadsheet(e)
             },
             "Enter": async (e) => {
                 let textarea = document.querySelector('.spreadsheet-editor')
@@ -409,8 +409,8 @@ browser = simply.app({
             browser.actions.saveChangesDocument()
         },
         saveChangesSpreadsheet: () => {
-            let el = document.querySelector('td.focus')
-            browser.actions.saveChangesSpreadsheet(el)
+            console.log("edit save in progess")
+            browser.actions.saveChangesSpreadsheet()
         },
         import: (el, value) => {
             document.getElementById('importDialog').showModal()            
@@ -740,8 +740,10 @@ browser = simply.app({
         }
     },
     actions: {
-        saveChangesSpreadsheet: async function(el){
+        saveChangesSpreadsheet: async function(){
            browser.view.sloSpreadsheet.saveChanges()
+           let el = document.querySelector('td.focus')
+           console.log(el)
            browser.view.sloSpreadsheet.selector(el)
         },
         login: async function(email, key) {
