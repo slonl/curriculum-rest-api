@@ -18,7 +18,7 @@ const sloDocument = (function() {
       document.body.dataset.simplyKeyboard = 'document-edit'  
       textEditor.value = title;
       textEditor.focus();
-      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user.
+      // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user
 
     }
 
@@ -29,19 +29,19 @@ const sloDocument = (function() {
     }
 
     function move(indexIncrement){
-      let focussedElement;
+      let focusedElement;
       let nodes = getAllNodes()
 
       //find current element to move to the next one
       if(document.querySelector(".focus")){
-          focussedElement = document.querySelector(".focus");
+          focusedElement = document.querySelector(".focus");
       }
       else{
-          focussedElement = nodes[0];
-          focussedElement.classList.add("focus")
+          focusedElement = nodes[0];
+          focusedElement.classList.add("focus")
       }
 
-      let itemIndex = nodes.indexOf(focussedElement);
+      let itemIndex = nodes.indexOf(focusedElement);
       nodes[itemIndex].classList.remove("focus");
       
       // moving around
@@ -70,37 +70,30 @@ const sloDocument = (function() {
     }
 
     function updateURL(){
-        // replace URL with the new URL
-        let nextFocussedElement = document.querySelector(".focus");
-
+        let focusedElement = document.querySelector(".focus");
+        // @NOTE: the try-catch was here because sometimes there is no id in the focused element.
         try {
-          let nextDocumentLocation = new URL(document.location.href)
-          let idPath = URL.parse(nextFocussedElement.id) // @TODO: check if parse is accepteable or if "new URL()" is needed.
-          let nextID = idPath.pathname.split("/").pop()
-          idPath.pathname = "/uuid/" + nextID
-          idPath.href = nextDocumentLocation.origin + "/uuid/" + nextID
-          window.history.replaceState({}, '', idPath.href)
-          browser.view.item.uuid = nextID  
-        } catch {
-          let path = "/uuid/"
-          let nextID = "/uuid/"
-          window.history.replaceState({}, '', path)
-          browser.view.item.uuid = nextID  
-        } //no catch: sometimes the elements focussed do not have a uuid so we try catch
-
+          let idPath = URL.parse(focusedElement.id, document.location.href)
+          let currentUUID = idPath.pathname.split("/").filter(Boolean).pop()
+          history.replaceState({}, '', new URL(currentUUID, window.location))
+          //browser.view.item.uuid = currentUUID // @NOTE : no idea what this was for.
+        } catch(e) {
+          console.error(e)
+        }
     }
 
     function getTitle() {
-      console.log()
       try {
-       let currentUUID = browser.view.item.uuid
-       currentIdentifier = currentUUID;
-       //console.log(data.index)
-       let currentContent = data.index.get(currentUUID).title
-       return currentContent
-      } catch {
+        let focusedElement = document.querySelector(".focus");
+        let idPath = URL.parse(focusedElement.id, document.location.href)
+        let currentUUID = idPath.pathname.split("/").filter(Boolean).pop()
+        currentIdentifier = currentUUID // @Note: needed for the documentSaveChanges.
+        let currentContent = data.index.get(currentUUID).title 
+        return currentContent
+      } catch(e){
         let warning = "Geselecteerd veld in de document weergave kan niet worden aangepast omdat het niet verwijst naar een UUID"
         console.log(warning)
+        console.error(e)
         return warning
       }
     }
@@ -110,7 +103,7 @@ const sloDocument = (function() {
         browser.actions.switchView('Documentweergave')
     }
 
-    function  documentSaveChanges(){
+    function  saveChangesDocument(){
       let editBox = document.querySelector(".documentEditorWrapper");
       let textEditor = editBox.querySelector("textarea");
       let newValue = textEditor.value;
@@ -146,27 +139,27 @@ const sloDocument = (function() {
       },
 
       moveTo : (destination) => {
-        let focussedElement;
+        let focusedElement;
         let nodes;
         let itemIndex;
                 
         // moving around
         switch(destination){
           case "top":
-            focussedElement;
+            focusedElement;
             nodes = getAllNodes()
           
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
-                focussedElement = document.getElementsByClassName("focus")[0];
+                focusedElement = document.getElementsByClassName("focus")[0];
             }
-            // if no element is focussed, focus the first one
+            // if no element is focused, focus the first one
             else{
-                focussedElement = nodes[0];
-                focussedElement.classList.add("focus")
+                focusedElement = nodes[0];
+                focusedElement.classList.add("focus")
             }
             
-            itemIndex = nodes.indexOf(focussedElement);
+            itemIndex = nodes.indexOf(focusedElement);
             
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
             
@@ -176,20 +169,20 @@ const sloDocument = (function() {
             nodes[itemIndex].classList.add("focus");
           break;
           case "bottom":
-            focussedElement;
+            focusedElement;
             nodes = getAllNodes()
           
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
-                focussedElement = document.getElementsByClassName("focus")[0];
+                focusedElement = document.getElementsByClassName("focus")[0];
             }
-            // if no element is focussed, focus the first one
+            // if no element is focused, focus the first one
             else{
-                focussedElement = nodes[0];
-                focussedElement.classList.add("focus")
+                focusedElement = nodes[0];
+                focusedElement.classList.add("focus")
             }
             
-            itemIndex = nodes.indexOf(focussedElement);
+            itemIndex = nodes.indexOf(focusedElement);
             
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
             
@@ -222,12 +215,12 @@ const sloDocument = (function() {
         updateURL()
       },
       onEdit : () => {
-        //documentSaveChanges()
+        //saveChangesDocument()
         //hideEditor()
         //updateURL()
       },
-      documentSaveChanges: () => {
-        documentSaveChanges()
+      saveChangesDocument: () => {
+        saveChangesDocument()
         hideEditor()
         // @TODO rerender page showing edits on inserted green lines and crowssed through red lines <- this will happen automagically by css
         updateURL(); // @TODO: check if it's needed

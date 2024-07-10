@@ -328,6 +328,38 @@ dialog.commit-changes {
 .slo-form-header .ds-button-close .ds-icon {
     height: 1em;
 }
+
+.slo-form-footer {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: 0em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    border-top-width: 0px;
+    left: -2px;
+}
+.slo-form-footer.ds-form-group {
+    margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-footer label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.slo-form-footer .ds-button-close {
+    height: 2em;
+    line-height: 2em;
+    min-height: unset;
+    right: 0;
+}
+.slo-form-footer.ds-button-close .ds-icon {
+    height: 1em;
+}
+
 label.changes-diff ins {
     background-color: #eaf2c2;
 }

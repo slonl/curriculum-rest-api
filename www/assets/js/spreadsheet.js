@@ -313,7 +313,7 @@ const spreadsheet = (function() {
           let disabled = row.node.dirty ? 'disabled' : ''
           let checked = browser.view.dirtyChecked ? 'checked' : ''
           selector.innerHTML = `
-<form>
+<form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
@@ -330,7 +330,14 @@ const spreadsheet = (function() {
   <div class="spreadsheet-autosize">
     <textarea name="${name}" data-simply-activate="autosize" rows="1" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}">${value}</textarea>
   </div>
-</form>`
+  <div class="slo-form-footer">
+   <button class="ds-button ds-button-naked ds-button-close" type="submit">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#save">
+      </use></svg>
+    </button>
+  </div>
+</form>`;
           selector.querySelector('textarea').style['height'] = selectorRect.height + 'px'
           selector.querySelector('textarea').focus()
         break

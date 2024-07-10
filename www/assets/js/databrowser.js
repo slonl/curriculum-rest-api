@@ -337,9 +337,7 @@ browser = simply.app({
             "Control+Enter": async (e) => {
                 // save changes, close editor
                 e.preventDefault()
-                await browser.view.sloSpreadsheet.saveChanges()
-                let el = document.querySelector('td.focus')
-                browser.view.sloSpreadsheet.selector(el)
+                await browser.actions.saveChangesSpreadsheet()
             },
             "Enter": async (e) => {
                 let textarea = document.querySelector('.spreadsheet-editor')
@@ -394,7 +392,7 @@ browser = simply.app({
         "document-edit": {
             "Control+Enter": async (e) => {
                 e.preventDefault();
-                browser.actions.documentSaveChanges()
+                browser.actions.saveChangesDocument()
             },
             "Escape": (e) => {
                 e.preventDefault();
@@ -407,6 +405,12 @@ browser = simply.app({
     },
 
     commands: {
+        saveChangesDocument:(form, values)=>{
+            browser.actions.saveChangesDocument()
+        },
+        saveChangesSpreadsheet: (form, values) => {
+            browser.actions.saveChangesSpreadsheet()
+        },
         import: (el, value) => {
             document.getElementById('importDialog').showModal()            
         },
@@ -735,6 +739,11 @@ browser = simply.app({
         }
     },
     actions: {
+        saveChangesSpreadsheet: async function(){
+           browser.view.sloSpreadsheet.saveChanges()
+           let el = document.querySelector('td.focus')
+           browser.view.sloSpreadsheet.selector(el)
+        },
         login: async function(email, key) {
             // check if email/key are valid
             if (!await slo.api.login(email, key)) {
@@ -1672,10 +1681,10 @@ browser = simply.app({
 
             browser.view.sloDocument.showEditor()
         },
-        documentSaveChanges(){
+        saveChangesDocument(){
             
-            // @TODO: documentSaveChanges should return the elements to be saved
-            browser.view.sloDocument.documentSaveChanges();
+            // @TODO: saveChangesDocument should return the elements to be saved
+            browser.view.sloDocument.saveChangesDocument();
         },
         documentHideEditor(){
             browser.view.sloDocument.hideEditor();

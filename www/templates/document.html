@@ -28,21 +28,35 @@
         
         <div class="documentEditorWrapper">
             <div class="documentEditor">
-                <div class="slo-form-header">
-                    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="documentCloseEditor">
-                    <svg class="ds-icon ds-icon-feather">
-                        <use xlink:href="/assets/icons/feather-sprite.svg#x">
-                    </use></svg>
-                    </button>
-                
-                    <div class="ds-form-group">
-                        <label>
-                            <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
-                            Inhoudelijke wijziging
-                        </label>
+                <form>
+                    <div class="slo-form-header">
+                        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="documentCloseEditor">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#x">
+                        </use></svg>
+                        </button>
+                    
+                        <div class="ds-form-group">
+                            <label>
+                                <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+                                Inhoudelijke wijziging
+                            </label>
+                        </div>
                     </div>
-                </div>
-                <textarea name="textEdit"></textarea>
+                    
+                    <div>
+                        <textarea name="textEdit"></textarea>
+                    </div>
+                    
+                    <div class="slo-form-footer">
+                        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="saveChangesDocument">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#save">
+                        </use></svg>
+                        </button>
+                    </div>
+                </form>
+              
             </div>
         </div>
 
@@ -59,6 +73,12 @@
                         <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
                     </h1>
                     <p class="ds-margin-up slo-prefix slo-description" data-simply-field="description" data-simply-content="text"></p>
+                    <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                        <svg class="ds-icon ds-icon-feather">
+                          <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                        </use></svg>
+                    </button>
+
                     <!--
                     <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                         <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -74,6 +94,11 @@
                         <li id="" class="slo-entity slo-niveau-index" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="ds-badge slo-title" data-simply-field="title" data-simply-content="text"></span>
                             <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
+                            <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                                <svg class="ds-icon ds-icon-feather">
+                                  <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                                </use></svg>
+                            </button>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -82,7 +107,7 @@
                                 <use xlink:href="/assets/icons/feather-sprite.svg#x-circle"></use>
                             </svg>
                         -->
-                    </li>
+                        </li>
                     </template>
                 </ul>
 
@@ -91,7 +116,12 @@
                         <div id="" class="slo-entity" data-simply-field="@id" data-simply-content="attributes" data-simply-attributes="id" data-simply-command="editDocument">
                             <span class="slo-prefix ds-badge" data-simply-field="prefix"></span>
                             <span class="ds-badge niveau" data-simply-field="title"></span>
-                            <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>                            <!--
+                            <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
+                            <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                                <svg class="ds-icon ds-icon-feather">
+                                  <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                                </use></svg>
+                            </button>                            <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
                             </svg>
@@ -112,6 +142,11 @@
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
                             <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
+                            <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                                <svg class="ds-icon ds-icon-feather">
+                                  <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                                </use></svg>
+                            </button>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -131,6 +166,11 @@
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
                             <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
+                            <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                                <svg class="ds-icon ds-icon-feather">
+                                  <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                                </use></svg>
+                            </button>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
@@ -150,6 +190,11 @@
                             <span class="slo-prefix" data-simply-field="title"></span>
                             <span class="slo-prefix" data-simply-field="description"></span>
                             <div class="slo-hidden" data-simply-field="$mark" data-simply-transformer="parentClass"></div>
+                            <button class="slo-hidden ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="editDocument">
+                                <svg class="ds-icon ds-icon-feather">
+                                  <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+                                </use></svg>
+                            </button>
                             <!--
                             <svg class="slo-add ds-icon ds-icon-feather" title="Voeg nieuwe relatie toe">
                                 <use xlink:href="/assets/icons/feather-sprite.svg#plus-circle"></use>
