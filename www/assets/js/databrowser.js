@@ -757,24 +757,13 @@ browser = simply.app({
             return true
         },
         importXLSX: async function(file) {
+            let tree = null
             try {
-                const tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
+                tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
                     tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
                 }
-                if (tree.errors.length) {
-                    // collect errors by message
-                    let errorMap = new Map()
-                    for(error of tree.errors) {
-                        if (!errorMap.has(error.message)) {
-                            errorMap.set(error.message, { message: error.message, errors: []})
-                        }
-                        let em = errorMap.get(error.message)
-                        em.errors.push(error)
-                    }
-                    this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
-                    return false
-                } else {
+                if (!tree.errors.length) {
                     // check if root is a new entity or existing one
                     let root = tree.roots[0]
                     let change = null
@@ -821,8 +810,20 @@ browser = simply.app({
                     let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
                     await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
                 }
-            } catch(errors) {
-                this.app.view.importErrors = errors
+            } catch(error) {
+                tree.errors.unshift(new Error(error.message))
+            }
+            if (tree?.errors?.length) {
+                // collect errors by message
+                let errorMap = new Map()
+                for(error of tree.errors) {
+                    if (!errorMap.has(error.message)) {
+                        errorMap.set(error.message, { message: error.message, errors: []})
+                    }
+                    let em = errorMap.get(error.message)
+                    em.errors.push(error)
+                }
+                this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
                 return false
             }
             return true
