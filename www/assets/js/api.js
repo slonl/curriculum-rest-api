@@ -42,6 +42,9 @@
                 return true
             },
             get: function(path, params, jsontag=false) {
+                if (path[0]!='/') {
+                    path = '/'+path
+                }
                 var url = new URL(window.apiURL + path);
                 if (!params && window.location.search) {
                     url.search = window.location.search;
@@ -122,7 +125,7 @@
                 })
             },
             pollCommand: function(commandId) {
-                let counter=0, maxWait=10000
+                let counter=0, maxWait=30000
                 return new Promise((resolve, reject) => {
                     let interval = setInterval(() => {
                         fetch(window.apiURL+'/command/'+commandId, {
@@ -151,7 +154,7 @@
                                 })
                             }
                         })
-                    }, 1000)
+                    }, 2000)
                 })
             },
             loadSchemas: async function() {
@@ -229,7 +232,7 @@
             function getColumns(n) {
                 let validColumns = Object.keys(n)
                     .filter(c => c[0].match(/[a-z]/))
-                    .filter(c => ['uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
+                    .filter(c => ['sloID', 'uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
                 let columns = {
                     id: getId(n),
                     type: getType(n),

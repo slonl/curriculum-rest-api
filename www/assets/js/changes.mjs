@@ -305,8 +305,7 @@ const changes = (()=> {
 				} else {
 					node = new ChangedNode({
 						id,
-						'@type': m['@type'],
-						title: m['@title']
+						'@type': m['@type']
 					})
 				}
 				for (let prop in m['@properties']) {

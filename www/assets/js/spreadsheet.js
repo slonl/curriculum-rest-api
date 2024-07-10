@@ -400,13 +400,18 @@ const spreadsheet = (function() {
     }
 
     function getRow(el) {
-      let id = el.closest('tr').id
-      return getRowById(id)
+      let line = el.closest('tr').querySelector('td.line').innerText
+      return getRowByLine(line)
     }
 
     function getRowById(id) {
       let row = datamodel.data.filter(r => r.columns.id==id).pop()
       return row
+    }
+
+    function getRowByLine(line) {
+      line -= 1;
+      return datamodel.data[line]
     }
 
     function findParentRow(row) {
@@ -611,7 +616,7 @@ const spreadsheet = (function() {
           </svg></td>`
         }
       }
-      let html = `<tr id="${row.columns.id}" class="${rowClass}">${add}<td>${row.id+1}</td>`
+      let html = `<tr id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
       let value, count = 0
       let colClass = ''
       let focusColumn = datamodel.options.focus.column

@@ -12,7 +12,7 @@ window.localAPI = (function() {
 
 	return {
         list: async function(type) {
-            return window.slo.api.get(window.release.apiPath+type, {
+            return window.slo.api.get(type, {
                 pageSize: browser.view.pageSize,
                 page: parseInt(browser.view.page)-1
             })
@@ -32,7 +32,7 @@ window.localAPI = (function() {
             if (changes.local[root] && changes.merged[root]['@newValue']) {
                 return changes.local[root]
             }
-            return window.slo.api.get(window.release.apiPath+'tree/'+root, {
+            return window.slo.api.get('tree/'+root, {
                 niveau, context
             }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
@@ -51,7 +51,7 @@ window.localAPI = (function() {
             if (changes.local[root] && changes.merged[root]['@newValue']) {
                 return changes.local[root]
             }
-	        return window.slo.api.get(window.release.apiPath+'tree/'+root, {
+	        return window.slo.api.get('tree/'+root, {
                 niveau, context
             }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
@@ -61,7 +61,7 @@ window.localAPI = (function() {
             })
         },
         doelniveauList: async function(type) {
-	        return window.slo.api.get(window.release.apiPath+type)
+	        return window.slo.api.get(type)
             .then(function(json) {
                 changes.getLocalView(json.data)
                 //add inserted entities matching type
@@ -72,14 +72,14 @@ window.localAPI = (function() {
             if (changes.local[id] && changes.merged[id]['@newValue']) {
                 return changes.local[id]
             }
-	        return window.slo.api.get(window.release.apiPath+'uuid/'+id+'/')
+	        return window.slo.api.get('uuid/'+id+'/')
             .then(function(json) {
                 changes.getLocalView(json)
                 return json
             })
         },
         listOpNiveau: async function(niveau, type) {
-            return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type)
+            return window.slo.api.get('niveau/'+niveau+'/'+type)
             .then(function(json) {
                 changes.getLocalView(json)
                 //add inserted entities matching type, niveau
@@ -87,17 +87,17 @@ window.localAPI = (function() {
             })
         },
         itemOpNiveau: async function(niveau, type, id) {
-        	return window.slo.api.get(window.release.apiPath+'niveau/'+niveau+'/'+type+id)
+        	return window.slo.api.get('niveau/'+niveau+'/'+type+id)
             .then(function(json) {
                 changes.getLocalView(json)
                 return json
             })
         },
         roots: async function(id) {
-        	return window.slo.api.get(window.release.apiPath+'roots/'+id)
+        	return window.slo.api.get('roots/'+id)
         },
         schemas: async function() {
-        	return window.slo.api.get(window.release.apiPath+'schemas/', null, true) //jsontag
+        	return window.slo.api.get('schemas/', null, true) //jsontag
         }
 	}
 })()

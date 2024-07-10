@@ -37,11 +37,12 @@
                     <h2>Voeg relatie toe</h2>
                 </div>
             </header>
-            <div class="ds-dialog-content ds-margin-up">
+            <div class="ds-dialog-content">
+                <div data-simply-field="addEntityError" class="ds-alert ds-alert-error ds-space-inside slo-errors"></div>
                 <div class="ds-space">
                     <label class="slo-type" data-simply-command="addSibling">Erna: <span data-simply-field="siblingType"></span></label>
-                    <label>Erin: selecteer type:</label>
-                    <div class="ds-space-horizontal" data-simply-list="availableTypes">
+                    <label class="slo-type" data-simply-command="showAvailableTypes">Erin: selecteer type:</label>
+                    <div class="slo-types ds-space-horizontal" data-simply-list="availableTypes">
                         <template>
                             <label class="slo-type">
                                 <input data-simply-command="addChild"
@@ -53,16 +54,22 @@
                             </label>
                         </template>
                     </div>
-                    <form class="ds-space-horizontal slo-hidden" data-simply-command="addNiveau">
+                    <form class="slo-niveau ds-space-horizontal slo-hidden" data-simply-command="addNiveau">
                         <label for="niveau">Selecteer Niveau:</label>
-                        <input name="niveau" list="niveaus">
-                        <button type="submit">Link</button>
+                        <input type="text" name="niveau" list="niveaus">
+                        <button class="ds-button" type="submit">Link</button>
                     </form>
                     <datalist id="niveaus" data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title">
                         <template>
                             <option data-simply-field="title"></option>
                         </template>
                     </datalist>
+                    <label class="slo-type" data-simply-command="showLinkForm">Link bestaande entiteit</label>
+                    <form class="slo-link ds-space-horizontal slo-hidden" data-simply-command="addLink">
+                        <label for="link">Entiteit ID:</label>
+                        <input type="text" name="link">
+                        <button class="ds-button" type="submit">Link</button>
+                    </form>
                 </div>
             </form>
         </dialog>
