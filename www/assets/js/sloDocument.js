@@ -29,19 +29,19 @@ const sloDocument = (function() {
     }
 
     function move(indexIncrement){
-      let focussedElement;
+      let focusedElement;
       let nodes = getAllNodes()
 
       //find current element to move to the next one
       if(document.querySelector(".focus")){
-          focussedElement = document.querySelector(".focus");
+          focusedElement = document.querySelector(".focus");
       }
       else{
-          focussedElement = nodes[0];
-          focussedElement.classList.add("focus")
+          focusedElement = nodes[0];
+          focusedElement.classList.add("focus")
       }
 
-      let itemIndex = nodes.indexOf(focussedElement);
+      let itemIndex = nodes.indexOf(focusedElement);
       nodes[itemIndex].classList.remove("focus");
       
       // moving around
@@ -70,10 +70,10 @@ const sloDocument = (function() {
     }
 
     function updateURL(){
-        let FocussedElement = document.querySelector(".focus");
-        // @NOTE: the try-catch was here because sometimes there is no id in the focussed element.
+        let focusedElement = document.querySelector(".focus");
+        // @NOTE: the try-catch was here because sometimes there is no id in the focused element.
         try {
-          let idPath = URL.parse(FocussedElement.id, document.location.href)
+          let idPath = URL.parse(focusedElement.id, document.location.href)
           let currentUUID = idPath.pathname.split("/").filter(Boolean).pop()
           history.replaceState({}, '', new URL(currentUUID, window.location))
           //browser.view.item.uuid = currentUUID // @NOTE : no idea what this was for.
@@ -84,8 +84,8 @@ const sloDocument = (function() {
 
     function getTitle() {
       try {
-        let FocussedElement = document.querySelector(".focus");
-        let idPath = URL.parse(FocussedElement.id, document.location.href)
+        let focusedElement = document.querySelector(".focus");
+        let idPath = URL.parse(focusedElement.id, document.location.href)
         let currentUUID = idPath.pathname.split("/").filter(Boolean).pop()
         currentIdentifier = currentUUID // @Note: needed for the documentSaveChanges.
         let currentContent = data.index.get(currentUUID).title 
@@ -139,27 +139,27 @@ const sloDocument = (function() {
       },
 
       moveTo : (destination) => {
-        let focussedElement;
+        let focusedElement;
         let nodes;
         let itemIndex;
                 
         // moving around
         switch(destination){
           case "top":
-            focussedElement;
+            focusedElement;
             nodes = getAllNodes()
           
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
-                focussedElement = document.getElementsByClassName("focus")[0];
+                focusedElement = document.getElementsByClassName("focus")[0];
             }
-            // if no element is focussed, focus the first one
+            // if no element is focused, focus the first one
             else{
-                focussedElement = nodes[0];
-                focussedElement.classList.add("focus")
+                focusedElement = nodes[0];
+                focusedElement.classList.add("focus")
             }
             
-            itemIndex = nodes.indexOf(focussedElement);
+            itemIndex = nodes.indexOf(focusedElement);
             
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
             
@@ -169,20 +169,20 @@ const sloDocument = (function() {
             nodes[itemIndex].classList.add("focus");
           break;
           case "bottom":
-            focussedElement;
+            focusedElement;
             nodes = getAllNodes()
           
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
-                focussedElement = document.getElementsByClassName("focus")[0];
+                focusedElement = document.getElementsByClassName("focus")[0];
             }
-            // if no element is focussed, focus the first one
+            // if no element is focused, focus the first one
             else{
-                focussedElement = nodes[0];
-                focussedElement.classList.add("focus")
+                focusedElement = nodes[0];
+                focusedElement.classList.add("focus")
             }
             
-            itemIndex = nodes.indexOf(focussedElement);
+            itemIndex = nodes.indexOf(focusedElement);
             
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
             
