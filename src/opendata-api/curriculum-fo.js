@@ -8,11 +8,29 @@ module.exports = {
                         prefix
                         title
                         description
-                        unreleased
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
+                        Vakleergebied {
+                                id
+                                title
+                                description     
+                        }
                 }`,
                 Doelzin: `fragment Doelzin on FoDoelzin {
                         id
                         title
+                        description
+                        soort
+                        se
+                        ce
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                         FoUitwerking {
                                 id
                                 title
@@ -23,8 +41,8 @@ module.exports = {
                                 }
                         }
                         FoToelichting {
-                        id
-                        title
+                                id
+                                title
                                 Niveau {
                                         id
                                         title
@@ -36,12 +54,16 @@ module.exports = {
         queries: {
                 Fo: `query Fo($page: Int, $perPage: Int) {
                         allFoSet(page: $page, perPage: $perPage, sortField: "title", filter: {deprecated: null}) {
-                                id
-                                prefix
-                                title
+                                ...SetBasics
                                 FoDomein {
                                         id
                                         title
+                                        description
+                                        NiveauIndex {
+                                                Niveau {
+                                                ...NiveauShort
+                                                }
+                                        }
                                         FoDoelzin {
                                                 ...Doelzin
                                         }
@@ -49,27 +71,37 @@ module.exports = {
                                                 id
                                                 title
                                                 FoDoelzin {
-                                                        ...Doelzin
+                                                ...Doelzin
                                                 }
-                                        }       
+                                        }
                                 }
-                                unreleased
-                                }
-                                _allFoSetMeta {
+                        }
+                        _allFoSetMeta {
                                 count
                         }
                 }`,
                 FoSet: `query FoSet($page:Int, $perPage:Int) {
                         allFoSet(page:$page, perPage:$perPage, sortField:"title",filter:{deprecated:null}) {
                                 ...SetBasics
-                                NiveauIndex {
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
-                                Vakleergebied {
+                                FoDomein {
                                         id
                                         title
+                                        description
+                                        NiveauIndex {
+                                                Niveau {
+                                                ...NiveauShort
+                                                }
+                                        }
+                                        FoDoelzin {
+                                                ...Doelzin
+                                        }
+                                        FoSubdomein {
+                                                id
+                                                title
+                                                FoDoelzin {
+                                                ...Doelzin
+                                                }
+                                        }
                                 }
                         }
                         _allFoSetMeta {
@@ -81,18 +113,14 @@ module.exports = {
                                 id
                                 prefix
                                 title
-                                FoSet{
-                                        ...SetBasics
-                                        NiveauIndex {
-                                                Niveau {
-                                                        ...NiveauShort
-                                                }
-                                        }
-                                }
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
                                         }
+                                }
+                                FoSet{
+                                        ...SetBasics
                                 }
                                 FoSubdomein{
                                         id
@@ -103,16 +131,9 @@ module.exports = {
                                                 }
                                         }
                                 }
-                                FoDoelzin{
-                                        id
-                                        title
-                                        NiveauIndex {
-                                                Niveau {
-                                                        ...NiveauShort
-                                                }
-                                        }
+                                FoDoelzin {
+                                        ...Doelzin
                                 }
-                                unreleased
                         }
                         _allFoDomeinMeta {
                                 count
@@ -123,19 +144,13 @@ module.exports = {
                                 id
                                 prefix
                                 title
-                                FoDomein{
-                                        id
-                                        title
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
                                         }
                                 }
-                                FoDoelzin{
+                                FoDomein{
                                         id
                                         title
                                         NiveauIndex {
@@ -144,7 +159,9 @@ module.exports = {
                                                 }
                                         }
                                 }
-                                unreleased
+                                FoDoelzin {
+                                        ...Doelzin
+                                }
                         }
                         _allFoSubdomeinMeta {
                                 count
@@ -156,26 +173,29 @@ module.exports = {
                                 prefix
                                 title
                                 description
-                                FoDomein{
-                                        id
-                                        title
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
-                                FoSubdomein{
-                                        id
-                                        title
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
                                         }
                                 }
-                                unreleased
+                                FoDomein{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
+                                FoSubdomein{
+                                        id
+                                        title
+                                        NiveauIndex {
+                                                Niveau {
+                                                        ...NiveauShort
+                                                }
+                                        }
+                                }
                                 FoUitwerking{
                                         id
                                         title
@@ -204,16 +224,16 @@ module.exports = {
                                 Niveau {
                                         ...NiveauShort
                                 }
-                                FoDoelzin{
+                                FoDoelzin {
                                         id
                                         title
+                                        deprecated
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
                                                 }
                                         }
                                 }
-                                unreleased
                         }
                         _allFoUitwerkingMeta {
                                 count
@@ -228,16 +248,16 @@ module.exports = {
                                 Niveau {
                                         ...NiveauShort
                                 }
-                                FoDoelzin{
+                                FoDoelzin {
                                         id
                                         title
+                                        deprecated
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
                                                 }
                                         }
                                 }
-                                unreleased
                         }
                         _allFoToelichtingMeta {
                                 count
@@ -246,18 +266,7 @@ module.exports = {
         },
         typedQueries: {
                 'fo_set': `
-                        id
-                        Vakleergebied {
-                                id
-                                title
-                        }
-                        prefix
-                        title
-                        NiveauIndex {
-                                Niveau {
-                                        ...NiveauShort
-                                }
-                        }
+                        ...SetBasics
                         FoDomein {
                                 id
                                 title
@@ -274,14 +283,7 @@ module.exports = {
                         prefix
                         title
                         FoSet {
-                                id
-                                prefix
-                                title
-                                NiveauIndex {
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
+                                ...SetBasics
                         }
                         NiveauIndex {
                                 Niveau {
@@ -298,14 +300,7 @@ module.exports = {
                                 }
                         }
                         FoDoelzin {
-                                id
-                                title
-                                deprecated
-                                NiveauIndex {
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
+                                ...Doelzin
                         }
                         deprecated
                 `,
@@ -329,14 +324,7 @@ module.exports = {
                                 }
                         }
                         FoDoelzin {
-                                id
-                                title
-                                deprecated
-                                NiveauIndex {
-                                        Niveau {
-                                                ...NiveauShort
-                                        }
-                                }
+                                ...Doelzin
                         }
                         deprecated
                 `,
@@ -345,6 +333,11 @@ module.exports = {
                         prefix
                         title
                         description
+                        NiveauIndex {
+                                Niveau {
+                                        ...NiveauShort
+                                }
+                        }
                         FoDomein {
                                 id
                                 prefix
@@ -377,11 +370,6 @@ module.exports = {
                                 id
                                 title
                                 deprecated
-                                Niveau {
-                                        ...NiveauShort
-                                }
-                        }
-                        NiveauIndex {
                                 Niveau {
                                         ...NiveauShort
                                 }
