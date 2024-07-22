@@ -869,25 +869,12 @@
                     </span>
                 </template>
             </span>
-			<span data-simply-list="Vakleergebied">
-				<template>
-					<span class="ds-badge ds-badge-mini">
-						<span class="ds-badge-label">Vakleergebied</span>
-						<span data-simply-field="title">title</span>
-					</span>
-				</template>
-			</span>
             <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
                         <span class="ds-badge-label">Prefix</span>
                         <span data-simply-field="prefix"></span>
                     </span>
-                </template>
-            </span>
-            <span data-simply-list="Niveau">
-                <template>
-                    <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
                 </template>
             </span>
             <span data-simply-field="title">titel</span>
@@ -898,7 +885,23 @@
                     </span>
                 </template>
             </span>
+            <br/>
         </a>
+        <span data-simply-list="Vakleergebied">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span class="ds-badge-label">Vakleergebied</span>
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="Niveau">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
         <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
             <template data-simply-template="true">
                 &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref" data-simply-content="fixed" data-simply-transformer="niveau">
@@ -1228,7 +1231,7 @@
             </template>
         </span>
 
-        <span data-simply-list="FoSet">
+		<!-- <span data-simply-list="FoSet">
             <template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">FoSet</span>
@@ -1260,7 +1263,7 @@
                 </span>
             </template>
         </span>
-		<span data-simply-list="FoUitwerking">
+        <span data-simply-list="FoUitwerking">
 			<template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">FoUitwerking</span>xx
@@ -1275,7 +1278,7 @@
                     <span data-simply-field="title">description</span>
                 </span>
             </template>
-        </span>
+        </span> -->
 
 
 
@@ -1869,22 +1872,13 @@
                 fo_toelichting: 'Toelichting'
             }
         },
-        'curriculum-samenhang': {
-            title: 'Samenhang',
-            data: {
-                tag: 'Begrippen',
-                relatie: 'Relaties'
-            }
-        },
-        'curriculum-basis': {
-            title: 'Basis',
-            data: {
-                vakleergebied: 'Vakleergebied',
-                niveau: 'Niveau',
-                doelniveau: 'DoelNiveau',
-                doel: 'Doel'
-            }
-        },
+        // 'curriculum-samenhang': {
+        //     title: 'Samenhang',
+        //     data: {
+        //         tag: 'Begrippen',
+        //         relatie: 'Relaties'
+        //     }
+        // },
         'curriculum-kerndoelen': {
             title: 'Kerndoelen',
             data: {
@@ -1972,7 +1966,7 @@
                 inh_cluster: 'InhCluster',
                 inh_subcluster: 'InhSubcluster'
             }
-//        },
+        },
 //        'curriculum-niveauhierarchie':{
 //            title: 'Niveau Hierarchie',
 //            data: {
@@ -1983,6 +1977,15 @@
 //                nh_bouw: 'NhBouw',
 //                nh_niveau: 'NhNiveau'
 //            }
+//        },
+        'curriculum-basis': {
+            title: 'Basis',
+            data: {
+                vakleergebied: 'Vakleergebied',
+                niveau: 'Niveau',
+                doelniveau: 'DoelNiveau',
+                doel: 'Doel'
+            }
         }
     }
 
