@@ -89,6 +89,22 @@ module.exports = {
                                 count
                         }
                 }`,
+                FoVakleergebiedFormPH: `query FoVakleergebiedFormPH($page: Int, $perPage: Int) {
+                        allFoSet(page: $page, perPage: $perPage, sortField: "title", filter: {deprecated: null}) {
+                                id
+                                prefix
+                                title
+                                description
+                                Vakleergebied {
+                                        id
+                                        title
+                                        description     
+                                }
+                        }
+                        _allFoSetMeta {
+                                count
+                        }
+                }`,
                 FoSet: `query FoSet($page:Int, $perPage:Int) {
                         allFoSet(page:$page, perPage:$perPage, sortField:"title",filter:{deprecated:null}) {
                                 ...SetBasics
@@ -313,9 +329,6 @@ module.exports = {
                         prefix
                         title
                         description
-                        FoSet {
-                                ...SetBasics
-                        }
                         NiveauIndex {
                                 Niveau {
                                         ...NiveauShort
@@ -676,6 +689,15 @@ module.exports = {
         routes: {
                 'fo/': (req) =>
                         opendata.api["Fo"](req.params, req.query)
+                                .then(function (result) {
+                                        return {
+                                                data: result.data.allFoSet,
+                                                type: 'FoSet',
+                                                meta: result.data._allFoSetMeta
+                                        }
+                                }),
+                'fovakleergebiedformph/': (req) =>
+                        opendata.api["FoVakleergebiedFormPH"](req.params, req.query)
                                 .then(function (result) {
                                         return {
                                                 data: result.data.allFoSet,
