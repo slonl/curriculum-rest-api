@@ -89,7 +89,7 @@ module.exports = {
                                 count
                         }
                 }`,
-                FoVakleergebiedFormPH: `query FoVakleergebiedFormPH($page: Int, $perPage: Int) {
+                FoVakleergebieden: `query FoVakleergebieden($page: Int, $perPage: Int) {
                         allFoSet(page: $page, perPage: $perPage, sortField: "title", filter: {deprecated: null}) {
                                 id
                                 prefix
@@ -696,8 +696,8 @@ module.exports = {
                                                 meta: result.data._allFoSetMeta
                                         }
                                 }),
-                'fovakleergebiedformph/': (req) =>
-                        opendata.api["FoVakleergebiedFormPH"](req.params, req.query)
+                'fovakleergebieden/': (req) =>
+                        opendata.api["FoVakleergebieden"](req.params, req.query)
                                 .then(function (result) {
                                         return {
                                                 data: result.data.allFoSet,
