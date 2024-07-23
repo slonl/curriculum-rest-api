@@ -162,9 +162,6 @@
             </template>
             <template data-simply-template="item">
                 <article>
-                    <h1>
-                        <span data-simply-field="item.title"></span>
-                    </h1>
                     <a class="ds-badge" href="#" data-simply-field="item.@references" data-simply-content="fixed" data-simply-transformer="addTrailingSlash">
                         <label class="ds-badge-label"><svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#link">
@@ -239,6 +236,14 @@
                             </ul>
                         </template>
                     </div>
+                    <h3>Titel</h3>
+                    <span data-simply-field="item.title"></span>
+                   <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Beschrijving</h3>
+                            <div data-simply-field="item.description"></div>
+                        </template>
+                    </div>
                     <div data-simply-field="item.Niveau" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Niveau</h3>
@@ -260,12 +265,6 @@
                             <h3><span data-simply-field="item.description"></span></h3>
                         </template>
                     </div> -->
-                   <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
-                        <template data-simply-template="true">
-                            <h3>Description</h3>
-                            <div data-simply-field="item.description"></div>
-                        </template>
-                    </div>
                     <div data-simply-field="item.vakbegrippen" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <div>
@@ -704,7 +703,7 @@
                                 <template rel="links"></template>
                             </ul>
                         </template>
-                    </div>
+                    </div>                    
                     <div data-simply-field="item.FoSet" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Set</h3>
@@ -1231,55 +1230,110 @@
             </template>
         </span>
 
-		<!-- <span data-simply-list="FoSet">
+        <span data-simply-list="FoSet"></span>
             <template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">FoSet</span>
-					<span data-simply-field="title">title</span>
+                    <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
         <span data-simply-list="FoDomein">
             <template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoDomein</span>
-                    <span data-simply-field="title">title</span>
+                <span data-simply-list="FoSet"></span>
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">FoSet</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
                 </span>
             </template>
         </span>
         <span data-simply-list="FoSubdomein">
             <template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoSubdomein</span>
-                    <span data-simply-field="title">title</span>
+                <span data-simply-list="FoDomein">
+                    <template>
+                        <span data-simply-list="FoSet"></span>
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">FoSet</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
                 </span>
             </template>
         </span>
         <span data-simply-list="FoDoelzin">
             <template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoDoelzin</span>
-                    <span data-simply-field="title">title</span>
+                <span data-simply-list="FoSubdomein">
+                    <template>
+                        <span data-simply-list="FoDomein">
+                            <template>
+                                <span data-simply-list="FoSet"></span>
+                                    <template>
+                                        <span class="ds-badge ds-badge-mini">
+                                            <span class="ds-badge-label">FoSet</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
                 </span>
             </template>
         </span>
         <span data-simply-list="FoUitwerking">
-			<template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoUitwerking</span>xx
-                    <span data-simply-field="description">description</span>yy
+            <template>
+                <span data-simply-list="FoDoelzin">
+                    <template>
+                        <span data-simply-list="FoSubdomein">
+                            <template>
+                                <span data-simply-list="FoDomein">
+                                    <template>
+                                        <span data-simply-list="FoSet"></span>
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">FoSet</span>
+                                                    <span data-simply-field="title">description</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
                 </span>
             </template>
         </span>
-		<span data-simply-list="FoToelichting">
-			<template>
-                <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoToelichting</span>
-                    <span data-simply-field="title">description</span>
+        <span data-simply-list="FoToelichting">
+            <template>
+                <span data-simply-list="FoDoelzin">
+                    <template>
+                        <span data-simply-list="FoSubdomein">
+                            <template>
+                                <span data-simply-list="FoDomein">
+                                    <template>
+                                        <span data-simply-list="FoSet"></span>
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">FoSet</span>
+                                                    <span data-simply-field="title">description</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
                 </span>
             </template>
-        </span> -->
-
+        </span>
 
 
         <span data-simply-list="Tag">
