@@ -8,6 +8,7 @@ module.exports = {
                         prefix
                         title
                         description
+                        karakteristiek
                         NiveauIndex {
                                 Niveau {
                                         ...NiveauShort
@@ -21,6 +22,7 @@ module.exports = {
                 }`,
                 Doelzin: `fragment Doelzin on FoDoelzin {
                         id
+                        prefix
                         title
                         description
                         soort
@@ -33,7 +35,9 @@ module.exports = {
                         }
                         FoUitwerking {
                                 id
+                                prefix
                                 title
+                                description
                                 Niveau {
                                         id
                                         title
@@ -42,7 +46,9 @@ module.exports = {
                         }
                         FoToelichting {
                                 id
+                                prefix
                                 title
+                                description
                                 Niveau {
                                         id
                                         title
@@ -57,6 +63,7 @@ module.exports = {
                                 ...SetBasics
                                 FoDomein {
                                         id
+                                        prefix
                                         title
                                         description
                                         NiveauIndex {
@@ -69,7 +76,9 @@ module.exports = {
                                         }
                                         FoSubdomein {
                                                 id
+                                                prefix
                                                 title
+                                                description
                                                 FoDoelzin {
                                                 ...Doelzin
                                                 }
@@ -85,6 +94,7 @@ module.exports = {
                                 ...SetBasics
                                 FoDomein {
                                         id
+                                        prefix
                                         title
                                         description
                                         NiveauIndex {
@@ -97,7 +107,9 @@ module.exports = {
                                         }
                                         FoSubdomein {
                                                 id
+                                                prefix
                                                 title
+                                                description
                                                 FoDoelzin {
                                                 ...Doelzin
                                                 }
@@ -124,7 +136,9 @@ module.exports = {
                                 }
                                 FoSubdomein{
                                         id
+                                        prefix
                                         title
+                                        description
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
@@ -152,7 +166,9 @@ module.exports = {
                                 }
                                 FoDomein{
                                         id
+                                        prefix
                                         title
+                                        description
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
@@ -180,7 +196,9 @@ module.exports = {
                                 }
                                 FoDomein{
                                         id
+                                        prefix
                                         title
+                                        description
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
@@ -189,7 +207,9 @@ module.exports = {
                                 }
                                 FoSubdomein{
                                         id
+                                        prefix
                                         title
+                                        description
                                         NiveauIndex {
                                                 Niveau {
                                                         ...NiveauShort
@@ -198,14 +218,18 @@ module.exports = {
                                 }
                                 FoUitwerking{
                                         id
+                                        prefix
                                         title
+                                        description
                                         Niveau {
                                                 ...NiveauShort
                                         }
                                 }
                                 FoToelichting{
                                         id
+                                        prefix
                                         title
+                                        description
                                         Niveau {
                                                 ...NiveauShort
                                         }
@@ -226,7 +250,9 @@ module.exports = {
                                 }
                                 FoDoelzin {
                                         id
+                                        prefix
                                         title
+                                        description
                                         deprecated
                                         NiveauIndex {
                                                 Niveau {
@@ -250,7 +276,9 @@ module.exports = {
                                 }
                                 FoDoelzin {
                                         id
+                                        prefix
                                         title
+                                        description
                                         deprecated
                                         NiveauIndex {
                                                 Niveau {
@@ -269,7 +297,9 @@ module.exports = {
                         ...SetBasics
                         FoDomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -282,6 +312,7 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         FoSet {
                                 ...SetBasics
                         }
@@ -292,7 +323,9 @@ module.exports = {
                         }
                         FoSubdomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -308,10 +341,12 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         FoDomein {
                                 id
                                 prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -342,6 +377,7 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -352,6 +388,7 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -360,7 +397,9 @@ module.exports = {
                         }
                         FoUitwerking {
                                 id
+                                prefix
                                 title
+                                description
                                 deprecated
                                 Niveau {
                                         ...NiveauShort
@@ -368,7 +407,9 @@ module.exports = {
                         }
                         FoToelichting {
                                 id
+                                prefix
                                 title
+                                description
                                 deprecated
                                 Niveau {
                                         ...NiveauShort
@@ -385,7 +426,9 @@ module.exports = {
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 deprecated
                                 NiveauIndex {
                                         Niveau {
@@ -404,7 +447,9 @@ module.exports = {
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 deprecated
                                 NiveauIndex {
                                         Niveau {
@@ -419,13 +464,18 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         Vakleergebied {
                                 id
+                                prefix
                                 title
+                                description
                         }
                         FoDomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -442,9 +492,12 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         FoSet {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -453,7 +506,9 @@ module.exports = {
                         }
                         FoSubdomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -462,7 +517,9 @@ module.exports = {
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -479,9 +536,12 @@ module.exports = {
                         id
                         prefix
                         title
+                        description
                         FoDomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -490,7 +550,9 @@ module.exports = {
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -510,7 +572,9 @@ module.exports = {
                         description
                         FoDomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -519,7 +583,9 @@ module.exports = {
                         }
                         FoSubdomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -528,6 +594,7 @@ module.exports = {
                         }
                         FoToelichting {
                                 id
+                                prefix
                                 title
                                 description
                                 Niveau {
@@ -536,6 +603,7 @@ module.exports = {
                         }
                         FoUitwerking {
                                 id
+                                prefix
                                 title
                                 description
                                 Niveau {
@@ -549,7 +617,9 @@ module.exports = {
                         }
                         FoSubdomein {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -566,10 +636,13 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
@@ -586,10 +659,13 @@ module.exports = {
                                 id
                                 prefix
                                 title
+                                description
                         }
                         FoDoelzin {
                                 id
+                                prefix
                                 title
+                                description
                                 NiveauIndex {
                                         Niveau {
                                                 ...NiveauShort
