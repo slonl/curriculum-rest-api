@@ -55,16 +55,17 @@ const spreadsheet = (function() {
       }
       let cache = pluginCache.get(this)
       if (params.toggle) {
-        let row = data.find(r => r.columns.id==params.toggle)
+        let selectedRow = parseInt(params.toggle.substring(4))
+        let row = data[selectedRow]
         if (row.node.$hasChildren) {
           cache.etag = null
-          if (this.options.closed[params.toggle]) {
-            delete this.options.closed[params.toggle]
+          if (this.options.closed[selectedRow]) {
+            delete this.options.closed[selectedRow]
             if (row) {
               row.hidden = 0
             }
           } else {
-            this.options.closed[params.toggle]=true
+            this.options.closed[selectedRow]=true
           }
         }
       }
@@ -88,7 +89,7 @@ const spreadsheet = (function() {
           if (closed && closed>=indent) {
             closedSubtree.pop()
           }
-          if (this.options.closed[r.columns.id]) {
+          if (this.options.closed[r.id]) {
             r.closed = 'closed'
             closedSubtree.push(indent)
           } else {
@@ -616,7 +617,7 @@ const spreadsheet = (function() {
           </svg></td>`
         }
       }
-      let html = `<tr id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
+      let html = `<tr id="row-${row.id}" data-slo-id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
       let value, count = 0
       let colClass = ''
       let focusColumn = datamodel.options.focus.column
@@ -837,8 +838,9 @@ const spreadsheet = (function() {
             el.classList.remove('focus')
         })
         cell.classList.add('focus')
-        cell.closest('tr').classList.add('focus')
-        let row = spreadsheet.findId(cell.closest('tr').id)
+        let tr = cell.closest('tr')
+        tr.classList.add('focus')
+        let row = parseInt(tr.id.substring(4))
         if (row!==null) {
             let columns = Array.from(cell.closest('tr').querySelectorAll('td'))
             let column = columns.findIndex(td => td===cell)

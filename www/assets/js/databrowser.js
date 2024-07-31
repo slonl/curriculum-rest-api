@@ -1814,4 +1814,49 @@ document.addEventListener('click', function(e) {
         dragging = false
     }
 }, true)
-// @NOTE: templates/scripts.html contains some extra javascript
+
+document.addEventListener('simply-content-loaded', function(evt) {
+    var menu = editor.currentData['/'].menu;
+    if (menu && menu[1]) {
+        var api = menu[1].submenu[0]['data-simply-template'] = 'api';
+    }
+});
+
+var treeviewNiveaus, treeviewSchemas;
+simply.activate.addListener('roots-select', function() {
+    if (!browser.view.roots || browser.view.roots.length<2) {
+        document.querySelector('.slo-roots-select').style.display = 'none'
+    } else {
+        treeviewNiveaus = new vanillaSelectBox('.slo-roots-select');
+        if (browser.view.root) {
+            let selectedIndex = browser.view.roots.findIndex(v => v.id==browser.view.root?.id)
+            if (selectedIndex>-1) {
+                treeviewNiveaus.setValue(browser.view.roots[selectedIndex].id)
+            }
+        }
+    }
+});
+simply.activate.addListener('niveaus-select', function() {
+    treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus', 'search':true});
+});
+simply.activate.addListener('contexts-select', function() {
+    if (browser.view.contexts) {
+        Array.from(this.options).forEach(option => {
+            if (browser.view.contexts.includes(option.value)) {
+                option.setAttribute('selected','selected');
+            }
+        })
+    }
+    treeviewSchemas = new vanillaSelectBox('.slo-contexts-select', {'placeHolder':'Selecteer contexten'});
+});
+
+simply.collect.addListener('niveaus-contexts', function(elements) {
+    browser.view.niveaus = Array.from(elements['niveaus'].options).filter(o => o.selected).map(o => o.value)
+    browser.view.contexts = Array.from(elements['contexts'].options).filter(o => o.selected).map(o => o.value)
+    if (browser.view.view=='spreadsheet') {
+        browser.actions.switchView('spreadsheet')
+    }
+    else if (browser.view.view=='document') {
+        browser.actions.switchView('document')
+    }
+})
