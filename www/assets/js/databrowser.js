@@ -757,7 +757,9 @@ browser = simply.app({
             return true
         },
         importXLSX: async function(file) {
-            let tree = null
+            let tree = {
+                errors: []
+            }
             try {
                 tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
@@ -811,7 +813,12 @@ browser = simply.app({
                     await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
                 }
             } catch(error) {
-                tree.errors.unshift(new Error(error.message))
+                if (!Array.isArray(error.cause)) {
+                    error.cause = [ error.cause ]
+                }
+                error.cause.forEach(cause => {
+                    tree.errors.unshift(new Error(error.message, {cause}))
+                })
             }
             if (tree?.errors?.length) {
                 // collect errors by message
