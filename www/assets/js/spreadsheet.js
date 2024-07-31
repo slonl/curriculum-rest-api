@@ -55,17 +55,17 @@ const spreadsheet = (function() {
       }
       let cache = pluginCache.get(this)
       if (params.toggle) {
-        let selectedRow = parseInt(params.toggle.substring(4))
-        let row = data[selectedRow]
+        let index = parseInt(params.toggle.substring(4))
+        let row = data.filter(r => r.index==index).pop()
         if (row.node.$hasChildren) {
           cache.etag = null
-          if (this.options.closed[selectedRow]) {
-            delete this.options.closed[selectedRow]
+          if (this.options.closed[index]) {
+            delete this.options.closed[index]
             if (row) {
               row.hidden = 0
             }
           } else {
-            this.options.closed[selectedRow]=true
+            this.options.closed[index]=true
           }
         }
       }
@@ -89,7 +89,7 @@ const spreadsheet = (function() {
           if (closed && closed>=indent) {
             closedSubtree.pop()
           }
-          if (this.options.closed[r.id]) {
+          if (this.options.closed[r.index]) {
             r.closed = 'closed'
             closedSubtree.push(indent)
           } else {
@@ -401,12 +401,12 @@ const spreadsheet = (function() {
     }
 
     function getRow(el) {
-      let line = el.closest('tr').querySelector('td.line').innerText
-      return getRowByLine(line)
+      let index = parseInt(el.closest('tr').id.substring(4))
+      return datamodel.data[index-1]
     }
 
-    function getRowById(id) {
-      let row = datamodel.data.filter(r => r.columns.id==id).pop()
+    function getRowsById(id) {
+      let row = datamodel.data.filter(r => r.columns.id==id)
       return row
     }
 
@@ -588,7 +588,7 @@ const spreadsheet = (function() {
 
     function renderRow(row) {
       let rowClass = row.closed;
-      if (datamodel.options.focus?.row == row.id) {
+      if (datamodel.options.focus?.row == row.index) {
         rowClass += ' focus';
       }
       if (row.deleted) {
@@ -617,7 +617,7 @@ const spreadsheet = (function() {
           </svg></td>`
         }
       }
-      let html = `<tr id="row-${row.id}" data-slo-id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
+      let html = `<tr id="row-${row.index}" data-slo-id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
       let value, count = 0
       let colClass = ''
       let focusColumn = datamodel.options.focus.column
@@ -627,7 +627,7 @@ const spreadsheet = (function() {
         }
         count++
         value = row.columns[column.value] || ''
-        if (datamodel.options.focus?.row == row.id && focusColumn == count) {
+        if (datamodel.options.focus?.row == row.index && focusColumn == count) {
           colClass='focus'
         } else {
           colClass=''
@@ -766,6 +766,7 @@ const spreadsheet = (function() {
     let spreadsheet = { 
       options: datamodel.options,
       data: datamodel.data,
+      visibleData: datamodel.view.visibleData,
       update: (params) => {
         datamodel.update.call(datamodel, params)
         if (params.data) {
@@ -776,6 +777,7 @@ const spreadsheet = (function() {
           datamodel.options.rows = params.rows
           datamodel.update()
         }
+        spreadsheet.visibleData = datamodel.view.visibleData
         renderBody()
       },
       render: () => {
@@ -792,10 +794,16 @@ const spreadsheet = (function() {
         return spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column+1)
       },
       moveUp: () => {
-        return spreadsheet.goto(datamodel.options.focus.row-1, datamodel.options.focus.column)
+        let line = datamodel.view.visibleData.findIndex(r => r.index==datamodel.options.focus.row)
+        line = Math.max(0, line-1)
+        let row = datamodel.view.visibleData[line]
+        return spreadsheet.goto(row.index, datamodel.options.focus.column)
       },
       moveDown: () => {
-        return spreadsheet.goto(datamodel.options.focus.row+1, datamodel.options.focus.column)
+        let line = datamodel.view.visibleData.findIndex(r => r.index==datamodel.options.focus.row)
+        line = Math.min(datamodel.view.visibleData.length, line+1)
+        let row = datamodel.view.visibleData[line]
+        return spreadsheet.goto(row.index, datamodel.options.focus.column)
       },
       moveNext: () => {
         let column = datamodel.options.focus.column
@@ -852,13 +860,15 @@ const spreadsheet = (function() {
       },
       goto: (row, column) => {
           // row/column only count visible rows and columns
-          row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
+          // FIXME: row now used index, so all rows
+          // row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
+          let line = datamodel.view.visibleData.findIndex(r => r.index==row)
           column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
           let focus = datamodel.options.focus
           focus.column = column
           focus.row = row
-          if (datamodel.options.offset>row || (datamodel.options.offset+datamodel.options.rows)<=row) {
-              let offset = Math.min(Math.max(row - Math.floor(datamodel.options.rows/2), 0), datamodel.view.visibleData.length - datamodel.options.rows);
+          if (datamodel.options.offset>line || (datamodel.options.offset+datamodel.options.rows)<=line) {
+              let offset = Math.min(Math.max(line - Math.floor(datamodel.options.rows/2), 0), datamodel.view.visibleData.length - datamodel.options.rows);
               if (offset!=datamodel.options.offset) {
                   // FIXME: update scrollbar offset as well
                   datamodel.update({
@@ -866,7 +876,7 @@ const spreadsheet = (function() {
                   })
                   scrollEnabled = false
                   //FIXME: doesn't take closed rows into account
-                  scrollBox.scrollTop = datamodel.options.rowHeight * Math.max(0, focus.row - Math.floor(datamodel.options.rows/2))
+                  scrollBox.scrollTop = datamodel.options.rowHeight * Math.max(0, line - Math.floor(datamodel.options.rows/2))
                   scrollEnabled = true
               }
           }
@@ -874,7 +884,7 @@ const spreadsheet = (function() {
           spreadsheet.renderBody()
           let el = table.querySelector('td.focus')
           spreadsheet.selector(el)
-          let id = datamodel.view.visibleData[row]?.columns.id
+          let id = datamodel.view.visibleData[line]?.columns.id
           if (id) {
               id = new URL(id, document.location.href)
               if (changeListeners) {
@@ -941,7 +951,7 @@ const spreadsheet = (function() {
       },
       findParentRow,
       getRow,
-      getRowById,
+      getRowsById,
       getRowByLine: (line) => {
         return datamodel.view.visibleData[line]
       },

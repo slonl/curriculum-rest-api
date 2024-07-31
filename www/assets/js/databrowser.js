@@ -208,27 +208,35 @@ browser = simply.app({
             },
             "Home": (e) => {
                 e.preventDefault()
-                browser.view.sloSpreadsheet.goto(0,0)
+                browser.view.sloSpreadsheet.goto(1,1)
             },
             "End": (e) => {
                 e.preventDefault()
-                let row = browser.view.sloSpreadsheet.data.length-1
-                let column = browser.view.sloSpreadsheet.options.columns.length
-                browser.view.sloSpreadsheet.goto(row, column)
+                let spreadsheet = browser.view.sloSpreadsheet
+                let data = spreadsheet.visibleData
+                let row = data.length-1
+                let column = spreadsheet.options.columns.length
+                spreadsheet.goto(data[row].index, column)
             },
             "PageUp": (e) => {
                 e.preventDefault()
-                let rowsPerPage = browser.view.sloSpreadsheet.options.rows
-                let row = browser.view.sloSpreadsheet.options.focus.row - (rowsPerPage - 1) -1
-                let column = browser.view.sloSpreadsheet.options.focus.column
-                browser.view.sloSpreadsheet.goto(row, column)                    
+                let spreadsheet = browser.view.sloSpreadsheet
+                let rowsPerPage = spreadsheet.options.rows
+                let data = spreadsheet.visibleData
+                let currentLine = spreadsheet.visibleData.findIndex(r => r.index == spreadsheet.options.focus.row)
+                let row = Math.max(0, currentLine - (rowsPerPage - 1) -1)
+                let column = spreadsheet.options.focus.column
+                spreadsheet.goto(data[row].index, column)
             },
             "PageDown": (e) => {
                 e.preventDefault()
-                let rowsPerPage = browser.view.sloSpreadsheet.options.rows
-                let row = browser.view.sloSpreadsheet.options.focus.row + (rowsPerPage - 1) -1
-                let column = browser.view.sloSpreadsheet.options.focus.column
-                browser.view.sloSpreadsheet.goto(row, column)                    
+                let spreadsheet = browser.view.sloSpreadsheet
+                let rowsPerPage = spreadsheet.options.rows
+                let data = spreadsheet.visibleData
+                let currentLine = spreadsheet.visibleData.findIndex(r => r.index == spreadsheet.options.focus.row)
+                let row = Math.min(data.length-1, currentLine + (rowsPerPage - 1) -1)
+                let column = spreadsheet.options.focus.column
+                spreadsheet.goto(data[row].index, column)                    
             },
             "Insert": async (e) => {
                 e.preventDefault()
@@ -678,7 +686,7 @@ browser = simply.app({
                 el = browser.view.insertParentRow
                 let row = await browser.actions.insertRow(el.closest('tr'),value)
                 let line = browser.view.sloSpreadsheet.getLineByRow(row)
-                el = browser.view.sloSpreadsheet.goto(line, 1)
+                el = browser.view.sloSpreadsheet.goto(row.index, 1)
                 while (!browser.view.sloSpreadsheet.isEditable(el)) {
                     el = browser.view.sloSpreadsheet.moveNext()
                 }
@@ -716,7 +724,7 @@ browser = simply.app({
             let newrow = await browser.actions.appendRow(el.closest('tr'), type)
             let line = browser.view.sloSpreadsheet.getLineByRow(newrow)
             // show editor for first editable field in new node
-            el = browser.view.sloSpreadsheet.goto(line, 1)
+            el = browser.view.sloSpreadsheet.goto(newrow.index, 1)
             while (!browser.view.sloSpreadsheet.isEditable(el)) {
                 el = browser.view.sloSpreadsheet.moveNext()
             }
@@ -1396,6 +1404,7 @@ browser = simply.app({
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let line = row.index
             let parentNode = row.node
             let typeName = window.slo.getTypeNameByType(type)
             let node = {
@@ -1430,11 +1439,14 @@ browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            return browser.view.sloSpreadsheet.getRowById(node['@id'])
+            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+            rows = rows.filter(r => r.index>line)
+            return rows[0]
         },
         appendRow: async function(rowEl) {
             if (!browser.view.user) return
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let line = row.index
             let siblingNode = row.node
             let typeName = getType(siblingNode)
             let node = {
@@ -1473,7 +1485,9 @@ browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            return browser.view.sloSpreadsheet.getRowById(node['@id'])
+            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id']) //FIXME: can be a different row than what was just inserted
+            rows = rows.filter(r => r.index>line)
+            return rows[0]
         },
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
