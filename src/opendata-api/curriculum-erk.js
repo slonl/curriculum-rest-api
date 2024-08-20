@@ -88,9 +88,9 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofiel',
-					...shortInfo,
-  				ErkTaalprofieltekst: _,
-  				ErkSchaal: _,
+				...shortInfo,
+  				ErkTaalprofieltekst: shortInfo,
+  				ErkSchaal: shortInfo,
 			})
 			
 
@@ -112,12 +112,7 @@ module.exports = {
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofieltekst',
 				...shortInfo,
-				Niveau: {
-					...shortInfo,
-					deprecated: _,
-                  	description: _,
-                  	type: _,
-				},
+				Niveau: NiveauShort
 			})
 			
 
@@ -139,7 +134,7 @@ module.exports = {
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalactiviteit',
 				...shortInfo,
-				erk_schaal_id: _,
+				ErkSchaal: shortInfo,
 				unreleased: _,
 			})
 			
@@ -162,7 +157,7 @@ module.exports = {
 				.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_schaal',
 				...shortInfo,
-				erk_candobeschrijving_id: _,
+				ErkCandobeschrijving: shortInfo,
 				unreleased: _,
 			})
 			
@@ -187,8 +182,8 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 				niveau_id: _,
-				erk_voorbeeld_id: _,
-				erk_lesidee_id: _,
+				ErkVoorbeeld: shortInfo,
+				ErkLesidee: shortInfo,
 			})
 			
 			const meta = {
