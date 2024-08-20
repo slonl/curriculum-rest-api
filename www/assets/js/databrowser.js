@@ -427,6 +427,10 @@ browser = simply.app({
                 document.getElementById('importDialog').close()
             }
         },
+        export: async (el, value) => {
+            const csv = await browser.actions.export()
+            window.open(encodeURI("data:text/csv;charset=urf-8,"+csv))
+        },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
             el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
@@ -842,6 +846,66 @@ browser = simply.app({
                 return false
             }
             return true
+        },
+        export: async function() {
+            const escapeCSV = (v => {
+                if (Array.isArray(v)) {
+                    return v.map(escapeCSV).join(',')
+                } else if (typeof v == 'string' || v instanceof String) {
+                    return v.replaceAll('"','""')
+                } else {
+                    return ''+v
+                }
+            })
+            //   get current visible columns
+            const visibleColumns = this.app.view.sloSpreadsheet.options.columns.filter(c => c.checked)
+            let headings = visibleColumns.map(c => c.name)
+            let mapping = []
+
+            // TODO: is there a filter?
+            if (!document.querySelector('.slo-tree-table.sorted,.slo-tree-table.filtered')) {
+                // if not add parentID: 
+                headings.unshift('ParentID')
+
+                let lastId = ''
+                let parents = []
+                let indent = 0
+                mapping.push((row) => {
+                    if (row.indent>indent) {
+                        parents.push(lastId)
+                    }
+                    while (indent>row.indent) {
+                        indent--
+                        parents.pop()
+                    }
+                    indent = row.indent
+                    lastId = row.node.id
+                    return parents[parents.length-1] || ''
+                })
+            }
+            // continue here withour parentID
+            visibleColumns.forEach(c => {
+                mapping.push((r) => {
+                    let result
+                    if (c.value==='id') {
+                        result = r.node.id
+                    } else {
+                        result = r.columns[c.value] || ''
+                    }
+                    return result
+                })
+            })
+            //   get current visibleRows
+            const visibleRows = this.app.view.sloSpreadsheet.visibleData
+            //   create csv from rows and columns
+            let csv = [headings.map(h => escapeCSV(h)).join(';')]
+            visibleRows.forEach(row => {
+                let foo = mapping.map(m => m(row))
+                let bar = foo.map(c => '"'+escapeCSV(c)+'"')
+                let baz = bar.join(';')
+                csv.push( baz )
+            })
+            return csv.join("\n") //TODO: add correct header?
         },
         updateView: async function(root) {
             this.app.actions.switchView(this.app.view.view, root)
