@@ -744,7 +744,7 @@ browser = simply.app({
             browser.actions.focusElement(el, value)
         },
         documentEdit: function(el, value){
-            browser.actions.documentEditElement(el, value)
+            browser.actions.documentEdit()
         },
         cancel: function(el, value){
             browser.actions.hideEditorDialog(el);
@@ -1764,7 +1764,7 @@ browser = simply.app({
         focusElement(el, value){
             browser.view.sloDocument.setFocus(el, value);
         },
-        documentEditElement(){
+        documentEdit(){
             // @TODO: move code that agregates the data to be shown here and pass it as parameter(s) into showEditor()
             // @NOTE : depending on context differen data will have to be displayed in the editor
 
