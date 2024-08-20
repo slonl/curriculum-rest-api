@@ -728,8 +728,11 @@ browser = simply.app({
         undeleteRow: async function(el, value) {
             browser.actions.undeleteRow(el.closest('tr'))
         },
-        editDocument: function(el, value){
-            browser.actions.editDocument(el, value)
+        focusElement: function(el, value){
+            browser.actions.focusElement(el, value)
+        },
+        documentEdit: function(el, value){
+            browser.actions.documentEditElement(el, value)
         },
         cancel: function(el, value){
             browser.actions.hideEditorDialog(el);
@@ -1672,10 +1675,10 @@ browser = simply.app({
         toggleFullScreen(state){
             browser.view.sloSpreadsheet.toggleFullScreen(state);
         },
-        editDocument(el, value){
+        focusElement(el, value){
             browser.view.sloDocument.setFocus(el, value);
         },
-        documentShowEditor(){
+        documentEditElement(){
             // @TODO: move code that agregates the data to be shown here and pass it as parameter(s) into showEditor()
             // @NOTE : depending on context differen data will have to be displayed in the editor
 

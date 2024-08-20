@@ -217,6 +217,14 @@
     .slo-document .ds-badge.niveau {
         font-size: 0.8rem;
     }
+
+    .slo-document .focus button.slo-hidden {
+        display: block;
+        background-color: red !important;
+        position: absolute;
+        margin-right: 0;
+        margin-top: -4px;
+    }
  
 
 .loading-overlay {
