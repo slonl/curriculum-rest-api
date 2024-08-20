@@ -177,7 +177,14 @@ function linkNodes(tree) {
 	tree.index.id.forEach((node, id) => {
 		// then for all child properties, link the node under the $parentId node
 		let parents = new Set()
-		node.$parentId?.forEach(id => parents.add(tree.index.id.get(id)))
+		node.$parentId?.forEach(id => {
+			let parent = tree.index.id.get(id)
+			if (parent) {
+				parents.add(parent)
+			} else {
+				tree.errors.push(new Error('Kan opgegeven parentID '+id+' niet vinden in deze sheet', {cause:node}))
+			}
+		})
 		delete node.$parentId
 		// $parentId must have been combined and linked before child id's
 		if (!parents.size) {
@@ -190,7 +197,7 @@ function linkNodes(tree) {
 					schema = tree.schemas.types[node['@type']]
 					if (!schema || !schema.children[parent['@type']]) {
 						// inverse relation also not allowed
-						tree.errors.push('Onbekende parent-child relatie: '+node['@type'],node)
+						tree.errors.push(new Error('Onbekende parent-child relatie: '+node['@type'],{cause:node}))
 						return
 					} else {
 						if (tree.roots.includes(parent)) {

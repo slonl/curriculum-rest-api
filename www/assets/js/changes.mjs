@@ -18,7 +18,7 @@ const walk = (node, indent, f) => {
         indent = f(node, indent)
         Object.entries(node)
         .filter(([k,v]) => {
-            if (!Array.isArray(v) || !v.length || k== 'Niveau') {
+            if (!Array.isArray(v) || !v.length || k== 'Niveau'|| k[0]=='$' || k[0]=='@') {
                 return false
             }
             return true

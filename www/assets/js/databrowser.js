@@ -208,27 +208,35 @@ browser = simply.app({
             },
             "Home": (e) => {
                 e.preventDefault()
-                browser.view.sloSpreadsheet.goto(0,0)
+                browser.view.sloSpreadsheet.goto(1,1)
             },
             "End": (e) => {
                 e.preventDefault()
-                let row = browser.view.sloSpreadsheet.data.length-1
-                let column = browser.view.sloSpreadsheet.options.columns.length
-                browser.view.sloSpreadsheet.goto(row, column)
+                let spreadsheet = browser.view.sloSpreadsheet
+                let data = spreadsheet.visibleData
+                let row = data.length-1
+                let column = spreadsheet.options.columns.length
+                spreadsheet.goto(data[row].index, column)
             },
             "PageUp": (e) => {
                 e.preventDefault()
-                let rowsPerPage = browser.view.sloSpreadsheet.options.rows
-                let row = browser.view.sloSpreadsheet.options.focus.row - (rowsPerPage - 1) -1
-                let column = browser.view.sloSpreadsheet.options.focus.column
-                browser.view.sloSpreadsheet.goto(row, column)                    
+                let spreadsheet = browser.view.sloSpreadsheet
+                let rowsPerPage = spreadsheet.options.rows
+                let data = spreadsheet.visibleData
+                let currentLine = spreadsheet.visibleData.findIndex(r => r.index == spreadsheet.options.focus.row)
+                let row = Math.max(0, currentLine - (rowsPerPage - 1) -1)
+                let column = spreadsheet.options.focus.column
+                spreadsheet.goto(data[row].index, column)
             },
             "PageDown": (e) => {
                 e.preventDefault()
-                let rowsPerPage = browser.view.sloSpreadsheet.options.rows
-                let row = browser.view.sloSpreadsheet.options.focus.row + (rowsPerPage - 1) -1
-                let column = browser.view.sloSpreadsheet.options.focus.column
-                browser.view.sloSpreadsheet.goto(row, column)                    
+                let spreadsheet = browser.view.sloSpreadsheet
+                let rowsPerPage = spreadsheet.options.rows
+                let data = spreadsheet.visibleData
+                let currentLine = spreadsheet.visibleData.findIndex(r => r.index == spreadsheet.options.focus.row)
+                let row = Math.min(data.length-1, currentLine + (rowsPerPage - 1) -1)
+                let column = spreadsheet.options.focus.column
+                spreadsheet.goto(data[row].index, column)                    
             },
             "Insert": async (e) => {
                 e.preventDefault()
@@ -678,7 +686,7 @@ browser = simply.app({
                 el = browser.view.insertParentRow
                 let row = await browser.actions.insertRow(el.closest('tr'),value)
                 let line = browser.view.sloSpreadsheet.getLineByRow(row)
-                el = browser.view.sloSpreadsheet.goto(line, 1)
+                el = browser.view.sloSpreadsheet.goto(row.index, 1)
                 while (!browser.view.sloSpreadsheet.isEditable(el)) {
                     el = browser.view.sloSpreadsheet.moveNext()
                 }
@@ -716,7 +724,7 @@ browser = simply.app({
             let newrow = await browser.actions.appendRow(el.closest('tr'), type)
             let line = browser.view.sloSpreadsheet.getLineByRow(newrow)
             // show editor for first editable field in new node
-            el = browser.view.sloSpreadsheet.goto(line, 1)
+            el = browser.view.sloSpreadsheet.goto(newrow.index, 1)
             while (!browser.view.sloSpreadsheet.isEditable(el)) {
                 el = browser.view.sloSpreadsheet.moveNext()
             }
@@ -760,24 +768,15 @@ browser = simply.app({
             return true
         },
         importXLSX: async function(file) {
+            let tree = {
+                errors: []
+            }
             try {
-                const tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
+                tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
                     tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
                 }
-                if (tree.errors.length) {
-                    // collect errors by message
-                    let errorMap = new Map()
-                    for(error of tree.errors) {
-                        if (!errorMap.has(error.message)) {
-                            errorMap.set(error.message, { message: error.message, errors: []})
-                        }
-                        let em = errorMap.get(error.message)
-                        em.errors.push(error)
-                    }
-                    this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
-                    return false
-                } else {
+                if (!tree.errors.length) {
                     // check if root is a new entity or existing one
                     let root = tree.roots[0]
                     let change = null
@@ -824,8 +823,25 @@ browser = simply.app({
                     let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
                     await browser.commands.switchView(button, 'spreadsheet') // updates selected view button and calls switchView action
                 }
-            } catch(errors) {
-                this.app.view.importErrors = errors
+            } catch(error) {
+                if (!Array.isArray(error.cause)) {
+                    error.cause = [ error.cause ]
+                }
+                error.cause.forEach(cause => {
+                    tree.errors.unshift(new Error(error.message, {cause}))
+                })
+            }
+            if (tree?.errors?.length) {
+                // collect errors by message
+                let errorMap = new Map()
+                for(error of tree.errors) {
+                    if (!errorMap.has(error.message)) {
+                        errorMap.set(error.message, { message: error.message, errors: []})
+                    }
+                    let em = errorMap.get(error.message)
+                    em.errors.push(error)
+                }
+                this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
                 return false
             }
             return true
@@ -921,7 +937,7 @@ browser = simply.app({
                         history.replaceState({}, '', new URL(uuid, window.location))
                     })
                     this.app.view.sloSpreadsheet.onEdit((update) => {
-                        let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
+                        let index = parseInt(update.id.substring(4))-1
                         let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                         let row = this.app.view.sloSpreadsheet.data[index]
                         let node = row.node
@@ -1391,6 +1407,7 @@ browser = simply.app({
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let line = row.index
             let parentNode = row.node
             let typeName = window.slo.getTypeNameByType(type)
             let node = {
@@ -1425,11 +1442,14 @@ browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            return browser.view.sloSpreadsheet.getRowById(node['@id'])
+            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+            rows = rows.filter(r => r.index>line)
+            return rows[0]
         },
         appendRow: async function(rowEl) {
             if (!browser.view.user) return
             let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let line = row.index
             let siblingNode = row.node
             let typeName = getType(siblingNode)
             let node = {
@@ -1468,7 +1488,9 @@ browser = simply.app({
             changes.changes.push(change)
             changes.update()
             await browser.actions.spreadsheetUpdate()
-            return browser.view.sloSpreadsheet.getRowById(node['@id'])
+            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id']) //FIXME: can be a different row than what was just inserted
+            rows = rows.filter(r => r.index>line)
+            return rows[0]
         },
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
@@ -1809,4 +1831,49 @@ document.addEventListener('click', function(e) {
         dragging = false
     }
 }, true)
-// @NOTE: templates/scripts.html contains some extra javascript
+
+document.addEventListener('simply-content-loaded', function(evt) {
+    var menu = editor.currentData['/'].menu;
+    if (menu && menu[1]) {
+        var api = menu[1].submenu[0]['data-simply-template'] = 'api';
+    }
+});
+
+var treeviewNiveaus, treeviewSchemas;
+simply.activate.addListener('roots-select', function() {
+    if (!browser.view.roots || browser.view.roots.length<2) {
+        document.querySelector('.slo-roots-select').style.display = 'none'
+    } else {
+        treeviewNiveaus = new vanillaSelectBox('.slo-roots-select');
+        if (browser.view.root) {
+            let selectedIndex = browser.view.roots.findIndex(v => v.id==browser.view.root?.id)
+            if (selectedIndex>-1) {
+                treeviewNiveaus.setValue(browser.view.roots[selectedIndex].id)
+            }
+        }
+    }
+});
+simply.activate.addListener('niveaus-select', function() {
+    treeviewNiveaus = new vanillaSelectBox('.slo-niveaus-select', {'placeHolder': 'Selecteer niveaus', 'search':true});
+});
+simply.activate.addListener('contexts-select', function() {
+    if (browser.view.contexts) {
+        Array.from(this.options).forEach(option => {
+            if (browser.view.contexts.includes(option.value)) {
+                option.setAttribute('selected','selected');
+            }
+        })
+    }
+    treeviewSchemas = new vanillaSelectBox('.slo-contexts-select', {'placeHolder':'Selecteer contexten'});
+});
+
+simply.collect.addListener('niveaus-contexts', function(elements) {
+    browser.view.niveaus = Array.from(elements['niveaus'].options).filter(o => o.selected).map(o => o.value)
+    browser.view.contexts = Array.from(elements['contexts'].options).filter(o => o.selected).map(o => o.value)
+    if (browser.view.view=='spreadsheet') {
+        browser.actions.switchView('spreadsheet')
+    }
+    else if (browser.view.view=='document') {
+        browser.actions.switchView('document')
+    }
+})
