@@ -934,7 +934,7 @@ browser = simply.app({
                         history.replaceState({}, '', new URL(uuid, window.location))
                     })
                     this.app.view.sloSpreadsheet.onEdit((update) => {
-                        let index = this.app.view.sloSpreadsheet.data.findIndex(r => r.columns.id===update.id)
+                        let index = parseInt(update.id.substring(4))-1
                         let columnDef = this.app.view.sloSpreadsheet.options.columns.filter(c => c.value===update.property).pop()
                         let row = this.app.view.sloSpreadsheet.data[index]
                         let node = row.node
