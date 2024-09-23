@@ -17,7 +17,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.Tag.length,
-				root: data.schema.types.Tag.root
+				root: meta.schema.types.Tag.root
 			}
 
 			meta
@@ -36,7 +36,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.Relatie.length,
-				root: data.schema.types.Relatie.root
+				root: meta.schema.types.Relatie.root
 			}
 
 			meta

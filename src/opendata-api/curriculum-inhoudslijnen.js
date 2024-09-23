@@ -22,7 +22,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.InhVakleergebied.length,
-				root: data.schema.types.InhVakleergebied.root
+				root: meta.schema.types.InhVakleergebied.root
 			}
 	
 			meta
@@ -47,7 +47,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.InhInhoudslijn.length,
-				root: data.schema.types.InhInhoudslijn.root
+				root: meta.schema.types.InhInhoudslijn.root
 			}
 	
 			meta
@@ -75,7 +75,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.InhCluster.length,
-				root: data.schema.types.InhCluster.root
+				root: meta.schema.types.InhCluster.root
 			}
 	
 			meta
@@ -104,7 +104,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.InhSubcluster.length,
-				root: data.schema.types.InhSubcluster.root
+				root: meta.schema.types.InhSubcluster.root
 			}
 	
 			meta

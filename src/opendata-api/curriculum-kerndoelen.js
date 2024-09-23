@@ -20,7 +20,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.Kerndoel.length,
-				root: data.schema.types.Kerndoel.root
+				root: meta.schema.types.Kerndoel.root
 			}
 
 			meta
@@ -51,7 +51,7 @@ module.exports = {
 			data: results,
 			page: Page,
 			count: data.KerndoelDomein.length,
-				root: data.schema.types.KerndoelDomein.root
+				root: meta.schema.types.KerndoelDomein.root
 		}
 
 		meta
@@ -75,7 +75,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.KerndoelUitstroomprofiel.length,
-				root: data.schema.types.KerndoelUitstroomprofiel.root
+				root: meta.schema.types.KerndoelUitstroomprofiel.root
 			}
 
 			meta
@@ -95,7 +95,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.KerndoelVakleergebied.length,
-				root: data.schema.types.KerndoelVakleergebied.root
+				root: meta.schema.types.KerndoelVakleergebied.root
 			}
 
 			meta

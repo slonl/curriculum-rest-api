@@ -22,7 +22,7 @@ module.exports = {
 			data: results,
 			page: Page,
 			count: data.ExamenprogrammaBgProfiel.length,
-			root: data.schema.types.ExamenprogrammaBgProfiel.root
+			root: meta.schema.types.ExamenprogrammaBgProfiel.root
 		}
 
 		meta
@@ -45,7 +45,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKern.length,
-				root: data.schema.types.ExamenprogrammaBgKern.root
+				root: meta.schema.types.ExamenprogrammaBgKern.root
 			}
 
 		meta
@@ -64,7 +64,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKerndeel.length,
-				root: data.schema.types.ExamenprogrammaBgKerndeel.root
+				root: meta.schema.types.ExamenprogrammaBgKerndeel.root
 			}
 
 			meta
@@ -83,7 +83,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgGlobaleEindterm.length,
-				root: data.schema.types.ExamenprogrammaBgGlobaleEindterm.root
+				root: meta.schema.types.ExamenprogrammaBgGlobaleEindterm.root
 			}
 
 			meta
@@ -105,7 +105,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgModule.length,
-				root: data.schema.types.ExamenprogrammaBgModule.root
+				root: meta.schema.types.ExamenprogrammaBgModule.root
 			}
 
 			meta
@@ -124,7 +124,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgDeeltaak.length,
-				root: data.schema.types.ExamenprogrammaBgDeeltaak.root
+				root: meta.schema.types.ExamenprogrammaBgDeeltaak.root
 			}
 
 			meta
@@ -143,7 +143,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgModuletaak.length,
-				root: data.schema.types.ExamenprogrammaBgModuletaak.root
+				root: meta.schema.types.ExamenprogrammaBgModuletaak.root
 			}
 
 			meta
@@ -164,7 +164,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKeuzevak.length,
-				root: data.schema.types.ExamenprogrammaBgKeuzevak.root
+				root: meta.schema.types.ExamenprogrammaBgKeuzevak.root
 			}
 
 			meta
@@ -183,7 +183,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKeuzevaktaak.length,
-				root: data.schema.types.ExamenprogrammaBgKeuzevaktaak.root
+				root: meta.schema.types.ExamenprogrammaBgKeuzevaktaak.root
 			}
 
 			meta

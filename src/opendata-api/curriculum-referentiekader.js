@@ -25,7 +25,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefVakleergebied.length,
-				root: data.schema.types.RefVakleergebied.root
+				root: meta.schema.types.RefVakleergebied.root
 			}
 
 			meta
@@ -51,7 +51,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefDomein.length,
-				root: data.schema.types.RefDomein.root
+				root: meta.schema.types.RefDomein.root
 			}
 
 			meta
@@ -78,7 +78,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefSubdomein.length,
-				root: data.schema.types.RefSubdomein.root
+				root: meta.schema.types.RefSubdomein.root
 			}
 
 			meta
@@ -107,7 +107,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefOnderwerp.length,
-				root: data.schema.types.RefOnderwerp.root
+				root: meta.schema.types.RefOnderwerp.root
 			}
 
 			meta
@@ -138,7 +138,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefDeelonderwerp.length,
-				root: data.schema.types.RefDeelonderwerp.root
+				root: meta.schema.types.RefDeelonderwerp.root
 			}
 
 			meta
@@ -171,7 +171,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.RefTekstkenmerk.length,
-				root: data.schema.types.RefTekstkenmerk.root
+				root: meta.schema.types.RefTekstkenmerk.root
 			}
 
 			meta

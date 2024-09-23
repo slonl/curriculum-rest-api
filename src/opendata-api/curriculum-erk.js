@@ -26,7 +26,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkVakleergebied.length,
-				root: data.schema.types.ErkVakleergebied.root
+				root: meta.schema.types.ErkVakleergebied.root
 			}
 	
 			meta
@@ -51,7 +51,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkGebied.length,
-				root: data.schema.types.ErkGebied.root
+				root: meta.schema.types.ErkGebied.root
 			}
 	
 			meta
@@ -75,7 +75,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkCategorie.length,
-				root: data.schema.types.ErkCategorie.root
+				root: meta.schema.types.ErkCategorie.root
 			}
 	
 			meta
@@ -98,7 +98,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalprofiel.length,
-				root: data.schema.types.ErkTaalprofiel.root
+				root: meta.schema.types.ErkTaalprofiel.root
 			}
 	
 			meta
@@ -120,7 +120,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalprofieltekst.length,
-				root: data.schema.types.ErkTaalprofieltekst.root
+				root: meta.schema.types.ErkTaalprofieltekst.root
 			}
 	
 			meta
@@ -143,7 +143,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalactiviteit.length,
-				root: data.schema.types.ErkTaalactiviteit.root
+				root: meta.schema.types.ErkTaalactiviteit.root
 			}
 	
 			meta
@@ -166,7 +166,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkSchaal.length,
-				root: data.schema.types.ErkSchaal.root
+				root: meta.schema.types.ErkSchaal.root
 			}
 	
 			meta
@@ -190,7 +190,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkCandobeschrijving.length,
-				root: data.schema.types.ErkCandobeschrijving.root
+				root: meta.schema.types.ErkCandobeschrijving.root
 			}
 	
 			meta
@@ -211,7 +211,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkVoorbeeld.length,
-				root: data.schema.types.ErkVoorbeeld.root
+				root: meta.schema.types.ErkVoorbeeld.root
 			}
 	
 			meta
@@ -232,7 +232,7 @@ module.exports = {
 				data: results,
 				page: Page,
 				count: data.ErkLesidee.length,
-				root: data.schema.types.ErkLesidee.root			}
+				root: meta.schema.types.ErkLesidee.root			}
 	
 			meta
 		`,
