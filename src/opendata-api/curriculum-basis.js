@@ -244,7 +244,10 @@ module.exports = {
 		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
-			...shortInfo,
+			'@id': Id,
+			uuid: _.id,
+			'@type': Type,
+			title: _
 		})
 		
 		const meta = {
