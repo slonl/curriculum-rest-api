@@ -52,7 +52,10 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				...shortInfo,
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
 				Syllabus: {
 					...shortInfo,
 					deprecated: _,
