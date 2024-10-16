@@ -10,10 +10,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				'@id': Id,
-				uuid: _.id,
-				'@type': Type,
-				title: _
+				...shortInfo,  
 			})
 
 			const meta = {
@@ -55,7 +52,10 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				...shortInfo,
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
 				Syllabus: {
 					...shortInfo,
 					deprecated: _,
