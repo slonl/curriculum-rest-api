@@ -10,7 +10,10 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				...shortInfo,  
+				'@id': Id,
+				uuid: _.id,
+				'@type': Type,
+				title: _
 			})
 
 			const meta = {
