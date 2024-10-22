@@ -161,6 +161,10 @@ browser = simply.app({
         }
     }),
     keyboard: {
+        default: {
+            //sometimes the keyboard needs to work as normal.
+        },
+
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
             "ArrowDown": (e) => {
@@ -407,9 +411,6 @@ browser = simply.app({
                 browser.actions.documentHideEditor()
             }
         },
-        default: {
-            // needed to switch back to default keyboard browser integreation
-        },
     },
 
     commands: {
@@ -472,6 +473,7 @@ browser = simply.app({
             browser.actions.updateFilterStatus()
         },
         filterText: (el, value) => {
+            document.body.dataset.simplyKeyboard = 'default'
             let filter = {}
             if (value.length>2) {
                 filter[el.name] = value
