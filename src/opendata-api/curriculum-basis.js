@@ -167,6 +167,14 @@ module.exports = {
 				RefVakleergebied(filter:{deprecated:null}) {
 					id
 					title
+				},
+				Examenprogramma(filter:{deprecated:null}) {
+					id
+					title
+					ExamenprogrammaVakleergebied {
+						id
+						title
+					}
 				}
 			}
 			allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
@@ -175,10 +183,6 @@ module.exports = {
 					title
 				}
 				KerndoelVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				ExamenprogrammaVakleergebied(filter:{deprecated:null}) {
 					id
 					title
 				}
@@ -799,9 +803,17 @@ module.exports = {
 		'niveau_vakleergebied/': (req) =>
 			opendata.api["NiveauVakleergebied"](req.params, req.query)
 			.then(function(result) {
-				let merged = result.data.allNiveau;
+				result.data.allNiveau.forEach(ni => {
+					if (ni.Examenprogramma) {
+						ni.ExamenprogrammaVakleergebied = []
+						ni.Examenprogramma.forEach(ex => {
+							ni.ExamenprogrammaVakleergebied = ni.ExamenprogrammaVakleergebied.concat(ex.ExamenprogrammaVakleergebied)
+						})
+						delete ni.Examenprogramma
+					}
+				})
 				result.data.allNiveauIndex.forEach(ni => {
-					let niveau = ni.Niveau;
+					let niveau = ni.Niveau[0];
 					Object.keys(ni).forEach(k => {
 						if (k!=='Niveau') {
 							niveau[k] = ni[k];
@@ -810,7 +822,7 @@ module.exports = {
 					result.data.allNiveau.push(niveau);
 				});
 				return {
-					data: merged,
+					data: result.data.allNiveau,
 					type: 'Niveau'
 				};
 			}),

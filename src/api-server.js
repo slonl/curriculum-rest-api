@@ -218,7 +218,7 @@ function jsonLD(entry, schema, type) {
 		'RefVakleergebied', 'RefDomein', 'RefSubdomein', 'RefOnderwerp', 'RefDeelonderwerp', 'RefTekstkenmerk',
 		'ErkVakleergebied', 'ErkTaalprofiel', 'ErkTaalprofieltekst', 'ErkGebied', 'ErkCategorie', 'ErkTaalactiviteit', 'ErkSchaal', 'ErkCandobeschrijving', 'ErkVoorbeeld', 'ErkLesidee',
 		'NhCategorie', 'NhSector', 'NhSchoolsoort', 'NhLeerweg', 'NhBouw', 'NhNiveau',
-		'FoDomein', 'FoSubdomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
+		'FoSet', 'FoDomein', 'FoSubdomein', 'FoDoelzin', 'FoToelichting', 'FoUitwerking',
 		'Tag', 'Relatie',
 		'replaces','replacedBy'
 	].forEach(function(listName) {
@@ -522,6 +522,7 @@ app.route('/' + 'uuid/:id').get((req, res) => {
 					case 'NhNiveau':
 						schema = opendata.schemas.niveauhierarchie;
 					break;
+					case 'FoSet':
 					case 'FoDomein':
 					case 'FoSubomein':
 					case 'FoDoelzin':

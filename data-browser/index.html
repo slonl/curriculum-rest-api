@@ -1,5 +1,6 @@
 <title>SLO Curriculum Browser</title>
 <link rel="stylesheet" href="/assets/css/slo.css">
+<link rel="icon" href="https://www.slo.nl/favicon.png">
 <style>
     a.slo-highlight-box {
         text-decoration: none;
@@ -161,9 +162,6 @@
             </template>
             <template data-simply-template="item">
                 <article>
-                    <h1>
-                        <span data-simply-field="item.title"></span>
-                    </h1>
                     <a class="ds-badge" href="#" data-simply-field="item.@references" data-simply-content="fixed" data-simply-transformer="addTrailingSlash">
                         <label class="ds-badge-label"><svg class="ds-icon ds-icon-feather">
                             <use xlink:href="/assets/icons/feather-sprite.svg#link">
@@ -224,7 +222,7 @@
                     </span>
                     <div data-simply-field="item.replacedBy" data-simply-content="template" data-simply-transformer="replaces">
                         <template data-simply-template="true">
-                            <label>Vervangen door</label>
+                            <h3>Vervangen door</h3>
                             <ul data-simply-list="item.replacedBy">
                                 <template rel="links"></template>
                             </ul>
@@ -232,10 +230,18 @@
                     </div>
                     <div data-simply-field="item.replaces" data-simply-content="template" data-simply-transformer="replaces">
                         <template data-simply-template="true">
-                            <label>Vervangt</label>
+                            <h3>Vervangt</h3>
                             <ul data-simply-list="item.replaces">
                                 <template rel="links"></template>
                             </ul>
+                        </template>
+                    </div>
+                    <h3>Titel</h3>
+                    <span data-simply-field="item.title"></span>
+                   <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Beschrijving</h3>
+                            <div data-simply-field="item.description"></div>
                         </template>
                     </div>
                     <div data-simply-field="item.Niveau" data-simply-content="template" data-simply-transformer="truthy">
@@ -246,12 +252,19 @@
                             </ul>
                         </template>
                     </div>
-                    <div data-simply-field="item.description" data-simply-content="template"  data-simply-transformer="truthy">
+                    <!-- <span data-simply-field="item.description" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
-                            <h3>Description</h3>
-                            <div data-simply-field="item.description"></div>
+                            <div class="ds-badge">
+                                <label class="ds-badge-label">Description</label>
+                                <span data-simply-field="item.description"></span>
+                            </div>
                         </template>
-                    </div>
+                    </span>
+                    <div data-simply-field="item.description" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3><span data-simply-field="item.description"></span></h3>
+                        </template>
+                    </div> -->
                     <div data-simply-field="item.vakbegrippen" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <div>
@@ -260,7 +273,6 @@
                             </div>
                         </template>
                     </div>
-                    
                     <div data-simply-field="item.Leerlingtekst" data-simply-content="template"  data-simply-transformer="truthy">
                         <template data-simply-template="true">
                             <h3>Leerlingtekst</h3>
@@ -691,6 +703,14 @@
                                 <template rel="links"></template>
                             </ul>
                         </template>
+                    </div>                    
+                    <div data-simply-field="item.FoSet" data-simply-content="template" data-simply-transformer="truthy">
+                        <template data-simply-template="true">
+                            <h3>Set</h3>
+                            <ul data-simply-list="item.FoSet">
+                                <template rel="links"></template>
+                            </ul>
+                        </template>
                     </div>
                     <div data-simply-field="item.FoDomein" data-simply-content="template" data-simply-transformer="truthy">
                         <template data-simply-template="true">
@@ -776,6 +796,7 @@
     </nav>
 </footer>
 
+
 <template id="deprecatedLinks">
     <li>
         <a href="#" data-simply-field="@references" data-simply-content="fixed">
@@ -834,9 +855,7 @@
             <span data-simply-field="deprecated" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
-                        <span class="ds-badge-label"><svg
-                class="ds-icon ds-icon-feather"><use
-                xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
+                        <span class="ds-badge-label"><svg class="ds-icon ds-icon-feather"><use xlink:href="/assets/icons/feather-sprite.svg#trash-2"></use></svg></span>
                         <span>Deprecated</span>
                     </span>
                 </template>
@@ -849,14 +868,6 @@
                     </span>
                 </template>
             </span>
-			<span data-simply-list="Vakleergebied">
-				<template>
-					<span class="ds-badge ds-badge-mini">
-						<span class="ds-badge-label">Vakleergebied</span>
-						<span data-simply-field="title">title</span>
-					</span>
-				</template>
-			</span>
             <span data-simply-field="prefix" data-simply-content="template" data-simply-transformer="truthy">
                 <template data-simply-template="true">
                     <span class="ds-badge ds-badge-mini">
@@ -865,20 +876,17 @@
                     </span>
                 </template>
             </span>
-            <span data-simply-field="title">titel</span><span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
-                <template data-simply-template="true"><span>: <span data-simply-field="description"></span></span></template>
+            <span data-simply-field="title">titel</span>
+            <span data-simply-field="description" data-simply-content="template" data-simply-transformer="truthy">
+                <template data-simply-template="true">
+                    <span>: 
+                        <span data-simply-field="description">Description</span>
+                    </span>
+                </template>
             </span>
+            <br/>
         </a>
-        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
-            <template data-simply-template="true">
-                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref"
-                data-simply-content="fixed" data-simply-transformer="niveau">
-                    Op niveau
-                </a>
-            </template>
-            <template data-simply-template="false">false</template>
-        </span>
-<!--        <span data-simply-list="Vakleergebied">
+        <span data-simply-list="Vakleergebied">
             <template>
                 <span class="ds-badge ds-badge-mini">
                     <span class="ds-badge-label">Vakleergebied</span>
@@ -886,7 +894,22 @@
                 </span>
             </template>
         </span>
--->        <span data-simply-list="LdkVakkern">
+        <span data-simply-list="Niveau">
+            <template>
+                <span class="ds-badge ds-badge-mini">
+                    <span data-simply-field="title">title</span>
+                </span>
+            </template>
+        </span>
+        <span data-simply-field="$ref" data-simply-content="template" data-simply-transformer="truthy">
+            <template data-simply-template="true">
+                &nbsp;<a class="ds-badge ds-badge-inline" href="#" data-simply-field="$ref" data-simply-content="fixed" data-simply-transformer="niveau">
+                    Op niveau
+                </a>
+            </template>
+            <template data-simply-template="false">false</template>
+        </span>
+        <span data-simply-list="LdkVakkern">
             <template>
                 <span data-simply-list="LdkVakleergebied">
                     <template>
@@ -1207,21 +1230,37 @@
             </template>
         </span>
 
-        <span data-simply-list="FoDomein">
+        <span data-simply-list="FoSet"></span>
             <template>
                 <span class="ds-badge ds-badge-mini">
-                    <span class="ds-badge-label">FoDomein</span>
-					<span data-simply-field="title">title</span>
+                    <span class="ds-badge-label">FoSet</span>
+                    <span data-simply-field="title">title</span>
                 </span>
             </template>
         </span>
-        <span data-simply-list="FoSubomein">
+        <span data-simply-list="FoDomein">
+            <template>
+                <span data-simply-list="FoSet"></span>
+                    <template>
+                        <span class="ds-badge ds-badge-mini">
+                            <span class="ds-badge-label">FoSet</span>
+                            <span data-simply-field="title">title</span>
+                        </span>
+                    </template>
+                </span>
+            </template>
+        </span>
+        <span data-simply-list="FoSubdomein">
             <template>
                 <span data-simply-list="FoDomein">
                     <template>
-                        <span class="ds-badge ds-badge-mini">
-                            <span class="ds-badge-label">FoDomein</span>
-                            <span data-simply-field="title">title</span>
+                        <span data-simply-list="FoSet"></span>
+                            <template>
+                                <span class="ds-badge ds-badge-mini">
+                                    <span class="ds-badge-label">FoSet</span>
+                                    <span data-simply-field="title">title</span>
+                                </span>
+                            </template>
                         </span>
                     </template>
                 </span>
@@ -1229,60 +1268,73 @@
         </span>
         <span data-simply-list="FoDoelzin">
             <template>
-				<span data-simply-list="FoSubomein">
-					<template>
-						<span data-simply-list="FoDomein">
-							<template>
-								<span class="ds-badge ds-badge-mini">
-									<span class="ds-badge-label">FoDomein</span>
-									<span data-simply-field="title">title</span>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+                <span data-simply-list="FoSubdomein">
+                    <template>
+                        <span data-simply-list="FoDomein">
+                            <template>
+                                <span data-simply-list="FoSet"></span>
+                                    <template>
+                                        <span class="ds-badge ds-badge-mini">
+                                            <span class="ds-badge-label">FoSet</span>
+                                            <span data-simply-field="title">title</span>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
             </template>
         </span>
         <span data-simply-list="FoUitwerking">
             <template>
-				<span data-simply-list="FoDoelzin">
-					<template>
-						<span data-simply-list="FoSubomein">
-							<template>
-								<span data-simply-list="FoDomein">
-									<template>
-										<span class="ds-badge ds-badge-mini">
-											<span class="ds-badge-label">FoDomein</span>
-											<span data-simply-field="title">title</span>
-										</span>
-									</template>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+                <span data-simply-list="FoDoelzin">
+                    <template>
+                        <span data-simply-list="FoSubdomein">
+                            <template>
+                                <span data-simply-list="FoDomein">
+                                    <template>
+                                        <span data-simply-list="FoSet"></span>
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">FoSet</span>
+                                                    <span data-simply-field="title">description</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
             </template>
         </span>
         <span data-simply-list="FoToelichting">
             <template>
-				<span data-simply-list="FoDoelzin">
-					<template>
-						<span data-simply-list="FoSubomein">
-							<template>
-								<span data-simply-list="FoDomein">
-									<template>
-										<span class="ds-badge ds-badge-mini">
-											<span class="ds-badge-label">FoDomein</span>
-											<span data-simply-field="title">title</span>
-										</span>
-									</template>
-								</span>
-							</template>
-						</span>
-					</template>
-				</span>
+                <span data-simply-list="FoDoelzin">
+                    <template>
+                        <span data-simply-list="FoSubdomein">
+                            <template>
+                                <span data-simply-list="FoDomein">
+                                    <template>
+                                        <span data-simply-list="FoSet"></span>
+                                            <template>
+                                                <span class="ds-badge ds-badge-mini">
+                                                    <span class="ds-badge-label">FoSet</span>
+                                                    <span data-simply-field="title">description</span>
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </span>
+                            </template>
+                        </span>
+                    </template>
+                </span>
             </template>
         </span>
+
 
         <span data-simply-list="Tag">
             <template>
@@ -1301,11 +1353,6 @@
             </template>
         </span>
 
-        <span data-simply-list="Niveau">
-            <template>
-                <span class="ds-badge ds-badge-mini" data-simply-field="title">title</span>
-            </template>
-        </span>
     </li>
 </template>
 <template id="doelniveau">
@@ -1671,6 +1718,9 @@
                 browser.actions.list('nh_niveau/')
             },
 
+            '/fo_set/': function(params) {
+                browser.actions.list('fo_set/')
+            },
             '/fo_domein/': function(params) {
                 browser.actions.list('fo_domein/')
             },
@@ -1868,6 +1918,7 @@
         'curriculum-fo':{
             title: 'Curriculum Funderend onderwijs',
             data: {
+                fo_set: 'Set',
                 fo_domein: 'Domein',
                 fo_subdomein: 'Subdomein',
                 fo_doelzin: 'Doelzin',
@@ -1875,22 +1926,13 @@
                 fo_toelichting: 'Toelichting'
             }
         },
-        'curriculum-samenhang': {
-            title: 'Samenhang',
-            data: {
-                tag: 'Begrippen',
-                relatie: 'Relaties'
-            }
-        },
-        'curriculum-basis': {
-            title: 'Basis',
-            data: {
-                vakleergebied: 'Vakleergebied',
-                niveau: 'Niveau',
-                doelniveau: 'DoelNiveau',
-                doel: 'Doel'
-            }
-        },
+        // 'curriculum-samenhang': {
+        //     title: 'Samenhang',
+        //     data: {
+        //         tag: 'Begrippen',
+        //         relatie: 'Relaties'
+        //     }
+        // },
         'curriculum-kerndoelen': {
             title: 'Kerndoelen',
             data: {
@@ -1978,7 +2020,7 @@
                 inh_cluster: 'InhCluster',
                 inh_subcluster: 'InhSubcluster'
             }
-//        },
+        },
 //        'curriculum-niveauhierarchie':{
 //            title: 'Niveau Hierarchie',
 //            data: {
@@ -1989,6 +2031,15 @@
 //                nh_bouw: 'NhBouw',
 //                nh_niveau: 'NhNiveau'
 //            }
+//        },
+        'curriculum-basis': {
+            title: 'Basis',
+            data: {
+                vakleergebied: 'Vakleergebied',
+                niveau: 'Niveau',
+                doelniveau: 'DoelNiveau',
+                doel: 'Doel'
+            }
         }
     }
 
@@ -2137,7 +2188,7 @@
     };
     
     document.addEventListener('simply-content-loaded', function(evt) {
-        var menu = editor.currentData['/'].menu;
+        var menu = editor.currentData['/']?.menu;
         if (menu && menu[1]) {
             var api = menu[1].submenu[0]['data-simply-template'] = 'api';
         }
