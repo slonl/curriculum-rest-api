@@ -162,20 +162,33 @@ browser = simply.app({
     }),
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
+        //@TODO: e.target.matches might be simplified using https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
         spreadsheet: {
             "ArrowDown": (e) => {
+                if(e.target.matches("input") || e.target.matches("textarea" || e.target.matches("select"))){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
             },
             "ArrowUp": (e) => {
+                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select")){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveUp()
                 e.preventDefault()
             },
             "ArrowLeft": (e) => {
+                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select") ){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveLeft()
                 e.preventDefault()
             },
             "ArrowRight": (e) => {
+                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select")){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveRight()
                 e.preventDefault()
             },
@@ -239,11 +252,18 @@ browser = simply.app({
                 spreadsheet.goto(data[row].index, column)                    
             },
             "Insert": async (e) => {
+                if(e.target.matches("input") || e.target.matches("textarea")){
+                    return
+                }
                 e.preventDefault()
                 let el = document.querySelector('td.focus')
                 let selectedType = await browser.actions.showTypeSelector(el)
             },
             "Delete": (e) => {
+                // making sure the keyboard works normally in input fiels
+                if(e.target.matches("input") || e.target.matches("textarea")){
+                    return
+                }
                 e.preventDefault()
                 let el = document.querySelector('td.focus')
                 browser.actions.deleteRow(el.closest('tr'))
@@ -616,7 +636,6 @@ browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
-            browser.actions.switchKeyboard('default')
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
             }
