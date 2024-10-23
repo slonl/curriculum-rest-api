@@ -161,9 +161,6 @@ browser = simply.app({
         }
     }),
     keyboard: {
-        default: {
-            //sometimes the keyboard needs to work as normal.
-        },
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         //@TODO: e.target.matches might be simplified using https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
         spreadsheet: {
@@ -639,7 +636,6 @@ browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
-            browser.actions.switchKeyboard('default')
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
             }
