@@ -244,7 +244,10 @@ module.exports = {
 		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
-			...shortInfo,
+			'@id': Id,
+			uuid: _.id,
+			'@type': Type,
+			title: _
 		})
 		
 		const response = {
@@ -260,23 +263,7 @@ module.exports = {
 		Doelniveau: `
 		const results = from(data.Doelniveau)
 		.slice(Paging.start, Paging.end)
-		.select({
-			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
-			...shortInfo,
-			ce_se: _,
-			Doel: {
-				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
-				...shortInfo,
-				description: _,
-				vakbegrippen: _,
-				bron: _,
-				aanbodid: _,
-				Leerlingtekst: {
-					title: _,
-					description: _,
-				}     
-			},
-		})
+		.select( Doelniveau )
 
 		const response = {
 			data: results,

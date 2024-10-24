@@ -31,7 +31,12 @@ module.exports = {
 				title:asc
 			})
 			.slice(Paging.start,Paging.end)
-			.select(shortInfo)
+			.select({	    
+				'@id': Id,
+				uuid: _.id,
+				'@type': Type,
+				title: _,
+			})
 			
 			const response = {
 				data: results,
