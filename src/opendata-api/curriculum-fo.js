@@ -12,14 +12,14 @@ module.exports = {
 				unreleased: _,
 			})
 
-			const meta = {
+			const response = {
 				type: 'FoSet',
 				data: results,
 				page: Page,
 				count: data.FoSet.length
 			}
 	
-			meta
+			response
 
 		`,
 		FoDomein: `
@@ -32,14 +32,14 @@ module.exports = {
 				unreleased: _,
 			})
 
-			const meta = {
+			const response = {
 				type: 'FoDomein',
 				data: results,
 				page: Page,
 				count: data.FoDomein.length
 			}
 	
-			meta
+			response
 	
 		`,
 		FoSubdomein: `
@@ -50,14 +50,14 @@ module.exports = {
 				FoDoelzin: shortInfo
 			})
 	
-			const meta = {
+			const response = {
 				type: 'FoSubdomein',
 				data: results,
 				page: Page,
 				count: data.FoSubdomein.length
 			}
 	
-			meta
+			response
 	
 		`,
 		FoDoelzin: `
@@ -69,14 +69,14 @@ module.exports = {
 				FoUitwerking: shortInfo
 			})
 
-			const meta = {
+			const response = {
 				type: 'FoDoelzin',
 				data: results,
 				page: Page,
 				count: data.FoDoelzin.length
 			}
 	
-			meta
+			response
 	
 		`,
 		FoToelichting: `
@@ -88,14 +88,14 @@ module.exports = {
 				unreleased: shortInfo
 			})
 
-			const meta = {
+			const response = {
 				type: 'FoToelichting',
 				data: results,
 				page: Page,
 				count: data.FoToelichting.length
 			}
 	
-			meta
+			response
 	
 			`,
 		FoUitwerking: `
@@ -107,14 +107,14 @@ module.exports = {
 				unreleased: _,
 			})
 	
-			const meta = {
+			const response = {
 				type: 'FoUitwerking',
 				data: results,
 				page: Page,
 				count: data.FoUitwerking.length
 			}
 	
-			meta
+			response
 	
 			`
 	},

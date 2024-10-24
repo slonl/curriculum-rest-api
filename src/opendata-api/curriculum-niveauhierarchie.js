@@ -16,14 +16,14 @@ module.exports = {
 				unreleased: _,
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhCategorie.length,
 				root: meta.schema.types.NhCategorie.root
 			}
 
-			meta
+			response
 
 		`,
 		NhSector: `
@@ -40,14 +40,14 @@ module.exports = {
 				unreleased: _,
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhSector.length,
 				root: meta.schema.types.NhSector.root
 			}
 
-			meta
+			response
 
 		`,
 		NhSchoolsoort: `
@@ -64,14 +64,14 @@ module.exports = {
 				unreleased: _,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhSchoolsoort.length,
 				root: meta.schema.types.NhSchoolsoort.root
 			}
 
-			meta
+			response
 
 		`,
 		NhLeerweg: `
@@ -87,14 +87,14 @@ module.exports = {
 				unreleased: _,
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhLeerweg.length,
 				root: meta.schema.types.NhLeerweg.root
 			}
 
-			meta
+			response
 
 		`,
 		NhBouw: `
@@ -109,14 +109,14 @@ module.exports = {
 				unreleased: _,
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhBouw.length,
 				root: meta.schema.types.NhBouw.root
 			}
 
-			meta
+			response
 
 		`,
 		NhNiveau: `
@@ -130,14 +130,14 @@ module.exports = {
 				unreleased: _,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.NhNiveau.length,
 				root: meta.schema.types.NhNiveau.root
 			}
 
-			meta
+			response
 
 		`,
 	},

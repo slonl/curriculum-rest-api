@@ -22,14 +22,14 @@ module.exports = {
 				Niveau: NiveauShort 
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkVakleergebied.length,
 				root: meta.schema.types.ErkVakleergebied.root
 			}
 	
-			meta
+			response
 		`,
 		ErkGebied: `
 		const results = from(data.ErkGebied)
@@ -47,14 +47,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkGebied.length,
 				root: meta.schema.types.ErkGebied.root
 			}
 	
-			meta
+			response
 		`,
 		ErkCategorie: `
 		const results = from(data.ErkCategorie)
@@ -71,14 +71,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkCategorie.length,
 				root: meta.schema.types.ErkCategorie.root
 			}
 	
-			meta
+			response
 		`,
 		ErkTaalprofiel:`
 		const results = from(data.ErkTaalprofiel)
@@ -94,14 +94,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalprofiel.length,
 				root: meta.schema.types.ErkTaalprofiel.root
 			}
 	
-			meta
+			response
 		`,
 		ErkTaalprofieltekst:`
 		const results = from(data.ErkTaalprofieltekst)
@@ -116,14 +116,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalprofieltekst.length,
 				root: meta.schema.types.ErkTaalprofieltekst.root
 			}
 	
-			meta
+			response
 		`,
 		ErkTaalactiviteit: `
 		const results = from(data.ErkTaalactiviteit)
@@ -139,14 +139,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalactiviteit.length,
 				root: meta.schema.types.ErkTaalactiviteit.root
 			}
 	
-			meta
+			response
 		`,
 		ErkSchaal: `
 			const results = from(data.ErkSchaal)
@@ -162,14 +162,14 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkSchaal.length,
 				root: meta.schema.types.ErkSchaal.root
 			}
 	
-			meta
+			response
 		`,
 		ErkCandobeschrijving: `
 		const results = from(data.ErkCandobeschrijving)
@@ -186,14 +186,14 @@ module.exports = {
 				ErkLesidee: shortInfo,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkCandobeschrijving.length,
 				root: meta.schema.types.ErkCandobeschrijving.root
 			}
 	
-			meta
+			response
 		`,
 		ErkVoorbeeld: `
 		const results = from(data.ErkVoorbeeld)
@@ -207,14 +207,14 @@ module.exports = {
 				unreleased: _,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkVoorbeeld.length,
 				root: meta.schema.types.ErkVoorbeeld.root
 			}
 	
-			meta
+			response
 		`,
 		ErkLesidee: `
 		const results = from(data.ErkLesidee)
@@ -228,13 +228,13 @@ module.exports = {
 				unreleased: _,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkLesidee.length,
 				root: meta.schema.types.ErkLesidee.root			}
 	
-			meta
+			response
 		`,
 		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
@@ -246,13 +246,13 @@ module.exports = {
 				Niveau: NiveauShort
 		  	})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: Index(request.query.id).length
 			}
 
-			meta
+			response
 		`,
 		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
@@ -292,13 +292,13 @@ module.exports = {
 			})
 			
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkSchalen.length
 			}
 	
-			meta`,
+			response`,
 	},
 	typedQueries: {
 		ErkVakleergebied: `

@@ -202,14 +202,14 @@ module.exports = {
 				Niveau: ShortLink
 			})
 		
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Vakleergebied.length,
 			root: meta.schema.types.Vakleergebied.root
 		}
 
-		meta
+		response
 
 		`,
 		Niveau: `
@@ -226,14 +226,14 @@ module.exports = {
 		})
 		
 
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Niveau.length,
 			root: meta.schema.types.Niveau.root
 		}
 
-		meta
+		response
 
 		`,
 		Doel: `
@@ -247,14 +247,14 @@ module.exports = {
 			...shortInfo,
 		})
 		
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Doel.length,
 			root: meta.schema.types.Doel.root
 		}
 
-		meta
+		response
 
 		`,
 		Doelniveau: `
@@ -278,14 +278,14 @@ module.exports = {
 			},
 		})
 
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Doelniveau.length,
 			root: meta.schema.types.Doelniveau.root
 		}
 
-		meta
+		response
 
 		`,
 	},

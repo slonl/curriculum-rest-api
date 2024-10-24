@@ -18,14 +18,14 @@ module.exports = {
 		  })
 		 
 
-		  const meta = {
+		  const response = {
 			data: results,
 			page: Page,
 			count: data.ExamenprogrammaBgProfiel.length,
 			root: meta.schema.types.ExamenprogrammaBgProfiel.root
 		}
 
-		meta
+		response
 		`,
 		ExamenprogrammaBgKern: `
 		const results = from(data.ExamenprogrammaBgKern)
@@ -41,14 +41,14 @@ module.exports = {
 				},
 		  	})
 	
-		  	const meta = {
+		  	const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKern.length,
 				root: meta.schema.types.ExamenprogrammaBgKern.root
 			}
 
-		meta
+		response
 		`,
 		ExamenprogrammaBgKerndeel: `
 		const results = from(data.ExamenprogrammaBgKerndeel)
@@ -60,14 +60,14 @@ module.exports = {
 				...shortInfo,
 		  	})
 		  
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKerndeel.length,
 				root: meta.schema.types.ExamenprogrammaBgKerndeel.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgGlobaleEindterm: `
 		const results = from(data.ExamenprogrammaBgGlobaleEindterm)
@@ -79,14 +79,14 @@ module.exports = {
 				...shortInfo,
 			})
 
-		  	const meta = {
+		  	const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgGlobaleEindterm.length,
 				root: meta.schema.types.ExamenprogrammaBgGlobaleEindterm.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgModule: `
 		const results = from(data.ExamenprogrammaBgModule)
@@ -101,14 +101,14 @@ module.exports = {
 			})
 		  
 	
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgModule.length,
 				root: meta.schema.types.ExamenprogrammaBgModule.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgDeeltaak: `
 		const results = from(data.ExamenprogrammaBgDeeltaak)
@@ -120,14 +120,14 @@ module.exports = {
 				...shortInfo,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgDeeltaak.length,
 				root: meta.schema.types.ExamenprogrammaBgDeeltaak.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgModuletaak: `
 		const results = from(data.ExamenprogrammaBgModuletaak)
@@ -139,14 +139,14 @@ module.exports = {
 				...shortInfo,
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgModuletaak.length,
 				root: meta.schema.types.ExamenprogrammaBgModuletaak.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgKeuzevak: `
 		const results = from(data.ExamenprogrammaBgKeuzevak)
@@ -160,14 +160,14 @@ module.exports = {
 				}
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKeuzevak.length,
 				root: meta.schema.types.ExamenprogrammaBgKeuzevak.root
 			}
 
-			meta
+			response
 		`,
 		ExamenprogrammaBgKeuzevaktaak: `
 		const results = from(data.ExamenprogrammaBgKeuzevaktaak)
@@ -179,14 +179,14 @@ module.exports = {
 				...shortInfo,
 			})
 		
-		  	const meta = {
+		  	const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBgKeuzevaktaak.length,
 				root: meta.schema.types.ExamenprogrammaBgKeuzevaktaak.root
 			}
 
-			meta
+			response
 		`,
 
 		ExamenprogrammaBgVolledig: `

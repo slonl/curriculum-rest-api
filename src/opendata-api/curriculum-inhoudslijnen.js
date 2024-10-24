@@ -18,14 +18,14 @@ module.exports = {
 				Niveau: NiveauIndex	
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.InhVakleergebied.length,
 				root: meta.schema.types.InhVakleergebied.root
 			}
 	
-			meta
+			response
 	
 		`,
 		InhInhoudslijn: `
@@ -43,14 +43,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.InhInhoudslijn.length,
 				root: meta.schema.types.InhInhoudslijn.root
 			}
 	
-			meta
+			response
 	
 		`,
 		InhCluster: `
@@ -71,14 +71,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.InhCluster.length,
 				root: meta.schema.types.InhCluster.root
 			}
 	
-			meta
+			response
 	
 		`,
 		InhSubcluster: `
@@ -100,14 +100,14 @@ module.exports = {
 				}
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.InhSubcluster.length,
 				root: meta.schema.types.InhSubcluster.root
 			}
 	
-			meta
+			response
 	
 		`,
 		InhoudslijnVolledig: `

@@ -21,14 +21,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefVakleergebied.length,
 				root: meta.schema.types.RefVakleergebied.root
 			}
 
-			meta
+			response
 
 		`,
 		RefDomein: `
@@ -47,14 +47,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 				
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefDomein.length,
 				root: meta.schema.types.RefDomein.root
 			}
 
-			meta
+			response
 		`,
 		RefSubdomein: `
 		const results = from(data.RefSubdomein)
@@ -74,14 +74,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefSubdomein.length,
 				root: meta.schema.types.RefSubdomein.root
 			}
 
-			meta
+			response
 		`,
 		RefOnderwerp: `
 		const results = from(data.RefOnderwerp)
@@ -103,14 +103,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefOnderwerp.length,
 				root: meta.schema.types.RefOnderwerp.root
 			}
 
-			meta
+			response
 		`,
 		RefDeelonderwerp: `
 		const results = from(data.RefDeelonderwerp)
@@ -134,14 +134,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefDeelonderwerp.length,
 				root: meta.schema.types.RefDeelonderwerp.root
 			}
 
-			meta
+			response
 		`,
 
 		// @TODO : Check if RefTekstkenmerk is indeed empty
@@ -167,14 +167,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.RefTekstkenmerk.length,
 				root: meta.schema.types.RefTekstkenmerk.root
 			}
 
-			meta
+			response
 		`,
 		/*
 		// @TODO : Check if ReferentiekaderVolledig is a word

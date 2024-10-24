@@ -16,14 +16,14 @@ module.exports = {
 				Niveau: NiveauShort,
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.Kerndoel.length,
 				root: meta.schema.types.Kerndoel.root
 			}
 
-			meta
+			response
 			
 		`,
 		KerndoelById: `
@@ -47,14 +47,14 @@ module.exports = {
 				}
 			})
 		
-		  const meta = {
+		  const response = {
 			data: results,
 			page: Page,
 			count: data.KerndoelDomein.length,
 				root: meta.schema.types.KerndoelDomein.root
 		}
 
-		meta
+		response
 
 		`,
 		KerndoelUitstroomprofiel: `
@@ -71,14 +71,14 @@ module.exports = {
 				}
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.KerndoelUitstroomprofiel.length,
 				root: meta.schema.types.KerndoelUitstroomprofiel.root
 			}
 
-			meta
+			response
 
 		`,
 		KerndoelVakleergebied: `
@@ -91,14 +91,14 @@ module.exports = {
 				...shortInfo,
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.KerndoelVakleergebied.length,
 				root: meta.schema.types.KerndoelVakleergebied.root
 			}
 
-			meta
+			response
 
 		`,
 	},
