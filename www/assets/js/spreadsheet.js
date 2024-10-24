@@ -288,7 +288,77 @@ const spreadsheet = (function() {
       let value = row.columns[columnDef.value] || ''
       let values = columnDef.values
       let name
+      let selectorRect, disabled, checked
       switch(columnDef.type) {
+        case 'autocomplete':
+          value = htmlEscape(value)
+          name = columnDef.value
+          valueOptions = '<option>'+values.map(v => htmlEscape(v.name)).join('</option><option>')+'</option>'
+          selectorRect = selector.getBoundingClientRect()
+          disabled = row.node.dirty ? 'disabled' : ''
+          checked = browser.view.dirtyChecked ? 'checked' : ''
+          selector.innerHTML = `
+<form data-simply-command="saveChangesSpreadsheet">
+  <div class="slo-form-header">
+    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+      </use></svg>
+    </button>
+    <div class="ds-form-group">
+      <label>
+        <input type="checkbox" ${disabled} ${checked} name="dirty" value="1" data-simply-command="toggleDirty">
+        Inhoudelijke wijziging
+      </label>
+    </div>
+  </div>
+  <div class="spreadsheet-autosize">
+    <input name="${name}" autofocus list="autocomplete" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}" value="${value}">
+  </div>
+  <datalist name="autocomplete">${valueOptions}</datalist>
+  <div class="slo-form-footer">
+   <button class="ds-button ds-button-naked ds-button-close" type="submit">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#save">
+      </use></svg>
+    </button>
+  </div>
+</form>`;
+
+        break
+        case 'checkbox':
+          value = !!value
+          name = columnDef.value
+          selectorRect = selector.getBoundingClientRect()
+          disabled = row.node.dirty ? 'disabled' : ''
+          checked = browser.view.dirtyChecked ? 'checked' : ''
+          let inputChecked = ''
+          if (value) {
+            inputChecked = 'checked'
+          }
+          selector.innerHTML = `
+<form data-simply-command="saveChangesSpreadsheet">
+  <div class="slo-form-header">
+    <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+      </use></svg>
+    </button>
+  </div>
+  <div class="spreadsheet-autosize">
+    <input type="hidden" name="${name}" value="0">
+    <label><input type="checkbox" name="${name}" data-replicated-value="${value}" class="spreadsheet-editor spreadsheet-editor-type-${columnDef.type}" value="1" ${inputChecked}> Ja</label>
+  </div>
+  <div class="slo-form-footer">
+   <button class="ds-button ds-button-naked ds-button-close" type="submit">
+      <svg class="ds-icon ds-icon-feather">
+        <use xlink:href="/assets/icons/feather-sprite.svg#save">
+      </use></svg>
+    </button>
+  </div>
+</form>`;
+          selector.querySelector('input[type="checkbox"]')?.focus()
+        break
         case 'list':
           if (!Array.isArray(value)) {
             value = [ value ]
@@ -310,9 +380,9 @@ const spreadsheet = (function() {
         default:
           value = htmlEscape(value)
           name = columnDef.value
-          let selectorRect = selector.getBoundingClientRect()
-          let disabled = row.node.dirty ? 'disabled' : ''
-          let checked = browser.view.dirtyChecked ? 'checked' : ''
+          selectorRect = selector.getBoundingClientRect()
+          disabled = row.node.dirty ? 'disabled' : ''
+          checked = browser.view.dirtyChecked ? 'checked' : ''
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
@@ -368,6 +438,9 @@ const spreadsheet = (function() {
         case 'id':
           selector.innerHTML = header + el.innerHTML
         break
+        case 'checkbox':
+          selector.innerHTML = header + ( value ? 'Ja' : '')
+        break
         case 'list':
           if (!Array.isArray(value)) {
             value = [ value ]
@@ -382,6 +455,7 @@ const spreadsheet = (function() {
           html+= '</ul>'
           selector.innerHTML = header + html
         break
+        case 'autocomplete':
         default:
           selector.innerHTML = header + htmlEscape(value)
         break
@@ -633,6 +707,10 @@ const spreadsheet = (function() {
           colClass=''
         }
         switch(column.type) {
+          case 'checkbox':
+            let v = value ? "ja" : ""
+            html+= `<td class="${colClass}">${v}</td>`
+          break
           case 'id': 
             html+= `<td class="${colClass}"><a href="${value}" target="sloSide">#</a></td>`
             break
@@ -645,6 +723,7 @@ const spreadsheet = (function() {
     <span class="slo-indent slo-indent-${row.indent} ${$hasChildren}"><span data-simply-command="selectTreeCell">${value}&nbsp;</span></span>
 </td>`
             break
+          case 'autocomplete':
           case 'text':
           default:
             html += `<td class="${colClass}">${value}</td>`
