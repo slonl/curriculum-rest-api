@@ -791,7 +791,6 @@ browser = simply.app({
                         // ignore errors
                     }
                     if (current) {
-                        throw new Error('Aanpassen van bestaande data via import is nog niet geimplementeerd')
                         // do an update
                         change = new changes.Change({
                             id: root.id,
@@ -862,7 +861,7 @@ browser = simply.app({
             })
             //   get current visible columns
             const visibleColumns = this.app.view.sloSpreadsheet.options.columns.filter(c => c.checked)
-            let headings = visibleColumns.map(c => c.name)
+            let headings = visibleColumns.map(c => c.value)
             let mapping = []
 
             // TODO: is there a filter?
@@ -890,10 +889,21 @@ browser = simply.app({
             visibleColumns.forEach(c => {
                 mapping.push((r) => {
                     let result
-                    if (c.value==='id') {
-                        result = r.node.id
-                    } else {
-                        result = r.columns[c.value] || ''
+                    switch(c.value) {
+                        case 'id':
+                            result = r.node.id
+                        break
+                        case 'niveaus':
+                        case 'level':
+                            if (r.node.Niveau) {
+                                result = r.columns[c.value] || ''
+                            } else {
+                                result = ''
+                            }
+                        break
+                        default:
+                            result = r.columns[c.value] || ''
+                        break
                     }
                     return result
                 })
@@ -904,7 +914,7 @@ browser = simply.app({
             let csv = [headings.map(h => escapeCSV(h)).join(';')]
             visibleRows.forEach(row => {
                 let foo = mapping.map(m => m(row))
-                let bar = foo.map(c => '"'+escapeCSV(c)+'"')
+                let bar = foo.map(c => '"'+escapeCSV(c)+'"') // FIXME: not all columns must be exported - Niveaus only for editable niveaus
                 let baz = bar.join(';')
                 csv.push( baz )
             })
@@ -1016,6 +1026,9 @@ browser = simply.app({
                         if (columnDef.type=='list') {
                             newValue = update.values.getAll(update.property)
                             dirty = true
+                        } else if (columnDef.type=='checkbox') {
+                            let checkedValue = update.values.getAll(update.property).pop()
+                            newValue = (checkedValue=="1") ? 1 : 0
                         } else {
                             newValue = update.values.get(update.property)
                         }
