@@ -486,6 +486,15 @@ browser = simply.app({
             }
             browser.actions.updateFilterStatus()
         },
+        removeFilter: (el, value) => {
+            debugger
+            // @todo: needs some checking to avoid situations where the element or value are incorrect.
+            let filter = {}
+            filter[el.name] = value
+            browser.actions.removeFilterText(filter[el.name])
+            browser.view.sloSpreadsheet.update( delete filter )
+            browser.actions.updateFilterStatus()
+        },
         close: function(el,value) {
             let dialog = el.closest('dialog')
             if (dialog) {
@@ -921,9 +930,22 @@ browser = simply.app({
             let filters = browser.view.sloSpreadsheet.options?.filter
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
+                 
+                for( filter in filters){
+                    let elementId = 'filter-' + filter ;
+
+                    document.getElementById(elementId).innerHTML = filters[filter] + `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter"><svg class="ds-icon ds-icon-feather">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+                  </svg></a>`
+                }   
+                
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
+        },
+        removeFilterText: async function(filter) {
+            let elementId = 'filter-' + filter ;
+            document.getElementById(elementId).innerHTML = ""
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
