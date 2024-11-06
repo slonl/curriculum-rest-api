@@ -706,12 +706,9 @@ const spreadsheet = (function() {
 
       
       // Filters
-      heading += `<tr><th></th><th></th>`
-            // extra table row to the header part of the table containing the list of filters. Insert that here.
-            // note: columns can be added using +, meaning html for filters needs to grow/shrink dynamically
-            
-      for (let column of options.columns) {   
-        console.log(column.className)    
+      heading += `<tr><td></td><td></td>`
+                
+      for (let column of options.columns) {    
         if (!column.checked) {
           continue
         }       

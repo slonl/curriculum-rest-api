@@ -487,13 +487,14 @@ browser = simply.app({
             browser.actions.updateFilterStatus()
         },
         removeFilter: (el, value) => {
-            debugger
             // @todo: needs some checking to avoid situations where the element or value are incorrect.
-            let filter = {}
-            filter[el.name] = value
-            browser.actions.removeFilterText(filter[el.name])
+            //the id "filter-prefix" becomes "prefix"
+            let filterPrefix = (el.parentElement.id).split("-").pop();
+            
+            let filter = {}            
+            filter[filterPrefix] = el.innerText
+            browser.actions.removeFilterText(el.parentElement.id.toString())
             browser.view.sloSpreadsheet.update( delete filter )
-            browser.actions.updateFilterStatus()
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -934,7 +935,7 @@ browser = simply.app({
                 for( filter in filters){
                     let elementId = 'filter-' + filter ;
 
-                    document.getElementById(elementId).innerHTML = filters[filter] + `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter"><svg class="ds-icon ds-icon-feather">
+                    document.getElementById(elementId).innerHTML += `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter">` + filters[filter] + `<svg class="ds-icon ds-icon-feather">
                     <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
                   </svg></a>`
                 }   
@@ -943,9 +944,8 @@ browser = simply.app({
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
         },
-        removeFilterText: async function(filter) {
-            let elementId = 'filter-' + filter ;
-            document.getElementById(elementId).innerHTML = ""
+        removeFilterText: async function(elementId) {
+            document.getElementById(elementId).innerHTML = "";
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
