@@ -487,14 +487,20 @@ browser = simply.app({
             browser.actions.updateFilterStatus()
         },
         removeFilter: (el, value) => {
-            // @todo: needs some checking to avoid situations where the element or value are incorrect.
-            //the id "filter-prefix" becomes "prefix"
-            let filterPrefix = (el.parentElement.id).split("-").pop();
-            
-            let filter = {}            
-            filter[filterPrefix] = el.innerText
+            let filterSuffix = (el.parentElement.id).split("-").pop();
             browser.actions.removeFilterText(el.parentElement.id.toString())
-            browser.view.sloSpreadsheet.update( delete filter )
+            let filter = {}
+            filter[filterSuffix] = ""
+            browser.view.sloSpreadsheet.update({
+                filter
+            })
+            delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
+            
+            // set all filteredValues values to "false"
+            // find a way to get the correct object when the filter is deleted. --> Use the name of the FilterSuffix as a supposition for there being an array? 
+           //  if browser.view.sloSpreadsheet.options.columns object contains a filteredValues array, set all items in that array to false.
+            
+            browser.actions.updateFilterStatus()
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
