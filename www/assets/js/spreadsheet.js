@@ -706,7 +706,7 @@ const spreadsheet = (function() {
 
       
       // Filters
-      heading += `<tr><td></td><td></td>`
+      heading += `<tr><td></td>`
                 
       for (let column of options.columns) {    
         if (!column.checked) {

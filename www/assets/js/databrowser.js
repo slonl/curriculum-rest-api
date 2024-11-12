@@ -435,6 +435,9 @@ browser = simply.app({
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
             el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
+            // add filter display trigger here
+            browser.actions.updateFilterStatus()
+
         },
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
@@ -470,7 +473,6 @@ browser = simply.app({
             browser.view.sloSpreadsheet.update({
                 filter
             })
-            browser.actions.updateFilterStatus()
         },
         filterText: (el, value) => {
             document.body.dataset.simplyKeyboard = 'default'
@@ -484,7 +486,6 @@ browser = simply.app({
                 filter[el.name] = ''
                 browser.view.sloSpreadsheet.update({filter})
             }
-            browser.actions.updateFilterStatus()
         },
         removeFilter: (el, value) => {
             let filterSuffix = (el.parentElement.id).split("-").pop();
@@ -935,17 +936,26 @@ browser = simply.app({
             // if any filters are non-empty, add the 'filtered' class
             // otherwise remove it from the slo-tree-table
             let filters = browser.view.sloSpreadsheet.options?.filter
+            
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
-                 
-                for( filter in filters){
-                    let elementId = 'filter-' + filter ;
+                let elementId;
 
-                    document.getElementById(elementId).innerHTML += `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter">` + filters[filter] + `<svg class="ds-icon ds-icon-feather">
-                    <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
-                  </svg></a>`
-                }   
+                for( filter in filters){
+                    elementId = 'filter-' + filter ;
+                    document.getElementById(elementId).innerHTML = '';
+                }
+
+                for( filter in filters){
+                    elementId = 'filter-' + filter ;
+                        document.getElementById(elementId).innerHTML += `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter">` + filters[filter] + `<svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+                    </svg></a>`
+                }
+
+                console.log(filters);
                 
+                //filtering arrays WIP
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
