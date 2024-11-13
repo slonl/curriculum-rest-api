@@ -488,19 +488,25 @@ browser = simply.app({
             }
         },
         removeFilter: (el, value) => {
-            let filterSuffix = (el.parentElement.id).split("-").pop();
-            browser.actions.removeFilterText(el.parentElement.id.toString())
+            
+            // @TODO change into an action: "emptyFilter" or somesuch.
+            let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
+            
+            browser.actions.removeFilterText(el.parentElement.parentElement.id);
+            
             let filter = {}
             filter[filterSuffix] = ""
             browser.view.sloSpreadsheet.update({
                 filter
             })
             delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
-            
-            // set all filteredValues values to "false"
-            // find a way to get the correct object when the filter is deleted. --> Use the name of the FilterSuffix as a supposition for there being an array? 
-           //  if browser.view.sloSpreadsheet.options.columns object contains a filteredValues array, set all items in that array to false.
-            
+
+            let column = browser.view.sloSpreadsheet.options.columns 
+                .find(c => c.value==filterSuffix);
+
+            for (filter in column.filteredValues){
+                filter = false;
+            }
             browser.actions.updateFilterStatus()
         },
         close: function(el,value) {
@@ -948,20 +954,25 @@ browser = simply.app({
 
                 for( filter in filters){
                     elementId = 'filter-' + filter ;
-                        document.getElementById(elementId).innerHTML += `<a class="ds-button ds-button-naked ds-icon-button ds-flex-right" title="verwijderFilter" data-simply-command="removeFilter">` + filters[filter] + `<svg class="ds-icon ds-icon-feather">
+                        document.getElementById(elementId).innerHTML += `<div>
+                        <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+                        <a title="${filters[filter]}">${filters[filter]}</a></span>
+                        <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+                        <svg class="ds-icon ds-icon-feather">
                         <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
-                    </svg></a>`
+                    </svg></a></div>`
                 }
 
-                console.log(filters);
-                
-                //filtering arrays WIP
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
         },
         removeFilterText: async function(elementId) {
-            document.getElementById(elementId).innerHTML = "";
+            console.log("removing element: ", elementId);
+            console.log(document.getElementById(elementId).innerHTML)
+            
+            let element = document.getElementById(elementId);
+            element.replaceChildren();
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
