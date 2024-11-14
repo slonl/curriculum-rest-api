@@ -319,7 +319,6 @@ browser = simply.app({
                 } while (el && !browser.view.sloSpreadsheet.isEditable(el))
             },
             "ArrowDown": (e) => {
-                e.preventDefault()
                 let target = document.activeElement
                 if (target && (target.type=='checkbox' || target.type=='radio')) {
                     let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
@@ -328,10 +327,10 @@ browser = simply.app({
                         current++
                         targets[current]?.focus()
                     }
+                    e.preventDefault()
                 }
             },
             "ArrowUp": (e) => {
-                e.preventDefault()
                 let target = document.activeElement
                 if (target && (target.type=='checkbox' || target.type=='radio')) {
                     let targets = Array.from(target.closest('.slo-cell-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
@@ -340,6 +339,7 @@ browser = simply.app({
                         current--
                         targets[current]?.focus()
                     }
+                    e.preventDefault()
                 }
             },
             "Control+Enter": async (e) => {
