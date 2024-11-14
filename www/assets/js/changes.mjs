@@ -366,7 +366,7 @@ const changes = (()=> {
 				})
 				if (e['@newValue']) {
 					let commit = {
-						name: 'newEntity',
+						name: 'importEntity',
 						'@type': e['@type'],
 						entity: e['@newValue']
 					}
