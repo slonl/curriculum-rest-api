@@ -755,9 +755,7 @@ const spreadsheet = (function() {
       if (options.editMode) {
         add = `<th class="ds-datatable-disable-sort slo-minwidth"></th>`
       }
-      let heading = `
-<tr>${add}<th class="ds-datatable-disable-sort slo-rownumber"></th>
-`
+      let heading = `<tr>${add}<th class="ds-datatable-disable-sort slo-rownumber"></th>`
       let col=''
       let visible = []
       for (let column of options.columns) {
@@ -784,6 +782,32 @@ const spreadsheet = (function() {
         heading += col
       }
       heading += `<th class="slo-minwidth slo-columns-select ds-datatable-disable-sort">${columnsSelectWidget()}</th></tr>`
+
+      
+      // Filters
+      heading += `<tr><td></td>`
+                
+      for (let column of options.columns) {    
+        if (!column.checked) {
+          continue
+        }       
+        visible.push(column)
+        if (!column.filteredValues) {
+          column.filteredValues = {}
+        }
+        col = '<td id="'
+        if (column.value) {
+          col+= "filter-"
+          col+=column.value
+        }
+        col += `">`
+        col += `</td>`
+        heading += col
+      }
+      
+      heading += '</tr>'
+      // --filter
+
       head.innerHTML = heading
       head.querySelector('th:first-child').appendChild(helpers) // here so it flow below the dropdowns, but above cell content
       datamodel.options.visibleColumns = visible

@@ -122,8 +122,8 @@ module.exports = {
 		const Niveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
-			'@type': Type,
 			uuid: _.id,
+			'@type': Type,
 			 title: _,
 			 description: _,
 			 prefix: _,
@@ -133,15 +133,15 @@ module.exports = {
 		const NiveauShort = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
 			'@id': Id,
-			'@type': Type,
 			uuid: _.id,
+			'@type': Type,
 			title: _,
 			prefix: _,
 		}
 		const ShortLink = {
 			'@id': Id,
-			'@type': Type,
 			uuid: _.id,
+			'@type': Type,
 			title: _,
 			deprecated: _,
 		}
@@ -155,8 +155,8 @@ module.exports = {
 		
 		const shortInfo = {
 		    '@id': Id,
+			uuid: _.id,
 		    '@type': Type,
-		    uuid: _.id,
 		    prefix: _,
 		    title: _,
 		};
@@ -199,7 +199,7 @@ module.exports = {
 			.select({
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 				...shortInfo,
-				Niveau: ShortLink
+				Niveau: NiveauShort
 			})
 		
 		const response = {
@@ -264,7 +264,6 @@ module.exports = {
 		const results = from(data.Doelniveau)
 		.slice(Paging.start, Paging.end)
 		.select( Doelniveau )
-
 		const response = {
 			data: results,
 			page: Page,
