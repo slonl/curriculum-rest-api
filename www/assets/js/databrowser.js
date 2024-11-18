@@ -1641,10 +1641,7 @@ browser = simply.app({
             let thisType = getType(row.node)
             let childTypes = slo.getAvailableChildTypes(thisType)
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
-            let siblingType = ''
-            if (parentRow) {
-                siblingType = getType(parentRow.node)
-            }
+            let siblingType = thisType
 
             browser.view.availableTypes = childTypes
             browser.view.siblingType = siblingType
