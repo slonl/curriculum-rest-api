@@ -411,15 +411,23 @@
                     filterable: true
                 }
                 if (columnValues.length<=15 && columnDefinition.name!='Description') { //@FIXME: allow switch to textarea from list type that is set like this?
-                    columnDefinition.type = 'list'
-                }
-                    columnDefinition.values = Object.keys(allColumns[c]).map(name => {
-                        return {
-                            name,
-                            count: allColumns[c][name]
+                    let propSchema = meta.schemas.properties[c]
+                    if (propSchema?.type) {
+                        if (propSchema.type=='string') {
+                            columnDefinition.type = 'autocomplete'
+                        } else if (propSchema.type=='integer') {
+                            if (propSchema.minimum==0 && propSchema.maximum==1) {
+                                columnDefinition.type = 'checkbox'
+                            }
                         }
-                    })
-                //}
+                    }
+                }
+                columnDefinition.values = Object.keys(allColumns[c]).map(name => {
+                    return {
+                        name,
+                        count: allColumns[c][name]
+                    }
+                })
                 if (columnDefinitions[c]) {
                     columnDefinitions[c].values = columnDefinition.values
                 } else {

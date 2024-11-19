@@ -92,7 +92,7 @@ from(Index('${variables.id}')?.root)
 
 opendata.api.Schemas = async (variables, urlQuery) => {
 	let query = `
-data.schema
+meta.schema
 `
 	return storeQuery(opendata.url+'/query/', query)
 }

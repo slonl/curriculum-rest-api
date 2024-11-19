@@ -31,14 +31,14 @@ module.exports = {
 				Niveau: NiveauIndex
 		  	})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.LdkVakleergebied.length,
-				root: data.schema.types.LdkVakleergebied.root
+				root: meta.schema.types.LdkVakleergebied.root
 			}
 
-			meta
+			response
 
 		`,
 		LdkVakkern: `
@@ -59,14 +59,14 @@ module.exports = {
 				}
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.LdkVakkern.length,
-				root: data.schema.types.LdkVakkern.root
+				root: meta.schema.types.LdkVakkern.root
 			}
 
-			meta
+			response
 
 		`,
 		LdkVaksubkern: `
@@ -87,14 +87,14 @@ module.exports = {
 				Niveau: NiveauIndex
 			})
 			
-		  	const meta = {
+		  	const response = {
 				data: results,
 				page: Page,
 				count: data.LdkVaksubkern.length,
-				root: data.schema.types.LdkVaksubkern.root
+				root: meta.schema.types.LdkVaksubkern.root
 			}
 
-			meta
+			response
 
 		`,
 		LdkVakinhoud: `
@@ -119,14 +119,14 @@ module.exports = {
 				}
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.LdkVakinhoud.length,
-				root: data.schema.types.LdkVakinhoud.root
+				root: meta.schema.types.LdkVakinhoud.root
 			}
 
-			meta
+			response
 
 		`,
 		LdkVakbegrip: `
@@ -141,14 +141,14 @@ module.exports = {
 				Doelniveau: Doelniveau,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.LdkVakbegrip.length,
-				root: data.schema.types.LdkVakbegrip.root
+				root: meta.schema.types.LdkVakbegrip.root
 			}
 
-			meta
+			response
 
 		`,
 		DoelenOpNiveauByLdkVakleergebiedById: `

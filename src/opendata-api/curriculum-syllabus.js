@@ -16,13 +16,13 @@ module.exports = {
 				title: _
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.Syllabus.length
 			}
 
-			meta
+			response
 
 		`,
 		SyllabusVakbegrip: `
@@ -39,13 +39,13 @@ module.exports = {
 				}
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.SyllabusVakbegrip.length
 			}
 
-			meta
+			response
 
 		`,
 		SyllabusVakleergebied: `
@@ -69,13 +69,13 @@ module.exports = {
 				}
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.SyllabusVakleergebied.length
 			}
 
-			meta
+			response
 
 		`,
 		SyllabusToelichting: `
@@ -98,13 +98,13 @@ module.exports = {
 				}
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.SyllabusToelichting.length
 			}
 
-			meta
+			response
 
 		`,
 		SyllabusSpecifiekeEindterm: `
@@ -121,13 +121,13 @@ module.exports = {
 				}
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.SyllabusSpecifiekeEindterm.length
 			}
 
-			meta
+			response
 
 		`,
 		SyllabusVolledig: `

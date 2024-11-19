@@ -13,14 +13,14 @@ module.exports = {
 				fo_uitwerking_id: _,
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.Tag.length,
-				root: data.schema.types.Tag.root
+				root: meta.schema.types.Tag.root
 			}
 
-			meta
+			response
 
 		`,
 		// @FIXME: make a correct query for Relatie
@@ -32,14 +32,14 @@ module.exports = {
 				unreleased: _
 			})
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.Relatie.length,
-				root: data.schema.types.Relatie.root
+				root: meta.schema.types.Relatie.root
 			}
 
-			meta
+			response
 
 		`
 	},

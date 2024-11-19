@@ -94,10 +94,10 @@ const changes = (()=> {
 					title: _,
 					timestamp: _
 				},
-				type: oneOf('patch','insert','delete','undelete','new'),
+				type: oneOf('patch','insert','delete','undelete','new','update'),
 				newValue: _,
 			})
-			if (ch.type!='new') {
+			if (ch.type!='new' && ch.type!='update') {
 				assert(ch, {
 					property: _,
 					prevValue: _,
@@ -193,7 +193,7 @@ const changes = (()=> {
 					m[ch.id]['@dirty']=true
 				}
 				let me = m[ch.id]
-				if (ch.type=='new') {
+				if (ch.type=='new' || ch.type=='update') {
 					me['@newValue'] = ch.newValue
 				} else {
 					if (!me['@properties'][ch.property]) {
@@ -271,7 +271,7 @@ const changes = (()=> {
 
 		let d = ''
 		if (m['@newValue']) {
-			d += '<label class="changes-diff">Nieuw '+m['@type']+'</label>'
+			d += '<label class="changes-diff">Import '+m['@type']+'</label>'
 			//TODO: show all properties? or just the title (if available)?
 		} else {
 			for (let propName in m['@properties']) {
@@ -366,7 +366,7 @@ const changes = (()=> {
 				})
 				if (e['@newValue']) {
 					let commit = {
-						name: 'newEntity',
+						name: 'importEntity',
 						'@type': e['@type'],
 						entity: e['@newValue']
 					}
@@ -407,7 +407,8 @@ const changes = (()=> {
 			}
 
 			let removed = [0]
-			let inserted = Object.keys(changes.insertedNodes).filter(id => !changes.merged[id]['@newValue'])
+			let inserted = Object.keys(changes.insertedNodes)
+				.filter(id => changes.merged[id] && !(changes.merged[id]?.['@newValue']))
 			while (removed.length) {
 				removed = []
 				let links = getLinks()

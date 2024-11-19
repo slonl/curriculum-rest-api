@@ -202,14 +202,14 @@ module.exports = {
 				Niveau: NiveauShort
 			})
 		
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Vakleergebied.length,
-			root: data.schema.types.Vakleergebied.root
+			root: meta.schema.types.Vakleergebied.root
 		}
 
-		meta
+		response
 
 		`,
 		Niveau: `
@@ -226,14 +226,14 @@ module.exports = {
 		})
 		
 
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Niveau.length,
-			root: data.schema.types.Niveau.root
+			root: meta.schema.types.Niveau.root
 		}
 
-		meta
+		response
 
 		`,
 		Doel: `
@@ -250,28 +250,28 @@ module.exports = {
 			title: _
 		})
 		
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Doel.length,
-			root: data.schema.types.Doel.root
+			root: meta.schema.types.Doel.root
 		}
 
-		meta
+		response
 
 		`,
 		Doelniveau: `
 		const results = from(data.Doelniveau)
 		.slice(Paging.start, Paging.end)
 		.select( Doelniveau )
-		const meta = {
+		const response = {
 			data: results,
 			page: Page,
 			count: data.Doelniveau.length,
-			root: data.schema.types.Doelniveau.root
+			root: meta.schema.types.Doelniveau.root
 		}
 
-		meta
+		response
 
 		`,
 	},

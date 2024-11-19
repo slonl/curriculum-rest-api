@@ -2,7 +2,7 @@ let niveaus = []
 export async function importXLSX(file, schemas, levels) {
 	var errors = []
 	let state = {}
-	niveaus = levels
+	niveaus = levels || []
 
 	let f = await readFile(file)
 	console.log(f)
@@ -72,8 +72,9 @@ function createNode(row, line, tree) {
 	let node = {}
 	node.$row = row
 	node.$line = line
-	node.id = row.ID
+	node.id = row.ID ?? row.id
 	delete row.ID
+	delete row.id
 	if (!isUUID(node.id)) {
 		node.id = createUUID(node.id, tree)
 	}
@@ -100,7 +101,10 @@ function createNode(row, line, tree) {
 		}
 		node[column] = value
 	})
-	if (TypeAliases[node['@type']]) {
+	if (node.type) {
+		node['@type'] = node.type
+		delete node.type
+	} else if (TypeAliases[node['@type']]) {
 		node['@type'] = TypeAliases[node['@type']]
 	}
 	if (!node['@type']) {
@@ -111,12 +115,15 @@ function createNode(row, line, tree) {
 		// check that all properties are known
 		let schema = tree.schemas.types[node['@type']]
 		Object.keys(node).forEach(property => {
-			if (property=='level') {
-				node.Niveau = parseLevels(node.level)
-				delete node.level
+			if (property=='level' || property=='niveaus') {
+				node.Niveau = parseLevels(node[property])
+				delete node[property]
 				return
 			}
 			if (property[0]!='@' && property[0]!='$') {
+				if (!schema.properties[property] && schema.properties[property.toLowerCase()]) {
+					property = property.toLowerCase()
+				}
 				if (!schema.properties[property]) {
 					tree.errors.push(new Error('Onbekende property: '+property, {cause:node}))
 				} else {

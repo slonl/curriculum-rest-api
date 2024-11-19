@@ -38,14 +38,14 @@ module.exports = {
 				title: _,
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaVakleergebied.length,
-				root: data.schema.types.ExamenprogrammaVakleergebied.root
+				root: meta.schema.types.ExamenprogrammaVakleergebied.root
 			}
 
-			meta
+			response
 
 		`,
 		Examenprogramma: `
@@ -57,14 +57,14 @@ module.exports = {
 			.select(shortInfo)
 		
 		
-			const meta = {
+			const result = {
 				data: results,
 				page: Page,
 				count: data.Examenprogramma.length,
-				root: data.schema.types.Examenprogramma.root
+				root: meta.schema.types.Examenprogramma.root
 			}
 			
-			meta
+			result
 
 		`,
 		ExamenprogrammaDomein: `
@@ -80,14 +80,14 @@ module.exports = {
 				}
 			})
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaDomein.length,
-				root: data.schema.types.ExamenprogrammaDomein.root
+				root: meta.schema.types.ExamenprogrammaDomein.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaSubdomein: `
@@ -107,14 +107,14 @@ module.exports = {
 			})
 		
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaSubdomein.length,
-				root: data.schema.types.ExamenprogrammaSubdomein.root
+				root: meta.schema.types.ExamenprogrammaSubdomein.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaEindterm: `
@@ -125,14 +125,14 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
 
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaEindterm.length,
-				root: data.schema.types.ExamenprogrammaEindterm.root
+				root: meta.schema.types.ExamenprogrammaEindterm.root
 			}
 
-		meta
+		response
 
 		`,
 		ExamenprogrammaKop1: `
@@ -149,14 +149,14 @@ module.exports = {
 				}
 			})
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaKop1.length,
-				root: data.schema.types.ExamenprogrammaKop1.root
+				root: meta.schema.types.ExamenprogrammaKop1.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaKop2: `
@@ -168,14 +168,14 @@ module.exports = {
 			.select(shortInfo)
 			
 			
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaKop2.length,
-				root: data.schema.types.ExamenprogrammaKop2.root
+				root: meta.schema.types.ExamenprogrammaKop2.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaKop3: `
@@ -186,14 +186,14 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaKop3.length,
-				root: data.schema.types.ExamenprogrammaKop3.root
+				root: meta.schema.types.ExamenprogrammaKop3.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaKop4: `
@@ -204,14 +204,14 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
 					
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaKop4.length,
-				root: data.schema.types.ExamenprogrammaKop4.root
+				root: meta.schema.types.ExamenprogrammaKop4.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaBody: `
@@ -222,14 +222,14 @@ module.exports = {
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
 		
-			const meta = {
+			const response = {
 				data: results,
 				page: Page,
 				count: data.ExamenprogrammaBody.length,
-				root: data.schema.types.ExamenprogrammaBody.root
+				root: meta.schema.types.ExamenprogrammaBody.root
 			}
 
-			meta
+			response
 
 		`,
 		ExamenprogrammaVolledig: `
