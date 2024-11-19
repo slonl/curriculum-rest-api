@@ -489,25 +489,29 @@ browser = simply.app({
         },
         removeFilter: (el, value) => {
             
+
             // @TODO change into an action: "emptyFilter" or somesuch.
             let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
             
-            browser.actions.removeFilterText(el.parentElement.parentElement.id);
+            console.log("detecting filter type: ", browser.view.sloSpreadsheet.options.filter[filterSuffix]); 
             
-            let filter = {}
-            filter[filterSuffix] = ""
-            browser.view.sloSpreadsheet.update({
-                filter
-            })
-            delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
-
-            let column = browser.view.sloSpreadsheet.options.columns 
-                .find(c => c.value==filterSuffix);
-
-            for (filter in column.filteredValues){
-                filter = false;
+            if (Array.isArray(browser.view.sloSpreadsheet.options.filter[filterSuffix])){
+                console.log("it's an array")
+                browser.view.sloSpreadsheet.options.filter[filterSuffix] = []
+                browser.actions.updateFilterStatus()
             }
-            browser.actions.updateFilterStatus()
+
+            if (!Array.isArray(browser.view.sloSpreadsheet.options.filter[filterSuffix])){
+                console.log("it's not an array")
+                let filter = {}
+                filter[filterSuffix] = ""
+                browser.view.sloSpreadsheet.update({
+                    filter
+                })
+                delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
+                browser.actions.updateFilterStatus()
+            }
+            //browser.actions.removeFilterText(el.parentElement.parentElement.id);
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -978,11 +982,11 @@ browser = simply.app({
             }
         },
         removeFilterText: async function(elementId) {
-            console.log("removing element: ", elementId);
-            console.log(document.getElementById(elementId).innerHTML)
-            
+            // also remove the checkbox filters
+
+
             let element = document.getElementById(elementId);
-            element.replaceChildren();
+            element.replaceChildren(); //emptying node of its children
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
