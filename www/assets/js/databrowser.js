@@ -488,7 +488,6 @@ browser = simply.app({
             }
         },
         removeFilter: (el, value) => {
-            
 
             // @TODO change into an action: "emptyFilter" or somesuch.
             let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
@@ -497,7 +496,9 @@ browser = simply.app({
             
             if (Array.isArray(browser.view.sloSpreadsheet.options.filter[filterSuffix])){
                 console.log("it's an array")
+                
                 browser.view.sloSpreadsheet.options.filter[filterSuffix] = []
+                
                 browser.actions.updateFilterStatus()
             }
 
@@ -508,10 +509,11 @@ browser = simply.app({
                 browser.view.sloSpreadsheet.update({
                     filter
                 })
+                
                 delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
+                
                 browser.actions.updateFilterStatus()
             }
-            //browser.actions.removeFilterText(el.parentElement.parentElement.id);
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -959,6 +961,8 @@ browser = simply.app({
             
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
+                
+                /*
                 let elementId;
 
                 for( filter in filters){
@@ -976,15 +980,13 @@ browser = simply.app({
                         <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
                     </svg></a></div>`
                 }
-
+                */
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
+            browser.view.sloSpreadsheet.render()
         },
         removeFilterText: async function(elementId) {
-            // also remove the checkbox filters
-
-
             let element = document.getElementById(elementId);
             element.replaceChildren(); //emptying node of its children
         },
