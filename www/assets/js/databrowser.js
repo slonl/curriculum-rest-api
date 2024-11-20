@@ -163,6 +163,11 @@ browser = simply.app({
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
+            "Control+f": (e) => {
+                browser.actions.switchKeyboard('spreadsheet-search')
+                browser.view.sloSpreadsheet.showSearch()
+                e.preventDefault()
+            },
             "ArrowDown": (e) => {
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
@@ -249,6 +254,15 @@ browser = simply.app({
                 browser.actions.deleteRow(el.closest('tr'))
             }
             // @TODO: Space -> open/close subtree in prefix/tree column, open links in id column
+        },
+        "spreadsheet-search": {
+            "Escape": (e) => {
+                e.preventDefault()
+                if (document.querySelector('.slo-spreadsheet-search')?.getAttribute('open')) {
+                    document.querySelector('.slo-spreadsheet-search').removeAttribute('open')
+                }
+                browser.actions.switchKeyboard()
+            }
         },
         "spreadsheet-types": {
             "Escape": (e) => {
@@ -413,6 +427,22 @@ browser = simply.app({
     },
 
     commands: {
+        searchText: (el, value) => {
+            if (!browser.view.searchFrom) {
+                browser.view.searchFrom = Object.assign({},browser.view.sloSpreadsheet.options.focus)
+            }
+            browser.actions.searchTextNext(value, browser.view.searchFrom)
+        },
+        searchTextNext: (el) => {
+            const form = el.closest('form')
+            const search = form.elements['search']
+            browser.actions.searchTextNext(search.value)
+        },
+        searchTextPrev: (el) => {
+            const form = el.closest('form')
+            const search = form.elements['search']
+            browser.actions.searchTextPrev(search.value)
+        },
         saveChangesDocument:(form, values)=>{
             browser.actions.saveChangesDocument()
         },
@@ -754,6 +784,45 @@ browser = simply.app({
         }
     },
     actions: {
+        searchTextNext: async function(search, from) {
+            const results = browser.view.sloSpreadsheet.search(search)
+            if (!results.length) {
+                return
+            }
+            const focus = from || browser.view.sloSpreadsheet.options.focus
+            for (const result of results) {
+                if (result.row==focus.row) {
+                    if (result.column>focus.column) {
+                        return browser.actions.highlightSearchResult(search, result.row, result.column)
+                    }
+                } else if (result.row>focus.row) {
+                    return browser.actions.highlightSearchResult(search, result.row, result.column)
+                }
+            }
+            let result = results[0]
+            return browser.actions.highlightSearchResult(search, result.row, result.column)
+        },
+        searchTextPrev: async function(search) {
+            const results = browser.view.sloSpreadsheet.search(search).reverse()
+            if (!results.length) {
+                return
+            }
+            const focus = browser.view.sloSpreadsheet.options.focus
+            for (const result of results) {
+                if (result.row<focus.row) {
+                    return browser.actions.highlightSearchResult(search, result.row, result.column)
+                } else if (result.row==focus.row) {
+                    if (result.column<focus.column) {
+                        return browser.actions.highlightSearchResult(search, result.row, result.column)
+                    }
+                }
+            }
+            let result = results[0]
+            return browser.actions.highlightSearchResult(search, result.row, result.column)
+        },
+        highlightSearchResult: async function(search, row, column) {
+            const el = browser.view.sloSpreadsheet.goto(row, column)
+        },
         saveChangesSpreadsheet: async function(){
            browser.view.sloSpreadsheet.saveChanges()
            let el = document.querySelector('td.focus')

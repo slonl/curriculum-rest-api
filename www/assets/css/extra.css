@@ -61,6 +61,11 @@
         max-height: 50vh;
         overflow: auto;
     }
+    .slo-helper ul {
+        margin-top: 0;
+        max-height: 48vh;
+        overflow: auto;
+    }
     .vsb-menu {
         left: auto !important;
     }
@@ -548,4 +553,19 @@ body.ds-paging .slo-header .ds-paging {
     height: 0;
     margin-bottom: -27px;
     display: block;
+}
+
+.slo-spreadsheet-search {
+    position: fixed;
+    top: 145px;
+    z-index: 100000;
+}
+
+.slo-search-form input,
+.slo-search-form label,
+.slo-search-form button {
+    display: inline-block;
+}
+.slo-search-form {
+    padding: 0 1em;
 }

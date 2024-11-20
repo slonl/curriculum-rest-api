@@ -264,8 +264,10 @@ const spreadsheet = (function() {
     table.style.width = '100%'
     let head = document.createElement('thead')
     let body = document.createElement('tbody')
+    let foot = document.createElement('tfoot')
     table.appendChild(head)
     table.appendChild(body)
+    table.appendChild(foot)
     options.container.appendChild(table)
     let helpers = document.createElement('div')
     helpers.classList.add('slo-table-helpers')
@@ -750,6 +752,38 @@ const spreadsheet = (function() {
       spreadsheet.selector(body.querySelector('td.focus'))
     }
     
+    function renderFoot() {
+      let colspan = options.columns.filter(c => c.checked).length+2
+      let html = `<tr><td colspan="${colspan}"><dialog class="ds-dialog ds-dialog-narrow slo-spreadsheet-search">
+      <div class="ds-dialog-header" style="z-index: 1000">
+        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeDialog">
+          <svg class="ds-icon ds-icon-feather">
+            <use xlink:href="/assets/icons/feather-sprite.svg#x">
+          </use></svg>
+        </button>
+      </div>
+      <div class="ds-dialog-content">
+        <form class="slo-search-form">
+          <label>
+            Zoek
+            <input type="text" name="search" data-simply-command="searchText" data-simply-immediate="true">
+          </label>
+          <button title="Volgende" class="ds-button ds-button-naked" data-simply-command="searchTextNext">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#chevron-down">
+            </use></svg>
+          </button>
+          <button title="Vorige" class="ds-button ds-button-naked" data-simply-command="searchTextPrev">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#chevron-up">
+            </use></svg>
+          </button>
+        </form>
+      </div>
+</dialog></td></tr>`
+      foot.innerHTML = html
+    }
+
     function renderHeading() {
       let add = ''
       if (options.editMode) {
@@ -862,6 +896,7 @@ const spreadsheet = (function() {
       render: () => {
         renderHeading()
         renderBody()
+        renderFoot()
       },
       renderBody: () => {
         renderBody()
@@ -1041,7 +1076,34 @@ const spreadsheet = (function() {
         return datamodel.view.visibleData.findIndex(r => r==row)
       },
       getColumnDefinition,
-      toggleFullScreen
+      toggleFullScreen,
+      showSearch: () => {
+        let searchDialog = foot.querySelector('.slo-spreadsheet-search')
+        searchDialog.setAttribute('open','open')
+        searchDialog.querySelector('[name="search"]').focus()
+      },
+      search: (text) => {
+        let results = []
+        let textRe = new RegExp(text, 'g')
+        datamodel.data.forEach((row, rowIndex) => {
+          datamodel.options.columns.forEach((column, colIndex) => {
+            if (column.checked) { //visible
+              const value = row.columns[column.value]
+              if (typeof value == 'string') {
+                const matches = value.matchAll(textRe)
+                for (const match of matches) {
+                  results.push({
+                    row: rowIndex+1,
+                    column: colIndex+1,
+                    offset: match.index
+                  })
+                }
+              }
+            }
+          })
+        })
+        return results
+      }
     }
     return spreadsheet
   }
