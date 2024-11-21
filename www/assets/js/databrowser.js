@@ -165,7 +165,7 @@ browser = simply.app({
         spreadsheet: {
             "Control+f": (e) => {
                 browser.actions.switchKeyboard('spreadsheet-search')
-                browser.view.sloSpreadsheet.showSearch()
+                browser.actions.showSearch()
                 e.preventDefault()
             },
             "ArrowDown": (e) => {
@@ -262,6 +262,16 @@ browser = simply.app({
                     document.querySelector('.slo-spreadsheet-search').removeAttribute('open')
                 }
                 browser.actions.switchKeyboard()
+            },
+            "ArrowUp": (e) => {
+                const searchInput = document.querySelector('.slo-spreadsheet-search input[name="searchText"]')
+                browser.actions.searchTextPrev(searchInput.value)
+                e.preventDefault()
+            },
+            "ArrowDown": (e) => {
+                const searchInput = document.querySelector('.slo-spreadsheet-search input[name="searchText"]')
+                browser.actions.searchTextNext(searchInput.value)
+                e.preventDefault()
             }
         },
         "spreadsheet-types": {
@@ -435,12 +445,12 @@ browser = simply.app({
         },
         searchTextNext: (el) => {
             const form = el.closest('form')
-            const search = form.elements['search']
+            const search = form.elements['searchText']
             browser.actions.searchTextNext(search.value)
         },
         searchTextPrev: (el) => {
             const form = el.closest('form')
-            const search = form.elements['search']
+            const search = form.elements['searchText']
             browser.actions.searchTextPrev(search.value)
         },
         saveChangesDocument:(form, values)=>{
@@ -784,6 +794,11 @@ browser = simply.app({
         }
     },
     actions: {
+        showSearch: () => {
+            let searchDialog = document.querySelector('.slo-spreadsheet-search')
+            searchDialog.setAttribute('open','open')
+            searchDialog.querySelector('[name="searchText"]').focus()
+        },
         searchTextNext: async function(search, from) {
             const results = browser.view.sloSpreadsheet.search(search)
             if (!results.length) {

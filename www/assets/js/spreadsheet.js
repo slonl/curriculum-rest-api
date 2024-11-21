@@ -754,33 +754,7 @@ const spreadsheet = (function() {
     
     function renderFoot() {
       let colspan = options.columns.filter(c => c.checked).length+2
-      let html = `<tr><td colspan="${colspan}"><dialog class="ds-dialog ds-dialog-narrow slo-spreadsheet-search">
-      <div class="ds-dialog-header" style="z-index: 1000">
-        <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeDialog">
-          <svg class="ds-icon ds-icon-feather">
-            <use xlink:href="/assets/icons/feather-sprite.svg#x">
-          </use></svg>
-        </button>
-      </div>
-      <div class="ds-dialog-content">
-        <form class="slo-search-form">
-          <label>
-            Zoek
-            <input type="text" name="search" data-simply-command="searchText" data-simply-immediate="true">
-          </label>
-          <button title="Volgende" class="ds-button ds-button-naked" data-simply-command="searchTextNext">
-            <svg class="ds-icon ds-icon-feather">
-              <use xlink:href="/assets/icons/feather-sprite.svg#chevron-down">
-            </use></svg>
-          </button>
-          <button title="Vorige" class="ds-button ds-button-naked" data-simply-command="searchTextPrev">
-            <svg class="ds-icon ds-icon-feather">
-              <use xlink:href="/assets/icons/feather-sprite.svg#chevron-up">
-            </use></svg>
-          </button>
-        </form>
-      </div>
-</dialog></td></tr>`
+      let html = `<tr><td colspan="${colspan}"></td></tr>`
       foot.innerHTML = html
     }
 
@@ -1077,11 +1051,6 @@ const spreadsheet = (function() {
       },
       getColumnDefinition,
       toggleFullScreen,
-      showSearch: () => {
-        let searchDialog = foot.querySelector('.slo-spreadsheet-search')
-        searchDialog.setAttribute('open','open')
-        searchDialog.querySelector('[name="search"]').focus()
-      },
       search: (text) => {
         let results = []
         let textRe = new RegExp(text, 'g')
