@@ -161,6 +161,10 @@ browser = simply.app({
         }
     }),
     keyboard: {
+        default: {
+            //sometimes the keyboard needs to work as normal.
+        },
+
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
             "Control+f": (e) => {
@@ -431,9 +435,6 @@ browser = simply.app({
                 browser.actions.documentHideEditor()
             }
         },
-        default: {
-            // needed to switch back to default keyboard browser integreation
-        },
     },
 
     commands: {
@@ -474,6 +475,9 @@ browser = simply.app({
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
             el.closest('.ds-dropdown').querySelector('.ds-dropdown-state').checked = false
+            // add filter display trigger here
+            browser.actions.updateFilterStatus()
+
         },
         closeDialog: (el, value) => {
             el.closest('dialog').close(false)
@@ -509,9 +513,9 @@ browser = simply.app({
             browser.view.sloSpreadsheet.update({
                 filter
             })
-            browser.actions.updateFilterStatus()
         },
         filterText: (el, value) => {
+            document.body.dataset.simplyKeyboard = 'default'
             let filter = {}
             if (value.length>2) {
                 filter[el.name] = value
@@ -521,6 +525,27 @@ browser = simply.app({
             } else {
                 filter[el.name] = ''
                 browser.view.sloSpreadsheet.update({filter})
+            }
+        },
+        removeFilter: (el, value) => {
+            
+            // @TODO change into an action: "emptyFilter" or somesuch.
+            let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
+            
+            browser.actions.removeFilterText(el.parentElement.parentElement.id);
+            
+            let filter = {}
+            filter[filterSuffix] = ""
+            browser.view.sloSpreadsheet.update({
+                filter
+            })
+            delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
+
+            let column = browser.view.sloSpreadsheet.options.columns 
+                .find(c => c.value==filterSuffix);
+
+            for (filter in column.filteredValues){
+                filter = false;
             }
             browser.actions.updateFilterStatus()
         },
@@ -1011,11 +1036,37 @@ browser = simply.app({
             // if any filters are non-empty, add the 'filtered' class
             // otherwise remove it from the slo-tree-table
             let filters = browser.view.sloSpreadsheet.options?.filter
+            
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
+                let elementId;
+
+                for( filter in filters){
+                    elementId = 'filter-' + filter ;
+                    document.getElementById(elementId).innerHTML = '';
+                }
+
+                for( filter in filters){
+                    elementId = 'filter-' + filter ;
+                        document.getElementById(elementId).innerHTML += `<div>
+                        <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+                        <a title="${filters[filter]}">${filters[filter]}</a></span>
+                        <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+                        <svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+                    </svg></a></div>`
+                }
+
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
+        },
+        removeFilterText: async function(elementId) {
+            console.log("removing element: ", elementId);
+            console.log(document.getElementById(elementId).innerHTML)
+            
+            let element = document.getElementById(elementId);
+            element.replaceChildren();
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
