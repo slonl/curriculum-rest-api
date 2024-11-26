@@ -354,7 +354,7 @@
                     type: 'list',
                     viewer: function(rect, offset, el) {
                         let row = browser.view.sloSpreadsheet.getRow(el)
-                        if (!row.node.Niveau?.length) {
+                        if (!meta.schemas.types[row.node['@type']]?.children?.Niveau) {
                             this.querySelector('ul').style.color='#888'
                             return false
                         }
@@ -362,7 +362,7 @@
                     editor: function(rect, offset, el) {
                         let row = browser.view.sloSpreadsheet.getRow(el)
                         let column = browser.view.sloSpreadsheet.getColumnDefinition(el)
-                        let disabled = !row.node.Niveau?.length ? ' disabled' : ''
+                        let disabled = !meta.schemas.types[row.node['@type']]?.children?.Niveau ? ' disabled' : ''
                         let value = row.columns[column.value] || []
                         let allNiveaus = column.values
                         let html = `
@@ -383,19 +383,15 @@
                         html+='</ul></form>'
                         this.innerHTML = html
                         this.querySelector('input[type="checkbox"]')?.focus()
-                        if (!row.node.Niveau?.length) {
-                            this.querySelector('ul').style.color='#888'
-                        }
                         if (disabled) {
+                            this.querySelector('ul').style.color='#888'
                             return false
                         }
                     },
                     isEditable: (el) => {
                         let row = browser.view.sloSpreadsheet.getRow(el)
-                        if (!row.node.Niveau?.length) {
-                            return false
-                        }
-                        return true
+                        let disabled = !meta.schemas.types[row.node['@type']]?.children?.Niveau ? ' disabled' : ''
+                        return !disabled
                     }
                 }
             }
