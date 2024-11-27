@@ -143,14 +143,19 @@
                     </ul>
                 </nav>
                 <h1 data-simply-field="listTitle"></h1>
-                <div data-simply-field="listIsRoot" data-simply-content="template">
-                    <template></template>
+                <div data-simply-field="loggedIn" data-simply-content="template">
+                    <template data-simply-template="false"></template>
                     <template data-simply-template="true">
-                        <button class="ds-button" data-simply-command="addNewRoot">
-                            <svg class="ds-icon ds-icon-feather"><use
-                                xlink:href="/assets/icons/feather-sprite.svg#plus"></use></svg>
-                            Nieuw
-                        </button>
+                        <div data-simply-field="listIsRoot" data-simply-content="template">
+                            <template></template>
+                            <template data-simply-template="true">
+                                <button class="ds-button" data-simply-command="addNewRoot">
+                                    <svg class="ds-icon ds-icon-feather"><use
+                                        xlink:href="/assets/icons/feather-sprite.svg#plus"></use></svg>
+                                    Nieuw
+                                </button>
+                            </template>
+                        </div>
                     </template>
                 </div>
                 <ul data-simply-list="list" xdata-simply-data="list">
