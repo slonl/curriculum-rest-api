@@ -794,7 +794,10 @@ const spreadsheet = (function() {
       
       // Filters
       heading += `<tr><td></td>`
-                
+      if (options.editMode) {
+        heading += '<td></td>'
+      }
+
       for (let column of options.columns) {    
         if (!column.checked) {
           continue
@@ -890,6 +893,7 @@ const spreadsheet = (function() {
         }
         spreadsheet.visibleData = datamodel.view.visibleData
         renderBody()
+        spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column)
       },
       render: () => {
         renderHeading()
