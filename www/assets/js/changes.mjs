@@ -568,14 +568,15 @@ const changes = (()=> {
 		changes.update()
 	}
 
-	function getLocalView(data) {
+	function getLocalView(dataIn) {
+		let dataOut = structuredClone(dataIn)
 		changes.merged = changes.changes.merge()
 		changes.local = changes.merged.normalize()
 		let local = changes.local
-		if (!Array.isArray(data)) {
-			data = [data]
+		if (!Array.isArray(dataOut)) {
+			dataOut = [dataOut]
 		}
-		for(let node of data) {
+		for(let node of dataOut) {
 			walk(node, 0, (n) => {
 				let id = n.id ?? n.uuid
 				if (local[id] && local[id] instanceof ChangedNode) {
@@ -597,6 +598,7 @@ const changes = (()=> {
 				}
 			})
 		}
+		return dataOut
 	}
 
 	return changes

@@ -721,7 +721,6 @@ browser = simply.app({
         insertRow: async function(el, value) {
             //find possible types for sibling and child of node
             //show popup with list of types
-            browser.view.insertParentRow = el
             browser.actions.showTypeSelector(el)                
         },
         showLinkForm: async function(el, value) {
@@ -1468,8 +1467,8 @@ browser = simply.app({
             })
         },
         spreadsheetUpdate: function() {
-            changes.getLocalView(browser.view.root)
-            let defs = slo.treeToRows(browser.view.root)
+            let localData = changes.getLocalView(browser.view.root)
+            let defs = slo.treeToRows(localData)
             browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
         },
@@ -1542,8 +1541,8 @@ browser = simply.app({
             return window.localAPI.doelniveauList(type)
             .then(function(json) {
                 browser.view.view = 'doelniveauList';
-                changes.getLocalView(json.data)
-                browser.view.list = json.data;
+                let localData = changes.getLocalView(json.data)
+                browser.view.list = localData;
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
@@ -1771,6 +1770,7 @@ browser = simply.app({
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
+            browser.view.insertParentRow = el.closest('tr')
             browser.view.addEntityError = ''
             let row = browser.view.sloSpreadsheet.getRow(el)
             let thisType = getType(row.node)
