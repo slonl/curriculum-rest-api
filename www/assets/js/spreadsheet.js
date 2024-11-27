@@ -662,10 +662,9 @@ TODO:
 
       // @TODO: found out where filterValue() and filterText() in databrowser.js put/retrieve things so as to comprehend why the entityfilterView doesn't display Text entities. 
       function entityFilterView(column){
-        console.log("column.filteredValues", column)
         let cellTextContent = ``
         if (column.filteredValues && Object.values(column.filteredValues).find(v => v)) {
-          console.log("filling cell");
+          console.log("generating filteredvalues from: ", column.filteredValues)
           cellTextContent = `<div>
                           <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
                           <a title="${Object.keys(column.filteredValues)}">${Object.keys(column.filteredValues)}</a></span>
@@ -802,8 +801,7 @@ TODO:
   
         
         // Filters
-        heading += `<tr><td></td><td></td>` 
-                  
+        heading += `<tr><td></td><td></td>`         
         for (let column of options.columns) {    
           if (!column.checked) {
             continue
@@ -818,6 +816,7 @@ TODO:
             col+= column.value
           }
           col += `">`
+          //console.log("Column contains data: ", column)
           col += entityFilterView(column)
           col += `</td>`
           heading += col
@@ -902,11 +901,14 @@ TODO:
           renderBody()
         },
         render: () => {
-          renderHeading()
           renderBody()
+          renderHeading()
         },
         renderBody: () => {
           renderBody()
+        },
+        renderHeading: () => {
+          renderHeading()
         },
         moveLeft: () => {
           return spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column-1)
