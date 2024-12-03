@@ -142,6 +142,8 @@
                         <li><a href="" data-simply-field="contextLink"></a></li>
                     </ul>
                 </nav>
+                <button class="ds-align-right ds-button" data-simply-command="toggleSource" data-simply-field="showSource" data-simply-transformer="select" data-simply-content="fixed">
+                    <input type="checkbox" value="1" data-simply-field="showSource"> Source</button>
                 <h1 data-simply-field="listTitle"></h1>
                 <div data-simply-field="loggedIn" data-simply-content="template">
                     <template data-simply-template="false"></template>
@@ -158,9 +160,16 @@
                         </div>
                     </template>
                 </div>
-                <ul data-simply-list="list" xdata-simply-data="list">
-                    <template rel="links"></template>
-                </ul>
+                <div data-simply-field="showSource" data-simply-content="template">
+                    <template data-simply-template="0">
+                        <ul data-simply-list="list">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                    <template data-simply-template="1">
+                        <pre data-simply-field="source"></pre>
+                    </template>
+                </div>
             </template>
             <template data-simply-template="register">
                 <h1>API Key registreren</h1>
@@ -177,10 +186,19 @@
                 <p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
             </template>
             <template data-simply-template="doelniveauList">
+                <button class="ds-align-right ds-button" data-simply-command="toggleSource" data-simply-field="showSource" data-simply-transformer="select" data-simply-content="fixed">
+                    <input type="checkbox" value="1" data-simply-field="showSource"> Source</button>
                 <h1 data-simply-field="listTitle"></h1>
-                <ul data-simply-list="list">
-                    <template rel="doelniveau"></template>
-                </ul>
+                <div data-simply-field="showSource" data-simply-content="template">
+                    <template data-simply-template="0">
+                        <ul data-simply-list="list">
+                            <template rel="doelniveau"></template>
+                        </ul>
+                    </template>
+                    <template data-simply-template="1">
+                        <pre data-simply-field="source"></pre>
+                    </template>
+                </div>
             </template>
             <link rel="simply-include" href="/templates/item.html">
             <link rel="simply-include" href="/templates/filters.html">

@@ -65,6 +65,7 @@ browser = simply.app({
     container: document.body,
 
     view: {
+        showSource: 0,
         spreadsheet: {
             focus: {
                 row: 0,
@@ -438,6 +439,9 @@ browser = simply.app({
     },
 
     commands: {
+        toggleSource: (el, value) => {
+            browser.view.showSource = browser.view.showSource ? 0 : 1
+        },
         searchText: (el, value) => {
             if (!browser.view.searchFrom) {
                 browser.view.searchFrom = Object.assign({},browser.view.sloSpreadsheet.options.focus)
@@ -1449,6 +1453,7 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.list(type)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 type = type.substring(0, type.length-1)
                 browser.view.context = window.slo.getContextByType(type)
                 browser.view.contextLink = {
@@ -1554,6 +1559,7 @@ browser = simply.app({
         item: function(id) {
             return window.localAPI.item(id)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
@@ -1572,6 +1578,7 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.listOpNiveau(niveau, type)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
@@ -1586,6 +1593,7 @@ browser = simply.app({
         itemOpNiveau: function(niveau, type, id) {
             return window.localAPI.itemOpNiveau(niveau, type, id)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 browser.view.view = 'item';
                 browser.view.item = json;
                 browser.actions.updatePaging();
