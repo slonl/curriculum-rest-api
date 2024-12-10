@@ -663,16 +663,34 @@ TODO:
       // @TODO: found out where filterValue() and filterText() in databrowser.js put/retrieve things so as to comprehend why the entityfilterView doesn't display Text entities. 
       function entityFilterView(column){
         let cellTextContent = ``
+        let filters = browser.view.sloSpreadsheet.options?.filter
+
         if (column.filteredValues && Object.values(column.filteredValues).find(v => v)) {
-          console.log("generating filteredvalues from: ", column.filteredValues)
           cellTextContent = `<div>
-                          <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
-                          <a title="${Object.keys(column.filteredValues)}">${Object.keys(column.filteredValues)}</a></span>
-                          <a title="verwijderAlleFilters" data-simply-command="removeFilter">
-                          <svg class="ds-icon ds-icon-feather">
-                          <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
-                      </svg></a></div>`
+            <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+            <a title="${Object.keys(column.filteredValues)}">${Object.keys(column.filteredValues)}</a></span>
+            <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+            <svg class="ds-icon ds-icon-feather">
+            <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+            </svg></a></div>`
         }
+        
+        // @NOTE Je kan beter de .find en .map van Auke gebruiken op de array uit Object.values(columnFilters)
+        if (filters && Object.values(filters).find(v => v)) {
+
+          let columnFilters =  Object.entries(filters).filter(([name,value]) => name === column.value)
+  
+          if (column.value == Object.keys(filters).find(key => key == column.value)){
+            cellTextContent = `<div>
+              <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+              <a title="${(columnFilters[0][1])}">${(columnFilters[0][1])}</a></span>
+              <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+              <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+              </svg></a></div>`
+          }
+        }
+
         return cellTextContent;
       }
   
@@ -816,7 +834,6 @@ TODO:
             col+= column.value
           }
           col += `">`
-          //console.log("Column contains data: ", column)
           col += entityFilterView(column)
           col += `</td>`
           heading += col

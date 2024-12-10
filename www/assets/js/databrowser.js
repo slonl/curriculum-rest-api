@@ -500,6 +500,9 @@ browser = simply.app({
 
             let filter = {}
             
+            console.log("sloSPreadsheet.options.filter[columnValue]")
+            console.log(browser.view.sloSpreadsheet.options.filter[columnValue])
+
             if (Array.isArray(browser.view.sloSpreadsheet.options.filter[columnValue])){
 
                 filter[columnValue] = ''
@@ -521,6 +524,7 @@ browser = simply.app({
             if (!Array.isArray(browser.view.sloSpreadsheet.options.filter[columnValue])){
                 let filter = {}
                 filter[columnValue] = ""
+
                 browser.view.sloSpreadsheet.update({
                     filter
                 })
