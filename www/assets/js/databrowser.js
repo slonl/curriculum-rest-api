@@ -494,7 +494,8 @@ browser = simply.app({
         },
         export: async (el, value) => {
             const csv = await browser.actions.export()
-            window.open(encodeURI("data:text/csv;charset=urf-8,"+csv))
+            let universalBOM = "\uFEFF"
+            window.open("data:text/csv;charset=utf-8," + encodeURIComponent(universalBOM+csv))
         },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
@@ -533,6 +534,7 @@ browser = simply.app({
                 .filter(([name,value]) => value)
                 .map(([name,value]) => name)
             let filter = {}
+            
             filter[el.name] = columnFilter
             browser.view.sloSpreadsheet.update({
                 filter
@@ -552,26 +554,50 @@ browser = simply.app({
             }
         },
         removeFilter: (el, value) => {
-            
-            // @TODO change into an action: "emptyFilter" or somesuch.
-            let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
-            
-            browser.actions.removeFilterText(el.parentElement.parentElement.id);
-            
+
+            let parts = (el.parentElement.parentElement.id).split("-");
+            parts.shift()
+            let columnValue = parts.join("-")
+        
+            let column = browser.view.sloSpreadsheet.options.columns
+            .find(c => c.value==columnValue)
+
+
             let filter = {}
-            filter[filterSuffix] = ""
-            browser.view.sloSpreadsheet.update({
-                filter
-            })
-            delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
+            
+            console.log("sloSPreadsheet.options.filter[columnValue]")
+            console.log(browser.view.sloSpreadsheet.options.filter[columnValue])
 
-            let column = browser.view.sloSpreadsheet.options.columns 
-                .find(c => c.value==filterSuffix);
+            if (Array.isArray(browser.view.sloSpreadsheet.options.filter[columnValue])){
 
-            for (filter in column.filteredValues){
-                filter = false;
+                filter[columnValue] = ''
+                column.filteredValues = ''
+                
+                console.log("calling browser.view.sloSpreadsheet.update()")
+              
+                browser.view.sloSpreadsheet.update({
+                    filter
+                })
+                
+                console.log("Filter has been set to: ", column.filteredValues )
+                
+                delete browser.view.sloSpreadsheet.options.filter[columnValue]
+                
+                browser.actions.updateFilterStatus()
             }
-            browser.actions.updateFilterStatus()
+
+            if (!Array.isArray(browser.view.sloSpreadsheet.options.filter[columnValue])){
+                let filter = {}
+                filter[columnValue] = ""
+
+                browser.view.sloSpreadsheet.update({
+                    filter
+                })
+                
+                delete browser.view.sloSpreadsheet.options.filter[columnValue]
+                
+                browser.actions.updateFilterStatus()
+            }
         },
         close: function(el,value) {
             let dialog = el.closest('dialog')
@@ -1056,40 +1082,16 @@ browser = simply.app({
             this.app.actions.switchView(this.app.view.view, root)
         },
         updateFilterStatus: async function() {
-            // if any filters are non-empty, add the 'filtered' class
-            // otherwise remove it from the slo-tree-table
             let filters = browser.view.sloSpreadsheet.options?.filter
+
+            console.log("updating filters: ", filters)
             
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
-                let elementId;
-
-                for( filter in filters){
-                    elementId = 'filter-' + filter ;
-                    document.getElementById(elementId).innerHTML = '';
-                }
-
-                for( filter in filters){
-                    elementId = 'filter-' + filter ;
-                        document.getElementById(elementId).innerHTML += `<div>
-                        <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
-                        <a title="${filters[filter]}">${filters[filter]}</a></span>
-                        <a title="verwijderAlleFilters" data-simply-command="removeFilter">
-                        <svg class="ds-icon ds-icon-feather">
-                        <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
-                    </svg></a></div>`
-                }
-
             } else {
                 document.querySelector('table.slo-tree-table').classList.remove('filtered')
             }
-        },
-        removeFilterText: async function(elementId) {
-            console.log("removing element: ", elementId);
-            console.log(document.getElementById(elementId).innerHTML)
-            
-            let element = document.getElementById(elementId);
-            element.replaceChildren();
+            browser.view.sloSpreadsheet.render()
         },
         switchView: async function(view,root){
             let currentView = this.app.view.view;
