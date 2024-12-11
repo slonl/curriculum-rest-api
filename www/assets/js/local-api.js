@@ -11,6 +11,44 @@ window.localAPI = (function() {
     }
 
 	return {
+        reflect: {
+            list: function(type) {
+                let token
+                if (browser.view.requestToken && browser.view.requestEmail) {
+                    token = btoa(browser.view.requestEmail+':'+browser.view.requestToken)
+                } else {
+                    token = '${token}'
+                }
+                const pageSize = browser.view.pageSize
+                const page = parseInt(browser.view.page) - 1
+                return `var result = await fetch(
+    "${apiURL}/${type}?page=${page}&pageSize=${pageSize}",
+    {
+        headers: {
+            Authorization: \`Basic ${token}\`,
+            Accept: 'application/json'
+        }
+    }
+).then(response => response.json())`
+            },
+            item: function(id) {
+                let token
+                if (browser.view.requestToken && browser.view.requestEmail) {
+                    token = btoa(browser.view.requestEmail+':'+browser.view.requestToken)
+                } else {
+                    token = '${token}'
+                }
+                return `var result = await fetch(
+    "${apiURL}/uuid/${id}/",
+    {
+        headers: {
+            Authorization: \`Basic ${token}\`,
+            Accept: 'application/json'
+        }
+    }
+).then(response => response.json())`
+            }
+        },
         list: async function(type) {
             return window.slo.api.get(type, {
                 pageSize: browser.view.pageSize,

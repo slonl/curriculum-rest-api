@@ -571,3 +571,24 @@ body.ds-paging .slo-header .ds-paging {
 .slo-search-form {
     padding: 0 1em;
 }
+
+pre {
+    background: var(--ds-grey-90);
+    color: var(--ds-white);
+    width: 100%;
+    overflow: auto;
+    max-height: calc(100vh - 337px);
+    border-radius: 5px;
+    margin-bottom: calc(0.5 * var(--ds-spacing));
+    padding: calc(0.5 * var(--ds-spacing));
+}
+.slo-relative {
+    position: relative;
+}
+.slo-absolute-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: calc(0.5 * var(--ds-spacing));
+    z-index: 11;
+}

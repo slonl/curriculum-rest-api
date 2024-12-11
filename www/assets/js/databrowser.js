@@ -442,6 +442,18 @@ browser = simply.app({
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
         },
+        copyPre: (el, value) => {
+            const pre = el.parentElement.querySelector('pre')
+            navigator.clipboard.writeText(pre.innerText)
+        },
+        saveToken: (form, values) => {
+            const requestToken = values.requestToken
+            const requestEmail = values.requestEmail
+            localStorage.setItem('requestToken', JSON.stringify(requestToken))
+            localStorage.setItem('requestEmail', JSON.stringify(requestEmail))
+            browser.view.requestEmail = requestEmail
+            browser.view.requestToken = requestToken
+        },
         searchText: (el, value) => {
             if (!browser.view.searchFrom) {
                 browser.view.searchFrom = Object.assign({},browser.view.sloSpreadsheet.options.focus)
@@ -1453,6 +1465,7 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.list(type)
             .then(function(json) {
+                browser.view.request = window.localAPI.reflect.list(type)
                 browser.view.source = JSON.stringify(json, null, 4)
                 type = type.substring(0, type.length-1)
                 browser.view.context = window.slo.getContextByType(type)
@@ -1559,6 +1572,7 @@ browser = simply.app({
         item: function(id) {
             return window.localAPI.item(id)
             .then(function(json) {
+                browser.view.request = window.localAPI.reflect.item(id)
                 browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
@@ -1985,7 +1999,14 @@ if (user && key) {
 } else {
     browser.view.loggedIn = false
 }
-
+const requestToken = localStorage.getItem('requestToken')
+const requestEmail = localStorage.getItem('requestEmail')
+if (requestToken) {
+    browser.view.requestToken = JSON.parse(requestToken)
+}
+if (requestEmail) {
+    browser.view.requestEmail = JSON.parse(requestEmail)
+}
 
 browser.view.dirtyChecked = true
 
