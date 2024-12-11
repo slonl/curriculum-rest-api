@@ -662,6 +662,38 @@ const spreadsheet = (function() {
 </label>`
     }
 
+    function entityFilterView(column){
+      let cellTextContent = ``
+      let filters = browser.view.sloSpreadsheet.options?.filter
+
+      if (column.filteredValues && Object.values(column.filteredValues).find(v => v)) {
+        cellTextContent = `<div>
+          <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+          <a title="${Object.keys(column.filteredValues)}">${Object.keys(column.filteredValues)}</a></span>
+          <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+          <svg class="ds-icon ds-icon-feather">
+          <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+          </svg></a></div>`
+      }
+      
+      if (filters && Object.values(filters).find(v => v)) {
+
+        let columnFilters =  Object.entries(filters).filter(([name,value]) => name === column.value)
+
+        if (column.value == Object.keys(filters).find(key => key == column.value)){
+          cellTextContent = `<div>
+            <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+            <a title="${(columnFilters[0][1])}">${(columnFilters[0][1])}</a></span>
+            <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+            <svg class="ds-icon ds-icon-feather">
+            <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+            </svg></a></div>`
+        }
+      }
+
+      return cellTextContent;
+    }
+
     function renderRow(row) {
       let rowClass = row.closed;
       if (datamodel.options.focus?.row == row.index) {
@@ -793,7 +825,7 @@ const spreadsheet = (function() {
 
       
       // Filters
-      heading += `<tr><td></td>`
+      heading += `<tr><td></td><td></td>`
       if (options.editMode) {
         heading += '<td></td>'
       }
@@ -812,6 +844,7 @@ const spreadsheet = (function() {
           col+=column.value
         }
         col += `">`
+        col += entityFilterView(column)
         col += `</td>`
         heading += col
       }
@@ -902,6 +935,9 @@ const spreadsheet = (function() {
       },
       renderBody: () => {
         renderBody()
+      },
+      renderHeading: () => {
+        renderHeading()
       },
       moveLeft: () => {
         return spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column-1)
