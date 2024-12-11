@@ -95,7 +95,6 @@
 
     editor.transformers.select = {
         render: function(data) {
-            console.log('select transformer called')
             if (data) {
                 this.classList.add('ds-selected')
             } else {
