@@ -554,7 +554,6 @@ browser = simply.app({
             }
         },
         removeFilter: (el, value) => {
-
             let parts = (el.parentElement.parentElement.id).split("-");
             parts.shift()
             let columnValue = parts.join("-")
@@ -562,11 +561,7 @@ browser = simply.app({
             let column = browser.view.sloSpreadsheet.options.columns
             .find(c => c.value==columnValue)
 
-
             let filter = {}
-            
-            console.log("sloSPreadsheet.options.filter[columnValue]")
-            console.log(browser.view.sloSpreadsheet.options.filter[columnValue])
 
             if (Array.isArray(browser.view.sloSpreadsheet.options.filter[columnValue])){
 
