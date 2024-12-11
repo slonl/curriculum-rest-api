@@ -592,3 +592,25 @@ pre {
     margin: calc(0.5 * var(--ds-spacing));
     z-index: 11;
 }
+.slo-box {
+    margin: calc(0.5 * var(--ds-spacing)) 0;
+    padding: calc(0.5 * var(--ds-spacing));
+    box-shadow: var(--ds-shadow-medium);
+}
+.slo-token-form {
+    display: flex;
+}
+.slo-token-form > * {
+    flex-grow: 2;
+    flex-basis: auto;    
+}
+.slo-token-form input,
+.slo-token-form button {
+    margin-bottom: 0;
+}
+.slo-token-form .ds-form-buttons {
+    flex-basis: 0;
+}
+.slo-code-box-title {
+    font-size: 1.1rem;
+}

@@ -14,17 +14,18 @@
                     </h1>
                     <div data-simply-field="showSource" data-simply-content="template">
                         <template data-simply-template="1">
-                            <form data-simply-command="saveToken">
+                            <form class="slo-box slo-token-form" data-simply-command="saveToken">
                                 <label>
-                                    API Token (<a href="/api/">lees meer</a>)
+                                    API Token (<a href="/curriculum/api/">lees meer over de API</a>)
                                     <input type="text" name="requestToken" data-simply-field="requestToken" placeholder="Vul je API token hier in">
                                 </label>
                                 <label>
                                     E-mail
                                     <input type="text" name="requestEmail" data-simply-field="requestEmail" placeholder="Vul het e-mail adres gekoppeld aan dit token hier in">
                                 </label>
-                                <button class="ds-button">Update</button>
+                                <div class="ds-form-buttons"><button class="ds-button">Update</button></div>
                             </form>
+                            <h2 class="slo-code-box-title">Request (javascript)</h2>
                             <div class="slo-relative">
                                 <button data-simply-command="copyPre" class="ds-button slo-absolute-right">
                                     <svg class="ds-icon ds-icon-feather">
@@ -33,6 +34,7 @@
                                 </button>
                                 <pre data-simply-field="request"></pre>
                             </div>
+                            <h2 class="slo-code-box-title">Response (json-ld)</h2>
                             <div class="slo-relative">
                                 <button data-simply-command="copyPre" class="ds-button slo-absolute-right">
                                     <svg class="ds-icon ds-icon-feather">

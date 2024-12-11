@@ -441,6 +441,13 @@ browser = simply.app({
     commands: {
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
+            let url = new URL(document.location.href)
+            if (browser.view.showSource) {
+                url.searchParams.set('source', browser.view.showSource)
+            } else {
+                url.searchParams.delete('source')
+            }
+            history.pushState({}, null, url)
         },
         copyPre: (el, value) => {
             const pre = el.parentElement.querySelector('pre')
@@ -453,6 +460,7 @@ browser = simply.app({
             localStorage.setItem('requestEmail', JSON.stringify(requestEmail))
             browser.view.requestEmail = requestEmail
             browser.view.requestToken = requestToken
+            window.location.reload()
         },
         searchText: (el, value) => {
             if (!browser.view.searchFrom) {
@@ -2009,7 +2017,10 @@ if (requestEmail) {
 }
 
 browser.view.dirtyChecked = true
-
+const locationURL = new URL(document.location.href)
+if (locationURL.searchParams.get('source')) {
+    browser.view.showSource = 1
+}
 window.addEventListener('resize', (e) => {
     if (browser.view.view == 'spreadsheet') {
         browser.actions.spreadsheetResize()
