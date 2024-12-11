@@ -61,6 +61,11 @@
         max-height: 50vh;
         overflow: auto;
     }
+    .slo-helper ul {
+        margin-top: 0;
+        max-height: 48vh;
+        overflow: auto;
+    }
     .vsb-menu {
         left: auto !important;
     }
@@ -548,4 +553,64 @@ body.ds-paging .slo-header .ds-paging {
     height: 0;
     margin-bottom: -27px;
     display: block;
+}
+
+.slo-spreadsheet-search {
+    width: min(100%, 40em);
+    position: absolute;
+    margin-top: -30px;
+    z-index: 100000;
+}
+
+.slo-search-form input,
+.slo-search-form label,
+.slo-search-form button {
+    display: inline-block;
+    white-space: nowrap;
+}
+.slo-search-form {
+    padding: 0 1em;
+}
+
+pre {
+    background: var(--ds-grey-90);
+    color: var(--ds-white);
+    width: 100%;
+    overflow: auto;
+    max-height: calc(100vh - 337px);
+    border-radius: 5px;
+    margin-bottom: calc(0.5 * var(--ds-spacing));
+    padding: calc(0.5 * var(--ds-spacing));
+}
+.slo-relative {
+    position: relative;
+}
+.slo-absolute-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: calc(0.5 * var(--ds-spacing));
+    z-index: 11;
+}
+.slo-box {
+    margin: calc(0.5 * var(--ds-spacing)) 0;
+    padding: calc(0.5 * var(--ds-spacing));
+    box-shadow: var(--ds-shadow-medium);
+}
+.slo-token-form {
+    display: flex;
+}
+.slo-token-form > * {
+    flex-grow: 2;
+    flex-basis: auto;    
+}
+.slo-token-form input,
+.slo-token-form button {
+    margin-bottom: 0;
+}
+.slo-token-form .ds-form-buttons {
+    flex-basis: 0;
+}
+.slo-code-box-title {
+    font-size: 1.1rem;
 }

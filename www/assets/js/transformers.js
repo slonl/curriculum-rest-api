@@ -93,6 +93,16 @@
         }
     }
 
+    editor.transformers.select = {
+        render: function(data) {
+            if (data) {
+                this.classList.add('ds-selected')
+            } else {
+                this.classList.remove('ds-selected')
+            }
+        }
+    }
+
     simply.activate.addListener('autosize', function() {
         this.addEventListener('input', () => {
             this.parentNode.dataset.replicatedValue = this.value

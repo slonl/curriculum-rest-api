@@ -142,20 +142,62 @@
                         <li><a href="" data-simply-field="contextLink"></a></li>
                     </ul>
                 </nav>
+                <button class="ds-align-right ds-button" data-simply-command="toggleSource" data-simply-field="showSource" data-simply-transformer="select" data-simply-content="fixed">
+                    <input type="checkbox" value="1" data-simply-field="showSource"> Source</button>
                 <h1 data-simply-field="listTitle"></h1>
-                <div data-simply-field="listIsRoot" data-simply-content="template">
-                    <template></template>
+                <div data-simply-field="loggedIn" data-simply-content="template">
+                    <template data-simply-template="false"></template>
                     <template data-simply-template="true">
-                        <button class="ds-button" data-simply-command="addNewRoot">
-                            <svg class="ds-icon ds-icon-feather"><use
-                                xlink:href="/assets/icons/feather-sprite.svg#plus"></use></svg>
-                            Nieuw
-                        </button>
+                        <div data-simply-field="listIsRoot" data-simply-content="template">
+                            <template></template>
+                            <template data-simply-template="true">
+                                <button class="ds-button" data-simply-command="addNewRoot">
+                                    <svg class="ds-icon ds-icon-feather"><use
+                                        xlink:href="/assets/icons/feather-sprite.svg#plus"></use></svg>
+                                    Nieuw
+                                </button>
+                            </template>
+                        </div>
                     </template>
                 </div>
-                <ul data-simply-list="list" xdata-simply-data="list">
-                    <template rel="links"></template>
-                </ul>
+                <div data-simply-field="showSource" data-simply-content="template">
+                    <template data-simply-template="0">
+                        <ul data-simply-list="list">
+                            <template rel="links"></template>
+                        </ul>
+                    </template>
+                    <template data-simply-template="1">
+<form class="slo-box slo-token-form" data-simply-command="saveToken">
+                                <label>
+                                    API Token (<a href="/curriculum/api/">lees meer over de API</a>)
+                                    <input type="text" name="requestToken" data-simply-field="requestToken" placeholder="Vul je API token hier in">
+                                </label>
+                                <label>
+                                    E-mail
+                                    <input type="text" name="requestEmail" data-simply-field="requestEmail" placeholder="Vul het e-mail adres gekoppeld aan dit token hier in">
+                                </label>
+                                <div class="ds-form-buttons"><button class="ds-button">Update</button></div>
+                            </form>
+                            <h2 class="slo-code-box-title">Request (javascript)</h2>
+                            <div class="slo-relative">
+                                <button data-simply-command="copyPre" class="ds-button slo-absolute-right">
+                                    <svg class="ds-icon ds-icon-feather">
+                                        <use xlink:href="/assets/icons/feather-sprite.svg#copy">
+                                    </use></svg>
+                                </button>
+                                <pre data-simply-field="request"></pre>
+                            </div>
+                            <h2 class="slo-code-box-title">Response (json-ld)</h2>
+                            <div class="slo-relative">
+                                <button data-simply-command="copyPre" class="ds-button slo-absolute-right">
+                                    <svg class="ds-icon ds-icon-feather">
+                                        <use xlink:href="/assets/icons/feather-sprite.svg#copy">
+                                    </use></svg>
+                                </button>
+                                <pre data-simply-field="source"></pre>
+                            </div>
+                    </template>
+                </div>
             </template>
             <template data-simply-template="register">
                 <h1>API Key registreren</h1>
@@ -172,10 +214,19 @@
                 <p>De API key wordt binnen een aantal uur per e-mail verstuurd.</p>
             </template>
             <template data-simply-template="doelniveauList">
+                <button class="ds-align-right ds-button" data-simply-command="toggleSource" data-simply-field="showSource" data-simply-transformer="select" data-simply-content="fixed">
+                    <input type="checkbox" value="1" data-simply-field="showSource"> Source</button>
                 <h1 data-simply-field="listTitle"></h1>
-                <ul data-simply-list="list">
-                    <template rel="doelniveau"></template>
-                </ul>
+                <div data-simply-field="showSource" data-simply-content="template">
+                    <template data-simply-template="0">
+                        <ul data-simply-list="list">
+                            <template rel="doelniveau"></template>
+                        </ul>
+                    </template>
+                    <template data-simply-template="1">
+                        <pre data-simply-field="source"></pre>
+                    </template>
+                </div>
             </template>
             <link rel="simply-include" href="/templates/item.html">
             <link rel="simply-include" href="/templates/filters.html">

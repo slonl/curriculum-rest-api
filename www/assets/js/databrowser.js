@@ -65,6 +65,7 @@ browser = simply.app({
     container: document.body,
 
     view: {
+        showSource: 0,
         spreadsheet: {
             focus: {
                 row: 0,
@@ -167,6 +168,11 @@ browser = simply.app({
 
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
         spreadsheet: {
+            "Control+f": (e) => {
+                browser.actions.switchKeyboard('spreadsheet-search')
+                browser.actions.showSearch()
+                e.preventDefault()
+            },
             "ArrowDown": (e) => {
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
@@ -253,6 +259,25 @@ browser = simply.app({
                 browser.actions.deleteRow(el.closest('tr'))
             }
             // @TODO: Space -> open/close subtree in prefix/tree column, open links in id column
+        },
+        "spreadsheet-search": {
+            "Escape": (e) => {
+                e.preventDefault()
+                if (document.querySelector('.slo-spreadsheet-search')?.getAttribute('open')) {
+                    document.querySelector('.slo-spreadsheet-search').removeAttribute('open')
+                }
+                browser.actions.switchKeyboard()
+            },
+            "ArrowUp": (e) => {
+                const searchInput = document.querySelector('.slo-spreadsheet-search input[name="searchText"]')
+                browser.actions.searchTextPrev(searchInput.value)
+                e.preventDefault()
+            },
+            "ArrowDown": (e) => {
+                const searchInput = document.querySelector('.slo-spreadsheet-search input[name="searchText"]')
+                browser.actions.searchTextNext(searchInput.value)
+                e.preventDefault()
+            }
         },
         "spreadsheet-types": {
             "Escape": (e) => {
@@ -414,6 +439,45 @@ browser = simply.app({
     },
 
     commands: {
+        toggleSource: (el, value) => {
+            browser.view.showSource = browser.view.showSource ? 0 : 1
+            let url = new URL(document.location.href)
+            if (browser.view.showSource) {
+                url.searchParams.set('source', browser.view.showSource)
+            } else {
+                url.searchParams.delete('source')
+            }
+            history.pushState({}, null, url)
+        },
+        copyPre: (el, value) => {
+            const pre = el.parentElement.querySelector('pre')
+            navigator.clipboard.writeText(pre.innerText)
+        },
+        saveToken: (form, values) => {
+            const requestToken = values.requestToken
+            const requestEmail = values.requestEmail
+            localStorage.setItem('requestToken', JSON.stringify(requestToken))
+            localStorage.setItem('requestEmail', JSON.stringify(requestEmail))
+            browser.view.requestEmail = requestEmail
+            browser.view.requestToken = requestToken
+            window.location.reload()
+        },
+        searchText: (el, value) => {
+            if (!browser.view.searchFrom) {
+                browser.view.searchFrom = Object.assign({},browser.view.sloSpreadsheet.options.focus)
+            }
+            browser.actions.searchTextNext(value, browser.view.searchFrom)
+        },
+        searchTextNext: (el) => {
+            const form = el.closest('form')
+            const search = form.elements['searchText']
+            browser.actions.searchTextNext(search.value)
+        },
+        searchTextPrev: (el) => {
+            const form = el.closest('form')
+            const search = form.elements['searchText']
+            browser.actions.searchTextPrev(search.value)
+        },
         saveChangesDocument:(form, values)=>{
             browser.actions.saveChangesDocument()
         },
@@ -707,7 +771,6 @@ browser = simply.app({
         insertRow: async function(el, value) {
             //find possible types for sibling and child of node
             //show popup with list of types
-            browser.view.insertParentRow = el
             browser.actions.showTypeSelector(el)                
         },
         showLinkForm: async function(el, value) {
@@ -805,6 +868,50 @@ browser = simply.app({
         }
     },
     actions: {
+        showSearch: () => {
+            let searchDialog = document.querySelector('.slo-spreadsheet-search')
+            searchDialog.setAttribute('open','open')
+            searchDialog.querySelector('[name="searchText"]').focus()
+        },
+        searchTextNext: async function(search, from) {
+            const results = browser.view.sloSpreadsheet.search(search)
+            if (!results.length) {
+                return
+            }
+            const focus = from || browser.view.sloSpreadsheet.options.focus
+            for (const result of results) {
+                if (result.row==focus.row) {
+                    if (result.column>focus.column) {
+                        return browser.actions.highlightSearchResult(search, result.row, result.column)
+                    }
+                } else if (result.row>focus.row) {
+                    return browser.actions.highlightSearchResult(search, result.row, result.column)
+                }
+            }
+            let result = results[0]
+            return browser.actions.highlightSearchResult(search, result.row, result.column)
+        },
+        searchTextPrev: async function(search) {
+            const results = browser.view.sloSpreadsheet.search(search).reverse()
+            if (!results.length) {
+                return
+            }
+            const focus = browser.view.sloSpreadsheet.options.focus
+            for (const result of results) {
+                if (result.row<focus.row) {
+                    return browser.actions.highlightSearchResult(search, result.row, result.column)
+                } else if (result.row==focus.row) {
+                    if (result.column<focus.column) {
+                        return browser.actions.highlightSearchResult(search, result.row, result.column)
+                    }
+                }
+            }
+            let result = results[0]
+            return browser.actions.highlightSearchResult(search, result.row, result.column)
+        },
+        highlightSearchResult: async function(search, row, column) {
+            const el = browser.view.sloSpreadsheet.goto(row, column)
+        },
         saveChangesSpreadsheet: async function(){
            browser.view.sloSpreadsheet.saveChanges()
            let el = document.querySelector('td.focus')
@@ -1368,6 +1475,8 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.list(type)
             .then(function(json) {
+                browser.view.request = window.localAPI.reflect.list(type)
+                browser.view.source = JSON.stringify(json, null, 4)
                 type = type.substring(0, type.length-1)
                 browser.view.context = window.slo.getContextByType(type)
                 browser.view.contextLink = {
@@ -1386,8 +1495,8 @@ browser = simply.app({
             })
         },
         spreadsheetUpdate: function() {
-            changes.getLocalView(browser.view.root)
-            let defs = slo.treeToRows(browser.view.root)
+            let localData = changes.getLocalView(browser.view.root)
+            let defs = slo.treeToRows(localData)
             browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
         },
@@ -1460,8 +1569,8 @@ browser = simply.app({
             return window.localAPI.doelniveauList(type)
             .then(function(json) {
                 browser.view.view = 'doelniveauList';
-                changes.getLocalView(json.data)
-                browser.view.list = json.data;
+                let localData = changes.getLocalView(json.data)
+                browser.view.list = localData;
                 browser.view['listTitle'] = window.titles[type];
                 console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
@@ -1473,6 +1582,8 @@ browser = simply.app({
         item: function(id) {
             return window.localAPI.item(id)
             .then(function(json) {
+                browser.view.request = window.localAPI.reflect.item(id)
+                browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
@@ -1491,6 +1602,7 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.listOpNiveau(niveau, type)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
@@ -1505,6 +1617,7 @@ browser = simply.app({
         itemOpNiveau: function(niveau, type, id) {
             return window.localAPI.itemOpNiveau(niveau, type, id)
             .then(function(json) {
+                browser.view.source = JSON.stringify(json, null, 4)
                 browser.view.view = 'item';
                 browser.view.item = json;
                 browser.actions.updatePaging();
@@ -1689,6 +1802,7 @@ browser = simply.app({
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
+            browser.view.insertParentRow = el.closest('tr')
             browser.view.addEntityError = ''
             let row = browser.view.sloSpreadsheet.getRow(el)
             let thisType = getType(row.node)
@@ -1895,10 +2009,20 @@ if (user && key) {
 } else {
     browser.view.loggedIn = false
 }
-
+const requestToken = localStorage.getItem('requestToken')
+const requestEmail = localStorage.getItem('requestEmail')
+if (requestToken) {
+    browser.view.requestToken = JSON.parse(requestToken)
+}
+if (requestEmail) {
+    browser.view.requestEmail = JSON.parse(requestEmail)
+}
 
 browser.view.dirtyChecked = true
-
+const locationURL = new URL(document.location.href)
+if (locationURL.searchParams.get('source')) {
+    browser.view.showSource = 1
+}
 window.addEventListener('resize', (e) => {
     if (browser.view.view == 'spreadsheet') {
         browser.actions.spreadsheetResize()
