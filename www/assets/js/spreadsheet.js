@@ -932,6 +932,9 @@ const spreadsheet = (function() {
         renderHeading()
         renderBody()
         renderFoot()
+        // @FIXME: This triggers a rerender, for some reason when removing a filter the rendering is not enough to  have the view display the data.
+        // we saw <td class"empty"> before triggering the scroll, and they were changed only after triggering the scroll
+        editor.fireEvent('scroll', scrollBox)
       },
       renderBody: () => {
         renderBody()
