@@ -418,13 +418,29 @@ const spreadsheet = (function() {
     }
 
     function defaultViewer(rect,offset,el) {
+      const spreadsheetElement = document.getElementById("slo-spreadsheet");
+      const spreadsheetSize = spreadsheetElement.getBoundingClientRect();
+
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
       selector.style.top = Math.max(2, (rect.top - offset.top))+'px'
       selector.style.left = (rect.left - offset.left)+'px'
-      selector.style.width = rect.width+'px'
+      selector.style.width = Math.max(150, (rect.width))+'px'
       selector.style['min-height'] = rect.height+'px'
+      selector.style.overflow = 'auto'
+      
+      if(el.scrollWidth >  spreadsheetSize.height){  // @TODO doublecheck during code review: 
+        selector.style.width = (spreadsheetSize.width/1.618)+'px' // golden ratio
+
+        if(rect.x > spreadsheetSize.width/2){ // check whether on left or right side coordinates of the page
+          selector.style.left = (rect.left - offset.left + rect.width - spreadsheetSize.width/1.618 )+'px'
+        }
+        else {
+          selector.style.left = (rect.left - offset.left)+'px'
+        }
+      }
+
       let value = row.columns[columnDef.value] || ''
       let header = ''
       if (columnDef.editor!==false) {
