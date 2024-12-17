@@ -494,7 +494,8 @@ browser = simply.app({
         },
         export: async (el, value) => {
             const csv = await browser.actions.export()
-            window.open(encodeURI("data:text/csv;charset=urf-8,"+csv))
+            let universalBOM = "\uFEFF"
+            window.open("data:text/csv;charset=utf-8," + encodeURIComponent(universalBOM+csv))
         },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
