@@ -662,6 +662,38 @@ const spreadsheet = (function() {
 </label>`
     }
 
+    function entityFilterView(column){
+      let cellTextContent = ``
+      let filters = browser.view.sloSpreadsheet.options?.filter
+
+      if (column.filteredValues && Object.values(column.filteredValues).find(v => v)) {
+        cellTextContent = `<div>
+          <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+          <a title="${Object.keys(column.filteredValues)}">${Object.keys(column.filteredValues)}</a></span>
+          <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+          <svg class="ds-icon ds-icon-feather">
+          <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+          </svg></a></div>`
+      }
+      
+      if (filters && Object.values(filters).find(v => v)) {
+
+        let columnFilters =  Object.entries(filters).filter(([name,value]) => name === column.value)
+
+        if (column.value == Object.keys(filters).find(key => key == column.value)){
+          cellTextContent = `<div>
+            <span style="text-overflow: ellipsis; display: inline-block; width : calc(100% - 12px); overflow: hidden; white-space: nowrap; float: left; ">
+            <a title="${(columnFilters[0][1])}">${(columnFilters[0][1])}</a></span>
+            <a title="verwijderAlleFilters" data-simply-command="removeFilter">
+            <svg class="ds-icon ds-icon-feather">
+            <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+            </svg></a></div>`
+        }
+      }
+
+      return cellTextContent;
+    }
+
     function renderRow(row) {
       let rowClass = row.closed;
       if (datamodel.options.focus?.row == row.index) {
@@ -812,6 +844,7 @@ const spreadsheet = (function() {
           col+=column.value
         }
         col += `">`
+        col += entityFilterView(column)
         col += `</td>`
         heading += col
       }
@@ -899,6 +932,9 @@ const spreadsheet = (function() {
         renderHeading()
         renderBody()
         renderFoot()
+        // @FIXME: This triggers a rerender, for some reason when removing a filter the rendering is not enough to  have the view display the data.
+        // we saw <td class"empty"> before triggering the scroll, and they were changed only after triggering the scroll
+        editor.fireEvent('scroll', scrollBox)
       },
       renderBody: () => {
         renderBody()
