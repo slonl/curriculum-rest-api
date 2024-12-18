@@ -418,13 +418,40 @@ const spreadsheet = (function() {
     }
 
     function defaultViewer(rect,offset,el) {
+      const spreadsheetElement = document.getElementById("slo-spreadsheet");
+      const spreadsheetSize = spreadsheetElement.getBoundingClientRect();
+      const boxWidth = spreadsheetSize.width/1.618 // golden ratio
+
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
       selector.style.top = Math.max(2, (rect.top - offset.top))+'px'
       selector.style.left = (rect.left - offset.left)+'px'
-      selector.style.width = rect.width+'px'
+      selector.style.width = Math.max(300, (rect.width))+'px'
       selector.style['min-height'] = rect.height+'px'
+
+      selector.style.overflow = 'auto'
+  
+      // if the content is big, fence in the display box
+      if(el.scrollWidth >  boxWidth){  // @TODO doublecheck during code review: 
+        selector.style.width = (boxWidth)+'px'
+        console.log("make box bigger")
+        if((rect.left + boxWidth) > spreadsheetSize.width){
+          selector.style.left = (rect.left - offset.left - boxWidth) +'px'
+          console.log("Move BIG left")
+        }
+      }
+
+      console.log("rect", rect)
+      console.log("offset", offset)
+      console.log("spreadsheet witdh", spreadsheetSize.width)
+        // if the content goes over the right side move it left       
+      
+      if((rect.left + rect.width) > spreadsheetSize.width){
+        selector.style.left = (rect.left - offset.left - rect.width) +'px'
+        console.log("Move left")
+      }
+
       let value = row.columns[columnDef.value] || ''
       let header = ''
       if (columnDef.editor!==false) {
