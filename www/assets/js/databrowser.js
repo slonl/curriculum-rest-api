@@ -162,31 +162,30 @@ browser = simply.app({
     }),
     keyboard: {
         //@TODO: keyboard definition should be in spreadsheet.js, and referenced here
-        //@TODO: e.target.matches might be simplified using https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
         spreadsheet: {
             "ArrowDown": (e) => {
-                if(e.target.matches("input") || e.target.matches("textarea" || e.target.matches("select"))){
+                if(e.target.matches('input,textarea,select')){
                     return
                 }
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
             },
             "ArrowUp": (e) => {
-                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select")){
+                if(e.target.matches('input,textarea,select')){
                     return
                 }
                 browser.view.sloSpreadsheet.moveUp()
                 e.preventDefault()
             },
             "ArrowLeft": (e) => {
-                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select") ){
+                if(e.target.matches('input,textarea,select')){
                     return
                 }
                 browser.view.sloSpreadsheet.moveLeft()
                 e.preventDefault()
             },
             "ArrowRight": (e) => {
-                if(e.target.matches("input") || e.target.matches("textarea") || e.target.matches("select")){
+                if(e.target.matches('input,textarea,select')){
                     return
                 }
                 browser.view.sloSpreadsheet.moveRight()
@@ -252,7 +251,7 @@ browser = simply.app({
                 spreadsheet.goto(data[row].index, column)                    
             },
             "Insert": async (e) => {
-                if(e.target.matches("input") || e.target.matches("textarea")){
+                if(e.target.matches('input, textarea')){
                     return
                 }
                 e.preventDefault()
@@ -261,7 +260,7 @@ browser = simply.app({
             },
             "Delete": (e) => {
                 // making sure the keyboard works normally in input fiels
-                if(e.target.matches("input") || e.target.matches("textarea")){
+                if(e.target.matches('input, textarea')){
                     return
                 }
                 e.preventDefault()
