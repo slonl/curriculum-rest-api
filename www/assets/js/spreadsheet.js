@@ -421,6 +421,8 @@ const spreadsheet = (function() {
       const spreadsheetElement = document.getElementById("slo-spreadsheet");
       const spreadsheetSize = spreadsheetElement.getBoundingClientRect();
       const boxWidth = spreadsheetSize.width/1.618 // golden ratio
+      const iconSize = 60
+      const standardBoxWidth = 300 + iconSize
 
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
@@ -429,28 +431,30 @@ const spreadsheet = (function() {
       selector.style.left = (rect.left - offset.left)+'px'
       selector.style.width = Math.max(300, (rect.width))+'px'
       selector.style['min-height'] = rect.height+'px'
-
       selector.style.overflow = 'auto'
+       
+      if((rect.left + standardBoxWidth) > spreadsheetSize.width){
+        selector.style.left = (rect.left - rect.width - standardBoxWidth) +'px' //looks like the icon width 60 is not in rect.width
+        console.log("Move left")
+      }
+
+      if((rect.left - standardBoxWidth) < 0){
+        selector.style.left = (rect.left + rect.width) +'px' //looks like the icon width 60 is not in rect.width
+        console.log("Move right")
+      }
   
-      // if the content is big, fence in the display box
       if(el.scrollWidth >  boxWidth){  // @TODO doublecheck during code review: 
         selector.style.width = (boxWidth)+'px'
         console.log("make box bigger")
-        if((rect.left + boxWidth) > spreadsheetSize.width){
-          selector.style.left = (rect.left - offset.left - boxWidth) +'px'
+        if((rect.left + iconSize + boxWidth) > spreadsheetSize.width){ //looks like the icon width 60 is not in rect.width
+          selector.style.left = (rect.left - rect.width - boxWidth - iconSize) +'px'
           console.log("Move BIG left")
         }
-      }
-
-      console.log("rect", rect)
-      console.log("offset", offset)
-      console.log("spreadsheet witdh", spreadsheetSize.width)
-        // if the content goes over the right side move it left       
-      
-      if((rect.left + rect.width) > spreadsheetSize.width){
-        selector.style.left = (rect.left - offset.left - rect.width) +'px'
-        console.log("Move left")
-      }
+        if((rect.left - boxWidth) < 0){
+          selector.style.left = (rect.left) +'px' //looks like the icon width 60 is not in rect.width
+          console.log("Move BIG right")
+        }
+      }  
 
       let value = row.columns[columnDef.value] || ''
       let header = ''
