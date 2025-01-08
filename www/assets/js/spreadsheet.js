@@ -423,6 +423,7 @@ const spreadsheet = (function() {
       const boxWidth = spreadsheetSize.width/1.618 // golden ratio
       const iconSize = 60
       const standardBoxWidth = 300 + iconSize
+      const extraPadding = 30
 
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
@@ -433,26 +434,21 @@ const spreadsheet = (function() {
       selector.style['min-height'] = rect.height+'px'
       selector.style.overflow = 'auto'
        
-      if((rect.left + standardBoxWidth) > spreadsheetSize.width){
-        selector.style.left = (rect.left - rect.width - standardBoxWidth) +'px' //looks like the icon width 60 is not in rect.width
-        console.log("Move left")
+      if((rect.left + standardBoxWidth + extraPadding) > spreadsheetSize.width){
+        selector.style.left = (rect.left - rect.width - standardBoxWidth - extraPadding ) +'px'
       }
 
       if((rect.left - standardBoxWidth) < 0){
-        selector.style.left = (rect.left + rect.width) +'px' //looks like the icon width 60 is not in rect.width
-        console.log("Move right")
+        selector.style.left = (extraPadding) +'px'
       }
   
       if(el.scrollWidth >  boxWidth){  // @TODO doublecheck during code review: 
         selector.style.width = (boxWidth)+'px'
-        console.log("make box bigger")
-        if((rect.left + iconSize + boxWidth) > spreadsheetSize.width){ //looks like the icon width 60 is not in rect.width
-          selector.style.left = (rect.left - rect.width - boxWidth - iconSize) +'px'
-          console.log("Move BIG left")
+        if((rect.left + iconSize + boxWidth + extraPadding) > spreadsheetSize.width){ 
+          selector.style.left = (rect.left - rect.width - boxWidth - iconSize - extraPadding) +'px'
         }
-        if((rect.left - boxWidth) < 0){
-          selector.style.left = (rect.left) +'px' //looks like the icon width 60 is not in rect.width
-          console.log("Move BIG right")
+        if((rect.left - boxWidth - extraPadding) < 0){
+          selector.style.left = (extraPadding) +'px'
         }
       }  
 
@@ -466,6 +462,7 @@ const spreadsheet = (function() {
   </use></svg>
 </button>
 `
+
       }
       switch(columnDef.type) {
         case 'id':
