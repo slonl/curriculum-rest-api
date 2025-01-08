@@ -494,12 +494,18 @@ const spreadsheet = (function() {
       if (current.top+current.height > offset.top+offset.height) {
         if ((offset.height-current.height)<2) {
           selector.style.top = '2px'
-//          selector.style.height = 'calc(100% - 40px)'
+
+          // @NOTE: not sure if needed here
+          selector.style.height = 'fit-content'
+          selector.style.overflow = 'visible'
         } else {
-          selector.style.top = (offset.height - current.height)+'px'
+          // @NOTE: not sure if needed here
+          selector.style.height = 'fit-content'
+          selector.style.overflow = 'visible'
         }
       } else {
-
+        selector.style.height = 'fit-content'
+        selector.style.overflow = 'visible'
       }
       selector.style.display = 'block'
     }
