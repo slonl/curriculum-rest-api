@@ -130,6 +130,9 @@ const spreadsheet = (function() {
       if (data.etag !== cache.etag) {
         cache.etag = data.etag
         cache.data = data.filter(row => {
+          if (row.node.$mark=='inserted'){
+            return true;
+          }
           for(let name in datamodel.options.filter) {
             let filter = datamodel.options.filter[name]
             if (Array.isArray(filter)) {
@@ -893,6 +896,8 @@ const spreadsheet = (function() {
         }
         spreadsheet.visibleData = datamodel.view.visibleData
         renderBody()
+        //FIXME: scrolling with the mouse should take precedence to focus.row
+        //if focus row is scrolled out of view, then don't use goto again
         spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column)
       },
       render: () => {
@@ -979,6 +984,9 @@ const spreadsheet = (function() {
           // FIXME: row now used index, so all rows
           // row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
           let line = datamodel.view.visibleData.findIndex(r => r.index==row)
+          if (line===-1) { // not found
+              line = 0
+          }
           column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
           let focus = datamodel.options.focus
           focus.column = column
