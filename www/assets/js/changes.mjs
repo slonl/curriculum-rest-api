@@ -568,37 +568,41 @@ const changes = (()=> {
 		changes.update()
 	}
 
-	function getLocalView(dataIn) {
-		let dataOut = structuredClone(dataIn)
+	function getLocalEntity(node) {
+		walk(node, 0, (n) => {
+			let id = n.id ?? n.uuid
+			if (local[id] && local[id] instanceof ChangedNode) {
+				if (!n.$mark) { // don't overwrite deleted or inserted marks, even if changes have been applied later
+					n.$mark = 'changed' 
+				}
+				let localNode = local[id]
+				for (let lprop of Object.keys(localNode)) {
+					//FIXME: prevValue does not contain all information, so newValue also doesn't
+					//need to apply the diff
+					n[lprop] = localNode[lprop]
+				}
+			}
+			if (local[id] && local[id] instanceof InsertedLink) {
+				debugger
+			}
+			if (local[id] && local[id] instanceof DeletedLink) {
+				debugger
+			}
+		})
+		return node
+	}
+
+	function getLocalView(nodes) {
+		// let dataOut = structuredClone(dataIn)
 		changes.merged = changes.changes.merge()
 		changes.local = changes.merged.normalize()
 		let local = changes.local
-		if (!Array.isArray(dataOut)) {
-			dataOut = [dataOut]
+		if (!Array.isArray(nodes)) {
+			getLocalEntity(nodes)
+		} else for(let node of nodes) {
+			getLocalEntity(node)
 		}
-		for(let node of dataOut) {
-			walk(node, 0, (n) => {
-				let id = n.id ?? n.uuid
-				if (local[id] && local[id] instanceof ChangedNode) {
-					if (!n.$mark) { // don't overwrite deleted or inserted marks, even if changes have been applied later
-						n.$mark = 'changed' 
-					}
-					let localNode = local[id]
-					for (let lprop of Object.keys(localNode)) {
-						//FIXME: prevValue does not contain all information, so newValue also doesn't
-						//need to apply the diff
-						n[lprop] = localNode[lprop]
-					}
-				}
-				if (local[id] && local[id] instanceof InsertedLink) {
-					debugger
-				}
-				if (local[id] && local[id] instanceof DeletedLink) {
-					debugger
-				}
-			})
-		}
-		return dataOut
+		return nodes
 	}
 
 	return changes

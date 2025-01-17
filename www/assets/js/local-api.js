@@ -80,9 +80,7 @@ window.localAPI = (function() {
                     e['@id'] = id;
                     e['@type'] = type
                 })
-                changes.getLocalView(json)
-                //add inserted entities matching root, context, niveau
-                return json
+                return changes.getLocalView(json)
             })
         },
         document: async function(root, context, niveau) {
@@ -93,17 +91,13 @@ window.localAPI = (function() {
                 niveau, context
             }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
-                changes.getLocalView(json)
-                //add inserted entities matching root, context, niveau
-                return json 
+                return changes.getLocalView(json)
             })
         },
         doelniveauList: async function(type) {
 	        return window.slo.api.get(type)
             .then(function(json) {
-                changes.getLocalView(json.data)
-                //add inserted entities matching type
-                return json
+                return changes.getLocalView(json.data)
             })
         },
         item: async function(id) {
@@ -112,23 +106,19 @@ window.localAPI = (function() {
             }
 	        return window.slo.api.get('uuid/'+id+'/')
             .then(function(json) {
-                changes.getLocalView(json)
-                return json
+                return changes.getLocalView(json)
             })
         },
         listOpNiveau: async function(niveau, type) {
             return window.slo.api.get('niveau/'+niveau+'/'+type)
             .then(function(json) {
-                changes.getLocalView(json)
-                //add inserted entities matching type, niveau
-                return json
+                return changes.getLocalView(json)
             })
         },
         itemOpNiveau: async function(niveau, type, id) {
         	return window.slo.api.get('niveau/'+niveau+'/'+type+id)
             .then(function(json) {
-                changes.getLocalView(json)
-                return json
+                return changes.getLocalView(json)
             })
         },
         roots: async function(id) {
