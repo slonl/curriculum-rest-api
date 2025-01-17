@@ -993,7 +993,13 @@ browser = simply.app({
                         errorMap.set(error.message, { message: error.message, errors: []})
                     }
                     let em = errorMap.get(error.message)
-                    em.errors.push(error)
+                    if (Array.isArray(error.cause)) {
+                        for (let cause of error.cause) {
+                            em.errors.push(new Error(error.message, {cause}))
+                        }
+                    } else {
+                        em.errors.push(error)
+                    }
                 }
                 this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
                 return false
