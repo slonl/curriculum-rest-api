@@ -504,7 +504,7 @@ browser = simply.app({
             browser.actions.saveChangesSpreadsheet()
         },
         import: (el, value) => {
-            browser.actions.removeErrorsFromElement()
+            this.app.view.importErrors = []
             document.getElementById('importDialog').showModal()            
         },
         importXLSX: async (form, values) => {
@@ -922,10 +922,6 @@ browser = simply.app({
             localStorage.setItem('username',email)
             localStorage.setItem('key',key)
             return true
-        },
-        removeErrorsFromElement: async function(element){
-            //empty element data-simply-list="errors"
-            this.app.view.importErrors = []
         },
         importXLSX: async function(file) {
             let tree = {
