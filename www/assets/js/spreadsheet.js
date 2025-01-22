@@ -417,40 +417,39 @@ const spreadsheet = (function() {
       }
     }
 
-    function defaultViewer(rect,offset,el) {
-      const spreadsheetElement = document.getElementById("slo-spreadsheet");
-      const spreadsheetSize = spreadsheetElement.getBoundingClientRect();
-      const boxWidth = spreadsheetSize.width/1.618 // golden ratio
-      const iconSize = 60
-      const standardBoxWidth = 300 + iconSize
-      const extraPadding = 30
+    function defaultViewer(cellRect,tableRect,el) {
+      const minCellWidth = 300
+      const maxCellWidth = tableRect.width/2 // golden ratio
+      let cellWidth = Math.max(minCellWidth, maxCellWidth)
 
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
-      selector.style.top = Math.max(2, (rect.top - offset.top))+'px'
-      selector.style.left = (rect.left - offset.left)+'px'
-      selector.style.width = Math.max(300, (rect.width))+'px'
-      selector.style['min-height'] = rect.height+'px'
-      selector.style.overflow = 'auto'
-       
-      if((rect.left + standardBoxWidth + extraPadding) > spreadsheetSize.width){
-        selector.style.left = (rect.left - rect.width - standardBoxWidth - extraPadding ) +'px'
-      }
+      selector.style.top = Math.max(2, (cellRect.top - tableRect.top)) + 'px'
+      selector.style.maxWidth = cellWidth + 'px'
+      selector.style.minWidth = cellRect.width + 'px'
+      selector.style.width = "fit-content"
 
-      if((rect.left - standardBoxWidth) < 0){
-        selector.style.left = (extraPadding) +'px'
+      selector.style['min-height'] = cellRect.height +'px'
+      selector.style.overflow = 'auto'
+      selector.style.marginRight = "2px"
+      
+      let trueCellWidth = selector.getBoundingClientRect().width
+      console.log(trueCellWidth, cellRect.width)
+      
+      window.setTimeout(() => {
+        console.log("selector width: ")
+        let temp = getComputedStyle(selector)
+        console.log(temp.getPropertyValue("width"))
+        calculateOptimalPosition(cellRect)
+      }, 10)
+
+      function calculateOptimalPosition(cellRect){
+        const cellRelativeLeft = cellRect.left - tableRect.left
+
+        // @TODO: add code here to move the box left if the content doesn't fit nicely on the page
+        selector.style.left = cellRelativeLeft + 'px'
       }
-  
-      if(el.scrollWidth >  boxWidth){  // @TODO doublecheck during code review: 
-        selector.style.width = (boxWidth)+'px'
-        if((rect.left + iconSize + boxWidth + extraPadding) > spreadsheetSize.width){ 
-          selector.style.left = (rect.left - rect.width - boxWidth - iconSize - extraPadding) +'px'
-        }
-        if((rect.left - boxWidth - extraPadding) < 0){
-          selector.style.left = (extraPadding) +'px'
-        }
-      }  
 
       let value = row.columns[columnDef.value] || ''
       let header = ''
@@ -491,22 +490,15 @@ const spreadsheet = (function() {
         break
       }
       let current = selector.getBoundingClientRect()
-      if (current.top+current.height > offset.top+offset.height) {
-        if ((offset.height-current.height)<2) {
+      
+      if (current.top+current.height > tableRect.top+tableRect.height) {
+        if ((tableRect.height-current.height)<2) {
           selector.style.top = '2px'
-
-          // @NOTE: not sure if needed here
-          selector.style.height = 'fit-content'
-          selector.style.overflow = 'visible'
-        } else {
-          // @NOTE: not sure if needed here
-          selector.style.height = 'fit-content'
-          selector.style.overflow = 'visible'
         }
-      } else {
-        selector.style.height = 'fit-content'
-        selector.style.overflow = 'visible'
-      }
+      } 
+
+      selector.style.height = 'fit-content'
+      selector.style.overflow = 'auto'
       selector.style.display = 'block'
     }
 
