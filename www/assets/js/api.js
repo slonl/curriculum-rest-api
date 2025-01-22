@@ -406,7 +406,7 @@
                     sortable: true,
                     filterable: true
                 }
-                if (columnValues.length<=15 && columnDefinition.name!='Description') { //@FIXME: allow switch to textarea from list type that is set like this?
+                if (columnValues.length<=15 && columnDefinition.name!='Description' && columnDefinition.name!='Karakteristiek') { //@FIXME: hardcoding Karakteristiek isn't right, allow switch to textarea from list type that is set like this?
                     let propSchema = meta.schemas.properties[c]
                     if (propSchema?.type) {
                         if (propSchema.type=='string') {
