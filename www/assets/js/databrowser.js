@@ -514,7 +514,8 @@ browser = simply.app({
         export: async (el, value) => {
             const csv = await browser.actions.export()
             let universalBOM = "\uFEFF"
-            window.open("data:text/csv;charset=utf-8," + encodeURIComponent(universalBOM+csv))
+            FileSaver.saveAs(new Blob([universalBOM,csv], {type: "data:text/csv;charset=utf-8"}), 'curriculum-download.csv')
+            // window.open("data:text/csv;charset=utf-8," + encodeURIComponent(universalBOM+csv))
         },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
@@ -1517,11 +1518,12 @@ browser = simply.app({
                 browser.actions.handleAPIError(error)
             })
         },
-        spreadsheetUpdate: function() {
+        spreadsheetUpdate: async function() {
             let localData = changes.getLocalView(browser.view.root)
             let defs = slo.treeToRows(localData)
             browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
+            return true
         },
         // functions for editing documentView
         editText : function(){
