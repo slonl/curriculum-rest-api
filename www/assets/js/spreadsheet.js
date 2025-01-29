@@ -294,6 +294,7 @@ const spreadsheet = (function() {
       let values = columnDef.values
       let name
       let selectorRect, disabled, checked
+      selector.style.overflow = 'visible'
       switch(columnDef.type) {
         case 'autocomplete':
           value = htmlEscape(value)
@@ -473,9 +474,8 @@ const spreadsheet = (function() {
         } else {
           selector.style.top = (offset.height - current.height)+'px'
         }
-      } else {
-
       }
+      selector.style.overflow = 'auto'
       selector.style.display = 'block'
     }
 
