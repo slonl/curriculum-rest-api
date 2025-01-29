@@ -6,6 +6,10 @@ TODO: if Examenprogramma X[ExamenprogrammaDomein][n] is removed (replaced with a
 then ExamenprogrammaDomein n[Examenprogramma][X] should also be a DeletedLink
  */
 
+if (!globalThis.jsontagMeta) {
+    globalThis.jsontagMeta = {}
+}
+
 const walk = (node, indent, f) => {
     if (!node) return node;
     if (node['@type']==='Niveau') {
@@ -159,7 +163,7 @@ const changes = (()=> {
 			if (!arr && globalThis.localStorage && globalThis.localStorage.getItem('changeHistory')) {
 				//FIXME: should use jsontag with a reviver to store/retrieve changes
 				//that way you can use metadata instead of $mark and @id, @type
-				arr = JSON.parse(globalThis.localStorage.getItem('changeHistory'))
+				arr = JSONTag.parse(globalThis.localStorage.getItem('changeHistory'), null, globalThis.jsontagMeta)
 			}
 			if (!arr) {
 				arr = []
@@ -169,11 +173,27 @@ const changes = (()=> {
 
 
 		save() {
+			function linkify(arr) {
+				arr.forEach((node, key) => {
+					if (node.id && !node.$mark) {
+						arr[key] = new JSONTag.Link('/uuid/'+node.id)
+					}
+				})
+			}
+
 			if (!globalThis.localStorage) {
 				return
 			}
-			//FIXME: again: use jsontag
-			globalThis.localStorage.setItem('changeHistory', JSON.stringify(this))
+			let linkedChanges = JSONTag.clone(this)
+			for (let change of linkedChanges) {
+				if (change.prevValue && Array.isArray(change.prevValue)) {
+					linkify(change.prevValue)
+				}
+				if (change.newValue && Array.isArray(change.newValue)) {
+					linkify(change.newValue)
+				}
+			}
+			globalThis.localStorage.setItem('changeHistory', JSONTag.stringify(linkedChanges))
 		}
 
 		merge() {
@@ -571,21 +591,31 @@ const changes = (()=> {
 	function getLocalEntity(node) {
 		walk(node, 0, (n) => {
 			let id = n.id ?? n.uuid
-			if (local[id] && local[id] instanceof ChangedNode) {
+			if (changes.local[id] && changes.local[id] instanceof ChangedNode) {
 				if (!n.$mark) { // don't overwrite deleted or inserted marks, even if changes have been applied later
 					n.$mark = 'changed' 
 				}
-				let localNode = local[id]
+				let localNode = changes.local[id]
 				for (let lprop of Object.keys(localNode)) {
 					//FIXME: prevValue does not contain all information, so newValue also doesn't
 					//need to apply the diff
 					n[lprop] = localNode[lprop]
+					if (Array.isArray(n[lprop])) {
+						n[lprop] = localNode[lprop].slice()
+						n[lprop].forEach((v,i) => {
+							if (JSONTag.getType(v)=='link') {
+								if (globalThis.jsontagMeta.index.id.has(''+v)) {
+									n[lprop][i] = globalThis.jsontagMeta.index.id.get(''+v).deref()
+								}
+							}
+						})
+					}
 				}
 			}
-			if (local[id] && local[id] instanceof InsertedLink) {
+			if (changes.local[id] && changes.local[id] instanceof InsertedLink) {
 				debugger
 			}
-			if (local[id] && local[id] instanceof DeletedLink) {
+			if (changes.local[id] && changes.local[id] instanceof DeletedLink) {
 				debugger
 			}
 		})
@@ -596,7 +626,6 @@ const changes = (()=> {
 		// let dataOut = structuredClone(dataIn)
 		changes.merged = changes.changes.merge()
 		changes.local = changes.merged.normalize()
-		let local = changes.local
 		if (!Array.isArray(nodes)) {
 			getLocalEntity(nodes)
 		} else for(let node of nodes) {
