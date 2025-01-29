@@ -1,4 +1,9 @@
 (function() {
+
+    if (!globalThis.jsontagMeta) {
+        globalThis.jsontagMeta = {}
+    }
+
     const walk = (node, indent, f) => {
         if (!node) return;
         if (getType(node)==='Niveau') {
@@ -74,7 +79,7 @@
                     if (jsontag) {
                         if (response.ok) {
                             let jsontag = await response.text()
-                            return JSONTag.parse(jsontag)
+                            return JSONTag.parse(jsontag, null, globalThis.jsontagMeta)
                         }
                         throw new Error(response.status+': '+response.statusText)
                     } else {
