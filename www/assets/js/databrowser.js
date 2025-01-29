@@ -48,6 +48,9 @@ function getTypeRoutes() {
 
 let meta = {}
 var browser = {}
+if (!jsontagMeta) {
+    var jsontagMeta = {}
+}
 
 slo.api.loadSchemas()
 .then(schemas => {
@@ -537,7 +540,14 @@ browser = simply.app({
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
           column.checked = el.checked
-          localStorage.setItem('spreadsheet-columns', JSON.stringify(browser.view.sloSpreadsheet.options.columns))
+          let storedColumns = browser.view.sloSpreadsheet.options.columns.map(c => {
+              return {
+                  name: c.name,
+                  value: c.value,
+                  checked: c.checked
+              }
+          })
+          localStorage.setItem('spreadsheet-columns', JSON.stringify(storedColumns))
           browser.view.sloSpreadsheet.render()
         },
         toggleDirty: (el, value) => {
@@ -1520,7 +1530,13 @@ browser = simply.app({
             })
         },
         spreadsheetUpdate: async function() {
-            let localData = changes.getLocalView(browser.view.root)
+            let localData = await window.localAPI.spreadsheet(
+                browser.view.currentTree.root,
+                browser.view.currentTree.context,
+                browser.view.currentTree.niveau
+            )
+            browser.view.root = localData
+            //let localData = changes.getLocalView(browser.view.root)
             let defs = slo.treeToRows(localData)
             browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
@@ -1530,6 +1546,11 @@ browser = simply.app({
         editText : function(){
         },
         spreadsheet: function(root, context, niveau) {
+            browser.view.currentTree = {
+                root,
+                context,
+                niveau
+            }
             return window.localAPI.spreadsheet(root, context, niveau)
             .then(function(json) {
                 browser.view.root = json

@@ -481,7 +481,7 @@ const spreadsheet = (function() {
 
     function getRow(el) {
       let index = parseInt(el.closest('tr').id.substring(4))
-      return datamodel.data[index-1]
+      return getRowByIndex(index)
     }
 
     function getRowsById(id) {
@@ -489,9 +489,14 @@ const spreadsheet = (function() {
       return row
     }
 
+    function getRowByIndex(index) {
+      index-=1
+      return datamodel.data[index]
+    }
+
     function getRowByLine(line) {
       line -= 1;
-      return datamodel.data[line]
+      return datamodel.view.visibleData[line]
     }
 
     function findParentRow(row) {
