@@ -507,7 +507,7 @@ browser = simply.app({
             browser.actions.saveChangesSpreadsheet()
         },
         import: (el, value) => {
-            this.app.view.importErrors = []
+            browser.view.importErrors = []
             document.getElementById('importDialog').showModal()            
         },
         importXLSX: async (form, values) => {
