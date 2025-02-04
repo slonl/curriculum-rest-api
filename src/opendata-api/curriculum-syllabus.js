@@ -131,7 +131,7 @@ module.exports = {
 
 		`,
 		SyllabusVolledig: `
-		from(Index(request.query.id))
+		const results = from(Index(request.query.id))
 		.select({
 			...shortInfo,
 			ingangsdatum: _,
@@ -140,12 +140,11 @@ module.exports = {
 			examenjaar: _,
 			status: _,
 			ce_se: _,
-			Niveau: NiveauIndex,
 			SyllabusSpecifiekeEindterm: {
 				...shortInfo,
 				ce_se: _,
 				deprecated: _,
-				Tag {
+				Tag: {
 					...shortInfo,
 					deprecated: _,
 				},
@@ -195,9 +194,12 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				}
-			}
-		  }
+			},
+			Niveau: NiveauIndex
+		  
 		})
+		results
+
 		`
 	},
 	typedQueries: {
