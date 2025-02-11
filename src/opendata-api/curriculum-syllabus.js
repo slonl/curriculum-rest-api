@@ -140,6 +140,7 @@ module.exports = {
 			examenjaar: _,
 			status: _,
 			ce_se: _,
+			Niveau: NiveauIndex,
 			SyllabusSpecifiekeEindterm: {
 				...shortInfo,
 				ce_se: _,
@@ -194,8 +195,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				}
-			},
-			Niveau: NiveauIndex
+			}
 		  
 		})
 		results
