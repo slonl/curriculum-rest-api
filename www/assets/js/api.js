@@ -272,7 +272,7 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
-                    if (n instanceof changes.DeletedLink) {
+                    if (n.deleted || n instanceof changes.DeletedLink) {
                         row.deleted = true
                     } else if (n instanceof changes.InsertedLink) {
                         row.inserted = true
