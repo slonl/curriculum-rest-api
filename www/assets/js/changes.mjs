@@ -98,10 +98,14 @@ const changes = (()=> {
 					title: _,
 					timestamp: _
 				},
-				type: oneOf('patch','insert','delete','undelete','new','update'),
-				newValue: _,
+				type: oneOf('patch','insert','delete','deleteRoot','undelete','undeleteRoot','new','update'),
 			})
-			if (ch.type!='new' && ch.type!='update') {
+			if (ch.type!='deleteRoot' && ch.type!='undeleteRoot') {
+				assert(ch, {
+					newValue: _,
+				})
+			}
+			if (ch.type!='new' && ch.type!='update' && ch.type!='deleteRoot' && ch.type!='undeleteRoot') {
 				assert(ch, {
 					property: _,
 					prevValue: _,
@@ -158,6 +162,27 @@ const changes = (()=> {
 		return equal
 	}
 
+	function linkify(arr) {
+		if (!Array.isArray(arr)) {
+			if (arr?.id && !arr?.$mark) {
+				return new JSONTag.Link('/uuid/'+arr.id)
+			}
+		} 
+		arr.forEach((node, key) => {
+			if (node.id && !node.$mark) {
+				arr[key] = new JSONTag.Link('/uuid/'+node.id)
+			} else if (node.id) {
+				Object.keys(node).forEach(prop => {
+					if (Array.isArray(node[prop])) {
+						linkify(node[prop])
+					} else if (node[prop] && node[prop]?.id && !node[prop]?.$mark) {
+						node[prop] = new JSONTag.Link('/uuid/'+node[prop].id)
+					}
+				})
+			}
+		})
+	}
+
 	class Changes extends Array {
 		constructor(arr) {
 			if (!arr && globalThis.localStorage && globalThis.localStorage.getItem('changeHistory')) {
@@ -173,14 +198,6 @@ const changes = (()=> {
 
 
 		save() {
-			function linkify(arr) {
-				arr.forEach((node, key) => {
-					if (node.id && !node.$mark) {
-						arr[key] = new JSONTag.Link('/uuid/'+node.id)
-					}
-				})
-			}
-
 			if (!globalThis.localStorage) {
 				return
 			}
@@ -215,6 +232,10 @@ const changes = (()=> {
 				let me = m[ch.id]
 				if (ch.type=='new' || ch.type=='update') {
 					me['@newValue'] = ch.newValue
+				} else if (ch.type=='deleteRoot') {
+					me['@deleted'] = true
+				} else if (ch.type=='undeleteRoot') {
+					me['@deleted'] = false
 				} else {
 					if (!me['@properties'][ch.property]) {
 						me['@properties'][ch.property] = {
@@ -227,7 +248,7 @@ const changes = (()=> {
 			}, merged)
 			for (let id in merged) {
 				let m = merged[id]
-				if (!m['@newValue']) {
+				if (!m['@newValue'] && (typeof m['@deleted']=='undefined')) {
 					// remove properties where newValue == prevValue
 					for (let prop of Object.keys(m['@properties'])) {
 						if ((Array.isArray(m['@properties'][prop].newValue) && arrayEquals(m['@properties'][prop]))
@@ -331,6 +352,9 @@ const changes = (()=> {
 				for (let prop in m['@properties']) {
 					node.applyChanges(prop, m['@properties'][prop])
 				}
+				if (typeof m['@deleted']!='undefined') {
+					node.deleted = m['@deleted']
+				}
 				result[id] = node
 			})
 			return result
@@ -377,6 +401,26 @@ const changes = (()=> {
 		// only the update is committed, but then the child doesn't exist
 		// so filter out those updates
 		commit() {
+			function clean(entries) {
+				if (Array.isArray(entries)) {
+					entries = entries.map(clean).filter(Boolean)
+				} else if (entries && typeof entries=='object') {
+					if (entries.$mark=='deleted') {
+						return null
+					}
+					Object.keys(entries).forEach(prop => {
+						if (prop[0]=='$' && prop!=='$mark') {
+							delete entries[prop]
+						} else if (Array.isArray(entries[prop])) {
+							entries[prop] = entries[prop].map(clean).filter(Boolean)
+						} else if (entries[prop] && typeof entries[prop]=='object') {
+							entries[prop] = clean(entries[prop])
+						}
+					})
+				}
+				return entries
+			}
+
 			let commits = []
 			for (let id in this) {
 				let e = this[id]
@@ -388,11 +432,26 @@ const changes = (()=> {
 					let commit = {
 						name: 'importEntity',
 						'@type': e['@type'],
-						entity: e['@newValue']
+						entity: clean(e['@newValue'])
 					}
 					commits.push(commit)
 				}
 				let dirty = e.dirty ? true : false
+				if (e['@deleted']) {
+					let commit = {
+						id,
+						name: 'deleteEntity',
+						'@type': e['@type']
+					}
+					commits.push(commit)
+				} else if (e['@deleted']==false) {
+					let commit = {
+						id,
+						name: 'undeleteEntity',
+						'@type': e['@type']
+					}
+					commits.push(commit)					
+				}
 				if (e['@properties']) {
 					for (let prop in e['@properties']) {
 						let commit = {
@@ -401,12 +460,12 @@ const changes = (()=> {
 							'@type': e['@type'],
 							dirty, 
 							property: prop,
-							prevValue: e['@properties'][prop].prevValue,
-							newValue: e['@properties'][prop].newValue
+							prevValue: clean(e['@properties'][prop].prevValue),
+							newValue: clean(e['@properties'][prop].newValue)
 						}
-						if (Array.isArray(commit.newValue)) {
-							commit.newValue = commit.newValue.filter(v => v.$mark!=='deleted')
-						}
+						// if (Array.isArray(commit.newValue)) {
+						// 	commit.newValue = commit.newValue.filter(v => v.$mark!=='deleted')
+						// }
 						commits.push(commit)
 					}
 				}
