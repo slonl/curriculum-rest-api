@@ -1785,28 +1785,44 @@ browser = simply.app({
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
             if (row.deleted) {
+                let change
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
-                let parentNode = parent.node
-                let typeName = getType(row.node)
-                let prevValue = parentNode[typeName].slice()
-                let newValue = parentNode[typeName].slice()
-                row.node.undelete(newValue)
-                parentNode[typeName] = newValue //Makes sure current datamodel is up to date
-                let timestamp = new Date().toISOString()
-                let change = new changes.Change({
-                    id: parentNode.id ?? parentNode.uuid,
-                    meta: {
-                        context: window.slo.getContextByTypeName(getType(parentNode)),
-                        title: 'undelete child in '+parentNode.title,
-                        type: getType(parentNode),   
-                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                    },
-                    type: 'undelete',
-                    property: typeName,
-                    prevValue,
-                    newValue,
-                    dirty: true
-                })
+                if (parent && parent.node) {
+                    let parentNode = parent.node
+                    let typeName = getType(row.node)
+                    let prevValue = parentNode[typeName].slice()
+                    let newValue = parentNode[typeName].slice()
+                    row.node.undelete(newValue)
+                    parentNode[typeName] = newValue //Makes sure current datamodel is up to date
+                    let timestamp = new Date().toISOString()
+                    change = new changes.Change({
+                        id: parentNode.id ?? parentNode.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(parentNode)),
+                            title: 'undelete child in '+parentNode.title,
+                            type: getType(parentNode),   
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'undelete',
+                        property: typeName,
+                        prevValue,
+                        newValue,
+                        dirty: true
+                    })
+                } else {
+                    let node = row.node
+                    let timestamp = new Date().toISOString()
+                    change = new changes.Change({
+                        id: node.id ?? node.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(node)),
+                            title: 'undelete '+node.title,
+                            type: getType(node),
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'undeleteRoot'
+                    })
+                }
                 changes.changes.push(change)
                 changes.update()
                 //this.app.actions.switchView('spreadsheet')
@@ -1817,35 +1833,50 @@ browser = simply.app({
             if (!browser.view.user) return
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
-            let parentNode = parent.node
-            let typeName = getType(row.node)
+            let change 
+            if (parent && parent.node) {
+                let parentNode = parent.node
+                let typeName = getType(row.node)
 
-            let prevValue = parentNode[typeName].slice()
-            let newValue = prevValue.map(e => { 
-                if (e.id==row.node.id) {
-                    return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
-                } else {
-                    return e
-                }
-            }) //filter(e => (e.id !== row.node.id))
-            let timestamp = new Date().toISOString()
-            let change = new changes.Change({
-                id: parentNode.id ?? parentNode.uuid,
-                meta: {
-                    context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: 'delete child of '+parentNode.title,
-                    type: getType(parentNode),
-                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                },
-                type: 'delete',
-                property: typeName,
-                prevValue,
-                newValue,
-                dirty: true,
-            })
+                let prevValue = parentNode[typeName].slice()
+                let newValue = prevValue.map(e => { 
+                    if (e.id==row.node.id) {
+                        return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                    } else {
+                        return e
+                    }
+                }) //filter(e => (e.id !== row.node.id))
+                let timestamp = new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'delete child of '+parentNode.title,
+                        type: getType(parentNode),
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'delete',
+                    property: typeName,
+                    prevValue,
+                    newValue,
+                    dirty: true,
+                })
+            } else { // rootnode
+                let node = row.node
+                let timestamp = new Date().toISOString()
+                change = new changes.Change({
+                    id: node.id ?? node.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(node)),
+                        title: 'delete '+node.title,
+                        type: getType(node),
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'deleteRoot'
+                })
+            }
             changes.changes.push(change)
             changes.update()
-//            this.app.actions.switchView('spreadsheet')
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
