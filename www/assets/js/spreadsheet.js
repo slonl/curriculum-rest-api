@@ -500,13 +500,14 @@ const spreadsheet = (function() {
     }
 
     function findParentRow(row) {
+      let parent = null
       let indent = row.indent
       let line = datamodel.view.visibleData.indexOf(row)
       while (line && row.indent>=indent) {
         line--
-        row = datamodel.view.visibleData[line]
+        parent = datamodel.view.visibleData[line]
       }
-      return row
+      return parent
     }
 
     function getColumnDefinition(el) {
