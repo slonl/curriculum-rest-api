@@ -159,6 +159,8 @@ module.exports = {
 		    '@type': Type,
 		    prefix: _,
 		    title: _,
+			deleted: _,
+			dirty: _
 		};
 
 		function sortByTitle(a,b) {
