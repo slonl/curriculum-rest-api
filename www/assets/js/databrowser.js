@@ -461,6 +461,13 @@ browser = simply.app({
     },
 
     commands: {
+        maximiseCellEditor: (el, value) =>{
+            let formElement = el.closest("form")
+            let divElement1 = formElement.closest("div")
+            let divElement = divElement1.closest("div")
+            divElement.style.cssText = ""
+            divElement.classList.add(`maximize`)
+        },
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
             let url = new URL(document.location.href)
@@ -536,6 +543,10 @@ browser = simply.app({
         closeEditor: (el, value) => {
             el = document.querySelector('td.focus')
             browser.view.sloSpreadsheet.selector(el)
+            
+            let elMaximized = document.querySelector('.maximize')
+            elMaximized.classList.remove(`maximize`)
+
         },
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)

@@ -1,3 +1,4 @@
+   
     a.slo-highlight-box {
         text-decoration: none;
         overflow: hidden;
@@ -110,11 +111,20 @@
         width: auto;
     }
     .slo-cell-selector {
+        --dePosition:sticky;
+        --deTop: 27px;
+        --deLeft: 0px;
+        --deWidth: 90%;
+        --deHeight: auto;
+        --deColor: green;
+        --deMinHeight: 27px;
+
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
+        top: var(--deTop);
+        left: var(--deLeft);
+        width: var(--deWidth);
+        height: var(--deHeight);
+        min-height: var(--deMinHeight);
         outline: 2px solid blue;
         z-index: 100;
         background-color: white;
@@ -122,8 +132,32 @@
         line-height: var(--ds-line-height);
         padding: 0 1px;
         overflow: visible;
-        height: auto;
         display: none;
+    }
+    .slo-cell-selector.visible {
+        display: block;
+    }
+    .slo-cell-selector.scroll {
+        overflow: auto;
+    }
+    .slo-cell-selector.maximize {
+        top: 118px;
+        left: 10%;
+        width: 80%;
+        height: 70vh;
+        background-color: white;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize {
+        height:100%;
+        overflow: initial;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize textarea {
+        max-height:100%;
+        margin-bottom: 27px;
+    }
+    .slo-cell-selector.maximize .slo-form-footer {
+        bottom: -2px;
+        margin-bottom: calc(-2em + 2px);
     }
     .slo-content-panel {
         margin-bottom: 0;
@@ -416,6 +450,13 @@ body.ds-paging .slo-header .ds-paging {
 }
 .ds-button-close {
     right: 0;
+}
+.ds-button-maximize {
+    right: 20;
+    position: absolute;
+    margin-right: 0;
+    margin-top: -4px;
+    background-color: transparent;
 }
 .ds-alert:empty {
     display: none;
