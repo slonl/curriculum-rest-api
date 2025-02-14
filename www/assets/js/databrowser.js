@@ -461,12 +461,24 @@ browser = simply.app({
     },
 
     commands: {
-        maximiseCellEditor: (el, value) =>{
-            let formElement = el.closest("form")
-            let divElement1 = formElement.closest("div")
-            let divElement = divElement1.closest("div")
-            divElement.style.cssText = ""
-            divElement.classList.add(`maximize`)
+        toggleMaximize: (el, value) =>{
+            console.log(document.querySelector('.maximize'))
+            if(document.querySelector('.maximize')){
+                console.log("MINIMIZING")
+                let maximizedElement = document.querySelector('.maximize')
+                maximizedElement.classList.remove(`maximize`)
+                // need to add the styles back in
+                // @TODO: find a way to add the style="--vars" back in.
+                browser.commands.cellEditor(el)
+            } else {
+                console.log("MAXIMIZING")
+                let formElement = el.closest("form")
+                // the class needs to be aplied to 2 divs up from the form.
+                let divElement1 = formElement.closest("div")
+                let divElement = divElement1.closest("div")
+                divElement.style.cssText = ""
+                divElement.classList.add(`maximize`)
+            } 
         },
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
@@ -543,10 +555,6 @@ browser = simply.app({
         closeEditor: (el, value) => {
             el = document.querySelector('td.focus')
             browser.view.sloSpreadsheet.selector(el)
-            
-            let elMaximized = document.querySelector('.maximize')
-            elMaximized.classList.remove(`maximize`)
-
         },
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)

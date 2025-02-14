@@ -308,7 +308,7 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
-          <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="maximiseCellEditor">
+          <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
             <svg class="ds-icon ds-icon-feather">
               <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
             </use></svg>
@@ -352,7 +352,7 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
-            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="maximiseCellEditor">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
             <svg class="ds-icon ds-icon-feather">
               <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
             </use></svg>
@@ -404,7 +404,7 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
-            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="maximiseCellEditor">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
             <svg class="ds-icon ds-icon-feather">
               <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
             </use></svg>
