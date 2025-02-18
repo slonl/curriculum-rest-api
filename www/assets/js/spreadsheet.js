@@ -276,7 +276,7 @@ const spreadsheet = (function() {
     options.container.appendChild(table)
     let helpers = document.createElement('div')
     helpers.classList.add('slo-table-helpers')
-    let selector = document.createElement('div');
+    let selector = document.createElement('dialog');
     selector.classList.add('slo-helper')
     selector.classList.add('slo-cell-selector')
     helpers.appendChild(selector)
@@ -897,6 +897,26 @@ const spreadsheet = (function() {
     }
     addClickSelectCell()
 
+    function selectorToggleMaximize() {
+        if(selector.classList.contains('maximize')){
+            selectorMinimize()
+        } else {
+            selectorMaximize()
+        }   
+    }
+
+    function selectorMaximize() {
+        selector.close()
+        selector.showModal()
+        selector.classList.add('maximize')
+    }
+
+    function selectorMinimize() {
+        selector.close()
+        selector.show()
+        selector.classList.remove(`maximize`)      
+    }
+
     datamodel.update()
 
     let changeListeners = []
@@ -1057,10 +1077,10 @@ const spreadsheet = (function() {
       },
       selector: (el) => {
         if (!el) {
-          selector.classList.remove("visible")
-         
+          selector.classList.remove("visible")         
           return
         }
+        selectorMinimize()
         selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
@@ -1110,6 +1130,9 @@ const spreadsheet = (function() {
       },
       getColumnDefinition,
       toggleFullScreen,
+      selectorToggleMaximize,
+      selectorMaximize,
+      selectorMinimize,
       search: (text) => {
         let results = []
         let textRe = new RegExp(text, 'g')
