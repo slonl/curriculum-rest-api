@@ -262,9 +262,11 @@ const spreadsheet = (function() {
     options.container.innerHTML = ''
     let table = document.createElement('table')
     table.className = 'slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers'
+
     table.style.position = 'sticky'
     table.style.top = '0px'
     table.style.width = '100%'
+
     let head = document.createElement('thead')
     let body = document.createElement('tbody')
     let foot = document.createElement('tfoot')
@@ -274,7 +276,7 @@ const spreadsheet = (function() {
     options.container.appendChild(table)
     let helpers = document.createElement('div')
     helpers.classList.add('slo-table-helpers')
-    let selector = document.createElement('div');
+    let selector = document.createElement('dialog');
     selector.classList.add('slo-helper')
     selector.classList.add('slo-cell-selector')
     helpers.appendChild(selector)
@@ -294,7 +296,7 @@ const spreadsheet = (function() {
       let values = columnDef.values
       let name
       let selectorRect, disabled, checked
-      selector.style.overflow = 'visible'
+      selector.classList.remove("scroll")
       switch(columnDef.type) {
         case 'autocomplete':
           value = htmlEscape(value)
@@ -306,6 +308,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+          <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -345,6 +352,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -392,6 +404,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -425,19 +442,20 @@ const spreadsheet = (function() {
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
-      selector.style.top = Math.max(2, (rect.top - offset.top))+'px'
-      selector.style.left = (rect.left - offset.left)+'px'
-      selector.style.width = rect.width+'px'
-      selector.style['min-height'] = rect.height+'px'
+      selector.style.setProperty("--deTop", Math.max(2, (rect.top - offset.top))+'px')
+      selector.style.setProperty("--deLeft", (rect.left - offset.left)+'px')
+      selector.style.setProperty("--deWidth", rect.width+'px')
+      selector.style.setProperty("min-height", rect.height+'px')
+
       let value = row.columns[columnDef.value] || ''
       let header = ''
       if (columnDef.editor!==false) {
         header = `
-<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
-  <svg class="ds-icon ds-icon-feather">
-    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
-  </use></svg>
-</button>
+          <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+            </use></svg>
+          </button>
 `
       }
       switch(columnDef.type) {
@@ -469,14 +487,13 @@ const spreadsheet = (function() {
       let current = selector.getBoundingClientRect()
       if (current.top+current.height > offset.top+offset.height) {
         if ((offset.height-current.height)<2) {
-          selector.style.top = '2px'
-//          selector.style.height = 'calc(100% - 40px)'
+          selector.style.setProperty("--deTop", '2px')
         } else {
-          selector.style.top = (offset.height - current.height)+'px'
+          selector.style.setProperty("--deTop", (offset.height - current.height)+'px' ) 
         }
       }
-      selector.style.overflow = 'auto'
-      selector.style.display = 'block'
+     selector.classList.add("visible")
+     selector.classList.add("scroll")
     }
 
     function getRow(el) {
@@ -881,6 +898,26 @@ const spreadsheet = (function() {
     }
     addClickSelectCell()
 
+    function selectorToggleMaximize() {
+        if(selector.classList.contains('maximize')){
+            selectorMinimize()
+        } else {
+            selectorMaximize()
+        }   
+    }
+
+    function selectorMaximize() {
+        selector.close()
+        selector.showModal()
+        selector.classList.add('maximize')
+    }
+
+    function selectorMinimize() {
+        selector.close()
+        selector.show()
+        selector.classList.remove(`maximize`)      
+    }
+
     datamodel.update()
 
     let changeListeners = []
@@ -1041,20 +1078,21 @@ const spreadsheet = (function() {
       },
       selector: (el) => {
         if (!el) {
-          selector.style.display = 'none'
+          selector.classList.remove("visible")         
           return
         }
-        selector.style.display = 'block'
+        selectorMinimize()
+        selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         showSelector(rect, offset, el)
       },
       editor: (el) => {
         if (!el) {
-          selector.style.display = 'none'
+          selector.classList.remove("visible")
           return
         }
-        selector.style.display = 'block'
+        selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         showEditor(rect, offset, el)
@@ -1093,6 +1131,9 @@ const spreadsheet = (function() {
       },
       getColumnDefinition,
       toggleFullScreen,
+      selectorToggleMaximize,
+      selectorMaximize,
+      selectorMinimize,
       search: (text) => {
         let results = []
         let textRe = new RegExp(text, 'g')

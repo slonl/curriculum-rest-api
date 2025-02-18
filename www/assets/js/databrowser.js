@@ -461,6 +461,9 @@ browser = simply.app({
     },
 
     commands: {
+        toggleMaximize: (el, value) =>{
+            browser.view.sloSpreadsheet.selectorToggleMaximize()
+        },
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
             let url = new URL(document.location.href)
