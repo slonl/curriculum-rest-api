@@ -373,8 +373,6 @@ dialog.commit-changes {
 }
 .slo-form-header .ds-button-close {
     height: 2em;
-    xline-height: 2em;
-    xmin-height: unset;
     margin-right: -29px;
     margin-top: 0;
     background-color: var(--ds-grey-20);
