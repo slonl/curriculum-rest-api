@@ -1,3 +1,4 @@
+   
     a.slo-highlight-box {
         text-decoration: none;
         overflow: hidden;
@@ -110,11 +111,19 @@
         width: auto;
     }
     .slo-cell-selector {
+        --dePosition:sticky;
+        --deTop: 27px;
+        --deLeft: 0px;
+        --deWidth: 90%;
+        --deHeight: auto;
+        --deMinHeight: 27px;
+
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 0;
+        top: var(--deTop);
+        left: var(--deLeft);
+        width: var(--deWidth);
+        height: var(--deHeight);
+        min-height: var(--deMinHeight);
         outline: 2px solid blue;
         z-index: 100;
         background-color: white;
@@ -122,8 +131,39 @@
         line-height: var(--ds-line-height);
         padding: 0 1px;
         overflow: visible;
-        height: auto;
         display: none;
+        border: 0;
+        margin: 0;
+    }
+    .slo-cell-selector.visible {
+        display: block;
+    }
+    .slo-cell-selector.scroll {
+        overflow: auto;
+    }
+    .slo-cell-selector.maximize {
+        top: 118px;
+        left: 10%;
+        width: 80%;
+        height: 70vh;
+        background-color: white;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize {
+        height:100%;
+        overflow: initial;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize textarea {
+        max-height:100%;
+        margin-bottom: 27px;
+        height: 100% !important; /* override inline height */
+    }
+    .slo-cell-selector.maximize .slo-form-footer {
+        bottom: -2px;
+        margin-bottom: calc(-2em + 2px);
+    }
+    .slo-cell-selector.maximize::backdrop {
+        background: var(--ds-grey-60);
+        opacity: 0.5;
     }
     .slo-content-panel {
         margin-bottom: 0;
@@ -333,9 +373,14 @@ dialog.commit-changes {
 }
 .slo-form-header .ds-button-close {
     height: 2em;
-    line-height: 2em;
-    min-height: unset;
-    right: 0;
+    margin-right: -29px;
+    margin-top: 0;
+    background-color: var(--ds-grey-20);
+    padding: 0 5px;
+    box-shadow: var(--ds-shadow-medium);
+}
+.slo-form-header .ds-button-close:hover {
+    background-color: var(--ds-primary);
 }
 .slo-form-header .ds-button-close .ds-icon {
     height: 1em;
@@ -417,6 +462,15 @@ body.ds-paging .slo-header .ds-paging {
 .ds-button-close {
     right: 0;
 }
+.ds-button-maximize {
+    right: 0;
+    margin-right: -29px;
+    top: 39px;
+    position: absolute;
+    background-color: var(--ds-grey-20);
+    padding: 0 5px;
+    box-shadow: var(--ds-shadow-medium);
+}
 .ds-alert:empty {
     display: none;
 }
@@ -430,7 +484,7 @@ body.ds-paging .slo-header .ds-paging {
     background-color: transparent;
 }
 .slo-cell-selector .slo-edit:hover {
-    background-color: var(--ds-button-primary-bg-color); 
+    background-color: var(--ds-button-primary-bg-color);
 }
 .slo-list-selector {
     overflow: auto;
@@ -519,6 +573,12 @@ body.ds-paging .slo-header .ds-paging {
 :fullscreen footer {
     display: none;
 }
+
+:fullscreen .slo-spreadsheet .ds-scrollbox {
+    --ds-scrollbox-height: calc(100vh - 155px);
+    height: var(--ds-scrollbox-height);
+}
+
 .ds-paging .ds-button {
     display: unset; /* FIXME: slo.css incorrectly sets this to block */
 }

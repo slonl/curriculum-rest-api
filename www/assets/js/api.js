@@ -272,7 +272,7 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
-                    if (n instanceof changes.DeletedLink) {
+                    if (n.deleted || n instanceof changes.DeletedLink) {
                         row.deleted = true
                     } else if (n instanceof changes.InsertedLink) {
                         row.inserted = true
@@ -318,8 +318,8 @@
                         let value = row.columns[columnDef.value] || ''
                         let span = el.querySelector('span.slo-indent')
                         let spanRect = span.getBoundingClientRect()
-                        this.style.left = (spanRect.left - offset.left)+'px'
-                        this.style.width = rect.width - (spanRect.left - rect.left)+'px'
+                        this.style.setProperty("--deLeft", (spanRect.left - offset.left)+'px')
+                        this.style.setProperty("--deWidth", rect.width - (spanRect.left - rect.left)+'px')
                         let header = `
 <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
   <svg class="ds-icon ds-icon-feather">

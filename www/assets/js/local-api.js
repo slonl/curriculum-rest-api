@@ -97,7 +97,7 @@ window.localAPI = (function() {
         doelniveauList: async function(type) {
 	        return window.slo.api.get(type)
             .then(function(json) {
-                return changes.getLocalView(json.data)
+                return changes.getLocalView(json)
             })
         },
         item: async function(id) {
