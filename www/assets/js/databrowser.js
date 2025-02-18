@@ -133,10 +133,12 @@ browser = simply.app({
             browser.actions.item(params.id);
         },
 
-        '/register/': function(params) { 
+        '/register/': function(params) {
+            browser.actions.clearView()
             browser.view.view = 'register';
         },
         '/curriculum-:context/': function(params) {
+            browser.actions.clearView()
             browser.view.context = params.context;
             browser.view.contextLink = {
                 href: '/curriculum-'+params.context+'/',
@@ -156,6 +158,7 @@ browser = simply.app({
             updateDataSource('contextdata')
         },
         '/': function(params) {
+            browser.actions.clearView()
             browser.view.view = 'home';
         },
         '/([^#]+):*': function(params) {
@@ -722,11 +725,13 @@ browser = simply.app({
         register : function(el, value) {
             var email = encodeURIComponent(el.querySelector("input").value);
             browser.actions.register(email);
+            browser.actions.clearView()
             browser.view.view = "registered";
         },
         'search-text': function(form, values) {
             const text = values.text;
             if (text) {
+                browser.actions.clearView()
                 browser.actions.search(text)
                 .then(data => {
                     browser.view.view = 'list';
@@ -931,6 +936,7 @@ browser = simply.app({
                 browser.view.loggedIn = false
                 return 'Ongeldig email en/of API-key'
             }
+            browser.actions.clearView()
             browser.view.user = email
             browser.view.loggedIn = true
             localStorage.setItem('username',email)
@@ -1132,6 +1138,7 @@ browser = simply.app({
             element.replaceChildren();
         },
         switchView: async function(view,root){
+            browser.actions.clearView()
             let currentView = this.app.view.view;
             let item = this.app.view.item
             let id = item?.id ?? item?.uuid
@@ -1509,6 +1516,7 @@ browser = simply.app({
             return true
         },
         list: function(type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.list(type)
@@ -1549,6 +1557,7 @@ browser = simply.app({
         editText : function(){
         },
         spreadsheet: function(root, context, niveau) {
+            browser.actions.clearView()
             browser.view.currentTree = {
                 root,
                 context,
@@ -1594,6 +1603,7 @@ browser = simply.app({
             browser.view.sloSpreadsheet.render()
         },
         document: async function(root, context, niveau) {
+            browser.actions.clearView()
             browser.view.documentList = []
             return window.localAPI.document(root, context, niveau)
             .then(async function(json) {
@@ -1614,6 +1624,7 @@ browser = simply.app({
             })
         },
         doelniveauList: function(type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.doelniveauList(type)
@@ -1630,6 +1641,7 @@ browser = simply.app({
             })
         },
         item: function(id) {
+            browser.actions.clearView()
             return window.localAPI.item(id)
             .then(function(json) {
                 browser.view.request = window.localAPI.reflect.item(id)
@@ -1648,6 +1660,7 @@ browser = simply.app({
             })
         },
         listOpNiveau: function(niveau, type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.listOpNiveau(niveau, type)
@@ -1665,6 +1678,7 @@ browser = simply.app({
             })
         },
         itemOpNiveau: function(niveau, type, id) {
+            browser.actions.clearView()
             return window.localAPI.itemOpNiveau(niveau, type, id)
             .then(function(json) {
                 browser.view.source = JSON.stringify(json, null, 4)
@@ -1677,6 +1691,7 @@ browser = simply.app({
             })
         },
         notfound: function(remainder) {
+            browser.actions.clearView()
             browser.view.view = 'notfound';
             browser.actions.updatePaging();
         },
@@ -1690,6 +1705,9 @@ browser = simply.app({
                 browser.view.max = Math.ceil(pages);
             }
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+        },
+        clearView: function() {
+            document.body.classList.remove('ds-paging')
         },
         register : function(email) {
             window.slo.api.get("register/?email=" + email)
