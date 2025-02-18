@@ -573,6 +573,12 @@ body.ds-paging .slo-header .ds-paging {
 :fullscreen footer {
     display: none;
 }
+
+:fullscreen .slo-spreadsheet .ds-scrollbox {
+    --ds-scrollbox-height: calc(100vh - 155px);
+    height: var(--ds-scrollbox-height);
+}
+
 .ds-paging .ds-button {
     display: unset; /* FIXME: slo.css incorrectly sets this to block */
 }
