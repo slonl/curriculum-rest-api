@@ -754,10 +754,11 @@ browser = simply.app({
         },
         removeAllChanges: async function(el, value) {
             if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
-                browser.actions.removeAllChanges()
-                browser.actions.switchView(browser.view.preferedView)
+                document.getElementById('previewChanges').showModal()
+                if (await browser.actions.removeAllChanges()) {
+                    browser.actions.switchView(browser.view.preferedView)
+                }
                 browser.commands.closeDialog(el, value)
-
             }
         },
         commitChanges: async function(form, values) {
@@ -1150,6 +1151,7 @@ browser = simply.app({
             
             switch(view) {
                 case 'item':
+                    this.app.view.view = view
                     document.body.setAttribute('data-simply-keyboard','item')
                     this.app.actions.updatePaging()
                     // get focused item
@@ -1159,6 +1161,7 @@ browser = simply.app({
                 case 'spreadsheet':
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                     if (!root) {
@@ -1270,6 +1273,7 @@ browser = simply.app({
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = this.app.view.item['@id']
                     // get roots of current item
@@ -1961,6 +1965,29 @@ browser = simply.app({
         },
         removeAllChanges: async function() {
             changes.clear()
+            return browser.actions.checkView()
+        },
+        checkView: async function() {
+            // check if the current view can be updated,
+            // or if browser should show the homepage instead
+            // e.g. current uuid was a local change, which has been removed
+            switch(browser.view.view) {
+                case 'item':
+                case 'spreadsheet':
+                case 'document':
+                    let uuid = browser.view.item.id
+                    try {
+                        let item = await localAPI.item(uuid)
+                    } catch(e) {
+                        browser.actions.clearView()
+                        simply.route.goto('/')
+                        return false
+                    }
+                break
+            }
+            // now update current view
+            window.location.reload(true)
+            return true
         },
         commitChanges: async function(message) {
             const linkArray = (list) => {
