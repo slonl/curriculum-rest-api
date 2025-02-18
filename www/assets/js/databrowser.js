@@ -462,23 +462,7 @@ browser = simply.app({
 
     commands: {
         toggleMaximize: (el, value) =>{
-            console.log(document.querySelector('.maximize'))
-            if(document.querySelector('.maximize')){
-                console.log("MINIMIZING")
-                let maximizedElement = document.querySelector('.maximize')
-                maximizedElement.classList.remove(`maximize`)
-                // need to add the styles back in
-                // @TODO: find a way to add the style="--vars" back in.
-                browser.commands.cellEditor(el)
-            } else {
-                console.log("MAXIMIZING")
-                let formElement = el.closest("form")
-                // the class needs to be aplied to 2 divs up from the form.
-                let divElement1 = formElement.closest("div")
-                let divElement = divElement1.closest("div")
-                divElement.style.cssText = ""
-                divElement.classList.add(`maximize`)
-            } 
+            browser.view.sloSpreadsheet.selectorToggleMaximize()
         },
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
