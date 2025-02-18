@@ -828,7 +828,6 @@ const spreadsheet = (function() {
         if (!column.checked) {
           continue
         }       
-        visible.push(column)
         if (!column.filteredValues) {
           column.filteredValues = {}
         }
@@ -965,7 +964,7 @@ const spreadsheet = (function() {
       },
       moveDown: () => {
         let line = datamodel.view.visibleData.findIndex(r => r.index==datamodel.options.focus.row)
-        line = Math.min(datamodel.view.visibleData.length, line+1)
+        line = Math.min(datamodel.view.visibleData.length-1, line+1)
         let row = datamodel.view.visibleData[line]
         return spreadsheet.goto(row.index, datamodel.options.focus.column)
       },
