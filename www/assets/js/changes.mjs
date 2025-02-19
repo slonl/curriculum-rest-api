@@ -162,12 +162,27 @@ const changes = (()=> {
 		return equal
 	}
 
+	function linkifyObject(ob) {
+		if (ob?.id && !ob.$mark) {
+			return new JSONTag.Link('/uuid/'+ob.id)
+		}
+		for (let prop in ob) {
+			if (ob[prop]?.id) {
+				ob[prop] = linkifyObject(ob[prop])
+			} else if (Array.isArray(ob[prop])) {
+				linkify(ob[prop])
+			}
+		}
+		return ob
+	}
+
 	function linkify(arr) {
 		if (!Array.isArray(arr)) {
 			if (arr?.id && !arr?.$mark) {
-				return new JSONTag.Link('/uuid/'+arr.id)
+				arr = linkifyObject(arr)
 			}
-		} 
+			return arr
+		}
 		arr.forEach((node, key) => {
 			if (node.id && !node.$mark) {
 				arr[key] = new JSONTag.Link('/uuid/'+node.id)
@@ -176,11 +191,12 @@ const changes = (()=> {
 					if (Array.isArray(node[prop])) {
 						linkify(node[prop])
 					} else if (node[prop] && node[prop]?.id && !node[prop]?.$mark) {
-						node[prop] = new JSONTag.Link('/uuid/'+node[prop].id)
+						node[prop] = linkifyObject(node[prop])
 					}
 				})
 			}
 		})
+		return arr
 	}
 
 	class Changes extends Array {
@@ -204,10 +220,10 @@ const changes = (()=> {
 			let linkedChanges = JSONTag.clone(this)
 			for (let change of linkedChanges) {
 				if (change.prevValue && Array.isArray(change.prevValue)) {
-					linkify(change.prevValue)
+					change.prevValue = linkify(change.prevValue)
 				}
 				if (change.newValue && Array.isArray(change.newValue)) {
-					linkify(change.newValue)
+					change.newValue = linkify(change.newValue)
 				}
 			}
 			globalThis.localStorage.setItem('changeHistory', JSONTag.stringify(linkedChanges))
