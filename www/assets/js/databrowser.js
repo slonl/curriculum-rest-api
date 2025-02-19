@@ -1397,13 +1397,13 @@ browser = simply.app({
                 let prop, prevValue, newValue
                 let dirty = true
                 let node = row.node
-                prop = node[entityType]
+                prop = node[entityType] || []
                 prevValue = prop
                 newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                 dirty = true
                 if (newValue == prevValue) {
                     return // no change failsave
-                } else if (!newValue && !prevValue) {
+                } else if (!newValue.length && !prevValue.length) {
                     return // check if both are empty
                 }
 
