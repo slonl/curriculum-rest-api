@@ -46,7 +46,15 @@
 
     window.slo.api.get('/niveau/')
     .then(niveaus => {
-        window.slo.niveaus = niveaus.data
+        window.slo.niveaus = niveaus.data.map(n => {
+            if (!n.deleted) {
+                delete n.deleted
+            }
+            if (!n.dirty) {
+                delete n.dirty
+            }
+            return n
+        })
         editor.addDataSource('niveaus', {
             load: niveaus.data.map(n => n.title)
         })
