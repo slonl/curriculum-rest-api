@@ -270,6 +270,15 @@
         margin-top: -4px;
     }
  
+    .button-clear{
+        background-color: transparent;
+        color : inherit;
+        font: inherit;
+        margin : 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+    }
 
 .loading-overlay {
     position: absolute;

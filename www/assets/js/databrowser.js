@@ -754,10 +754,11 @@ browser = simply.app({
         },
         removeAllChanges: async function(el, value) {
             if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
-                browser.actions.removeAllChanges()
-                browser.actions.switchView(browser.view.preferedView)
+                document.getElementById('previewChanges').showModal()
+                if (await browser.actions.removeAllChanges()) {
+                    browser.actions.switchView(browser.view.preferedView)
+                }
                 browser.commands.closeDialog(el, value)
-
             }
         },
         commitChanges: async function(form, values) {
@@ -950,49 +951,56 @@ browser = simply.app({
             try {
                 tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
-                    tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
+                    let type = tree.roots[0]?.['@type']
+                    for (let root of tree.roots) {
+                        if (root?.['@type'] != type ) {
+                            tree.errors.push(new Error('Alle root entiteiten moeten van hetzelfde type zijn', {cause:[tree.roots[0], root]}))
+                        }
+                    }
                 }
                 if (!tree.errors.length) {
                     // check if root is a new entity or existing one
+                    for (let root of tree.roots) {
+                        let change = null
+                        let current = null
+                        try {
+                            current = await localAPI.item(root.id)
+                        } catch(e) {
+                            // ignore errors
+                        }
+                        if (current) {
+                            // do an update
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: root.title,
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'update',
+                                prevValue: current,
+                                newValue: root
+                            })
+                        } else {
+                            // do a new
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: 'Importing '+root['@type'],
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'new',
+                                newValue: root
+                            })
+                        }
+                        changes.changes.push(change)
+                        changes.update()
+                    }
+                    // switch to spreadsheet view of first root entity
                     let root = tree.roots[0]
-                    let change = null
-                    let current = null
-                    try {
-                        current = await localAPI.item(root.id)
-                    } catch(e) {
-                        // ignore errors
-                    }
-                    if (current) {
-                        // do an update
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: root.title,
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'update',
-                            prevValue: current,
-                            newValue: root
-                        })
-                    } else {
-                        // do a new
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: 'Importing '+root['@type'],
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'new',
-                            newValue: root
-                        })
-                    }
-                    changes.changes.push(change)
-                    changes.update()
-                    // switch to spreadsheet view of that entity
                     history.pushState({}, null, root['@id']) //window.release.apiPath+'uuid/'+node.id)
                     this.app.view.item = root
                     let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
@@ -1150,6 +1158,7 @@ browser = simply.app({
             
             switch(view) {
                 case 'item':
+                    this.app.view.view = view
                     document.body.setAttribute('data-simply-keyboard','item')
                     this.app.actions.updatePaging()
                     // get focused item
@@ -1159,6 +1168,7 @@ browser = simply.app({
                 case 'spreadsheet':
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                     if (!root) {
@@ -1270,6 +1280,7 @@ browser = simply.app({
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = this.app.view.item['@id']
                     // get roots of current item
@@ -1961,6 +1972,29 @@ browser = simply.app({
         },
         removeAllChanges: async function() {
             changes.clear()
+            return browser.actions.checkView()
+        },
+        checkView: async function() {
+            // check if the current view can be updated,
+            // or if browser should show the homepage instead
+            // e.g. current uuid was a local change, which has been removed
+            switch(browser.view.view) {
+                case 'item':
+                case 'spreadsheet':
+                case 'document':
+                    let uuid = browser.view.item.id
+                    try {
+                        let item = await localAPI.item(uuid)
+                    } catch(e) {
+                        browser.actions.clearView()
+                        simply.route.goto('/')
+                        return false
+                    }
+                break
+            }
+            // now update current view
+            window.location.reload(true)
+            return true
         },
         commitChanges: async function(message) {
             const linkArray = (list) => {
