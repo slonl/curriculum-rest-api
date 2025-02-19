@@ -707,16 +707,16 @@ const spreadsheet = (function() {
       if (options.editMode) {
         if (row.deleted) {
           add = `<td></td>`
-          remove = `<td><svg data-simply-command="undeleteRow" class="slo-delete ds-icon ds-icon-feather">
+          remove = `<td><button class="button-clear" data-simply-command="undeleteRow"><svg class="slo-delete ds-icon ds-icon-feather">
               <use xlink:href="${options.icons}#plus-circle"></use>
-          </svg></td>` // unremove option here?
+          </svg></button></td>` // unremove option here?
         } else {
-          add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
+          add = `<td><button class="button-clear" data-simply-command="insertRow"><svg class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
               <use xlink:href="${options.icons}#plus-circle"></use>
-          </svg></td>`
-          remove = `<td><svg data-simply-command="deleteRow" class="slo-delete ds-icon ds-icon-feather">
+          </svg></button></td>`
+          remove = `<td><button class="button-clear" data-simply-command="deleteRow"><svg class="slo-delete ds-icon ds-icon-feather">
               <use xlink:href="${options.icons}#x-circle"></use>
-          </svg></td>`
+          </svg></button></td>`
         }
       }
       let html = `<tr id="row-${row.index}" data-slo-id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
