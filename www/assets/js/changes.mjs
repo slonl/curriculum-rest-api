@@ -352,7 +352,7 @@ const changes = (()=> {
 				for (let prop in m['@properties']) {
 					node.applyChanges(prop, m['@properties'][prop])
 				}
-				if (typeof m['@deleted']!='undefined') {
+				if (typeof m['@deleted']!='undefined' && m['@deleted']) {
 					node.deleted = m['@deleted']
 				}
 				result[id] = node
