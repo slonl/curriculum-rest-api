@@ -56,7 +56,7 @@ function createUUID(id, tree) {
 const aliases = {
 	'Title':'title',
 	'Description':'description',
-	'Level':'level',
+	'Level':'niveaus',
 	'Prefix':'prefix',
 	'Type':'@type'
 }
@@ -104,7 +104,8 @@ function createNode(row, line, tree) {
 	if (node.type) {
 		node['@type'] = node.type
 		delete node.type
-	} else if (TypeAliases[node['@type']]) {
+	}
+	if (node['@type'] && TypeAliases[node['@type']]) {
 		node['@type'] = TypeAliases[node['@type']]
 	}
 	if (!node['@type']) {

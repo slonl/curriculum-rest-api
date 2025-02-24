@@ -951,49 +951,56 @@ browser = simply.app({
             try {
                 tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
-                    tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
+                    let type = tree.roots[0]?.['@type']
+                    for (let root of tree.roots) {
+                        if (root?.['@type'] != type ) {
+                            tree.errors.push(new Error('Alle root entiteiten moeten van hetzelfde type zijn', {cause:[tree.roots[0], root]}))
+                        }
+                    }
                 }
                 if (!tree.errors.length) {
                     // check if root is a new entity or existing one
+                    for (let root of tree.roots) {
+                        let change = null
+                        let current = null
+                        try {
+                            current = await localAPI.item(root.id)
+                        } catch(e) {
+                            // ignore errors
+                        }
+                        if (current) {
+                            // do an update
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: root.title,
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'update',
+                                prevValue: current,
+                                newValue: root
+                            })
+                        } else {
+                            // do a new
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: 'Importing '+root['@type'],
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'new',
+                                newValue: root
+                            })
+                        }
+                        changes.changes.push(change)
+                        changes.update()
+                    }
+                    // switch to spreadsheet view of first root entity
                     let root = tree.roots[0]
-                    let change = null
-                    let current = null
-                    try {
-                        current = await localAPI.item(root.id)
-                    } catch(e) {
-                        // ignore errors
-                    }
-                    if (current) {
-                        // do an update
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: root.title,
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'update',
-                            prevValue: current,
-                            newValue: root
-                        })
-                    } else {
-                        // do a new
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: 'Importing '+root['@type'],
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'new',
-                            newValue: root
-                        })
-                    }
-                    changes.changes.push(change)
-                    changes.update()
-                    // switch to spreadsheet view of that entity
                     history.pushState({}, null, root['@id']) //window.release.apiPath+'uuid/'+node.id)
                     this.app.view.item = root
                     let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
@@ -1401,13 +1408,13 @@ browser = simply.app({
                 let prop, prevValue, newValue
                 let dirty = true
                 let node = row.node
-                prop = node[entityType]
+                prop = node[entityType] || []
                 prevValue = prop
                 newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                 dirty = true
                 if (newValue == prevValue) {
                     return // no change failsave
-                } else if (!newValue && !prevValue) {
+                } else if (!newValue.length && !prevValue.length) {
                     return // check if both are empty
                 }
 
