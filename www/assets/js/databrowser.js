@@ -1240,6 +1240,11 @@ browser = simply.app({
                         prevValue = prop
                         if (columnDef.type=='list') {
                             newValue = update.values.getAll(update.property)
+                            let p = new Set(prevValue)
+                            let n = new Set(newValue)
+                            if (n.difference(p).size==0) {
+                                return // no change
+                            }
                             dirty = true
                         } else if (columnDef.type=='checkbox') {
                             let checkedValue = update.values.getAll(update.property).pop()
@@ -1409,12 +1414,12 @@ browser = simply.app({
                 let dirty = true
                 let node = row.node
                 prop = node[entityType]
-                prevValue = prop
+                prevValue = prop || [] // new entities may not yet have this child property nere
                 newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                 dirty = true
                 if (newValue == prevValue) {
                     return // no change failsave
-                } else if (!newValue && !prevValue) {
+                } else if (!newValue.length && !prevValue.length) {
                     return // check if both are empty
                 }
 
