@@ -1413,8 +1413,8 @@ browser = simply.app({
                 let prop, prevValue, newValue
                 let dirty = true
                 let node = row.node
-                prop = node[entityType]
-                prevValue = prop || [] // new entities may not yet have this child property nere
+                prop = node[entityType] || []
+                prevValue = prop
                 newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                 dirty = true
                 if (newValue == prevValue) {
