@@ -72,6 +72,7 @@ function createNode(row, line, tree) {
 	let node = {}
 	node.$row = row
 	node.$line = line
+	node.$mark = 'inserted'
 	node.id = row.ID ?? row.id
 	delete row.ID
 	delete row.id

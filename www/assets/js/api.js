@@ -272,11 +272,11 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
-                    if (n.deleted || n instanceof changes.DeletedLink) {
+                    if (n.deleted || n.$mark=='deleted') {
                         row.deleted = true
-                    } else if (n instanceof changes.InsertedLink) {
+                    } else if (n.$mark=='inserted') {
                         row.inserted = true
-                    } else if (n instanceof changes.ChangedNode) {
+                    } else if (n.$mark=='changed') {
                         row.changed = true
                     }
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
@@ -445,7 +445,7 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async documentPage(node){
+        async documentPage(node){
             
             let documentData = {
                 index :  new Map()
