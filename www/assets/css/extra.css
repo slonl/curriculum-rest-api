@@ -349,6 +349,11 @@ tr.changed {
 .slo-type-selector .slo-type:hover {
     background-color: var(--ds-grey-20);
 }
+
+.slo-type-focus {
+    background-color: var(--ds-grey-20);
+}
+
 .slo-type-selector .ds-button-close {
     right: 0;
 }
