@@ -6,7 +6,7 @@
 
     const walk = (node, indent, f) => {
         if (!node) return;
-        if (getType(node)==='Niveau') {
+        if (getType(node)==='Niveau' && indent>0) {
             return
         }
         if (Array.isArray(node)) {
