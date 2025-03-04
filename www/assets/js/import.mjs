@@ -241,7 +241,9 @@ function combineNodes(nodes) {
 	let combined = {}
 	nodes.forEach(node => {
 		Object.entries(node).forEach(([key, value]) => {
-			if (key[0]=='$' || key=='$parentId') {
+			if (key=='$mark') {
+				combined[key] = value
+			} else if (key[0]=='$' || key=='$parentId') {
 				if (!combined[key]) {
 					combined[key] = []
 				}
