@@ -1054,7 +1054,7 @@ const spreadsheet = (function() {
           if (id) {
               id = new URL(id, document.location.href)
               if (changeListeners) {
-                  changeListeners.forEach(listener => listener.call(spreadsheet, id))
+                  changeListeners.forEach(listener =>  listener.call(spreadsheet, id))
               }
           }
           return el
