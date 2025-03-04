@@ -53,6 +53,12 @@
             if (!n.dirty) {
                 delete n.dirty
             }
+            if (n.uuid) {
+                JSONTag.setAttribute(n, 'id', '/uuid/'+n.uuid)
+                n['@id'] = '/uuid/'+n.uuid
+                n.id = n.uuid
+                delete n.uuid
+            }
             return n
         })
         editor.addDataSource('niveaus', {
