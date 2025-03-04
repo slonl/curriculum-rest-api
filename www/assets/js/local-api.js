@@ -10,6 +10,18 @@ window.localAPI = (function() {
         })
     }
 
+    const updateMeta = (data) => {
+        walk(data, v => {
+            if (v.id) {
+                let id = v.id
+                if (id.substr(0,6)!=='/uuid/') {
+                    id = '/uuid/'+id
+                }
+                jsontagMeta.index.id.set(id, new WeakRef(v))
+            }
+        })
+    }
+
 	return {
         reflect: {
             list: function(type) {
@@ -55,7 +67,8 @@ window.localAPI = (function() {
                 page: parseInt(browser.view.page)-1
             })
             .then(function(json) {
-                changes.getLocalView(json.data)
+                updateMeta(json)
+                json.data = changes.getLocalView(json.data)
                 let typeName = window.titles[type]
                 //add inserted entities matching type -> get typeName from type
                 Object.values(changes.merged)
@@ -67,13 +80,11 @@ window.localAPI = (function() {
             })
         },
         spreadsheet: async function(root, context, niveau) {
-            if (changes.local[root] && changes.merged[root]['@newValue']) {
-                return changes.local[root]
-            }
             return window.slo.api.get('tree/'+root, {
                 niveau, context
             }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
+                updateMeta(json)
                 walk(json, e => {
                     let id = getId(e);
                     let type = getType(e);
@@ -81,6 +92,12 @@ window.localAPI = (function() {
                     e['@type'] = type
                 })
                 return changes.getLocalView(json)
+            })
+            .catch(err => {
+                if (changes.local[root] && changes.merged[root]['@newValue']) {
+                  return changes.getLocalView(changes.local[root])
+                }
+                throw err
             })
         },
         document: async function(root, context, niveau) {
@@ -91,33 +108,40 @@ window.localAPI = (function() {
                 niveau, context
             }, true) //jsontag FIXME: detect jsontag from Content-Type headers
             .then(function(json) {
+                updateMeta(json)
                 return changes.getLocalView(json)
             })
         },
         doelniveauList: async function(type) {
 	        return window.slo.api.get(type)
             .then(function(json) {
+                updateMeta(json)
                 return changes.getLocalView(json)
             })
         },
         item: async function(id) {
-            if (changes.local[id] && changes.merged[id]['@newValue']) {
-                return changes.local[id]
-            }
-	        return window.slo.api.get('uuid/'+id+'/')
-            .then(function(json) {
+            try {
+                let json = await window.slo.api.get('uuid/'+id+'/')
+                updateMeta(json)
                 return changes.getLocalView(json)
-            })
+            } catch(err) {
+                if (changes.local[id]) {
+                    return changes.getLocalView(changes.local[id])
+                }
+                throw err
+            }
         },
         listOpNiveau: async function(niveau, type) {
             return window.slo.api.get('niveau/'+niveau+'/'+type)
             .then(function(json) {
+                updateMeta(json)
                 return changes.getLocalView(json)
             })
         },
         itemOpNiveau: async function(niveau, type, id) {
         	return window.slo.api.get('niveau/'+niveau+'/'+type+id)
             .then(function(json) {
+                updateMeta(json)
                 return changes.getLocalView(json)
             })
         },

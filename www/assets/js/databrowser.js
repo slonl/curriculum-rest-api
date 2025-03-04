@@ -1737,11 +1737,14 @@ browser = simply.app({
             let line = row.index
             let parentNode = row.node
             let typeName = window.slo.getTypeNameByType(type)
+            let id = uuid()
             let node = {
-                id: uuid(),
+                id,
+                '@references': '/uuid/'+id,
                 '@type': typeName,
                 'prefix': parentNode.prefix,
-                'unreleased': true
+                'unreleased': true,
+                $mark: 'inserted'
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             if (!parentNode[typeName]) {
@@ -1779,11 +1782,14 @@ browser = simply.app({
             let line = row.index
             let siblingNode = row.node
             let typeName = getType(siblingNode)
+            let id = uuid()
             let node = {
-                id: uuid(),
+                id,
+                '@references': '/uuid/'+id,
                 '@type': typeName,
                 'prefix': siblingNode.prefix,
-                'unreleased': true
+                'unreleased': true,
+                $mark: 'inserted'
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
@@ -1878,7 +1884,8 @@ browser = simply.app({
                 let prevValue = parentNode[typeName].slice()
                 let newValue = prevValue.map(e => { 
                     if (e.id==row.node.id) {
-                        return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                        //return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                        return new changes.DeletedLink(e)
                     } else {
                         return e
                     }
@@ -2006,7 +2013,7 @@ browser = simply.app({
                 let links = []
                 for (let v of list) {
                     let id = v.id ?? v.uuid
-                    if (JSONTag.getType(v)==='object' && id && !changes.isInsertedNode(id)) {
+                    if (JSONTag.getType(v)==='object' && id && !v.$mark) {
                         v = new JSONTag.Link('/uuid/'+id)
                     }
                     links.push(v)

@@ -72,6 +72,7 @@ function createNode(row, line, tree) {
 	let node = {}
 	node.$row = row
 	node.$line = line
+	node.$mark = 'inserted'
 	node.id = row.ID ?? row.id
 	delete row.ID
 	delete row.id
@@ -240,7 +241,9 @@ function combineNodes(nodes) {
 	let combined = {}
 	nodes.forEach(node => {
 		Object.entries(node).forEach(([key, value]) => {
-			if (key[0]=='$' || key=='$parentId') {
+			if (key=='$mark') {
+				combined[key] = value
+			} else if (key[0]=='$' || key=='$parentId') {
 				if (!combined[key]) {
 					combined[key] = []
 				}
