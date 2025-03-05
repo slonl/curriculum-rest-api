@@ -313,11 +313,10 @@ browser = simply.app({
                 browser.actions.hideTypeSelector()
             },
             "ArrowDown": (e) => {
-                e.preventDefault()
                 let target = document.activeElement
                 if (target) {
-                    
-                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"], form[data-simply-command="addLink"]'))
+                    e.preventDefault()
+                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"], input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"]'))
                     let current = targets.findIndex(input => input==e.target)
                     targets[current]?.classList.add("slo-type-focus")
 
@@ -330,11 +329,10 @@ browser = simply.app({
                 }
             },
             "ArrowUp": (e) => {
-                e.preventDefault()
                 let target = document.activeElement
-               
                 if (target) {
-                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"], form[data-simply-command="addLink"]'))
+                    e.preventDefault()
+                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"], input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"]'))
                     let current = targets.findIndex(input => input==e.target)
                     targets[current]?.classList.add("slo-type-focus")
                     
@@ -347,8 +345,8 @@ browser = simply.app({
                 }
             },
             "Enter": (e) => {
-                e.preventDefault()
                 if (browser.view.user) {
+                    e.preventDefault()
                     let el = document.querySelector(".slo-type-focus")         
                     if(el){
                         let closestCommand = el.closest("[data-simply-command]")

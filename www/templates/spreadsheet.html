@@ -75,8 +75,10 @@
                 <div class="ds-space">
                     <button data-simply-command="addSibling" class="button-clear">
                         <label class="slo-type">Erna: <span data-simply-field="siblingType" ></span></label>
+                    </button><br>
+                    <button data-simply-command="showAvailableTypes" class="button-clear">
+                        <label class="slo-type">Erin: selecteer type:</label>
                     </button>
-                    <label class="slo-type" data-simply-command="showAvailableTypes">Erin: selecteer type:</label>
                     <div class="slo-types ds-space-horizontal" data-simply-list="availableTypes">
                         <template>
                             <label class="slo-type">
@@ -90,10 +92,10 @@
                             </label>
                         </template>
                     </div>
-                    <form class="slo-niveau ds-space-horizontal slo-hidden" data-simply-command="addNiveau">
+                    <form class="slo-niveau ds-space-horizontal slo-hidden">
                         <label for="niveau">Selecteer Niveau:</label>
                         <input type="text" name="niveau" list="niveaus">
-                        <button class="ds-button" type="submit">Link</button>
+                        <button class="ds-button" type="submit" data-simply-command="addNiveau">Link</button>
                     </form>
                     <datalist id="niveaus" data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title">
                         <template>
@@ -103,13 +105,13 @@
                     <button data-simply-command="showLinkForm" class="button-clear">
                         <label class="slo-type">Link bestaande entiteit</label>
                     </button>
-                    <form class="slo-link ds-space-horizontal slo-hidden" data-simply-command="addLink">
+                    <form class="slo-link ds-space-horizontal slo-hidden">
                         <label for="link">Entiteit ID:</label>
                         <input type="text" name="link">
-                        <button class="ds-button" type="submit">Link</button>
+                        <button class="ds-button" type="submit" data-simply-command="addLink">Link</button>
                     </form>
                 </div>
-            </form>
+            </div>
         </dialog>
     </div>
 </template>
