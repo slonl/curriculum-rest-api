@@ -347,16 +347,15 @@ browser = simply.app({
                 }
             },
             "Enter": (e) => {
+                e.preventDefault()
                 if (browser.view.user) {
                     let el = document.querySelector(".slo-type-focus")         
-
                     if(el){
                         let closestCommand = el.closest("[data-simply-command]")
                         let command = closestCommand.dataset.simplyCommand
                         let value = closestCommand?.value
                         browser.commands[command](e.target, value)
                     }
-
                     el.classList.remove("slo-type-focus")
                 }
             }
@@ -1983,16 +1982,11 @@ browser = simply.app({
             addFocusElement.classList.add("slo-type-focus")
         },
         hideTypeSelector: function() {
-            console.log("Closing modal.")
             document.body.dataset.simplyKeyboard = 'spreadsheet'
-            setTimeout(function() {
                 let selector = document.querySelector('.slo-type-selector')
-                console.log(selector)
-                selector.close(); //removeAttribute('open')
-                selector.removeAttribute("open")
+                selector.close();
                 let shouldBeClosed = document.querySelector('.slo-type-selector')
                 console.log(shouldBeClosed)
-            }, 5)
         },
         removeAllChanges: async function() {
             changes.clear()
