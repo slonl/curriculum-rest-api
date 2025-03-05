@@ -1981,8 +1981,8 @@ browser = simply.app({
         },
         hideTypeSelector: async function() {
             document.body.dataset.simplyKeyboard = 'spreadsheet'
-                let selector = document.querySelector('.slo-type-selector')
-                selector.close();
+            let selector = document.querySelector('.slo-type-selector')
+            selector.close();
         },
         removeAllChanges: async function() {
             changes.clear()
