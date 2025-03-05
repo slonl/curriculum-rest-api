@@ -1979,12 +1979,10 @@ browser = simply.app({
             addFocusElement.focus()
             addFocusElement.classList.add("slo-type-focus")
         },
-        hideTypeSelector: function() {
+        hideTypeSelector: async function() {
             document.body.dataset.simplyKeyboard = 'spreadsheet'
                 let selector = document.querySelector('.slo-type-selector')
                 selector.close();
-                let shouldBeClosed = document.querySelector('.slo-type-selector')
-                console.log(shouldBeClosed)
         },
         removeAllChanges: async function() {
             changes.clear()
