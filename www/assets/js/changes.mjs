@@ -678,6 +678,7 @@ const changes = (()=> {
         }
         changes.changes = new Changes()
         insertedNodes = changes.insertedNodes = {}
+        localEntities = {}
         changes.update()
     }
 
