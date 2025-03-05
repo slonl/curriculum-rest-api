@@ -1975,7 +1975,7 @@ browser = simply.app({
             }
             
             //document.querySelector('[data-simply-command="addSibling"]').focus()
-            let addFocusElement = document.querySelector('[data-simply-command="addSibling"]')
+            let addFocusElement = selector.querySelector('[data-simply-command="addSibling"]')
             addFocusElement.focus()
             addFocusElement.classList.add("slo-type-focus")
         },
