@@ -2110,14 +2110,15 @@ browser = simply.app({
                         if (error.message) {
                             alert('Probleem: '+error.error+': '+error.message)
                         } else {
-                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
                             console.error(error)
+                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
+                           
                         }
                     break
                 }
             } else {
-                alert('Probleem: er is een onbekend probleem opgetreden.')
                 console.error(error)
+                alert('Probleem: er is een onbekend probleem opgetreden.')
             }
        }, 
 

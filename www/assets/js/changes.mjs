@@ -286,8 +286,14 @@ const changes = (()=> {
                     if (!line.length) {
                         continue
                     }
-                    let change = new Change(JSONTag.parse(line, null, globalThis.jsontagMeta))
-                    this.push(change)
+                    let temp = JSONTag.parse(line, null, globalThis.jsontagMeta)
+                    if(temp && typeof temp == "object" && !Array.isArray(temp)){
+                        let change = new Change(temp)
+                        this.push(change)
+                    } else {
+                        this.#log = [];
+                        break
+                    }
                 }
             }
         }
