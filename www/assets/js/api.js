@@ -235,15 +235,18 @@
             }
 
             function getColumns(n) {
-                let validColumns = Object.keys(n)
-                    .filter(c => c[0].match(/[a-z]/))
-                    .filter(c => ['sloID', 'uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
                 let columns = {
                     id: getId(n),
                     type: getType(n),
                     niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
-                validColumns.forEach(column => { if (column!='id') { columns[column] = n[column]}})
+
+                let allColumnNames = Object.keys(meta.schemas.types[browser.view.listType].properties) 
+                // I'm assuming I don't need the filters anymore as it is loading from the schemas.types <-- double check with Auke.
+                //.filter(c => c[0].match(/[a-z]/))
+                //.filter(c => ['sloID', 'uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
+
+                allColumnNames.forEach(column => { if (column!='id') { columns[column] = n[column] }})
                 return columns
             }
 
