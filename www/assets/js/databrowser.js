@@ -120,19 +120,15 @@ browser = simply.app({
         '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
             browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
         },
-
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
-            alert("WE ARE HERE!");
         },
-
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
         '/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
-
         '/register/': function(params) { 
             browser.view.view = 'register';
         },
