@@ -205,7 +205,7 @@ function jsonLD(entry) {
 			if (entry['@type']=='Vakleergebied') {
 				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
 			} else {
-			child['$ref'] += '/ldk_vakleergebied/' + (entry.uuid ?? entry.id);
+				child['$ref'] += '/ldk_vakleergebied/' + (entry.uuid ?? entry.id);
 			}
 			return child;
 		});
