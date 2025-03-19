@@ -77,7 +77,7 @@ browser = simply.app({
         }
     },
 
-    routes: Object.assign(typeRoutes, {
+    routes: Object.assign({
         '/login/': function() {
             document.getElementById('login').setAttribute('open','open')
         },
@@ -87,9 +87,8 @@ browser = simply.app({
         '/niveau/:niveau/vakleergeboed/': function(params) {
             browser.actions.listOpNiveau(params.niveau, 'vakleergebied/');
         },
-
         '/niveau/:niveau/ldk_vakleergebied/:vakid': function(params) {
-            browser.actions.itemOpNiveau(params.niveau, 'ldk_vakleergebied/', params.vakid);
+            browser.actions.itemOpNiveau(params.niveau, 'ldk_vakleergebied/', params.vakid);  
         },
         '/niveau/:niveau/ldk_vakkern/:ldk_vakkernid': function(params) {
             browser.actions.itemOpNiveau(params.niveau, 'ldk_vakkern/', params.ldk_vakkernid);
@@ -124,6 +123,7 @@ browser = simply.app({
 
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
+            alert("WE ARE HERE!");
         },
 
         '/curriculum/uuid/:id': function(params) {
@@ -154,15 +154,20 @@ browser = simply.app({
                 })
             })
             updateDataSource('contextdata')
+        }
+    }, 
+    typeRoutes,
+    {
+        '/([^#]+):*': function(params) {
+            if (params.remainder) {
+                browser.actions.notfound(params.remainder);
+            } else {
+                browser.view.view = 'home';
+            }
         },
         '/': function(params) {
             browser.view.view = 'home';
         },
-        '/([^#]+):*': function(params) {
-            if (params.remainder) {
-                browser.actions.notfound(params.remainder);
-            }
-        }
     }),
     keyboard: {
         default: {

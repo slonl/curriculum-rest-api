@@ -209,12 +209,10 @@ module.exports = {
 				deprecated: _,
 			}
 		})`,
-		LdkVakleergebiedByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid: request.query.id
-		})
-		.select({
+		LdkVakleergebiedByIdOpNiveau: `	
+		const results = from(Index(request.query.id))
+			.select({
+			...shortInfo,
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
@@ -231,7 +229,9 @@ module.exports = {
 				deprecated: _,
 			},
 			Niveau: NiveauShort
-		})`,
+		})
+		results
+		`,
 
 		LdkVakkernOpNiveau: `
 		const results = from(data.NiveauIndex)
@@ -424,7 +424,7 @@ module.exports = {
 		'ldk_vakbegrip/': (req) => opendata.api["LdkVakbegrip"](req.params, req.query),
 		'niveau/:niveau/ldk_vakleergebied': (req) => opendata.api["LdkVakleergebiedOpNiveau"](req.params, req.query),
 		'niveau/:niveau/ldk_vakleergebied/:id/doelen': (req) => opendata.api['DoelenOpNiveauByLdkVakleergebiedById'](req.params, req.query),
-		'niveau/:niveau/ldk_vakleergebied/:id/': (req) => opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params, req.query),
+		'niveau/:niveau/ldk_vakleergebied/:id': (req) => opendata.api["LdkVakleergebiedByIdOpNiveau"](req.params, req.query),
 		'niveau/:niveau/ldk_vakkern': (req) => opendata.api["LdkVakkernOpNiveau"](req.params, req.query),
 		'niveau/:niveau/ldk_vakkern/:id': (req) => opendata.api["LdkVakkernByIdOpNiveau"](req.params, req.query),
 		'niveau/:niveau/ldk_vaksubkern': (req) => opendata.api["LdkVaksubkernOpNiveau"](req.params, req.query),
