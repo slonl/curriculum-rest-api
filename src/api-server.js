@@ -196,12 +196,16 @@ readEditors();
 
 function jsonLD(entry) {
 	if (entry.Niveau && Array.isArray(entry.Niveau)) {
+		//console.log("entry", entry)
+
 		entry.Niveau
 		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
 		.map(child => {
 			child['$ref'] = niveauURL + (child.uuid ?? child.id);
 			if (entry['@type']=='Vakleergebied') {
 				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
+			} else {
+			child['$ref'] += '/ldk_vakleergebied/' + (entry.uuid ?? entry.id);
 			}
 			return child;
 		});
