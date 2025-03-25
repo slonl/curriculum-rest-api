@@ -1149,7 +1149,7 @@ browser = simply.app({
             browser.actions.clearView()
             let currentView = this.app.view.view;
             let item = this.app.view.item
-            let id = item?.id ?? item?.uuid
+            let id = item?.id || item?.uuid
             if (!id) {
                 return
             }
