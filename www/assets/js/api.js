@@ -235,15 +235,23 @@
             }
 
             function getColumns(n) {
-                let validColumns = Object.keys(n)
+                let validColumns = []
+                
+                if (browser.view.user){
+                    validColumns = Object.keys(meta.schemas.types[browser.view.listType].properties)
+                } else {
+                    validColumns = Object.keys(n)
                     .filter(c => c[0].match(/[a-z]/))
                     .filter(c => ['sloID', 'uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
+                }
+
                 let columns = {
                     id: getId(n),
                     type: getType(n),
                     niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
-                validColumns.forEach(column => { if (column!='id') { columns[column] = n[column]}})
+
+                validColumns.forEach(column => { if (column!='id') { columns[column] = n[column] }})
                 return columns
             }
 
