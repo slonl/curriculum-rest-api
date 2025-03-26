@@ -130,6 +130,9 @@ const spreadsheet = (function() {
       if (data.etag !== cache.etag) {
         cache.etag = data.etag
         cache.data = data.filter(row => {
+          if (row.node.$mark=='inserted'){
+            return true;
+          }
           for(let name in datamodel.options.filter) {
             let filter = datamodel.options.filter[name]
             if (Array.isArray(filter)) {
@@ -259,9 +262,11 @@ const spreadsheet = (function() {
     options.container.innerHTML = ''
     let table = document.createElement('table')
     table.className = 'slo-tree-table ds-datatable ds-datatable-sticky-header ds-datatable-rulers'
+
     table.style.position = 'sticky'
     table.style.top = '0px'
     table.style.width = '100%'
+
     let head = document.createElement('thead')
     let body = document.createElement('tbody')
     let foot = document.createElement('tfoot')
@@ -271,7 +276,7 @@ const spreadsheet = (function() {
     options.container.appendChild(table)
     let helpers = document.createElement('div')
     helpers.classList.add('slo-table-helpers')
-    let selector = document.createElement('div');
+    let selector = document.createElement('dialog');
     selector.classList.add('slo-helper')
     selector.classList.add('slo-cell-selector')
     helpers.appendChild(selector)
@@ -291,6 +296,7 @@ const spreadsheet = (function() {
       let values = columnDef.values
       let name
       let selectorRect, disabled, checked
+      selector.classList.remove("scroll")
       switch(columnDef.type) {
         case 'autocomplete':
           value = htmlEscape(value)
@@ -302,6 +308,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+          <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -341,6 +352,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -388,6 +404,11 @@ const spreadsheet = (function() {
           selector.innerHTML = `
 <form data-simply-command="saveChangesSpreadsheet">
   <div class="slo-form-header">
+            <button class="ds-button ds-button-naked ds-button-maximize" data-simply-command="toggleMaximize">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#maximize">
+            </use></svg>
+          </button>
     <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeEditor">
       <svg class="ds-icon ds-icon-feather">
         <use xlink:href="/assets/icons/feather-sprite.svg#x">
@@ -425,41 +446,21 @@ const spreadsheet = (function() {
       let columnDef = getColumnDefinition(el)
       let row = getRow(el)
       selector.innerHTML = ''
-      selector.style.top = Math.max(2, (cellRect.top - tableRect.top)) + 'px'
-      selector.style.maxWidth = cellWidth + 'px'
-      selector.style.minWidth = cellRect.width + 'px'
-      selector.style.width = "fit-content"
 
-      selector.style['min-height'] = cellRect.height +'px'
-      selector.style.overflow = 'auto'
-      selector.style.marginRight = "2px"
-      
-      let trueCellWidth = selector.getBoundingClientRect().width
-      console.log(trueCellWidth, cellRect.width)
-      
-      window.setTimeout(() => {
-        console.log("selector width: ")
-        let temp = getComputedStyle(selector)
-        console.log(temp.getPropertyValue("width"))
-        calculateOptimalPosition(cellRect)
-      }, 10)
-
-      function calculateOptimalPosition(cellRect){
-        const cellRelativeLeft = cellRect.left - tableRect.left
-
-        // @TODO: add code here to move the box left if the content doesn't fit nicely on the page
-        selector.style.left = cellRelativeLeft + 'px'
-      }
+      selector.style.setProperty("--deTop", Math.max(2, (rect.top - offset.top))+'px')
+      selector.style.setProperty("--deLeft", (rect.left - offset.left)+'px')
+      selector.style.setProperty("--deWidth", rect.width+'px')
+      selector.style.setProperty("min-height", rect.height+'px')
 
       let value = row.columns[columnDef.value] || ''
       let header = ''
       if (columnDef.editor!==false) {
         header = `
-<button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
-  <svg class="ds-icon ds-icon-feather">
-    <use xlink:href="/assets/icons/feather-sprite.svg#edit">
-  </use></svg>
-</button>
+          <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
+            <svg class="ds-icon ds-icon-feather">
+              <use xlink:href="/assets/icons/feather-sprite.svg#edit">
+            </use></svg>
+          </button>
 `
 
       }
@@ -490,21 +491,21 @@ const spreadsheet = (function() {
         break
       }
       let current = selector.getBoundingClientRect()
-      
-      if (current.top+current.height > tableRect.top+tableRect.height) {
-        if ((tableRect.height-current.height)<2) {
-          selector.style.top = '2px'
-        }
-      } 
 
-      selector.style.height = 'fit-content'
-      selector.style.overflow = 'auto'
-      selector.style.display = 'block'
+      if (current.top+current.height > offset.top+offset.height) {
+        if ((offset.height-current.height)<2) {
+          selector.style.setProperty("--deTop", '2px')
+        } else {
+          selector.style.setProperty("--deTop", (offset.height - current.height)+'px' ) 
+        }
+      }
+     selector.classList.add("visible")
+     selector.classList.add("scroll")
     }
 
     function getRow(el) {
       let index = parseInt(el.closest('tr').id.substring(4))
-      return datamodel.data[index-1]
+      return getRowByIndex(index)
     }
 
     function getRowsById(id) {
@@ -512,19 +513,25 @@ const spreadsheet = (function() {
       return row
     }
 
+    function getRowByIndex(index) {
+      index-=1
+      return datamodel.data[index]
+    }
+
     function getRowByLine(line) {
       line -= 1;
-      return datamodel.data[line]
+      return datamodel.view.visibleData[line]
     }
 
     function findParentRow(row) {
+      let parent = null
       let indent = row.indent
       let line = datamodel.view.visibleData.indexOf(row)
       while (line && row.indent>=indent) {
         line--
-        row = datamodel.view.visibleData[line]
+        parent = datamodel.view.visibleData[line]
       }
-      return row
+      return parent
     }
 
     function getColumnDefinition(el) {
@@ -707,16 +714,16 @@ const spreadsheet = (function() {
       if (options.editMode) {
         if (row.deleted) {
           add = `<td></td>`
-          remove = `<td><svg data-simply-command="undeleteRow" class="slo-delete ds-icon ds-icon-feather">
+          remove = `<td><button class="button-clear" data-simply-command="undeleteRow"><svg class="slo-delete ds-icon ds-icon-feather">
               <use xlink:href="${options.icons}#plus-circle"></use>
-          </svg></td>` // unremove option here?
+          </svg></button></td>` // unremove option here?
         } else {
-          add = `<td><svg data-simply-command="insertRow" class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
+          add = `<td><button class="button-clear" data-simply-command="insertRow"><svg class="slo-delete ds-icon ds-icon-feather" title="Voeg relatie toe">
               <use xlink:href="${options.icons}#plus-circle"></use>
-          </svg></td>`
-          remove = `<td><svg data-simply-command="deleteRow" class="slo-delete ds-icon ds-icon-feather">
+          </svg></button></td>`
+          remove = `<td><button class="button-clear" data-simply-command="deleteRow"><svg class="slo-delete ds-icon ds-icon-feather">
               <use xlink:href="${options.icons}#x-circle"></use>
-          </svg></td>`
+          </svg></button></td>`
         }
       }
       let html = `<tr id="row-${row.index}" data-slo-id="${row.columns.id}" class="${rowClass}">${add}<td class="line">${row.id+1}</td>`
@@ -828,7 +835,6 @@ const spreadsheet = (function() {
         if (!column.checked) {
           continue
         }       
-        visible.push(column)
         if (!column.filteredValues) {
           column.filteredValues = {}
         }
@@ -898,6 +904,26 @@ const spreadsheet = (function() {
     }
     addClickSelectCell()
 
+    function selectorToggleMaximize() {
+        if(selector.classList.contains('maximize')){
+            selectorMinimize()
+        } else {
+            selectorMaximize()
+        }   
+    }
+
+    function selectorMaximize() {
+        selector.close()
+        selector.showModal()
+        selector.classList.add('maximize')
+    }
+
+    function selectorMinimize() {
+        selector.close()
+        selector.show()
+        selector.classList.remove(`maximize`)      
+    }
+
     datamodel.update()
 
     let changeListeners = []
@@ -919,6 +945,8 @@ const spreadsheet = (function() {
         }
         spreadsheet.visibleData = datamodel.view.visibleData
         renderBody()
+        //FIXME: scrolling with the mouse should take precedence to focus.row
+        //if focus row is scrolled out of view, then don't use goto again
         spreadsheet.goto(datamodel.options.focus.row, datamodel.options.focus.column)
       },
       render: () => {
@@ -943,7 +971,7 @@ const spreadsheet = (function() {
       },
       moveDown: () => {
         let line = datamodel.view.visibleData.findIndex(r => r.index==datamodel.options.focus.row)
-        line = Math.min(datamodel.view.visibleData.length, line+1)
+        line = Math.min(datamodel.view.visibleData.length-1, line+1)
         let row = datamodel.view.visibleData[line]
         return spreadsheet.goto(row.index, datamodel.options.focus.column)
       },
@@ -1005,6 +1033,9 @@ const spreadsheet = (function() {
           // FIXME: row now used index, so all rows
           // row = Math.max(0, Math.min(datamodel.view.visibleData.length-1, row))
           let line = datamodel.view.visibleData.findIndex(r => r.index==row)
+          if (line===-1) { // not found
+              line = 0
+          }
           column = Math.max(1, Math.min(datamodel.options.visibleColumns.length, column))
           let focus = datamodel.options.focus
           focus.column = column
@@ -1053,20 +1084,21 @@ const spreadsheet = (function() {
       },
       selector: (el) => {
         if (!el) {
-          selector.style.display = 'none'
+          selector.classList.remove("visible")         
           return
         }
-        selector.style.display = 'block'
+        selectorMinimize()
+        selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         showSelector(rect, offset, el)
       },
       editor: (el) => {
         if (!el) {
-          selector.style.display = 'none'
+          selector.classList.remove("visible")
           return
         }
-        selector.style.display = 'block'
+        selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
         showEditor(rect, offset, el)
@@ -1105,6 +1137,9 @@ const spreadsheet = (function() {
       },
       getColumnDefinition,
       toggleFullScreen,
+      selectorToggleMaximize,
+      selectorMaximize,
+      selectorMinimize,
       search: (text) => {
         let results = []
         let textRe = new RegExp(text, 'g')

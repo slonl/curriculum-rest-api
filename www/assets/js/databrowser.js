@@ -48,6 +48,9 @@ function getTypeRoutes() {
 
 let meta = {}
 var browser = {}
+if (!jsontagMeta) {
+    var jsontagMeta = {}
+}
 
 slo.api.loadSchemas()
 .then(schemas => {
@@ -130,10 +133,12 @@ browser = simply.app({
             browser.actions.item(params.id);
         },
 
-        '/register/': function(params) { 
+        '/register/': function(params) {
+            browser.actions.clearView()
             browser.view.view = 'register';
         },
         '/curriculum-:context/': function(params) {
+            browser.actions.clearView()
             browser.view.context = params.context;
             browser.view.contextLink = {
                 href: '/curriculum-'+params.context+'/',
@@ -153,6 +158,7 @@ browser = simply.app({
             updateDataSource('contextdata')
         },
         '/': function(params) {
+            browser.actions.clearView()
             browser.view.view = 'home';
         },
         '/([^#]+):*': function(params) {
@@ -174,18 +180,30 @@ browser = simply.app({
                 e.preventDefault()
             },
             "ArrowDown": (e) => {
+                if(e.target.matches('input,textarea,select')){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveDown()
                 e.preventDefault()
             },
             "ArrowUp": (e) => {
+                if(e.target.matches('input,textarea,select')){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveUp()
                 e.preventDefault()
             },
             "ArrowLeft": (e) => {
+                if(e.target.matches('input,textarea,select')){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveLeft()
                 e.preventDefault()
             },
             "ArrowRight": (e) => {
+                if(e.target.matches('input,textarea,select')){
+                    return
+                }
                 browser.view.sloSpreadsheet.moveRight()
                 e.preventDefault()
             },
@@ -249,11 +267,18 @@ browser = simply.app({
                 spreadsheet.goto(data[row].index, column)                    
             },
             "Insert": async (e) => {
+                if(e.target.matches('input, textarea')){
+                    return
+                }
                 e.preventDefault()
                 let el = document.querySelector('td.focus')
                 let selectedType = await browser.actions.showTypeSelector(el)
             },
             "Delete": (e) => {
+                // making sure the keyboard works normally in input fiels
+                if(e.target.matches('input, textarea')){
+                    return
+                }
                 e.preventDefault()
                 let el = document.querySelector('td.focus')
                 browser.actions.deleteRow(el.closest('tr'))
@@ -439,6 +464,9 @@ browser = simply.app({
     },
 
     commands: {
+        toggleMaximize: (el, value) =>{
+            browser.view.sloSpreadsheet.selectorToggleMaximize()
+        },
         toggleSource: (el, value) => {
             browser.view.showSource = browser.view.showSource ? 0 : 1
             let url = new URL(document.location.href)
@@ -485,6 +513,7 @@ browser = simply.app({
             browser.actions.saveChangesSpreadsheet()
         },
         import: (el, value) => {
+            browser.view.importErrors = []
             document.getElementById('importDialog').showModal()            
         },
         importXLSX: async (form, values) => {
@@ -494,7 +523,9 @@ browser = simply.app({
         },
         export: async (el, value) => {
             const csv = await browser.actions.export()
-            window.open(encodeURI("data:text/csv;charset=urf-8,"+csv))
+            let universalBOM = "\uFEFF"
+            FileSaver.saveAs(new Blob([universalBOM,csv], {type: "data:text/csv;charset=utf-8"}), 'curriculum-download.csv')
+            // window.open("data:text/csv;charset=utf-8," + encodeURIComponent(universalBOM+csv))
         },
         // @TODO : spreadsheet commands should be in spreadsheet.js and referenced here
         closeFilter: (el, value) => {
@@ -515,7 +546,14 @@ browser = simply.app({
         toggleColumn: (el, value) => {
           let column = browser.view.sloSpreadsheet.options.columns.find(c => c.name==el.name)
           column.checked = el.checked
-          localStorage.setItem('spreadsheet-columns', JSON.stringify(browser.view.sloSpreadsheet.options.columns))
+          let storedColumns = browser.view.sloSpreadsheet.options.columns.map(c => {
+              return {
+                  name: c.name,
+                  value: c.value,
+                  checked: c.checked
+              }
+          })
+          localStorage.setItem('spreadsheet-columns', JSON.stringify(storedColumns))
           browser.view.sloSpreadsheet.render()
         },
         toggleDirty: (el, value) => {
@@ -687,11 +725,13 @@ browser = simply.app({
         register : function(el, value) {
             var email = encodeURIComponent(el.querySelector("input").value);
             browser.actions.register(email);
+            browser.actions.clearView()
             browser.view.view = "registered";
         },
         'search-text': function(form, values) {
             const text = values.text;
             if (text) {
+                browser.actions.clearView()
                 browser.actions.search(text)
                 .then(data => {
                     browser.view.view = 'list';
@@ -705,7 +745,6 @@ browser = simply.app({
             document.getElementById('previewChanges').showModal()
         },
         showCommitChanges: async function(el, value) {
-            browser.actions.switchKeyboard('default')
             if (Object.keys(changes.merged).length==0) {
                 alert('Wijzigingen heffen elkaar op')
             }
@@ -715,10 +754,11 @@ browser = simply.app({
         },
         removeAllChanges: async function(el, value) {
             if (confirm('Weet u zeker dat u al uw lokale wijzigingen wil verwijderen?')) {
-                browser.actions.removeAllChanges()
-                browser.actions.switchView(browser.view.preferedView)
+                document.getElementById('previewChanges').showModal()
+                if (await browser.actions.removeAllChanges()) {
+                    browser.actions.switchView(browser.view.preferedView)
+                }
                 browser.commands.closeDialog(el, value)
-
             }
         },
         commitChanges: async function(form, values) {
@@ -897,6 +937,7 @@ browser = simply.app({
                 browser.view.loggedIn = false
                 return 'Ongeldig email en/of API-key'
             }
+            browser.actions.clearView()
             browser.view.user = email
             browser.view.loggedIn = true
             localStorage.setItem('username',email)
@@ -910,49 +951,56 @@ browser = simply.app({
             try {
                 tree = await slo.importXLSX(file, meta.schemas, window.slo.niveaus)
                 if (tree.roots.length>1) {
-                    tree.errors.push(new Error('Er mag maar 1 root entiteit zijn', {cause:tree.roots}))
+                    let type = tree.roots[0]?.['@type']
+                    for (let root of tree.roots) {
+                        if (root?.['@type'] != type ) {
+                            tree.errors.push(new Error('Alle root entiteiten moeten van hetzelfde type zijn', {cause:[tree.roots[0], root]}))
+                        }
+                    }
                 }
                 if (!tree.errors.length) {
                     // check if root is a new entity or existing one
+                    for (let root of tree.roots) {
+                        let change = null
+                        let current = null
+                        try {
+                            current = await localAPI.item(root.id)
+                        } catch(e) {
+                            // ignore errors
+                        }
+                        if (current) {
+                            // do an update
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: root.title,
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'update',
+                                prevValue: current,
+                                newValue: root
+                            })
+                        } else {
+                            // do a new
+                            change = new changes.Change({
+                                id: root.id,
+                                meta: {
+                                    context: window.slo.getContextByTypeName(root['@type']),
+                                    title: 'Importing '+root['@type'],
+                                    type: root['@type'],
+                                    timestamp: mkTimestamp()
+                                },
+                                type: 'new',
+                                newValue: root
+                            })
+                        }
+                        changes.changes.push(change)
+                        changes.update()
+                    }
+                    // switch to spreadsheet view of first root entity
                     let root = tree.roots[0]
-                    let change = null
-                    let current = null
-                    try {
-                        current = await localAPI.item(root.id)
-                    } catch(e) {
-                        // ignore errors
-                    }
-                    if (current) {
-                        // do an update
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: root.title,
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'update',
-                            prevValue: current,
-                            newValue: root
-                        })
-                    } else {
-                        // do a new
-                        change = new changes.Change({
-                            id: root.id,
-                            meta: {
-                                context: window.slo.getContextByTypeName(root['@type']),
-                                title: 'Importing '+root['@type'],
-                                type: root['@type'],
-                                timestamp: mkTimestamp()
-                            },
-                            type: 'new',
-                            newValue: root
-                        })
-                    }
-                    changes.changes.push(change)
-                    changes.update()
-                    // switch to spreadsheet view of that entity
                     history.pushState({}, null, root['@id']) //window.release.apiPath+'uuid/'+node.id)
                     this.app.view.item = root
                     let button = document.querySelector('[data-simply-command="switchView"][data-simply-value="spreadsheet"]')
@@ -974,7 +1022,13 @@ browser = simply.app({
                         errorMap.set(error.message, { message: error.message, errors: []})
                     }
                     let em = errorMap.get(error.message)
-                    em.errors.push(error)
+                    if (Array.isArray(error.cause)) {
+                        for (let cause of error.cause) {
+                            em.errors.push(new Error(error.message, {cause}))
+                        }
+                    } else {
+                        em.errors.push(error)
+                    }
                 }
                 this.app.view.importErrors = Array.from(errorMap, ([n, v]) => v)
                 return false
@@ -1092,9 +1146,10 @@ browser = simply.app({
             element.replaceChildren();
         },
         switchView: async function(view,root){
+            browser.actions.clearView()
             let currentView = this.app.view.view;
             let item = this.app.view.item
-            let id = item?.id ?? item?.uuid
+            let id = item?.id || item?.uuid
             if (!id) {
                 return
             }
@@ -1103,6 +1158,7 @@ browser = simply.app({
             
             switch(view) {
                 case 'item':
+                    this.app.view.view = view
                     document.body.setAttribute('data-simply-keyboard','item')
                     this.app.actions.updatePaging()
                     // get focused item
@@ -1112,6 +1168,7 @@ browser = simply.app({
                 case 'spreadsheet':
                     document.body.setAttribute('data-simply-keyboard','spreadsheet')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = 'https://opendata.slo.nl/curriculum/uuid/'+currentItem
                     if (!root) {
@@ -1183,6 +1240,11 @@ browser = simply.app({
                         prevValue = prop
                         if (columnDef.type=='list') {
                             newValue = update.values.getAll(update.property)
+                            let p = new Set(prevValue)
+                            let n = new Set(newValue)
+                            if (n.difference(p).size==0) {
+                                return // no change
+                            }
                             dirty = true
                         } else if (columnDef.type=='checkbox') {
                             let checkedValue = update.values.getAll(update.property).pop()
@@ -1223,6 +1285,7 @@ browser = simply.app({
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
                     this.app.actions.updatePaging()
+                    this.app.view.view = view
                     currentItem = id
                     currentId = this.app.view.item['@id']
                     // get roots of current item
@@ -1350,13 +1413,13 @@ browser = simply.app({
                 let prop, prevValue, newValue
                 let dirty = true
                 let node = row.node
-                prop = node[entityType]
+                prop = node[entityType] || []
                 prevValue = prop
                 newValue = Array.from(new Set([entity, ...prop])) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                 dirty = true
                 if (newValue == prevValue) {
                     return // no change failsave
-                } else if (!newValue && !prevValue) {
+                } else if (!newValue.length && !prevValue.length) {
                     return // check if both are empty
                 }
 
@@ -1469,6 +1532,7 @@ browser = simply.app({
             return true
         },
         list: function(type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.list(type)
@@ -1485,23 +1549,36 @@ browser = simply.app({
                 browser.view.view = 'list';
                 browser.view.listType = slo.getTypeNameByType(type);
                 browser.view.list = json.data;
-                browser.view.listIsRoot = meta.schemas.types[browser.view.listType].root;
+                browser.view.listIsRoot = !!meta.schemas.types[browser.view.listType].root;
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
                 browser.actions.handleAPIError(error)
             })
         },
-        spreadsheetUpdate: function() {
-            let localData = changes.getLocalView(browser.view.root)
+        spreadsheetUpdate: async function() {
+            let localData = await window.localAPI.spreadsheet(
+                browser.view.currentTree.root,
+                browser.view.currentTree.context,
+                browser.view.currentTree.niveau
+            )
+            browser.view.root = localData
+            //let localData = changes.getLocalView(browser.view.root)
             let defs = slo.treeToRows(localData)
             browser.view.sloSpreadsheet.update({data:defs.rows}) //FIXME: if a node was previously changed (deleted row) but no longer, this doesn't remove the changed mark or update that property to undelete the row
             browser.view.sloSpreadsheet.render()
+            return true
         },
         // functions for editing documentView
         editText : function(){
         },
         spreadsheet: function(root, context, niveau) {
+            browser.actions.clearView()
+            browser.view.currentTree = {
+                root,
+                context,
+                niveau
+            }
             return window.localAPI.spreadsheet(root, context, niveau)
             .then(function(json) {
                 browser.view.root = json
@@ -1542,6 +1619,7 @@ browser = simply.app({
             browser.view.sloSpreadsheet.render()
         },
         document: async function(root, context, niveau) {
+            browser.actions.clearView()
             browser.view.documentList = []
             return window.localAPI.document(root, context, niveau)
             .then(async function(json) {
@@ -1562,6 +1640,7 @@ browser = simply.app({
             })
         },
         doelniveauList: function(type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.doelniveauList(type)
@@ -1578,6 +1657,7 @@ browser = simply.app({
             })
         },
         item: function(id) {
+            browser.actions.clearView()
             return window.localAPI.item(id)
             .then(function(json) {
                 browser.view.request = window.localAPI.reflect.item(id)
@@ -1596,6 +1676,7 @@ browser = simply.app({
             })
         },
         listOpNiveau: function(niveau, type) {
+            browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
             browser.view.list = [];
             return window.localAPI.listOpNiveau(niveau, type)
@@ -1613,6 +1694,7 @@ browser = simply.app({
             })
         },
         itemOpNiveau: function(niveau, type, id) {
+            browser.actions.clearView()
             return window.localAPI.itemOpNiveau(niveau, type, id)
             .then(function(json) {
                 browser.view.source = JSON.stringify(json, null, 4)
@@ -1625,6 +1707,7 @@ browser = simply.app({
             })
         },
         notfound: function(remainder) {
+            browser.actions.clearView()
             browser.view.view = 'notfound';
             browser.actions.updatePaging();
         },
@@ -1639,6 +1722,9 @@ browser = simply.app({
             }
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         },
+        clearView: function() {
+            document.body.classList.remove('ds-paging')
+        },
         register : function(email) {
             window.slo.api.get("register/?email=" + email)
             .catch(function(error) {
@@ -1651,11 +1737,14 @@ browser = simply.app({
             let line = row.index
             let parentNode = row.node
             let typeName = window.slo.getTypeNameByType(type)
+            let id = uuid()
             let node = {
-                id: uuid(),
+                id,
+                '@references': '/uuid/'+id,
                 '@type': typeName,
                 'prefix': parentNode.prefix,
-                'unreleased': true
+                'unreleased': true,
+                $mark: 'inserted'
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             if (!parentNode[typeName]) {
@@ -1693,11 +1782,14 @@ browser = simply.app({
             let line = row.index
             let siblingNode = row.node
             let typeName = getType(siblingNode)
+            let id = uuid()
             let node = {
-                id: uuid(),
+                id,
+                '@references': '/uuid/'+id,
                 '@type': typeName,
                 'prefix': siblingNode.prefix,
-                'unreleased': true
+                'unreleased': true,
+                $mark: 'inserted'
             }
             node['@id'] = 'https://opendata.slo.nl/curriculum/uuid/'+node.id
             let parentRow = browser.view.sloSpreadsheet.findParentRow(row)
@@ -1736,28 +1828,44 @@ browser = simply.app({
         undeleteRow: function(rowEl) {
             row = browser.view.sloSpreadsheet.getRow(rowEl)
             if (row.deleted) {
+                let change
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
-                let parentNode = parent.node
-                let typeName = getType(row.node)
-                let prevValue = parentNode[typeName].slice()
-                let newValue = parentNode[typeName].slice()
-                row.node.undelete(newValue)
-                parentNode[typeName] = newValue //Makes sure current datamodel is up to date
-                let timestamp = new Date().toISOString()
-                let change = new changes.Change({
-                    id: parentNode.id ?? parentNode.uuid,
-                    meta: {
-                        context: window.slo.getContextByTypeName(getType(parentNode)),
-                        title: 'undelete child in '+parentNode.title,
-                        type: getType(parentNode),   
-                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                    },
-                    type: 'undelete',
-                    property: typeName,
-                    prevValue,
-                    newValue,
-                    dirty: true
-                })
+                if (parent && parent.node) {
+                    let parentNode = parent.node
+                    let typeName = getType(row.node)
+                    let prevValue = parentNode[typeName].slice()
+                    let newValue = parentNode[typeName].slice()
+                    row.node.undelete(newValue)
+                    parentNode[typeName] = newValue //Makes sure current datamodel is up to date
+                    let timestamp = new Date().toISOString()
+                    change = new changes.Change({
+                        id: parentNode.id ?? parentNode.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(parentNode)),
+                            title: 'undelete child in '+parentNode.title,
+                            type: getType(parentNode),   
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'undelete',
+                        property: typeName,
+                        prevValue,
+                        newValue,
+                        dirty: true
+                    })
+                } else {
+                    let node = row.node
+                    let timestamp = new Date().toISOString()
+                    change = new changes.Change({
+                        id: node.id ?? node.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(node)),
+                            title: 'undelete '+node.title,
+                            type: getType(node),
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'undeleteRoot'
+                    })
+                }
                 changes.changes.push(change)
                 changes.update()
                 //this.app.actions.switchView('spreadsheet')
@@ -1768,35 +1876,51 @@ browser = simply.app({
             if (!browser.view.user) return
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
-            let parentNode = parent.node
-            let typeName = getType(row.node)
+            let change 
+            if (parent && parent.node) {
+                let parentNode = parent.node
+                let typeName = getType(row.node)
 
-            let prevValue = parentNode[typeName].slice()
-            let newValue = prevValue.map(e => { 
-                if (e.id==row.node.id) {
-                    return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
-                } else {
-                    return e
-                }
-            }) //filter(e => (e.id !== row.node.id))
-            let timestamp = new Date().toISOString()
-            let change = new changes.Change({
-                id: parentNode.id ?? parentNode.uuid,
-                meta: {
-                    context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: 'delete child of '+parentNode.title,
-                    type: getType(parentNode),
-                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                },
-                type: 'delete',
-                property: typeName,
-                prevValue,
-                newValue,
-                dirty: true,
-            })
+                let prevValue = parentNode[typeName].slice()
+                let newValue = prevValue.map(e => { 
+                    if (e.id==row.node.id) {
+                        //return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
+                        return new changes.DeletedLink(e)
+                    } else {
+                        return e
+                    }
+                }) //filter(e => (e.id !== row.node.id))
+                let timestamp = new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'delete child of '+parentNode.title,
+                        type: getType(parentNode),
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'delete',
+                    property: typeName,
+                    prevValue,
+                    newValue,
+                    dirty: true,
+                })
+            } else { // rootnode
+                let node = row.node
+                let timestamp = new Date().toISOString()
+                change = new changes.Change({
+                    id: node.id ?? node.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(node)),
+                        title: 'delete '+node.title,
+                        type: getType(node),
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'deleteRoot'
+                })
+            }
             changes.changes.push(change)
             changes.update()
-//            this.app.actions.switchView('spreadsheet')
             browser.actions.spreadsheetUpdate()
         },
         showTypeSelector: async function(el) {
@@ -1860,13 +1984,36 @@ browser = simply.app({
         },
         removeAllChanges: async function() {
             changes.clear()
+            return browser.actions.checkView()
+        },
+        checkView: async function() {
+            // check if the current view can be updated,
+            // or if browser should show the homepage instead
+            // e.g. current uuid was a local change, which has been removed
+            switch(browser.view.view) {
+                case 'item':
+                case 'spreadsheet':
+                case 'document':
+                    let uuid = browser.view.item.id
+                    try {
+                        let item = await localAPI.item(uuid)
+                    } catch(e) {
+                        browser.actions.clearView()
+                        simply.route.goto('/')
+                        return false
+                    }
+                break
+            }
+            // now update current view
+            window.location.reload(true)
+            return true
         },
         commitChanges: async function(message) {
             const linkArray = (list) => {
                 let links = []
                 for (let v of list) {
                     let id = v.id ?? v.uuid
-                    if (JSONTag.getType(v)==='object' && id && !changes.isInsertedNode(id)) {
+                    if (JSONTag.getType(v)==='object' && id && !v.$mark) {
                         v = new JSONTag.Link('/uuid/'+id)
                     }
                     links.push(v)
@@ -1963,14 +2110,15 @@ browser = simply.app({
                         if (error.message) {
                             alert('Probleem: '+error.error+': '+error.message)
                         } else {
-                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
                             console.error(error)
+                            alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
+                           
                         }
                     break
                 }
             } else {
-                alert('Probleem: er is een onbekend probleem opgetreden.')
                 console.error(error)
+                alert('Probleem: er is een onbekend probleem opgetreden.')
             }
        }, 
 

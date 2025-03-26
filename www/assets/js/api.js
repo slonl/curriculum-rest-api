@@ -1,7 +1,12 @@
 (function() {
+
+    if (!globalThis.jsontagMeta) {
+        globalThis.jsontagMeta = {}
+    }
+
     const walk = (node, indent, f) => {
         if (!node) return;
-        if (getType(node)==='Niveau') {
+        if (getType(node)==='Niveau' && indent>0) {
             return
         }
         if (Array.isArray(node)) {
@@ -74,7 +79,7 @@
                     if (jsontag) {
                         if (response.ok) {
                             let jsontag = await response.text()
-                            return JSONTag.parse(jsontag)
+                            return JSONTag.parse(jsontag, null, globalThis.jsontagMeta)
                         }
                         throw new Error(response.status+': '+response.statusText)
                     } else {
@@ -230,15 +235,23 @@
             }
 
             function getColumns(n) {
-                let validColumns = Object.keys(n)
+                let validColumns = []
+                
+                if (browser.view.user){
+                    validColumns = Object.keys(meta.schemas.types[browser.view.listType].properties)
+                } else {
+                    validColumns = Object.keys(n)
                     .filter(c => c[0].match(/[a-z]/))
                     .filter(c => ['sloID', 'uuid','dirty','unreleased','$hasChildren'].indexOf(c)===-1)
+                }
+
                 let columns = {
                     id: getId(n),
                     type: getType(n),
                     niveaus: n.Niveau ? n.Niveau.map(n => n.title) : n.NiveauIndex ? n.NiveauIndex.map(n => n.title) : ''
                 }
-                validColumns.forEach(column => { if (column!='id') { columns[column] = n[column]}})
+
+                validColumns.forEach(column => { if (column!='id') { columns[column] = n[column] }})
                 return columns
             }
 
@@ -267,11 +280,11 @@
                     row.indent = indent;
                     row.columns = getColumns(n)
                     row.node = n
-                    if (n instanceof changes.DeletedLink) {
+                    if (n.deleted || n.$mark=='deleted') {
                         row.deleted = true
-                    } else if (n instanceof changes.InsertedLink) {
+                    } else if (n.$mark=='inserted') {
                         row.inserted = true
-                    } else if (n instanceof changes.ChangedNode) {
+                    } else if (n.$mark=='changed') {
                         row.changed = true
                     }
                     let prevIndent = allRows[allRows.length-1]?.indent || 0
@@ -313,8 +326,8 @@
                         let value = row.columns[columnDef.value] || ''
                         let span = el.querySelector('span.slo-indent')
                         let spanRect = span.getBoundingClientRect()
-                        this.style.left = (spanRect.left - offset.left)+'px'
-                        this.style.width = rect.width - (spanRect.left - rect.left)+'px'
+                        this.style.setProperty("--deLeft", (spanRect.left - offset.left)+'px')
+                        this.style.setProperty("--deWidth", rect.width - (spanRect.left - rect.left)+'px')
                         let header = `
 <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
   <svg class="ds-icon ds-icon-feather">
@@ -440,7 +453,7 @@
                 columns: Object.values(columnDefinitions)
             }
         },
-       async documentPage(node){
+        async documentPage(node){
             
             let documentData = {
                 index :  new Map()
