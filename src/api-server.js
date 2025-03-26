@@ -196,7 +196,6 @@ readEditors();
 
 function jsonLD(entry) {
 	if (entry.Niveau && Array.isArray(entry.Niveau)) {
-		//console.log("entry", entry)
 
 		entry.Niveau
 		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
@@ -210,8 +209,6 @@ function jsonLD(entry) {
 			return child;
 		});
 	}
-	// add a '@references' tot the entry children
-	// this is just some comment to convince git there are changes to commit in a branch
 	addReference(entry);
 	return entry;
 }
