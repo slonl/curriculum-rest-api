@@ -276,6 +276,20 @@ module.exports = {
 		response
 
 		`,
+		NiveauVakleergebied:`
+		const results = from(data.Doelniveau)
+		.slice(Paging.start, Paging.end)
+		.select( Doelniveau )
+		const response = {
+			data: results,
+			page: Page,
+			count: data.Doelniveau.length,
+			root: meta.schema.types.Doelniveau.root
+		}
+
+		response
+
+		`,
 	},
 	typedQueries: {
 		Vakleergebied: `
@@ -337,6 +351,7 @@ module.exports = {
 	},
 	routes: {
 		'vakleergebied/': (req) => opendata.api["Vakleergebied"](req.params, req.query),
+		'niveau_vakleergebied/': (req) => opendata.api["NiveauVakleergebied"](req.params, req.query),
 		'niveau/': (req) => opendata.api["Niveau"](req.params, req.query),
 		'doel/': (req) => opendata.api["Doel"](req.params, req.query),
 		'doelniveau/': (req) => opendata.api["Doelniveau"](req.params, req.query),
