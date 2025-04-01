@@ -277,17 +277,31 @@ module.exports = {
 
 		`,
 		NiveauVakleergebied:`
-		const results = from(data.Doelniveau)
-		.slice(Paging.start, Paging.end)
-		.select( Doelniveau )
-		const response = {
-			data: results,
-			page: Page,
-			count: data.Doelniveau.length,
-			root: meta.schema.types.Doelniveau.root
-		}
+		const ExamenprogrammaVakleergebied = o => from(o?.Examenprogramma).select(Niveau)
+		const SyllabusVakleergebied = o => from(o?.Syllabus).select(NiveauIndex)
+		const KerndoelVakleergebied = o => from(o?.KerndoelVakleergebied).select(NiveauIndex)
+		const LdkVakleergebied = o => from(o?.LdkVakleergebied).select(NiveauIndex)
+		const InhVakleergebied = o => from(o?.InhVakleergebied).select(NiveauIndex)
+		const results = from(data.Niveau)
+		.orderBy({ 
+				title:asc 
+			})
+		.select({
+			...shortInfo,
+			'@references': _,
+			description: _,
+			Vakleergebied: ShortLink,
+			ErkVakleergebied: ShortLink,
+			RefVakleergebied: ShortLink,
+			KerndoelVakleergebied,
+			ExamenprogrammaVakleergebied,
+			SyllabusVakleergebied,
+			LdkVakleergebied,
+			InhVakleergebied,
+			Niveau
+		})
 
-		response
+		results
 
 		`,
 	},
