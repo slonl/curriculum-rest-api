@@ -278,27 +278,35 @@ module.exports = {
 		`,
 		NiveauVakleergebied:`
 		const ExamenprogrammaVakleergebied = o => from(o?.Examenprogramma).select(Niveau)
+		const ErkVakleergebied = o => from(o?.ErkVakleergebied).select(Niveau)
+
 		const SyllabusVakleergebied = o => from(o?.Syllabus).select(NiveauIndex)
 		const KerndoelVakleergebied = o => from(o?.KerndoelVakleergebied).select(NiveauIndex)
 		const LdkVakleergebied = o => from(o?.LdkVakleergebied).select(NiveauIndex)
 		const InhVakleergebied = o => from(o?.InhVakleergebied).select(NiveauIndex)
+		const RefVakleergebied = o => from(o?.RefVakleergebied).select(NiveauIndex)
+
 		const results = from(data.Niveau)
 		.orderBy({ 
 				title:asc 
-			})
+		})
 		.select({
-			...shortInfo,
 			'@references': _,
+			...shortInfo,
 			description: _,
 			Vakleergebied: ShortLink,
-			ErkVakleergebied: ShortLink,
+			ErkVakleergebied,
 			RefVakleergebied: ShortLink,
+			ExamenprogrammaVakleergebied: ShortLink,
+
+			Niveau,
 			KerndoelVakleergebied,
-			ExamenprogrammaVakleergebied,
 			SyllabusVakleergebied,
 			LdkVakleergebied,
 			InhVakleergebied,
-			Niveau
+			ErkVakleergebied,
+			RefVakleergebied
+			
 		})
 
 		results
