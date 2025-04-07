@@ -256,7 +256,7 @@ module.exports = {
 		`,
 		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
-		const results = from(data.ErkSchalen)
+		const results = from(data.ErkGebied)
 			.orderBy({
 				prefix:asc
 			})
@@ -295,7 +295,7 @@ module.exports = {
 			const response = {
 				data: results,
 				page: Page,
-				count: data.ErkSchalen.length
+				count: data.ErkGebied.length
 			}
 	
 			response`,
