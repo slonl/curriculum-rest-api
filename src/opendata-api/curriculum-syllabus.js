@@ -140,7 +140,7 @@ module.exports = {
 			examenjaar: _,
 			status: _,
 			ce_se: _,
-			Niveau: NiveauIndex,
+			NiveauIndex : o => from( _.NiveauIndex(o)).select(Niveau),
 			SyllabusSpecifiekeEindterm: {
 				...shortInfo,
 				ce_se: _,
