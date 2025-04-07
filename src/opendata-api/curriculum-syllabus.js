@@ -145,7 +145,7 @@ module.exports = {
 				...shortInfo,
 				ce_se: _,
 				deprecated: _,
-				Tag {
+				Tag: {
 					...shortInfo,
 					deprecated: _,
 				},
@@ -196,7 +196,6 @@ module.exports = {
 					deprecated: _,
 				}
 			}
-		  }
 		})
 		`
 	},
