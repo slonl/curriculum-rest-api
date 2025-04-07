@@ -238,14 +238,12 @@ module.exports = {
 		`,
 		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
 				...shortInfo,
 				Niveau: NiveauShort
 		  	})
-
-			results
 		`,
 		// @TODO : Find ErkSchalen en context
 		ErkSchalen: `
