@@ -277,7 +277,7 @@ module.exports = {
 
 		`,
 		NiveauVakleergebied:`
-		const tinyNiveauIndex = o => from(o.NiveauIndex).orderBy({title:asc}).select(ShortLink)
+		const tinyNiveauIndex = o => from(o.NiveauIndex).select(ShortLink)
 
 		const results = from(data.Niveau)
 			.orderBy({ 
@@ -291,12 +291,12 @@ module.exports = {
 				ExamenprogrammaVakleergebied: o => from( _.Examenprogramma.ExamenprogrammaVakleergebied(o)).orderBy({title:asc}).select(ShortLink),
 				
 				Niveau: tinyNiveauIndex,
-				KerndoelVakleergebied: o => from(o?.KerndoelVakleergebied).orderBy({title:asc}).select(Niveau),
-				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(Niveau),
-				LdkVakleergebied: o => from(o?.LdkVakleergebied).orderBy({title:asc}).select(Niveau),
-				InhVakleergebied: o => from(o?.InhVakleergebied).orderBy({title:asc}).select(Niveau),
-				VerkeerdeErkVakleergebied: o => from(o?.ErkVakleergebied).orderBy({title:asc}).select(Niveau),
-				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(Niveau),
+				KerndoelVakleergebied: o => from(o?.KerndoelVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				LdkVakleergebied: o => from(o?.LdkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				InhVakleergebied: o => from(o?.InhVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				VerkeerdeErkVakleergebied: o => from(o?.ErkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
 			})
 
 		results
