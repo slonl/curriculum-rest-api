@@ -448,7 +448,9 @@ browser = simply.app({
             },
             "Enter": (e) => {
                 e.preventDefault();
-                browser.actions.documentShowEditor();
+                if(browser.view.user){
+                    browser.actions.documentShowEditor();
+                }
             },           
         },
         "document-edit": {
