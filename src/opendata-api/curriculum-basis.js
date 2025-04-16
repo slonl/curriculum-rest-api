@@ -289,7 +289,6 @@ module.exports = {
 				ErkVakleergebied: ShortLink,
 				RefVakleergebied: ShortLink,
 				ExamenprogrammaVakleergebied: o => from( _.Examenprogramma.ExamenprogrammaVakleergebied(o)).orderBy({title:asc}).select(ShortLink),
-				
 				Niveau: tinyNiveauIndex,
 				KerndoelVakleergebied: o => from(o?.KerndoelVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
 				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
