@@ -295,8 +295,7 @@ module.exports = {
 				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
 				LdkVakleergebied: o => from(o?.LdkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
 				InhVakleergebied: o => from(o?.InhVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				VerkeerdeErkVakleergebied: o => from(o?.ErkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex)
 			})
 
 		results
