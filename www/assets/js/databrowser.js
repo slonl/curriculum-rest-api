@@ -1354,6 +1354,9 @@ browser = simply.app({
             })
         },
         updatePage: function(page) {
+            if (page<1) {
+                page=1
+            }
             browser.view.page = page
             let url = new URL(document.location)
             url.searchParams.set('page', page)
@@ -2143,7 +2146,7 @@ browser.view.pageSize = 100;
 browser.view.page = 1;
 let url = new URL(document.location)
 if (url.searchParams.has('page')) {
-    browser.view.page = parseInt(url.searchParams.get('page'));
+    browser.view.page = Math.max(1, parseInt(url.searchParams.get('page')));
 }
 let user = localStorage.getItem('username')
 let key = localStorage.getItem('key')
