@@ -1281,6 +1281,83 @@ browser = simply.app({
                         changes.update()
                         browser.actions.spreadsheetUpdate()
                     })
+                    //wip dropping links
+                    const spreadsheetBody = document.querySelector('#slo-spreadsheet tbody')
+                    let overRow = null
+                    let linkInfo = {}
+                    function getLinkInfo(link) {
+                        if (link.host==='opendata.slo.nl') {
+                            let path = link.pathname.split('/')
+                            let uuid = path.pop()
+                            let check = path.pop()
+                            if (check==='uuid') {
+                                linkInfo.uuid = uuid
+                            } else {
+                                linkInfo.uuid = false
+                            }
+                            slo.api.get('uuid/'+linkInfo.uuid).then(data => {
+                                if (data['@type']) {
+                                    linkInfo.type = data['@type']
+                                }
+                            })
+                        // } else {
+                        //     console.log('no valid host',link.host)
+                        }
+                    }
+                    function isValidDrop(entityType, dropType) {
+                        if (entityType==dropType) {
+                            return true
+                        }
+                        if (meta.schemas.types[entityType].children[dropType]) {
+                            return true 
+                        }
+                        return false
+                    }
+
+                    function getLink(event) {
+                        let link = event.dataTransfer?.getData("URL");
+                        if (link) {
+                            link = new URL(link)
+                            if (link.href!==linkInfo.href) {
+                                linkInfo.href = link.href
+                                getLinkInfo(link)
+                            }
+                        }
+                        return link
+                    }
+                    spreadsheetBody.addEventListener('dragenter', (event) => {
+                        let link = getLink(event)
+                        if (linkInfo.uuid) {
+//                            console.log('dragenter with link', link, linkInfo.uuid)
+                            if (overRow) {
+                                overRow.classList.remove('slo-drop-over-valid')
+                                overRow.classList.remove('slo-drop-over-invalid')
+                            }
+                            overRow = event.target.closest('tr')
+                            if (overRow) {
+                                let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                                if (rows.length && isValidDrop(rows[0].node['@type'], linkInfo.type)) {
+                                    overRow.classList.add('slo-drop-over-valid')
+                                } else {
+                                    overRow.classList.add('slo-drop-over-invalid')
+                                }
+                            }
+                            event.preventDefault()
+                        }
+                    })
+                    spreadsheetBody.addEventListener('dragover', (event) => {
+                        getLink(event)
+                        if (linkInfo.uuid) {
+                            event.preventDefault()
+                        }                        
+                    })
+                    spreadsheetBody.addEventListener('drop', (event) => {
+                        getLink(event)
+                        if (linkInfo.uuid) {
+                            console.log(event)
+                            event.preventDefault()
+                        }
+                    })
                 break;
                 case 'document':
                     document.body.setAttribute('data-simply-keyboard','document')
