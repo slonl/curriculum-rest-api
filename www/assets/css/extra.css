@@ -683,3 +683,10 @@ pre {
 .slo-code-box-title {
     font-size: 1.1rem;
 }
+
+.slo-drop-over-valid td {
+    box-shadow: inset 0 -2px green;
+}
+.slo-drop-over-invalid td {
+    box-shadow: inset 0 -2px red;
+}
