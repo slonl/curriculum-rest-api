@@ -53,6 +53,9 @@
                 var url = new URL(window.apiURL + path);
                 if (!params && window.location.search) {
                     url.search = window.location.search;
+                    if (url.searchParams.has('page')) {
+                        url.searchParams.set('page', Math.max(0, parseInt(url.searchParams.get('page'))-1))
+                    }
                 }
                 if (params) {
                     let args = Object.keys(params).map(function(param) {
@@ -63,6 +66,9 @@
                         }
                     }).filter(Boolean).join('&');
                     url.search = '?' + args;
+                }
+                if (!url.searchParams.has('pageSize') && !url.searchParams.has('perPage')) {
+                    url.searchParams.set('perPage','100')
                 }
                 let args = {
                     headers: {
