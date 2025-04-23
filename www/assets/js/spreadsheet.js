@@ -897,6 +897,10 @@ const spreadsheet = (function() {
     }
     addClickSelectCell()
 
+    function selectorIsMaximized() {
+        return (selector.classList.contains('maximize'))
+    }
+
     function selectorToggleMaximize() {
         if(selector.classList.contains('maximize')){
             selectorMinimize()
@@ -1080,7 +1084,9 @@ const spreadsheet = (function() {
           selector.classList.remove("visible")         
           return
         }
-        selectorMinimize()
+        if (selectorIsMaximized()) {
+          selectorMinimize()
+        }
         selector.classList.add("visible")
         let offset = table.getBoundingClientRect()
         let rect = el.getBoundingClientRect()
@@ -1130,6 +1136,7 @@ const spreadsheet = (function() {
       },
       getColumnDefinition,
       toggleFullScreen,
+      selectorIsMaximized,
       selectorToggleMaximize,
       selectorMaximize,
       selectorMinimize,
