@@ -62,10 +62,7 @@ window.localAPI = (function() {
             }
         },
         list: async function(type) {
-            return window.slo.api.get(type, {
-                pageSize: browser.view.pageSize,
-                page: parseInt(browser.view.page)-1
-            })
+            return window.slo.api.get(type)
             .then(function(json) {
                 updateMeta(json)
                 json.data = changes.getLocalView(json.data)
