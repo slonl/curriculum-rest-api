@@ -42,6 +42,7 @@ const spreadsheet = (function() {
         column: 1
       }
     })
+    datamodel.options.editMode = options.editMode
 
     let pluginCache = new Map()
 
@@ -449,7 +450,7 @@ const spreadsheet = (function() {
 
       let value = row.columns[columnDef.value] || ''
       let header = ''
-      if (columnDef.editor!==false) {
+      if (options.editMode) {
         header = `
           <button class="ds-button ds-button-naked ds-button-close slo-edit" data-simply-command="cellEditor">
             <svg class="ds-icon ds-icon-feather">
