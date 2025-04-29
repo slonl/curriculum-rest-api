@@ -506,6 +506,10 @@ body.ds-paging .slo-header .ds-paging {
    margin: 0px;
 }
 
+.slo-no-edit .slo-hidden.ds-button.ds-button-naked.ds-button-close.slo-edit{
+    display: none;
+}
+
 .documentEditor {
     outline: 2px solid blue;
     opacity: 1;

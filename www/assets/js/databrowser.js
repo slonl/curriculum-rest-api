@@ -1339,6 +1339,14 @@ browser = simply.app({
                     //focus on item
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.scrollIntoView({ block: "center" });
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.classList.add("focus");
+
+                    //toggle editting UI
+                    if(!browser.view.user){
+                        document.body.classList.add('slo-no-edit');
+                    }
+                    if(browser.view.user){
+                        document.body.classList.remove('slo-no-edit');
+                    }
                     
                 break;
             }
