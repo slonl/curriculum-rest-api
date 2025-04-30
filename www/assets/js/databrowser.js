@@ -1340,11 +1340,11 @@ browser = simply.app({
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.scrollIntoView({ block: "center" });
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.classList.add("focus");
 
-                    //toggle editing UI
-                    if(!browser.view.user){
-                        document.body.classList.add('slo-no-edit');
+                    // toggle editing UI
+                    if(browser.view.user){
+                        document.body.classList.add('slo-document-editmode');
                     } else {
-                        document.body.classList.remove('slo-no-edit');
+                        document.body.classList.remove('slo-document-editmode');
                     }
                     
                 break;
