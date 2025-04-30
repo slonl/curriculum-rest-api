@@ -90,10 +90,47 @@ module.exports = {
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofiel',
 				...shortInfo,
   				ErkTaalprofieltekst: shortInfo,
-  				ErkSchaal: shortInfo,
+				ErkSchaal: {
+					...shortInfo,
+					deprecated: _,
+					ErkTaalactiviteit: {
+						...shortInfo,
+						deprecated: _,
+						ErkGebied: {
+							...shortInfo,
+							deprecated: _,
+						},
+						ErkCategorie: {
+							...shortInfo,
+							deprecated: _,
+							ErkGebied: {
+								...shortInfo,
+								deprecated: _,
+							},
+						},
+						ErkTaalactiviteit: {
+							...shortInfo,
+							deprecated: _,
+							ErkCategorie: {
+								...shortInfo,
+								deprecated: _,
+							},
+						},
+						ErkCandobeschrijving: {
+							...shortInfo,
+							deprecated: _,
+							Niveau: {
+								...NiveauShort,
+							}
+						},
+						ErkVoorbeeld: {
+						...shortInfo,
+						deprecated: _,
+						},
+					},
+				},
 			})
 			
-
 			const response = {
 				data: results,
 				page: Page,
