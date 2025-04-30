@@ -203,9 +203,12 @@ function jsonLD(entry) {
 			child['$ref'] = niveauURL + (child.uuid ?? child.id);
 			if (entry['@type']=='Vakleergebied') {
 				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
-			} else {
+			}
+			
+			if (entry['@type']=='LdkVakleergebied') {
 				child['$ref'] += '/ldk_vakleergebied/' + (entry.uuid ?? entry.id);
 			}
+			
 			return child;
 		});
 	}
