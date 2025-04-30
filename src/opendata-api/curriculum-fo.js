@@ -5,10 +5,14 @@ module.exports = {
 	queries: {
 		FoSet: `
 		const results = from(data.FoSet)
+			.orderBy({
+				title: asc
+			})
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
-				FoDomein: shortInfo,
+				Vakleergebied: shortInfo,
+				Niveau: o => from(o.NiveauIndex).select(shortInfo),
 				unreleased: _,
 			})
 
@@ -116,7 +120,9 @@ module.exports = {
 	
 			response
 	
-			`
+			`,
+		FoVolledig: `data.FoSet`
+			
 	},
 	typedQueries: {
 		FoSet: `
@@ -187,7 +193,7 @@ module.exports = {
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
 		'fo_doelzin/': (req) => opendata.api["FoDoelzin"](req.params, req.query),
 		'fo_toelichting/': (req) => opendata.api["FoToelichting"](req.params, req.query),
-		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query)
+		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query),
 		
 	}
 };

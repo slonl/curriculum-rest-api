@@ -159,6 +159,8 @@ module.exports = {
 		    '@type': Type,
 		    prefix: _,
 		    title: _,
+			deleted: _,
+			dirty: _
 		};
 
 		function sortByTitle(a,b) {
@@ -274,6 +276,30 @@ module.exports = {
 		response
 
 		`,
+		NiveauVakleergebied:`
+		const tinyNiveauIndex = o => from(o.NiveauIndex).select(ShortLink)
+
+		const results = from(data.Niveau)
+			.orderBy({ 
+				title:asc 
+			})
+			.select({
+				...ShortLink,
+				Vakleergebied: ShortLink,
+				ErkVakleergebied: ShortLink,
+				RefVakleergebied: ShortLink,
+				ExamenprogrammaVakleergebied: o => from( _.Examenprogramma.ExamenprogrammaVakleergebied(o)).orderBy({title:asc}).select(ShortLink),
+				Niveau: tinyNiveauIndex,
+				KerndoelVakleergebied: o => from(o?.KerndoelVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				LdkVakleergebied: o => from(o?.LdkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				InhVakleergebied: o => from(o?.InhVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
+				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex)
+			})
+
+		results
+
+		`,
 	},
 	typedQueries: {
 		Vakleergebied: `
@@ -335,6 +361,7 @@ module.exports = {
 	},
 	routes: {
 		'vakleergebied/': (req) => opendata.api["Vakleergebied"](req.params, req.query),
+		'niveau_vakleergebied/': (req) => opendata.api["NiveauVakleergebied"](req.params, req.query),
 		'niveau/': (req) => opendata.api["Niveau"](req.params, req.query),
 		'doel/': (req) => opendata.api["Doel"](req.params, req.query),
 		'doelniveau/': (req) => opendata.api["Doelniveau"](req.params, req.query),

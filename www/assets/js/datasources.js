@@ -46,7 +46,21 @@
 
     window.slo.api.get('/niveau/')
     .then(niveaus => {
-        window.slo.niveaus = niveaus.data
+        window.slo.niveaus = niveaus.data.map(n => {
+            if (!n.deleted) {
+                delete n.deleted
+            }
+            if (!n.dirty) {
+                delete n.dirty
+            }
+            if (n.uuid) {
+                JSONTag.setAttribute(n, 'id', '/uuid/'+n.uuid)
+                n['@id'] = '/uuid/'+n.uuid
+                n.id = n.uuid
+                delete n.uuid
+            }
+            return n
+        })
         editor.addDataSource('niveaus', {
             load: niveaus.data.map(n => n.title)
         })
