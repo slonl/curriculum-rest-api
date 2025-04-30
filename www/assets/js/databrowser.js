@@ -457,8 +457,10 @@ browser = simply.app({
                 browser.view.sloDocument.move(5)
             },
             "Enter": (e) => {
-                e.preventDefault();
-                browser.actions.documentShowEditor();
+                if(browser.view.user){
+                    e.preventDefault();
+                    browser.actions.documentShowEditor();
+                }
             },           
         },
         "document-edit": {
@@ -1424,6 +1426,13 @@ browser = simply.app({
                     //focus on item
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.scrollIntoView({ block: "center" });
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.classList.add("focus");
+
+                    // toggle editing UI
+                    if(browser.view.user){
+                        document.body.classList.add('slo-document-editmode');
+                    } else {
+                        document.body.classList.remove('slo-document-editmode');
+                    }
                     
                 break;
             }
