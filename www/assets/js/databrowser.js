@@ -447,8 +447,8 @@ browser = simply.app({
                 browser.view.sloDocument.move(5)
             },
             "Enter": (e) => {
-                e.preventDefault();
                 if(browser.view.user){
+                    e.preventDefault();
                     browser.actions.documentShowEditor();
                 }
             },           
@@ -1343,8 +1343,7 @@ browser = simply.app({
                     //toggle editting UI
                     if(!browser.view.user){
                         document.body.classList.add('slo-no-edit');
-                    }
-                    if(browser.view.user){
+                    } else {
                         document.body.classList.remove('slo-no-edit');
                     }
                     
