@@ -154,7 +154,7 @@ browser = simply.app({
             updateDataSource('contextdata')
         },
         '/': function(params) {
-            browser.actions.clearView()
+            browser.actions.clearView() //
             browser.view.view = 'home';
         },
         '/([^#]+):*': function(params) {
@@ -163,9 +163,6 @@ browser = simply.app({
             } else {
                 browser.view.view = 'home';
             }
-        },
-        '/': function(params) {
-            browser.view.view = 'home';
         },
     }),
     keyboard: {
