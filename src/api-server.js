@@ -213,14 +213,19 @@ function jsonLD(entry) {
 }
 
 function jsonLDList(list, schema, type, meta) {
-	return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
+	//return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
+	//the original return could not add references inside the objects from inside the array, was this by design?
+	//looks like the api calls still work after this modification.
+	// simply-edit.js however seems to be stuck in a loop in the background... 
+	addReference(list);
+	return list;
 }
 
 function addReference(entry){
 	if (Array.isArray(entry)){ 
 		entry.forEach(addReference);
 	}
-	else if(isObject(entry)) { 
+	else if(isObject(entry)) {
 		if (entry.uuid) {
 			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
 		}
@@ -245,9 +250,11 @@ Object.keys(opendata.routes).forEach((route) => {
 		try {
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
+				console.log("Find references in Array")
 				result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
+				console.log("Find references in Object")
 				result = jsonLD(result);
 			} 
 			res.send(result);
