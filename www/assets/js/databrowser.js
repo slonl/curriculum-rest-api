@@ -154,7 +154,7 @@ browser = simply.app({
             updateDataSource('contextdata')
         },
         '/': function(params) {
-            browser.actions.clearView() //
+            browser.actions.clearView()
             browser.view.view = 'home';
         },
         '/([^#]+):*': function(params) {
