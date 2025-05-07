@@ -29,6 +29,10 @@ opendata.url    = storeUrl;
 const niveauURL = baseDatasetURL + "niveau/";
 const notfound  = { error: "not found"};
 
+global.baseVariables = { 
+		'baseDatasetURL' : baseDatasetURL,
+}
+
 app.route('/status/').get((req, res) => {
 	console.log('status')
 	return request({
@@ -212,7 +216,7 @@ function jsonLD(entry) {
 	return entry;
 }
 
-function jsonLDList(list, schema, type, meta) {
+function jsonLDList(list) {
 	//return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
 	//the original return could not add references inside the objects from inside the array, was this by design?
 	//looks like the api calls still work after this modification.
@@ -226,9 +230,10 @@ function addReference(entry){
 		entry.forEach(addReference);
 	}
 	else if(isObject(entry)) {
-		if (entry.uuid) {
-			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
-		}
+		// we're adding reference from withing shortInfo in the opendata-api curriculum-et-all.js nowadays
+		// if (entry.uuid) {
+		// 	entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
+		// }
 		Object.values(entry).forEach(addReference);	
 	};
 }
@@ -251,7 +256,7 @@ Object.keys(opendata.routes).forEach((route) => {
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
 				console.log("Find references in Array")
-				result.data = jsonLDList(result.data);
+				//result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
 				console.log("Find references in Object")

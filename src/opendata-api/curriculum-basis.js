@@ -5,6 +5,9 @@ module.exports = {
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
+		
+		const References = o => '${global.baseVariables}' + JSONTag.getAttribute(o,'id')
+		
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
@@ -159,6 +162,8 @@ module.exports = {
 		    '@type': Type,
 		    prefix: _,
 		    title: _,
+			'@references': References,
+			'FOO': 'BAR',
 			deleted: _,
 			dirty: _
 		};
