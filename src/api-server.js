@@ -29,8 +29,13 @@ opendata.url    = storeUrl;
 const niveauURL = baseDatasetURL + "niveau/";
 const notfound  = { error: "not found"};
 
-global.baseVariables = { 
+const baseVariables = { 
 		'baseDatasetURL' : baseDatasetURL,
+}
+
+function getVars(params={}) {
+	Object.assign(params, baseVariables)
+	return params
 }
 
 app.route('/status/').get((req, res) => {
@@ -251,15 +256,14 @@ Object.keys(opendata.routes).forEach((route) => {
 	console.log('adding my route '+route);
 	app.route('/' + route)
 	.get(async (req, res) => {
-		console.log(route);
+		console.log("find the route: ", route, getVars());
+		console.log("request buildup: ", req.params);
 		try {
+			req.params = getVars(req.params)
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
-				console.log("Find references in Array")
-				//result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
-				console.log("Find references in Object")
 				result = jsonLD(result);
 			} 
 			res.send(result);
@@ -288,7 +292,7 @@ app.route("/" + "search/").get((req, res) => {
 
 app.route('/' + 'uuid/:id').get(async (req, res) => {
 	try {
-		let result = await opendata.api.Id(req.params)
+		let result = await opendata.api.Id(getVars(req.params))
 		if (!result) {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
@@ -303,7 +307,7 @@ app.route('/' + 'uuid/:id').get(async (req, res) => {
 
 app.route('/roots/:id').get(async (req,res) => {
 	try {
-		let result = await opendata.api.Roots(req.params)
+		let result = await opendata.api.Roots(getVars(req.params))
 		if (!result) {
 	  		res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
@@ -318,7 +322,7 @@ app.route('/roots/:id').get(async (req,res) => {
 
 app.route('/tree/:id').get(async (req, res) => {
 	try {
-		let result = await opendata.api.Tree(req.params, req.query)
+		let result = await opendata.api.Tree(getVars(req.params), req.query)
 		if (!result) {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
@@ -472,3 +476,6 @@ app.route('*').get((req,res) => {
 });
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
+
+//module.exports = {baseVariables};
+

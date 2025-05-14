@@ -6,7 +6,7 @@ module.exports = {
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
 		
-		const References = o => '${global.baseVariables}' + JSONTag.getAttribute(o,'id')
+		const References = o => request.query.baseDatasetURL + JSONTag.getAttribute(o,'id')
 		
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
@@ -163,7 +163,6 @@ module.exports = {
 		    prefix: _,
 		    title: _,
 			'@references': References,
-			'FOO': 'BAR',
 			deleted: _,
 			dirty: _
 		};
@@ -308,7 +307,8 @@ module.exports = {
 	},
 	typedQueries: {
 		Vakleergebied: `
-		from(Index(request.query.id))
+
+		const entry = from(Index(request.query.id))
 			.select({
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 				...shortInfo,
@@ -323,7 +323,20 @@ module.exports = {
 				RefVakleergebied: ShortLink,
 				ErkVakleergebied: ShortLink,
 				Niveau
+
 			})
+
+			entry.Niveau
+				.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
+				.map(child => {
+					child['$ref'] =   request.query.baseDatasetURL + "niveau/";+ (child.uuid ?? child.id);
+					if (entry['@type']=='Vakleergebied') {
+						child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
+					}
+					return child;
+				});
+			
+			entry
 		`,
 		Niveau: `
 		from(Index(request.query.id))
