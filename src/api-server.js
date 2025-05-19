@@ -215,32 +215,7 @@ function jsonLD(entry) {
 			return child;
 		});
 	}
-	// add a '@references' tot the entry children
-	// this is just some comment to convince git there are changes to commit in a branch
-	addReference(entry);
 	return entry;
-}
-
-function jsonLDList(list) {
-	//return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
-	//the original return could not add references inside the objects from inside the array, was this by design?
-	//looks like the api calls still work after this modification.
-	// simply-edit.js however seems to be stuck in a loop in the background... 
-	addReference(list);
-	return list;
-}
-
-function addReference(entry){
-	if (Array.isArray(entry)){ 
-		entry.forEach(addReference);
-	}
-	else if(isObject(entry)) {
-		// we're adding reference from withing shortInfo in the opendata-api curriculum-et-all.js nowadays
-		// if (entry.uuid) {
-		// 	entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
-		// }
-		Object.values(entry).forEach(addReference);	
-	};
 }
 
 function isObject(value){
@@ -253,11 +228,8 @@ function isObject(value){
 }
 
 Object.keys(opendata.routes).forEach((route) => {
-	console.log('adding my route '+route);
 	app.route('/' + route)
 	.get(async (req, res) => {
-		console.log("find the route: ", route, getVars());
-		console.log("request buildup: ", req.params);
 		try {
 			req.params = getVars(req.params)
 			let result = await opendata.routes[route](req)
@@ -283,7 +255,7 @@ app.route("/" + "search/").get((req, res) => {
 		try {
 			data = JSON.parse(data);
 			res.setHeader("Content-Type", "application/json");
-			res.send(jsonLDList(data));
+			res.send(data);
 		} catch (e) {
 			res.error(e);
 		}
@@ -311,7 +283,7 @@ app.route('/roots/:id').get(async (req,res) => {
 		if (!result) {
 	  		res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-			res.send(jsonLDList(result));
+			res.send(result);
 		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
