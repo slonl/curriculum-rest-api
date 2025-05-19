@@ -448,6 +448,3 @@ app.route('*').get((req,res) => {
 });
 
 app.listen(port, () => console.log(`API server listening on port ${port}!`));
-
-//module.exports = {baseVariables};
-
