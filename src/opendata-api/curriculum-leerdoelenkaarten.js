@@ -231,7 +231,21 @@ module.exports = {
 				deprecated: _,
 			},
 			Niveau: NiveauShort
-		})`,
+		})
+			
+		results.Niveau
+				.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
+				.map(child => {
+					child['$ref'] =   request.query.baseDatasetURL + "niveau/";+ (child.uuid ?? child.id);
+					if (entry['@type']=='Vakleergebied') {
+						child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
+					}
+					return child;
+				});
+			
+		results
+
+		`,
 
 		LdkVakkernOpNiveau: `
 		const results = from(data.NiveauIndex)
