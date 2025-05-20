@@ -197,23 +197,22 @@ module.exports = {
               		},
             	}			
 			})
+
+			results
 		`,
 		LdkVakleergebiedOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id,
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
 			}
-		})`,
-		LdkVakleergebiedByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid: request.query.id
 		})
+			
+		results
+		`,
+		LdkVakleergebiedByIdOpNiveau: `
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVakleergebied: {
 				...shortInfo,
@@ -231,25 +230,25 @@ module.exports = {
 				deprecated: _,
 			},
 			Niveau: NiveauShort
-		})`,
+		})
+			
+		results
+		`,
 
 		LdkVakkernOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVakkern: {
 				...shortInfo,
 				deprecated: _,
 		  }
-		})`,
+		})
+		  
+		results
+		`,
 
 		LdkVakkernByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVakkern: {
 				...shortInfo,
@@ -272,26 +271,24 @@ module.exports = {
 			},
 			Niveau: NiveauShort,
 		})
+
+		results
 		`,
 
 		LdkVaksubkernOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVaksubkern :{
 				...shortInfo,
 				deprecated: _,
 			}
 		})
+
+		results
 		`,
 
 		LdkVaksubkernByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id 
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVaksubkern: {
 				...shortInfo,
@@ -315,19 +312,20 @@ module.exports = {
 				Niveau: NiveauShort
 		  	}
 		})
+
+		results
 		`,
 
 		LdkVakinhoudOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id 
-		})
+		const results = from(Index(request.query.id)) 
 		.select({
 			LdkVakinhoud: {
 				...shortInfo,
 				deprecated: _,
 			}
 		})
+
+		results
 		`
 	},
 	typedQueries: {
