@@ -3,6 +3,15 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-fo/context.json',
 	queries: {
+		FoVolledig: `
+			const results = from(data.FoSet)
+			.orderBy({
+			title: asc
+			})
+
+			results
+		`,
+
 		FoSet: `
 		const results = from(data.FoSet)
 			.orderBy({
@@ -188,6 +197,7 @@ module.exports = {
 		`
 	},
 	routes: {
+		'fo_volledig/': (req) => opendata.api["FoVolledig"](req.params, req.query),
 		'fo_set/': (req) => opendata.api["FoSet"](req.params, req.query),
 		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
