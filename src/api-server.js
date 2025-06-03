@@ -29,6 +29,15 @@ opendata.url    = storeUrl;
 const niveauURL = baseDatasetURL + "niveau/";
 const notfound  = { error: "not found"};
 
+const baseVariables = { 
+		'baseDatasetURL' : baseDatasetURL,
+}
+
+function getVars(params={}) {
+	Object.assign(params, baseVariables)
+	return params
+}
+
 app.route('/status/').get((req, res) => {
 	console.log('status')
 	return request({
@@ -206,26 +215,7 @@ function jsonLD(entry) {
 			return child;
 		});
 	}
-	// add a '@references' tot the entry children
-	// this is just some comment to convince git there are changes to commit in a branch
-	addReference(entry);
 	return entry;
-}
-
-function jsonLDList(list, schema, type, meta) {
-	return list.map(entity => { entity['@references'] = baseDatasetURL + 'uuid/' + entity.uuid; return entity})
-}
-
-function addReference(entry){
-	if (Array.isArray(entry)){ 
-		entry.forEach(addReference);
-	}
-	else if(isObject(entry)) { 
-		if (entry.uuid) {
-			entry['@references'] = baseDatasetURL + 'uuid/' + entry.uuid;
-		}
-		Object.values(entry).forEach(addReference);	
-	};
 }
 
 function isObject(value){
@@ -238,14 +228,12 @@ function isObject(value){
 }
 
 Object.keys(opendata.routes).forEach((route) => {
-	console.log('adding my route '+route);
 	app.route('/' + route)
 	.get(async (req, res) => {
-		console.log(route);
 		try {
+			req.params = getVars(req.params)
 			let result = await opendata.routes[route](req)
 			if (Array.isArray(result.data)) {
-				result.data = jsonLDList(result.data);
 				result['@isPartOf'] = baseDatasetURL;
 			} else {
 				result = jsonLD(result);
@@ -267,7 +255,7 @@ app.route("/" + "search/").get((req, res) => {
 		try {
 			data = JSON.parse(data);
 			res.setHeader("Content-Type", "application/json");
-			res.send(jsonLDList(data));
+			res.send(data);
 		} catch (e) {
 			res.error(e);
 		}
@@ -276,7 +264,7 @@ app.route("/" + "search/").get((req, res) => {
 
 app.route('/' + 'uuid/:id').get(async (req, res) => {
 	try {
-		let result = await opendata.api.Id(req.params)
+		let result = await opendata.api.Id(getVars(req.params))
 		if (!result) {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
@@ -291,11 +279,11 @@ app.route('/' + 'uuid/:id').get(async (req, res) => {
 
 app.route('/roots/:id').get(async (req,res) => {
 	try {
-		let result = await opendata.api.Roots(req.params)
+		let result = await opendata.api.Roots(getVars(req.params))
 		if (!result) {
 	  		res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-			res.send(jsonLDList(result));
+			res.send(result);
 		}
 	} catch(err) {
 		res.setHeader('content-type', 'application/json');
@@ -306,7 +294,7 @@ app.route('/roots/:id').get(async (req,res) => {
 
 app.route('/tree/:id').get(async (req, res) => {
 	try {
-		let result = await opendata.api.Tree(req.params, req.query)
+		let result = await opendata.api.Tree(getVars(req.params), req.query)
 		if (!result) {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
