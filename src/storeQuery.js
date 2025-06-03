@@ -31,7 +31,6 @@ function storeQuery(url, query, variables, urlQuery) {
 		    }
 	    })
 	}
-	
 	return fetch(url, {
 		method : "POST",
 		body : query,

@@ -135,7 +135,6 @@ module.exports = {
 							...NiveauShort,
 						},
 						ErkVoorbeeld: {
-
 							id: _,
 							title: _,
 							deprecated: _,
@@ -146,6 +145,7 @@ module.exports = {
 				unreleased: _,
 			})
 			
+
 			const response = {
 				data: results,
 				page: Page,
