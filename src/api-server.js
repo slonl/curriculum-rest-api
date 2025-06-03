@@ -229,7 +229,7 @@ function addReference(entry){
 }
 
 function isObject(value){
-	if (value !== null && typeof value == 'object' && typeof value !== 'string' && typeof value !== 'Number' && typeof value !== "Boolean"){
+	if (value !== null && typeof value == 'object' && typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'boolean'){
 		return true;
 	}
 	else {
