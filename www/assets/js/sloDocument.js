@@ -65,7 +65,7 @@ const sloDocument = (function() {
     }
 
     function getAllNodes(){
-      let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-entity"));
+      let getAllNodes = Array.from( document.querySelectorAll(".slo-document .slo-document-entity"));
       return getAllNodes;
     }
 
@@ -210,7 +210,7 @@ const sloDocument = (function() {
       hideEditor,
       setFocus: (el, value) =>{
         document.querySelectorAll('.focus').forEach(item => item.classList.remove('focus'));
-        let newPosition = el.closest('.slo-entity');
+        let newPosition = el.closest('.slo-document-entity');
         newPosition.classList.add("focus");
         updateURL()
       },

@@ -305,46 +305,56 @@ browser = simply.app({
             }
         },
         "spreadsheet-types": {
+            // @todo: select a default to add the classlist to.
             "Escape": (e) => {
                 e.preventDefault()
+                let currentStyleFocusElement = document.querySelector(".slo-type.focus")
+                currentStyleFocusElement?.classList.remove("slo-type-focus")
                 browser.actions.hideTypeSelector()
             },
             "ArrowDown": (e) => {
                 let target = document.activeElement
-                if (target && (target.type=='checkbox' || target.type=='radio')) {
+                if (target) {
                     e.preventDefault()
-                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"], input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"]'))
                     let current = targets.findIndex(input => input==e.target)
-                    if (current>=0) {
+                    targets[current]?.classList.add("slo-type-focus")
+
+                    if (current < (targets.length -1) ) {
+                        targets[current]?.classList?.remove("slo-type-focus")
                         current++
                         targets[current]?.focus()
+                        targets[current]?.classList?.add("slo-type-focus")
                     }
                 }
             },
             "ArrowUp": (e) => {
                 let target = document.activeElement
-                if (target && (target.type=='checkbox' || target.type=='radio')) {
+                if (target) {
                     e.preventDefault()
-                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"],input[type="radio"]'))
+                    let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"], input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"]'))
                     let current = targets.findIndex(input => input==e.target)
-                    if (current>0) {
+                    targets[current]?.classList.add("slo-type-focus")
+                    
+                    if (current && current > 0) {
+                        targets[current]?.classList.remove("slo-type-focus")
                         current--
                         targets[current]?.focus()
+                        targets[current]?.classList.add("slo-type-focus")
                     }
                 }
             },
             "Enter": (e) => {
                 if (browser.view.user) {
-                    let el = document.querySelector('td.focus')
-                    let selector = document.querySelector('.slo-type-selector')
-                    let type = selector.querySelector('input:checked')
-                    if (type) {
-                        //FIXME: check for addNiveau, so do form submit which triggers form command
-                        //FIXME: check that .slo-type-selector is visible
-                        e.preventDefault()
-                        browser.actions.hideTypeSelector()
-                        return browser.actions.insertRow(el.closest('tr'), type.value)
+                    e.preventDefault()
+                    let el = document.querySelector(".slo-type-focus")         
+                    if(el){
+                        let closestCommand = el.closest("[data-simply-command]")
+                        let command = closestCommand.dataset.simplyCommand
+                        let value = closestCommand?.value
+                        browser.commands[command](e.target, value)
                     }
+                    el.classList.remove("slo-type-focus")
                 }
             }
         },
@@ -447,8 +457,10 @@ browser = simply.app({
                 browser.view.sloDocument.move(5)
             },
             "Enter": (e) => {
-                e.preventDefault();
-                browser.actions.documentShowEditor();
+                if(browser.view.user){
+                    e.preventDefault();
+                    browser.actions.documentShowEditor();
+                }
             },           
         },
         "document-edit": {
@@ -1414,6 +1426,13 @@ browser = simply.app({
                     //focus on item
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.scrollIntoView({ block: "center" });
                     document.getElementById(("https://opendata.slo.nl/curriculum/uuid/" + currentItem))?.classList.add("focus");
+
+                    // toggle editing UI
+                    if(browser.view.user){
+                        document.body.classList.add('slo-document-editmode');
+                    } else {
+                        document.body.classList.remove('slo-document-editmode');
+                    }
                     
                 break;
             }
@@ -2055,12 +2074,15 @@ browser = simply.app({
             if (checked) {
                 checked.checked=false
             }
-            selector.querySelector('input').focus()
+            
+            let addFocusElement = selector.querySelector('[data-simply-command="addSibling"]')
+            addFocusElement.focus()
+            addFocusElement.classList.add("slo-type-focus")
         },
         hideTypeSelector: async function() {
             document.body.dataset.simplyKeyboard = 'spreadsheet'
             let selector = document.querySelector('.slo-type-selector')
-            selector.close(); //removeAttribute('open')
+            selector.close();
         },
         removeAllChanges: async function() {
             changes.clear()

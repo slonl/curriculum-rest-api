@@ -349,6 +349,11 @@ tr.changed {
 .slo-type-selector .slo-type:hover {
     background-color: var(--ds-grey-20);
 }
+
+.slo-type-focus {
+    background-color: var(--ds-grey-20);
+}
+
 .slo-type-selector .ds-button-close {
     right: 0;
 }
@@ -504,6 +509,21 @@ body.ds-paging .slo-header .ds-paging {
     display: inline;
     list-style-type: none;
    margin: 0px;
+}
+
+.slo-document-editmode .focus .slo-document-edit{
+    display: block;
+}
+
+.slo-document-edit{
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.slo-document-entity {
+    position: relative;
 }
 
 .documentEditor {
