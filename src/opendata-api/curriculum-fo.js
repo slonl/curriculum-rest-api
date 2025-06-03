@@ -64,6 +64,24 @@ module.exports = {
 			response
 	
 		`,
+		FoKernzin: `
+		const results = from(data.FoKernzin)
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				FoDoelzin: shortInfo
+			})
+	
+			const response = {
+				type: 'FoKernzin',
+				data: results,
+				page: Page,
+				count: data.FoKernzin.length
+			}
+	
+			response
+	
+		`,
 		FoDoelzin: `
 		const results = from(data.FoDoelzin)
 			.slice(Paging.start,Paging.end)
@@ -120,8 +138,7 @@ module.exports = {
 	
 			response
 	
-			`,
-		FoVolledig: `data.FoSet`
+			`
 			
 	},
 	typedQueries: {
@@ -132,7 +149,42 @@ module.exports = {
 				...shortInfo,
 				description: _,
 				replaces: ShortLink,
-				FoDomein: shortInfo
+				FoDomein: {
+                  ...shortInfo,
+					description: _,
+                    FoDoelzin: {
+                      ...shortInfo,
+	   				description: _,
+                      se: _,
+                      ce: _,
+	    	              FoUitwerking: {
+                        ...shortInfo, 
+                      	description:  _                        
+                      },
+                      FoToelichting:  {
+                        ...shortInfo, 
+                      	description:  _                        
+                      },
+                    },
+                  FoSubdomein: {
+                    ...shortInfo,
+					description: _,
+                    FoDoelzin: {
+                      ...shortInfo,
+                      description: _,
+                      se: _,
+                      ce: _,
+                      FoUitwerking: {
+                        ...shortInfo, 
+                      	description:  _                        
+                      },
+                      FoToelichting:  {
+                        ...shortInfo, 
+                      	description:  _                        
+                      },
+                    },
+                  },
+                },
 			})
 		`,
 		FoDomein: `
@@ -149,6 +201,16 @@ module.exports = {
 			from(Index(request.query.id))
 			.select({
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoSubdomein',
+				...shortInfo,
+				description: _,
+				replaces: ShortLink,
+				FoDoelzin: shortInfo
+			})
+		`,
+		FoKernzin: `
+			from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoKernzin',
 				...shortInfo,
 				description: _,
 				replaces: ShortLink,
@@ -191,9 +253,9 @@ module.exports = {
 		'fo_set/': (req) => opendata.api["FoSet"](req.params, req.query),
 		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
+		'fo_kernzin/': (req) => opendata.api["FoKernzin"](req.params, req.query),
 		'fo_doelzin/': (req) => opendata.api["FoDoelzin"](req.params, req.query),
 		'fo_toelichting/': (req) => opendata.api["FoToelichting"](req.params, req.query),
-		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query),
-		
+		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query)
 	}
 };
