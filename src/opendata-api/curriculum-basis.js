@@ -194,13 +194,16 @@ module.exports = {
 			return 0
 		}
 
-		function referenceById(entry){
+		function referenceNiveau(entry){
 			entry.Niveau
 				.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
 				.map(child => {
 					child['$ref'] =   request.query.baseDatasetURL + "niveau/";+ (child.uuid ?? child.id);
 					if (entry['@type']=='Vakleergebied') {
 						child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
+					}
+					if (entry['@type']=='WelkeAndereTypesHebbenDitSoortPaden?') {
+						child['$ref'] += '/welkeAndereTypesHebbenDitSoortPaden?/' + (entry.uuid ?? entry.id);
 					}
 					return child;
 				});
@@ -339,8 +342,8 @@ module.exports = {
 
 			})
 
-			referenceById(entry)
-						
+			referenceNiveau(entry)
+
 			entry
 		`,
 		Niveau: `
