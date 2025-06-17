@@ -298,7 +298,6 @@ app.route('/tree/:id').get(async (req, res) => {
 		if (!result) {
 			res.status(404).send({ error: 404, message: '404: not found' });
 		} else {
-			addReference(result);
 			result = jsonLD(result);
 			result = JSONTag.stringify(result);
 			res.set('Content-Type','application/jsontag');
