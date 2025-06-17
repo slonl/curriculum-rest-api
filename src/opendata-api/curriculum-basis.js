@@ -148,7 +148,7 @@ module.exports = {
 			title: _,
 			deprecated: _,
 		}
-		const PageSize = parseInt(request.query.pageSize || request.query.perPage || '100')
+		const PageSize = Math.max(10, Math.min(1000, parseInt(request.query.pageSize || request.query.perPage || '100')))
 		const Page = parseInt(request.query.page || '0')
 		const Paging = {
 			start: Page*PageSize,
