@@ -10,7 +10,7 @@ function storeQuery(url, query, variables, urlQuery) {
 	}
 
    	variables.page = urlQuery?.page ? urlQuery.page : 0;
-	variables.perPage = urlQuery?.perPage ? urlQuery.perPage : 10;
+	variables.perPage = Math.min(1000, urlQuery?.perPage ? urlQuery.perPage : 10);
 
     url = new URL(url)
 	if (variables) {
