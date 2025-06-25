@@ -15,6 +15,7 @@ module.exports = {
 			uuid: _.id,
 			prefix: _,
 			ce_se: _,
+			'@references': References,
 			Doel: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 				'@id': Id,
@@ -25,6 +26,7 @@ module.exports = {
 				vakbegrippen: _,
 				bron: _,
 				aanbodid: _,
+				'@references': References,
 				Leerlingtekst: {
 					title: _,
 					description: _,
@@ -39,6 +41,7 @@ module.exports = {
 				description: _,
 				prefix: _,
 				type: _,
+				'@references': References,
 			},
 			Kerndoel: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
@@ -49,6 +52,7 @@ module.exports = {
 				description: _,
 				kerndoelLabel: _,
 				prefix: _,
+				'@references': References,
 			},
 			ExamenprogrammaDomein: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_domein',
@@ -57,6 +61,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				prefix: _,
+				'@references': References,
 			},
 			ExamenprogrammaSubdomein: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_subdomein',
@@ -65,6 +70,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				prefix: _,
+				'@references': References,
 			},
 			ExamenprogrammaEindterm: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_eindterm',
@@ -73,6 +79,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				prefix: _,
+				'@references': References,
 			},
 			LdkVakbegrip: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
@@ -81,6 +88,7 @@ module.exports = {
 				uuid: _.id,
 				title: _,
 				ce_se: _,
+				'@references': References,
 			}
 		}
 		const Doelen = {
@@ -146,6 +154,7 @@ module.exports = {
 			uuid: _.id,
 			'@type': Type,
 			title: _,
+			'@references': References,
 			deprecated: _,
 		}
 		const PageSize = Math.max(10, Math.min(1000, parseInt(request.query.pageSize || request.query.perPage || '100')))
@@ -250,10 +259,7 @@ module.exports = {
 		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
-			'@id': Id,
-			uuid: _.id,
-			'@type': Type,
-			title: _
+			...ShortLink
 		})
 		
 		const response = {
