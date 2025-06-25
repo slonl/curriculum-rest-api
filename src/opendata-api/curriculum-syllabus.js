@@ -10,10 +10,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				'@id': Id,
-				uuid: _.id,
-				'@type': Type,
-				title: _
+				...ShortLink
 			})
 
 			const response = {
