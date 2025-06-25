@@ -5,9 +5,6 @@ module.exports = {
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
-		
-		const References = o => request.query.baseDatasetURL + JSONTag.getAttribute(o,'id')
-		
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
@@ -148,7 +145,7 @@ module.exports = {
 			title: _,
 			deprecated: _,
 		}
-		const PageSize = Math.max(10, Math.min(1000, parseInt(request.query.pageSize || request.query.perPage || '100')))
+		const PageSize = parseInt(request.query.pageSize || request.query.perPage || '100')
 		const Page = parseInt(request.query.page || '0')
 		const Paging = {
 			start: Page*PageSize,
@@ -162,7 +159,6 @@ module.exports = {
 		    '@type': Type,
 		    prefix: _,
 		    title: _,
-			'@references': References,
 			deleted: _,
 			dirty: _
 		};
@@ -281,25 +277,28 @@ module.exports = {
 
 		`,
 		NiveauVakleergebied:`
-		const tinyNiveauIndex = o => from(o.NiveauIndex).select(ShortLink)
-
-		const results = from(data.Niveau)
-			.orderBy({ 
-				title:asc 
-			})
-			.select({
+		let results = from(data.Niveau)
+		.select({
+			...ShortLink,
+			Vakleergebied : ShortLink,
+			ErkVakleergebied : ShortLink,
+			RefVakleergebied : ShortLink,
+			Examenprogramma: {
 				...ShortLink,
-				Vakleergebied: ShortLink,
-				ErkVakleergebied: ShortLink,
-				RefVakleergebied: ShortLink,
-				ExamenprogrammaVakleergebied: o => from( _.Examenprogramma.ExamenprogrammaVakleergebied(o)).orderBy({title:asc}).select(ShortLink),
-				Niveau: tinyNiveauIndex,
-				KerndoelVakleergebied: o => from(o?.KerndoelVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				SyllabusVakleergebied: o => from(o?.SyllabusVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				LdkVakleergebied: o => from(o?.LdkVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				InhVakleergebied: o => from(o?.InhVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex),
-				RefVakleergebied: o => from(o?.RefVakleergebied).orderBy({title:asc}).select(tinyNiveauIndex)
-			})
+				ExamenprogrammaVakleergebied : ShortLink
+			}
+		})
+
+		let results2 = from(Object.values(data.niveauIndex))
+		.select({
+			...ShortLink,
+			KerndoelVakleergebied: ShortLink,
+			SyllabusVakleergebied: ShortLink,
+			LdkVakleergebied: ShortLink,
+			InhVakleergebied: ShortLink
+		})
+
+		results = results.concat(results2)
 
 		results
 
@@ -307,8 +306,7 @@ module.exports = {
 	},
 	typedQueries: {
 		Vakleergebied: `
-
-		const entry = from(Index(request.query.id))
+		from(Index(request.query.id))
 			.select({
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 				...shortInfo,
@@ -323,20 +321,7 @@ module.exports = {
 				RefVakleergebied: ShortLink,
 				ErkVakleergebied: ShortLink,
 				Niveau
-
 			})
-
-			entry.Niveau
-				.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
-				.map(child => {
-					child['$ref'] =   request.query.baseDatasetURL + "niveau/";+ (child.uuid ?? child.id);
-					if (entry['@type']=='Vakleergebied') {
-						child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
-					}
-					return child;
-				});
-			
-			entry
 		`,
 		Niveau: `
 		from(Index(request.query.id))
