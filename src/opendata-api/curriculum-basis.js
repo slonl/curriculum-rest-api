@@ -5,6 +5,9 @@ module.exports = {
 	fragments: `
 		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
 		const Type = o => JSONTag.getAttribute(o,"class")
+
+		const References = o => request.query.baseDatasetURL + JSONTag.getAttribute(o,'id')
+
 		const Doelniveau = {
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 			'@id': Id,
@@ -140,6 +143,7 @@ module.exports = {
 		}
 		const ShortLink = {
 			'@id': Id,
+			'@references': References,
 			uuid: _.id,
 			'@type': Type,
 			title: _,
@@ -160,7 +164,8 @@ module.exports = {
 		    prefix: _,
 		    title: _,
 			deleted: _,
-			dirty: _
+			dirty: _,
+			'@references': References,
 		};
 
 		function sortByTitle(a,b) {
@@ -283,19 +288,29 @@ module.exports = {
 			Vakleergebied : ShortLink,
 			ErkVakleergebied : ShortLink,
 			RefVakleergebied : ShortLink,
-			Examenprogramma: {
-				...ShortLink,
-				ExamenprogrammaVakleergebied : ShortLink
-			}
+		})
+		.orderBy({ 
+			title:asc 
 		})
 
 		let results2 = from(Object.values(data.niveauIndex))
 		.select({
 			...ShortLink,
 			KerndoelVakleergebied: ShortLink,
-			SyllabusVakleergebied: ShortLink,
+			SyllabusVakleergebied: n => from(_.Syllabus.SyllabusVakleergebied).select(ShortLink),
 			LdkVakleergebied: ShortLink,
-			InhVakleergebied: ShortLink
+			InhVakleergebied: ShortLink,
+			ErkVakleergebied: n =>
+				from(data.ErkVakleergebied)
+				.where({
+					Niveau: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			RefVakleergebied: ShortLink,
+			ExamenprogrammaVakleergebied: n => from(_.Examenprogramma.ExamenprogrammaVakleergebied(n)).select(ShortLink),
 		})
 
 		results = results.concat(results2)
