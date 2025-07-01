@@ -135,7 +135,6 @@ module.exports = {
 							...NiveauShort,
 						},
 						ErkVoorbeeld: {
-
 							id: _,
 							title: _,
 							deprecated: _,
