@@ -158,14 +158,16 @@ app.route('/login/').get((req,res) => {
 	let user = token.split(':')[0]
 	if (editors[user]) {
 		res.send('OK')
-		let logContent = user + 'login ok, date :' + new Date().toUTCString();
-		let filePath = '/logs/userlogs.txt'
+		let logContent = user + 'login ok, date :' + new Date().toUTCString() + '\n';
+		let filePath = './logs/userlogs.txt';
+		console.log(logContent)
 		logfile(logContent, filePath);
 	} else {
 		res.status(401)
 		res.send('Forbidden')
-		let logContent = user + 'login failed, date :' + new Date().toUTCString();
-		let filePath = '/logs/failedLogins.txt'
+		let logContent = user + 'login failed, date :' + new Date().toUTCString() + '\n';
+		let filePath = './logs/failedLogins.txt';
+		console.log(logContent)
 		logfile(logContent, filePath);
 	}
 })
@@ -173,25 +175,14 @@ app.route('/login/').get((req,res) => {
 async function logfile(logContent, filePath){
 	try {
 		await fs.mkdir(path.dirname(filePath), { recursive: true });
-		await fs.writeFile(filePath, logContent, { flag: 'w+' });
+		await fs.writeFile(filePath, logContent, { flag: 'a+' });
 		console.log('File and folder created successfully');
 	} catch (error) {
 		if (error.code === 'EEXIST') {
-			await fs.writeFile(filePath, logContent, { flag: 'w+'});
 		} else {
 			console.error('Error:', error);
 		}
 	}
-}
-
-	let logText = user + " login OK, date: " + new Date().toUTCString();
-		fs.writeFile(filePath, logText, { flag: 'w+' }, err => {
-		if (err) {
-			console.error(err);
-		} else {
-			// file written successfully
-		}
-		});
 }
 
 watch.createMonitor('.', function(monitor) {
