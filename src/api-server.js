@@ -6,6 +6,10 @@ const path      = require('path');
 const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
 const opendata  = require('./opendata-api.js');
+const ignoreUSerLogins = {
+	"opendata@slo.nl": true
+};
+
 
 let JSONTag
 import('@muze-nl/jsontag').then(module => { JSONTag = module.default })
@@ -120,9 +124,11 @@ function myAuthorizer(username, password) {
 		return false;
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
-		let filePath = `./logs/apiAccess${new Date().toISOString().slice(0, 10)}.txt`;
-		let logContent = username + ' ' + apiKeys[username].key + '\n';
-		logfile(logContent, filePath)
+		if(!ignoreUSerLogins[username]){
+			let filePath = `./logs/apiAccess${new Date().toISOString().slice(0, 10)}.txt`;
+			let logContent = username + ' ' + apiKeys[username].key + '\n';
+			logfile(logContent, filePath)
+		}
 		return true;
 	} else {
 		console.log('password does not match');
