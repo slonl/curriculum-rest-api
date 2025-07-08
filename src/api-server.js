@@ -6,7 +6,7 @@ const path      = require('path');
 const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
 const opendata  = require('./opendata-api.js');
-const ignoreUSerLogins = {
+const ignoreUserLogins = {
 	"opendata@slo.nl": true
 };
 
@@ -124,7 +124,7 @@ function myAuthorizer(username, password) {
 		return false;
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
-		if(!ignoreUSerLogins[username]){
+		if(!ignoreUserLogins[username]){
 			let filePath = `./logs/apiAccess${new Date().toISOString().slice(0, 10)}.txt`;
 			let logContent = username + ' ' + apiKeys[username].key + '\n';
 			logfile(logContent, filePath)
