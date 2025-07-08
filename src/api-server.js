@@ -121,7 +121,8 @@ function myAuthorizer(username, password) {
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
 		let filePath = `./logs/apiAccess${new Date().toISOString().slice(0, 10)}.txt`;
-		logfile(username + ' ' + apiKeys[username].key + '\n' , filePath)
+		let logContent = username + ' ' + apiKeys[username].key + '\n';
+		logfile(logContent, filePath)
 		return true;
 	} else {
 		console.log('password does not match');
