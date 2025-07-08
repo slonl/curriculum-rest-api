@@ -158,24 +158,24 @@ app.route('/login/').get((req,res) => {
 	let user = token.split(':')[0]
 	if (editors[user]) {
 		res.send('OK')
-		let logContent = user + 'login ok, date :' + new Date().toUTCString() + '\n';
+		let logContent = user + ' login ok, date :' + new Date().toUTCString() + '\n';
 		let filePath = './logs/userlogs.txt';
 		console.log(logContent)
 		logfile(logContent, filePath);
 	} else {
 		res.status(401)
 		res.send('Forbidden')
-		let logContent = user + 'login failed, date :' + new Date().toUTCString() + '\n';
+		let logContent = user + ' login failed, date :' + new Date().toUTCString() + '\n';
 		let filePath = './logs/failedLogins.txt';
 		console.log(logContent)
 		logfile(logContent, filePath);
 	}
 })
 
-async function logfile(logContent, filePath){
+function logfile(logContent, filePath){
 	try {
-		await fs.mkdir(path.dirname(filePath), { recursive: true });
-		await fs.writeFile(filePath, logContent, { flag: 'a+' });
+		fs.mkdirSync(path.dirname(filePath), { recursive: true });
+		fs.writeFileSync(filePath, logContent, { flag: 'a+' });
 		console.log('File and folder created successfully');
 	} catch (error) {
 		if (error.code === 'EEXIST') {
