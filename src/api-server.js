@@ -134,7 +134,7 @@ function myAuthorizer(username, password) {
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
 		if(!ignoreUserLogins[username]){
-			let filePath = path.join(__dirname, '../logs', `/access${new Date().toISOString().slice(0, 10)}.log`);
+			let filePath = path.join(__dirname, '../logs', `/access.${new Date().toISOString().slice(0, 10)}.log`);
 			let logContent = username + '\n';
 			fs.writeFileSync(filePath, logContent, { flag: 'a+' });
 		}
