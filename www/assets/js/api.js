@@ -181,7 +181,7 @@
                     schema.name = schemaName
                     let contextData = {}
                     for (let typeName in schema) {
-                        let typeLabel = schema[typeName].label
+                        let typeLabel = schema[typeName]?.label
                         if (typeLabel) {
                             contextData[typeName] = typeLabel
                         }

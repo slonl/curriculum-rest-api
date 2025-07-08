@@ -110,8 +110,8 @@ module.exports = {
 			response
 	
 		`,
-		FoToelichting: `
-		const results = from(data.FoToelichting)
+		FoIllustratie: `
+		const results = from(data.FoIllustratie)
 			.slice(Paging.start,Paging.end)
 			.select({
 				...shortInfo,
@@ -120,10 +120,10 @@ module.exports = {
 			})
 
 			const response = {
-				type: 'FoToelichting',
+				type: 'FoIllustratie',
 				data: results,
 				page: Page,
-				count: data.FoToelichting.length
+				count: data.FoIllustratie.length
 			}
 	
 			response
@@ -265,7 +265,7 @@ module.exports = {
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
 		'fo_kernzin/': (req) => opendata.api["FoKernzin"](req.params, req.query),
 		'fo_doelzin/': (req) => opendata.api["FoDoelzin"](req.params, req.query),
-		'fo_toelichting/': (req) => opendata.api["FoToelichting"](req.params, req.query),
+		'fo_illustratie/': (req) => opendata.api["FoIllustratie"](req.params, req.query),
 		'fo_uitwerking/': (req) => opendata.api["FoUitwerking"](req.params, req.query)
 	}
 };
