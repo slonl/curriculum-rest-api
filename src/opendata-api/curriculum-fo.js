@@ -237,10 +237,10 @@ module.exports = {
 				FoUitwerking: shortInfo
 			})
 		`,
-		FoToelichting: `
+		FoIllustratie: `
 			from(Index(request.query.id))
 			.select({
-				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoToelichting',
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoIllustratie',
 				...shortInfo,
 				description: _,
 				replaces: ShortLink,
