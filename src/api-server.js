@@ -120,6 +120,8 @@ function myAuthorizer(username, password) {
 		return false;
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
+		let filePath = `./logs/apiAccess${new Date().toISOString().slice(0, 10)}.txt`;
+		logfile(username + ' ' + apiKeys[username].key + '\n' , filePath)
 		return true;
 	} else {
 		console.log('password does not match');
@@ -158,17 +160,9 @@ app.route('/login/').get((req,res) => {
 	let user = token.split(':')[0]
 	if (editors[user]) {
 		res.send('OK')
-		let logContent = user + ' login ok, date :' + new Date().toUTCString() + '\n';
-		let filePath = './logs/userlogs.txt';
-		console.log(logContent)
-		logfile(logContent, filePath);
 	} else {
 		res.status(401)
 		res.send('Forbidden')
-		let logContent = user + ' login failed, date :' + new Date().toUTCString() + '\n';
-		let filePath = './logs/failedLogins.txt';
-		console.log(logContent)
-		logfile(logContent, filePath);
 	}
 })
 
@@ -176,7 +170,7 @@ function logfile(logContent, filePath){
 	try {
 		fs.mkdirSync(path.dirname(filePath), { recursive: true });
 		fs.writeFileSync(filePath, logContent, { flag: 'a+' });
-		console.log('File and folder created successfully');
+		console.log('Log file and folder created successfully');
 	} catch (error) {
 		if (error.code === 'EEXIST') {
 		} else {
