@@ -7,6 +7,19 @@ const url       = require('url');
 const { v4: uuidv4 } = require('uuid');
 const opendata  = require('./opendata-api.js');
 
+const ignoreUserLogins = {
+	"opendata@slo.nl": true
+};
+const logFolder = path.join(__dirname, '../logs/');
+try {
+	fs.mkdirSync(logFolder, { recursive: true });
+} catch (error) {
+	if (error.code === 'EEXIST') {
+	} else {
+		console.error('Error:', error);
+	}
+}
+
 let JSONTag
 import('@muze-nl/jsontag').then(module => { JSONTag = module.default })
 
@@ -120,6 +133,11 @@ function myAuthorizer(username, password) {
 		return false;
 	}
 	if (basicAuth.safeCompare(password, apiKeys[username].key)) {
+		if(!ignoreUserLogins[username]){
+			let filePath = path.join(__dirname, '../logs', `/access.${new Date().toISOString().slice(0, 10)}.log`);
+			let logContent = username + '\n';
+			fs.writeFileSync(filePath, logContent, { flag: 'a+' });
+		}
 		return true;
 	} else {
 		console.log('password does not match');
