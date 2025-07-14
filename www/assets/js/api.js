@@ -187,7 +187,7 @@
                         }
                     }
                     slo.contexts[schemaLabel] = {
-                        title: schemaName,
+                        title: schemas.contexts[schemaName].title,
                         data: contextData,
                         schema
                     }
