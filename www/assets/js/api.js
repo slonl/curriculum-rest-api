@@ -244,7 +244,7 @@
                 let validColumns = []
                 
                 if (browser.view.user){
-                    validColumns = Object.keys(meta.schemas.types[browser.view.listType].properties)
+                    validColumns = Object.keys(meta.schemas.types[n["@type"]].properties)
                 } else {
                     validColumns = Object.keys(n)
                     .filter(c => c[0].match(/[a-z]/))
