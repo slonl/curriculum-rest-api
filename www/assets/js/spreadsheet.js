@@ -518,10 +518,10 @@ const spreadsheet = (function() {
     }
 
     function findParentRow(row) {
-      let parent = null
       let indent = row.indent
       let line = datamodel.view.visibleData.indexOf(row)
-      while (line && row.indent>=indent) {
+      let parent = datamodel.view.visibleData[line]
+      while (line && parent.indent>=indent) {
         line--
         parent = datamodel.view.visibleData[line]
       }
