@@ -97,7 +97,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 				FoToelichting: shortInfo,
-				FoUitwerking: shortInfo
+				FoUitwerking: shortInfo,
 			})
 
 			const response = {
@@ -116,7 +116,8 @@ module.exports = {
 			.select({
 				...shortInfo,
 				FoDoelzin: shortInfo,
-				unreleased: shortInfo
+				unreleased: shortInfo,
+				description: _,
 			})
 
 			const response = {
@@ -136,6 +137,7 @@ module.exports = {
 				...shortInfo,
 				FoDoelzin: shortInfo,
 				unreleased: _,
+				description: _,
 			})
 	
 			const response = {
@@ -234,7 +236,10 @@ module.exports = {
 				description: _,
 				replaces: ShortLink,
 				FoToelichting: shortInfo,
-				FoUitwerking: shortInfo
+				FoUitwerking: {
+					...shortInfo, 
+					description:  _                        
+				},
 			})
 		`,
 		FoIllustratie: `
