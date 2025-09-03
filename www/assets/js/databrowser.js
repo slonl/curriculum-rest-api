@@ -1929,20 +1929,41 @@ browser = simply.app({
             if (row.deleted) {
                 let change
                 let parent = browser.view.sloSpreadsheet.findParentRow(row)
+                let timestamp = new Date().toISOString()
+                if (row.node.deleted) {
+                    change = new changes.Change({
+                        id: row.node.id ?? row.node.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(row.node)),
+                            title: 'undelete entity '+row.node.title,
+                            type: getType(row.node),
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'undeleteRoot'
+                    })
+                    changes.changes.push(change)
+                }
                 if (parent && parent.node) {
                     let parentNode = parent.node
                     let typeName = getType(row.node)
                     let prevValue = parentNode[typeName].slice()
-                    let newValue = parentNode[typeName].slice()
-                    row.node.undelete(newValue)
+                    let newValue = prevValue.map(e => { 
+                        if (e.id==row.node.id) {
+                            if (e.deleted) {
+                                delete e.deleted
+                            }
+                            return new changes.InsertedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
                     parentNode[typeName] = newValue //Makes sure current datamodel is up to date
-                    let timestamp = new Date().toISOString()
                     change = new changes.Change({
                         id: parentNode.id ?? parentNode.uuid,
                         meta: {
                             context: window.slo.getContextByTypeName(getType(parentNode)),
                             title: 'undelete child in '+parentNode.title,
-                            type: getType(parentNode),   
+                            type: getType(parentNode),
                             timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                         },
                         type: 'undelete',
@@ -1953,7 +1974,6 @@ browser = simply.app({
                     })
                 } else {
                     let node = row.node
-                    let timestamp = new Date().toISOString()
                     change = new changes.Change({
                         id: node.id ?? node.uuid,
                         meta: {
@@ -1967,6 +1987,7 @@ browser = simply.app({
                 }
                 changes.changes.push(change)
                 changes.update()
+
                 //this.app.actions.switchView('spreadsheet')
                 browser.actions.spreadsheetUpdate()
             }
