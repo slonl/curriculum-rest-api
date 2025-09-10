@@ -334,7 +334,7 @@ module.exports = {
 	},
 	typedQueries: {
 		LdkVakleergebied: `
-		const results = from(Index(request.query.id))
+		from(Index(request.query.id))
 		.select({
 			...shortInfo,
 			LdkVakkern: {
@@ -349,19 +349,6 @@ module.exports = {
 				deprecated: _,
 			}
 		})
-
-		results.Niveau
-		.sort((a,b) => a.prefix<b.prefix ? -1 : 1)
-		.map(child => {
-			child['$ref'] =   request.query.baseDatasetURL + "niveau/";+ (child.uuid ?? child.id);
-			if (entry['@type']=='Vakleergebied') {
-				child['$ref'] += '/vakleergebied/' + (entry.uuid ?? entry.id);
-			}
-			return child;
-		});
-			
-		results
-
 		`,
 		LdkVakkern: `
 		from(Index(request.query.id))
