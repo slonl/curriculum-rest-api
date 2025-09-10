@@ -205,7 +205,8 @@ module.exports = {
 				...shortInfo,
 				description: _,
 				replaces: ShortLink,
-				FoSubdomein: shortInfo
+				FoSubdomein: shortInfo,
+			  FoDoelzin: shortInfo
 			})
 		`,
 		FoSubdomein: `
@@ -235,7 +236,7 @@ module.exports = {
 				...shortInfo,
 				description: _,
 				replaces: ShortLink,
-				FoToelichting: shortInfo,
+				FoIllustratie: shortInfo,
 				FoUitwerking: {
 					...shortInfo, 
 					description:  _                        
