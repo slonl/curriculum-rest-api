@@ -65,9 +65,18 @@ apis.forEach(api => {
 function camelize(str) {
 	return str.replace(/_([a-z])/g, (m, p1) => p1.toUpperCase())
 }
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
 
 opendata.api.Id = async (variables, urlQuery) => {
 	let type = await storeQuery(opendata.url+'/query/', `JSONTag.getAttribute(meta.index.id.get('/uuid/${variables.id}'),'class')`)
+	if (type=='Deprecated') {
+		let types = await storeQuery(opendata.url+'/query/', `meta.index.id.get('/uuid/${variables.id}').types`)
+		if (types && types[0]) {
+			type = capitalizeFirstLetter(types[0]) //TODO: fix types property in deprecated entities - first letter is lowercase
+		}
+	}
 	let typedQuery = opendata.typedQueries[type]
 	if (!typedQuery) {
 		console.error('missing typedquery for '+type)
