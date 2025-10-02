@@ -52,10 +52,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
-				'@id': Id,
-				'@type': Type,
-				uuid: _.id,
-				title: _,
+				...shortInfo,
 				Syllabus: {
 					...shortInfo,
 					deprecated: _,
@@ -228,8 +225,8 @@ module.exports = {
 		`,
 		SyllabusVakleergebied: `
 		from(Index(request.query.id))
-			.select({
-				...shortInfo,
+		.select({
+			...shortInfo,
 			Syllabus: {
 				...shortInfo,
 				deprecated: _,
