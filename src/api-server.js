@@ -260,15 +260,18 @@ Object.keys(opendata.routes).forEach((route) => {
 
 app.route("/" + "search/").get((req, res) => {
 	console.log('search for '+req.query.text)
-	request({
-		url: searchUrl + "/search?text=" + req.query.text,
-	}).then((data) => {
+	fetch(searchUrl + "/search?text=" + req.query.text)
+	.then(async (response) => {
 		try {
-			data = JSON.parse(data);
+			let data = await response.json();
 			res.setHeader("Content-Type", "application/json");
+			for (let entry of data) {
+				entry['@references'] = baseDatasetURL + 'uuid/' + entry.id
+				entry['@id'] = baseIdURL + entry.id
+			}
 			res.send(data);
 		} catch (e) {
-			res.error(e);
+			res.status(500).send({ error: 500, message: ''+e});
 		}
 	});
 });
