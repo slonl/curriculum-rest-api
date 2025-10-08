@@ -94,34 +94,34 @@ module.exports = {
 				},
   				ErkSchaal: {
 					...ShortLink,
-					category: _,
-					ErkGebied: {
+					category: many(_),
+					ErkGebied: many({
 						...ShortLink,
-					},
-					ErkCategorie: {
+					}),
+					ErkCategorie: many({
 						...ShortLink,
-						ErkGebied: {
-							...ShortLink,				
-						},
-					},
-					ErkTaalactiviteit: {
+						ErkGebied: many({
 						...ShortLink,
-						category: _,
-						ErkCategorie: {
+						}),
+					}),
+					ErkTaalactiviteit: many({
+						...ShortLink,
+						category: many(_),
+						ErkCategorie: many({
 							...ShortLink,
-							ErkGebied: {
+							ErkGebied: many({
 								...ShortLink,
-							},
-						},
-					},
-					ErkCandobeschrijving : {
+							}),
+						}),
+					}),
+					ErkCandobeschrijving: {
 						...ShortLink,
 						Niveau: {
 							...NiveauShort,
 						},
-						ErkVoorbeeld: {
+						ErkVoorbeeld: many({
 							...ShortLink,
-						},
+						}),
 					}
 				},
 				unreleased: _,
