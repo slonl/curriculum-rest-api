@@ -235,6 +235,7 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoDoelzin',
 				...shortInfo,
 				description: _,
+				soort: _,
 				replaces: ShortLink,
 				FoIllustratie: shortInfo,
 				FoUitwerking: {
