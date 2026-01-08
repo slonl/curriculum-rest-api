@@ -157,6 +157,18 @@ module.exports = {
 			title: _,
 			deprecated: _,
 		}
+		const ReplacesLink = o => from(o.replaces?.map(
+				idUri => meta.index.id.get('/uuid/'+idUri.split('/').pop())
+			))
+		  	.select(
+		  		ShortLink
+		  	)
+		const ReplacedByLink = o => from(o.replacedBy?.map(
+				idUri => meta.index.id.get('/uuid/'+idUri.split('/').pop())
+			))
+		  	.select(
+		  		ShortLink
+		  	)
 		const PageSize = Math.max(10, Math.min(1000, parseInt(request.query.pageSize || request.query.perPage || '100')))
 		const Page = parseInt(request.query.page || '0')
 		const Paging = {
@@ -173,6 +185,8 @@ module.exports = {
 		    title: _,
 			deleted: _,
 			dirty: _,
+			replaces: ReplacesLink,
+			replacedBy: ReplacedByLink,
 			'@references': References,
 		};
 
@@ -331,7 +345,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				KerndoelVakleergebied: ShortLink,
 				ExamenprogrammaVakleergebied: ShortLink,
 				SyllabusVakleergebied: ShortLink,
@@ -345,41 +358,41 @@ module.exports = {
 		`,
 		Niveau: `
 		from(Index(request.query.id))
-		.select({
-			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
-			...shortInfo,
-			description: _,
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+				...shortInfo,
+				description: _
 			})
 		`,
 		Doel: `
 		from(Index(request.query.id))
-		.select({
-			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
-			...shortInfo,
-			sloID: _,
-			description: _,
-			bron: _,
-		})
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+				...shortInfo,
+				sloID: _,
+				description: _,
+				bron: _
+			})
 		`,
 		Doelniveau:`
 		from(Index(request.query.id))
-		.select({
-			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
-			...shortInfo,
-			ce_se: _,
-			Doel: {
-				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
 				...shortInfo,
-				description: _,
-				vakbegrippen: _,
-				bron: _,
-				aanbodid: _,
-				Leerlingtekst: {
-					title: _,
+				ce_se: _,
+				Doel: {
+					'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+					...shortInfo,
 					description: _,
-				}     
-			},
-		})
+					vakbegrippen: _,
+					bron: _,
+					aanbodid: _,
+					Leerlingtekst: {
+						title: _,
+						description: _,
+					}     
+				},
+			})
 		`,
 	},
 	routes: {
