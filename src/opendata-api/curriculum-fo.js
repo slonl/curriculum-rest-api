@@ -11,6 +11,28 @@ module.exports = {
 
 			results
 		`,
+		FoKerndoelen: `
+			const results = from(data.FoSet)
+			.where({
+				settype: anyOf('kerndoelenset','functionele kerndoelenset')
+			})
+			.orderBy({
+			title: asc
+			})
+
+			results
+		`,
+		FoExamenprogrammas: `
+			const results = from(data.FoSet)
+			.where({
+				settype: 'examenprogramma'
+			})
+			.orderBy({
+			title: asc
+			})
+
+			results
+		`,
 
 		FoSet: `
 		const results = from(data.FoSet)
@@ -260,6 +282,8 @@ module.exports = {
 	},
 	routes: {
 		'fo_volledig/': (req) => opendata.api["FoVolledig"](req.params, req.query),
+		'fo_kerndoelen/': (req) => opendata.api["FoKerndoelen"](req.params, req.query),
+		'fo_examenprogrammas/': (req) => opendata.api["FoExamenprogrammas"](req.params, req.query),
 		'fo_set/': (req) => opendata.api["FoSet"](req.params, req.query),
 		'fo_domein/': (req) => opendata.api["FoDomein"](req.params, req.query),
 		'fo_subdomein/': (req) => opendata.api["FoSubdomein"](req.params, req.query),
