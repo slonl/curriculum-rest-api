@@ -159,7 +159,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoSet',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoDomein: {
                   ...shortInfo,
 					description: _,
@@ -204,7 +203,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoDomein',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoSubdomein: shortInfo,
 			  FoDoelzin: shortInfo
 			})
@@ -215,7 +213,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoSubdomein',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoDoelzin: shortInfo
 			})
 		`,
@@ -225,7 +222,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoKernzin',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoDoelzin: shortInfo
 			})
 		`,
@@ -236,7 +232,6 @@ module.exports = {
 				...shortInfo,
 				description: _,
 				soort: _,
-				replaces: ShortLink,
 				FoIllustratie: shortInfo,
 				FoUitwerking: {
 					...shortInfo, 
@@ -250,7 +245,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoIllustratie',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoDoelzin: shortInfo
 			})
 		`,
@@ -260,7 +254,6 @@ module.exports = {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/fo.jsonld#FoUitwerking',
 				...shortInfo,
 				description: _,
-				replaces: ShortLink,
 				FoDoelzin: shortInfo
 			})
 		`
