@@ -1,3 +1,5 @@
+import changes from './changes.mjs'
+
 let niveaus = []
 export async function importXLSX(file, schemas, levels) {
 	var errors = []
@@ -127,7 +129,14 @@ function createNode(row, line, tree) {
 					property = property.toLowerCase()
 				}
 				if (!schema.properties[property]) {
-					tree.errors.push(new Error('Onbekende property: '+property, {cause:node}))
+					if (property=='delete' || property=='Delete') {
+						if (node[property].trim()=='x') {
+							node.$mark = 'deleted' // CHECK: use DeletedLink here?
+						}
+						delete node[property]
+					} else {
+						tree.errors.push(new Error('Onbekende property: '+property, {cause:node}))
+					}
 				} else {
 					switch(schema.properties[property].type) {
 						case 'string':
@@ -227,10 +236,22 @@ function linkNodes(tree) {
 				if (!parent[node['@type']]) {
 					parent[node['@type']] = []
 				}
-				if (tree.schemas.types[parent['@type']].properties[node['@type']]?.type=='object') {
-					parent[node['@type']] = node // erk_vakleergebied.vakleergebied_id is not an array, for example.
+				if (!tree.schemas.types[parent['@type']]) {
+					  tree.errors.push(new Error('Onbekende entiteit type: '+parent['@type'],{cause:parent}))
+						return
+				}
+				if (node.$deleted?.includes(parent.id)) {
+					if (tree.schemas.types[parent['@type']].properties[node['@type']]?.type=='object') {
+						parent[node['@type']] = new changes.DeletedLink(node)
+					} else {
+						parent[node['@type']].push(new changes.DeletedLink(node))
+					}
 				} else {
-					parent[node['@type']].push(node)
+					if (tree.schemas.types[parent['@type']].properties[node['@type']]?.type=='object') {
+						parent[node['@type']] = node // erk_vakleergebied.vakleergebied_id is not an array, for example.
+					} else {
+						parent[node['@type']].push(node)
+					}
 				}
 			})
 		}
@@ -242,7 +263,16 @@ function combineNodes(nodes) {
 	nodes.forEach(node => {
 		Object.entries(node).forEach(([key, value]) => {
 			if (key=='$mark') {
-				combined[key] = value
+				if (value=='deleted') {
+					// the node itself is not deleted, just the link from the parent to this node
+					if (!combined.$deleted) {
+						combined.$deleted = []
+					}
+					// keep track of all parents from which this node is deleted
+					combined.$deleted.push(node.$parentId)
+				} else {
+					combined[key] = value
+				}
 			} else if (key[0]=='$' || key=='$parentId') {
 				if (!combined[key]) {
 					combined[key] = []
