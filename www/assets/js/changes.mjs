@@ -36,7 +36,7 @@ const walk = (node, f) => {
  * This class is a placeholder (tombstone) for an entity that was linked
  * in a parent entity array, but is now deleted.
  */
-class DeletedLink {
+export class DeletedLink {
     #actualNode;
     constructor(node) {
         Object.assign(this, node)
@@ -705,6 +705,9 @@ const changes = (()=> {
                     node[prop] = localNode[prop]
                 } else if (Array.isArray(localNode[prop])) {
                     node[prop] = localNode[prop].map(e => {
+                        if (e.$deleted && e.$deleted.includes(node.id)) {
+                            return new DeletedLink(e)
+                        }
                         if (e.$mark) {
                             return e
                         }
@@ -730,14 +733,18 @@ const changes = (()=> {
             for (let prop of Object.keys(node)) {
                 if (Array.isArray(node[prop])) {
                     node[prop].forEach((v,i) => {
-                        if (v.id && localEntities[v.id]) {
+                        if (v.$deleted && v.$deleted.includes(node.id)) {
+                            // leave it as deleted
+                        } else if (v.id && localEntities[v.id]) {
                             v = localEntities[v.id]
                             Object.assign(node[prop][i], v)
                         }
                         resolveLink(node[prop],i)
                     })
                 } else if (node[prop]?.id && localEntities[node[prop].id]) {
-                    Object.assign(node[prop], localEntities[node[prop].id])
+                    if (!node[prop].$deleted || !node[prop].$deleted.includes(node.id)) {
+                        Object.assign(node[prop], localEntities[node[prop].id])
+                    }
                 }
                 resolveLink(node, prop)
             }
