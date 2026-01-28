@@ -1296,24 +1296,26 @@ browser = simply.app({
                     //wip dropping links
                     const spreadsheetBody = document.querySelector('#slo-spreadsheet tbody')
                     let overRow = null
-                    let linkInfo = {}
-                    function getLinkInfo(link) {
+                    let linkedNode = {}
+                    function getLinkedNode(link) {
                         if (link.host==='opendata.slo.nl') {
                             let path = link.pathname.split('/')
                             let uuid = path.pop()
                             let check = path.pop()
+                            linkedNode['@id'] = link.href
                             if (check==='uuid') {
-                                linkInfo.uuid = uuid
+                                linkedNode.uuid = uuid
                             } else {
-                                linkInfo.uuid = false
+                                linkedNode.uuid = false
                             }
-                            slo.api.get('uuid/'+linkInfo.uuid).then(data => {
-                                if (data['@type']) {
-                                    linkInfo.type = data['@type']
-                                }
+                            slo.api.get('uuid/'+linkedNode.uuid)
+                            .then(data => {
+                                Object.assign(linkedNode, data)
+                                return linkedNode
                             })
-                        // } else {
-                        //     console.log('no valid host',link.host)
+                        } else {
+                            //     console.log('no valid host',link.host)
+                            linkedNode = {}
                         }
                     }
                     function isValidDrop(entityType, dropType) {
@@ -1330,17 +1332,27 @@ browser = simply.app({
                         let link = event.dataTransfer?.getData("URL");
                         if (link) {
                             link = new URL(link)
-                            if (link.href!==linkInfo.href) {
-                                linkInfo.href = link.href
-                                getLinkInfo(link)
+                            if (link.href!==linkedNode.href) {
+                                linkedNode.href = link.href
+                                getLinkedNode(link)
                             }
                         }
                         return link
                     }
+                    spreadsheetBody.addEventListener('dragstart', (event) => {
+                        let link = getLink(event)
+                        if (linkedNode.uuid) {
+                            Object.defineProperty(linkedNode, 'root', {
+                                enumerable: false,
+                                value: browser.view.root
+                            })
+                            linkedNode.row = event.target.closest('tr')
+                        }
+                    })
                     spreadsheetBody.addEventListener('dragenter', (event) => {
                         let link = getLink(event)
-                        if (linkInfo.uuid) {
-//                            console.log('dragenter with link', link, linkInfo.uuid)
+                        if (linkedNode.uuid) {
+//                            console.log('dragenter with link', link, linkedNode.uuid)
                             if (overRow) {
                                 overRow.classList.remove('slo-drop-over-valid')
                                 overRow.classList.remove('slo-drop-over-invalid')
@@ -1348,7 +1360,7 @@ browser = simply.app({
                             overRow = event.target.closest('tr')
                             if (overRow) {
                                 let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
-                                if (rows.length && isValidDrop(rows[0].node['@type'], linkInfo.type)) {
+                                if (rows.length && isValidDrop(rows[0].node['@type'], linkedNode.type)) {
                                     overRow.classList.add('slo-drop-over-valid')
                                 } else {
                                     overRow.classList.add('slo-drop-over-invalid')
@@ -1359,15 +1371,34 @@ browser = simply.app({
                     })
                     spreadsheetBody.addEventListener('dragover', (event) => {
                         getLink(event)
-                        if (linkInfo.uuid) {
+                        if (linkedNode.uuid) {
                             event.preventDefault()
                         }                        
                     })
                     spreadsheetBody.addEventListener('drop', (event) => {
                         getLink(event)
-                        if (linkInfo.uuid) {
+                        if (linkedNode.uuid) {
+                            //WIP: move/copy linked entity
+                            overRow = event.target.closest('tr')
+                            if (overRow) {
+                                let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                                if (rows.length && isValidDrop(rows[0].node['@type'], linkedNode.type)) {
+                                    // if linkedNode.uuid is part of this tree, move it
+                                    if (linkedNode.root == browser.view.root) {
+                                        //   this means removing it from its current parent
+                                        browser.actions.deleteRow(linkedNode.row)
+                                    }
+                                    // then add it to the new parent
+                                    browser.actions.copyNode(overRow, linkedNode)
+                                } else {
+                                    // error of negeren?
+                                }
+                            } else {
+                                //alert error? of negeren?
+                            }
                             console.log(event)
                             event.preventDefault()
+                            linkedNode = {}
                         }
                     })
                 break;
@@ -1829,6 +1860,42 @@ browser = simply.app({
             .catch(function(error) {
                 browser.actions.handleAPIError(error)
             })
+        },
+        copyNode: async function(rowEl, node) {
+            if (!browser.view.user) return
+            let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let line = row.index
+            let parentNode = row.node
+            let typeName = window.slo.getTypeNameByType(type)
+            let id = uuid()
+            if (!parentNode[typeName]) {
+                parentNode[typeName] = []
+            }
+            let prevValue = parentNode[typeName].slice()
+            let newValue = parentNode[typeName].slice()
+            newValue.unshift(new changes.InsertedLink(node))
+            // now add this to the change history
+            let timestamp =  new Date().toISOString()
+            let change = new changes.Change({
+                id: parentNode.id ?? parentNode.uuid,
+                meta: {
+                    context: window.slo.getContextByTypeName(getType(parentNode)),
+                    title: 'addChild to '+parentNode.title,
+                    type: getType(parentNode),                    
+                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                },
+                type: 'insert',
+                property: typeName,
+                prevValue: prevValue,
+                newValue: newValue,
+                dirty: true,
+            })
+            changes.changes.push(change)
+            changes.update()
+            await browser.actions.spreadsheetUpdate()
+            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+            rows = rows.filter(r => r.index>line)
+            return rows[0]
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
