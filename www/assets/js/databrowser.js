@@ -1151,9 +1151,6 @@ browser = simply.app({
             }
         },
         removeFilterText: async function(elementId) {
-            console.log("removing element: ", elementId);
-            console.log(document.getElementById(elementId).innerHTML)
-            
             let element = document.getElementById(elementId);
             element.replaceChildren();
         },
@@ -1302,15 +1299,27 @@ browser = simply.app({
                             let path = link.pathname.split('/')
                             let uuid = path.pop()
                             let check = path.pop()
-                            linkedNode['@id'] = link.href
+                            linkedNode = {
+                                '@id': link.href
+                            }
                             if (check==='uuid') {
                                 linkedNode.uuid = uuid
                             } else {
                                 linkedNode.uuid = false
                             }
+                            linkedNode.href = link.href
+                            // FIXME: use local api?
+                            // FIXME: linkedNode now contains parent properties, since /uuid/{id} returns those
+                            // that will create a cyclic data structure in changes, so clean it up
                             slo.api.get('uuid/'+linkedNode.uuid)
                             .then(data => {
-                                Object.assign(linkedNode, data)
+                                const type = data['@type']
+                                const typeSchema = meta.schemas.types[type]
+                                for (const prop in data) {
+                                    if (prop[0] == '@' || typeSchema.properties[prop] || typeSchema.children[prop]) {
+                                        linkedNode[prop] = data[prop]
+                                    }
+                                }
                                 return linkedNode
                             })
                         } else {
@@ -1318,85 +1327,100 @@ browser = simply.app({
                             linkedNode = {}
                         }
                     }
-                    function isValidDrop(entityType, dropType) {
-                        if (entityType==dropType) {
-                            return true
-                        }
-                        if (meta.schemas.types[entityType].children[dropType]) {
-                            return true 
-                        }
-                        return false
-                    }
-
-                    function getLink(event) {
-                        let link = event.dataTransfer?.getData("URL");
-                        if (link) {
-                            link = new URL(link)
-                            if (link.href!==linkedNode.href) {
-                                linkedNode.href = link.href
-                                getLinkedNode(link)
+                    function getLink(event, start=false) {
+                        let link
+                        if (start) {
+                            // linkedNode is row.node
+                            let row = browser.view.sloSpreadsheet.getRow(event.target.closest('tr'))
+                            linkedNode = row.node
+                            link = new URL(linkedNode['@id'])
+                            linkedNode.uuid = link.pathname.split('/').pop()
+                            linkedNode.href = link.href
+                        } else {
+                            link = event.dataTransfer?.getData("text/uri-list");
+                            if (link) {
+                                link = new URL(link)
+                                if (link.href!==linkedNode.href) {
+                                    linkedNode.href = link.href
+                                    // do an api call
+                                    getLinkedNode(link)
+                                }
                             }
                         }
                         return link
                     }
+
+                    function getLinkType(event) {
+                        return Array.from(event.dataTransfer.types)
+                            ?.filter(t => t.startsWith('x-slo-type/'))
+                            ?.map(t => toCamelCase(t.substring('x-slo-type/'.length)))
+                            ?.pop()
+                    }
+
                     spreadsheetBody.addEventListener('dragstart', (event) => {
-                        let link = getLink(event)
+                        let link = getLink(event, 'start')
                         if (linkedNode.uuid) {
                             Object.defineProperty(linkedNode, 'root', {
                                 enumerable: false,
                                 value: browser.view.root
                             })
-                            linkedNode.row = event.target.closest('tr')
+                            const snake_type = to_snake_case(linkedNode['@type'])
+                            event.dataTransfer.setData('x-slo-type/'+snake_type, linkedNode.href)
+                            event.dataTransfer.setData('text/uri-list',linkedNode.href)
                         }
                     })
+
                     spreadsheetBody.addEventListener('dragenter', (event) => {
-                        let link = getLink(event)
-                        if (linkedNode.uuid) {
-//                            console.log('dragenter with link', link, linkedNode.uuid)
-                            if (overRow) {
-                                overRow.classList.remove('slo-drop-over-valid')
-                                overRow.classList.remove('slo-drop-over-invalid')
-                            }
-                            overRow = event.target.closest('tr')
-                            if (overRow) {
-                                let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
-                                if (rows.length && isValidDrop(rows[0].node['@type'], linkedNode.type)) {
-                                    overRow.classList.add('slo-drop-over-valid')
-                                } else {
-                                    overRow.classList.add('slo-drop-over-invalid')
-                                }
-                            }
-                            event.preventDefault()
+                        const linkType = getLinkType(event)
+                        if (overRow) {
+                            overRow.classList.remove('slo-drop-over-valid')
+                            overRow.classList.remove('slo-drop-over-invalid')
+                            overRow.classList.remove('slo-drop-over-unknown')
                         }
+                        overRow = event.target.closest('tr')
+                        if (overRow) {
+                            let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                            if (!linkType) {
+                                overRow.classList.add('slo-drop-over-unknown')
+                            } else if (rows.length && isValidDrop(rows[0].node['@type'], linkType)) {
+                                overRow.classList.add('slo-drop-over-valid')
+                            } else {
+                                overRow.classList.add('slo-drop-over-invalid')
+                            }
+                        }
+                        event.preventDefault()
                     })
                     spreadsheetBody.addEventListener('dragover', (event) => {
-                        getLink(event)
-                        if (linkedNode.uuid) {
-                            event.preventDefault()
-                        }                        
+                        const linkType = getLinkType(event)
+                        event.preventDefault()
                     })
                     spreadsheetBody.addEventListener('drop', (event) => {
-                        getLink(event)
+                        const link = getLink(event)
+                        if (overRow) {
+                            overRow.classList.remove('slo-drop-over-valid')
+                            overRow.classList.remove('slo-drop-over-invalid')
+                            overRow.classList.remove('slo-drop-over-unknown')
+                        }
+                        overRow = event.target.closest('tr')
                         if (linkedNode.uuid) {
                             //WIP: move/copy linked entity
-                            overRow = event.target.closest('tr')
                             if (overRow) {
-                                let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
-                                if (rows.length && isValidDrop(rows[0].node['@type'], linkedNode.type)) {
-                                    // if linkedNode.uuid is part of this tree, move it
-                                    if (linkedNode.root == browser.view.root) {
-                                        //   this means removing it from its current parent
-                                        browser.actions.deleteRow(linkedNode.row)
+                                //let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                                const row = browser.view.sloSpreadsheet.getRow(overRow)
+                                if (row && isValidDrop(row.node['@type'], linkedNode['@type'])) {
+                                    if (linkedNode['@id']==row.node['@id']) {
+                                        // do nothing
+                                    } else if (linkedNode.root['@id'] == browser.view.root['@id']) {
+                                        browser.actions.moveNode(row, linkedNode)
+                                    } else {
+                                        browser.actions.copyNode(row, linkedNode)
                                     }
-                                    // then add it to the new parent
-                                    browser.actions.copyNode(overRow, linkedNode)
                                 } else {
                                     // error of negeren?
                                 }
                             } else {
                                 //alert error? of negeren?
                             }
-                            console.log(event)
                             event.preventDefault()
                             linkedNode = {}
                         }
@@ -1779,7 +1803,6 @@ browser = simply.app({
                 let localData = changes.getLocalView(json.data)
                 browser.view.list = localData;
                 browser.view['listTitle'] = window.titles[type];
-                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
@@ -1816,7 +1839,6 @@ browser = simply.app({
                 browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
                 browser.view['listTitle'] = window.titles[type];
-                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging();
             })
             .catch(function(error) {
@@ -1861,41 +1883,99 @@ browser = simply.app({
                 browser.actions.handleAPIError(error)
             })
         },
-        copyNode: async function(rowEl, node) {
+        moveNode: async function(row, node) {
+            // create a single change that removes node from its current parent
+            // and inserts it at the correct position in its new parent
             if (!browser.view.user) return
-            let row = browser.view.sloSpreadsheet.getRow(rowEl)
+            let parentNode = changes.getLocalView(row.node) // so that previous delete is found
             let line = row.index
-            let parentNode = row.node
-            let typeName = window.slo.getTypeNameByType(type)
-            let id = uuid()
-            if (!parentNode[typeName]) {
-                parentNode[typeName] = []
+            let typeName = node['@type']
+            let change
+            if (isValidParent(row.node['@type'],node['@type'])) {
+                console.log('move valid parent',row,node['@type'])
+                // TODO check that move will actually change anything
+                // so the dragged node is not already at the drop location
+            } else if (isValidSibling(row.node['@type'],node['@type'])) {
+                //TODO: move immediately after row.node in parent of row.node
+                console.log('move valid sibling',row,node['@type'])
+                // TODO check that move will actually change anything
+                // so the dragged node is not already at the drop location
+                // find parent
+                // find position of row.node in parent[row.node['@type']]
+                // copy list (prevValue)
+                // splice newValue
+                // create change
+                debugger;
+            } else {
+                console.log('move invalid drop',row,node['@type'])
+                debugger;
             }
-            let prevValue = parentNode[typeName].slice()
-            let newValue = parentNode[typeName].slice()
-            newValue.unshift(new changes.InsertedLink(node))
-            // now add this to the change history
-            let timestamp =  new Date().toISOString()
-            let change = new changes.Change({
-                id: parentNode.id ?? parentNode.uuid,
-                meta: {
-                    context: window.slo.getContextByTypeName(getType(parentNode)),
-                    title: 'addChild to '+parentNode.title,
-                    type: getType(parentNode),                    
-                    timestamp: timestamp.substring(0, timestamp.indexOf('.'))
-                },
-                type: 'insert',
-                property: typeName,
-                prevValue: prevValue,
-                newValue: newValue,
-                dirty: true,
-            })
-            changes.changes.push(change)
-            changes.update()
-            await browser.actions.spreadsheetUpdate()
-            let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
-            rows = rows.filter(r => r.index>line)
-            return rows[0]
+            if (change) {
+                changes.changes.push(change)
+                changes.update()
+                await browser.actions.spreadsheetUpdate()
+                let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+                rows = rows.filter(r => r.index>line)
+                return rows[0]
+            }                
+        },
+        copyNode: async function(row, node) {
+            if (!browser.view.user) return
+            let parentNode = changes.getLocalView(row.node) // so that previous delete is found
+            let line = row.index
+            let typeName = node['@type']
+            let change
+            if (isValidParent(row.node['@type'],node['@type'])) {
+                // TODO check that node is not already a child of row.node
+                console.log('valid parent',row,node['@type'])
+                debugger;
+                let parentNode = row.node
+                let id = uuid()
+                if (!parentNode[typeName]) {
+                    parentNode[typeName] = []
+                }
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                // move to firstChild of parent
+                newValue.unshift(new changes.InsertedLink(node))
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+            } else if (isValidSibling(row.node['@type'],node['@type'])) {
+                // TODO check that node is not already a sibling of row.node
+                //TODO: move immediately after row.node in parent of row.node
+                console.log('valid sibling',row,node['@type'])
+                // find parent
+                // find position of row.node in parent[row.node['@type']]
+                // copy list (prevValue)
+                // splice newValue
+                // create change
+                debugger;
+            } else {
+                console.log('invalid drop',row,node['@type'])
+                debugger;
+            }
+            if (change) {
+                changes.changes.push(change)
+                changes.update()
+                await browser.actions.spreadsheetUpdate()
+                let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+                rows = rows.filter(r => r.index>line)
+                return rows[0]
+            }
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
@@ -2328,6 +2408,37 @@ browser = simply.app({
         }
     }
 });
+
+function toCamelCase(str) {
+  return str
+  .replace(/^([a-z])/g, group => group.toUpperCase())
+  .replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  )
+}
+function to_snake_case(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+}
+function isValidDrop(entityType, drop_type) {
+    const dropType = toCamelCase(drop_type)
+    return isValidParent(entityType, dropType)
+        || isValidSibling(entityType,dropType)
+}
+function isValidParent(entityType, dropType) {
+    if (meta.schemas.types[entityType].children[dropType]) {
+        return true 
+    }
+    return false                        
+}
+function isValidSibling(entityType, dropType) {
+    if (entityType==dropType) {
+        return true
+    }                        
+    return false
+}
 
 browser.view.pageSize = 100;
 browser.view.page = 1;

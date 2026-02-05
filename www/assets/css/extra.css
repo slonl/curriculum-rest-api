@@ -704,6 +704,9 @@ pre {
     font-size: 1.1rem;
 }
 
+.slo-drop-over-unknown td {
+    box-shadow: inset 0 -2px grey;
+}
 .slo-drop-over-valid td {
     box-shadow: inset 0 -2px green;
 }
