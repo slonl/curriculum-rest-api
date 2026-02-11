@@ -1370,14 +1370,25 @@ browser = simply.app({
                         }
                     })
 
+                    spreadsheetBody.addEventListener('dragleave', (event) => {
+                         const leaveRow = event.target?.closest('tr')
+                         const enterRow = event.relatedTarget?.closest('tr')
+                         if (leaveRow!=enterRow && enterRow!=overRow) {
+                             overRow.classList.remove('slo-drop-over-valid')
+                             overRow.classList.remove('slo-drop-over-invalid')
+                             overRow.classList.remove('slo-drop-over-unknown')
+                         }
+                    })
+
                     spreadsheetBody.addEventListener('dragenter', (event) => {
                         const linkType = getLinkType(event)
-                        if (overRow) {
+                        const enterRow = event.target?.closest('tr')
+                        if (overRow && enterRow!=overRow) {
                             overRow.classList.remove('slo-drop-over-valid')
                             overRow.classList.remove('slo-drop-over-invalid')
                             overRow.classList.remove('slo-drop-over-unknown')
                         }
-                        overRow = event.target.closest('tr')
+                        overRow = enterRow
                         if (overRow) {
                             let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
                             if (!linkType) {
@@ -1391,7 +1402,7 @@ browser = simply.app({
                         event.preventDefault()
                     })
                     spreadsheetBody.addEventListener('dragover', (event) => {
-                        const linkType = getLinkType(event)
+                        //const linkType = getLinkType(event)
                         event.preventDefault()
                     })
                     spreadsheetBody.addEventListener('drop', (event) => {
