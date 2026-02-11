@@ -1364,6 +1364,12 @@ browser = simply.app({
                                 enumerable: false,
                                 value: browser.view.root
                             })
+                            const row = browser.view.sloSpreadsheet.getRow(event.target.closest('tr'))
+                            const parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+                            Object.defineProperty(linkedNode, 'dragParent', {
+                                enumerable: false,
+                                value: parentRow?.node
+                            })
                             const snake_type = to_snake_case(linkedNode['@type'])
                             event.dataTransfer.setData('x-slo-type/'+snake_type, linkedNode.href)
                             event.dataTransfer.setData('text/uri-list',linkedNode.href)
@@ -1898,25 +1904,151 @@ browser = simply.app({
             // create a single change that removes node from its current parent
             // and inserts it at the correct position in its new parent
             if (!browser.view.user) return
-            let parentNode = changes.getLocalView(row.node) // so that previous delete is found
+            let parentNode = row.node
             let line = row.index
             let typeName = node['@type']
             let change
+            const prevParent = node.dragParent
             if (isValidParent(row.node['@type'],node['@type'])) {
-                console.log('move valid parent',row,node['@type'])
-                // TODO check that move will actually change anything
-                // so the dragged node is not already at the drop location
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                if (currIndex==0) {
+                    // nothing to do
+                    return
+                }
+                let id = uuid()
+                if (!parentNode[typeName]) {
+                    parentNode[typeName] = []
+                }
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                if (prevParent==parentNode) {
+                    // remove from current position
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                }
+                // move to firstChild of parent
+                newValue.unshift(new changes.InsertedLink(node))
+
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+                if (prevParent!=parentNode) {
+                    // add a change to remove node from its old parent
+                    changes.changes.push(change)
+                    let prevValue = prevParent[typeName].slice()
+                    let newValue = prevParent[typeName].slice()
+                    //const prevIndex = prevParent[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                    //FIXMEnewValue = newValue.splice(prevIndex, 1)
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                    change = new changes.Change({
+                        id: prevParent.id ?? prevParent.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(prevParent)),
+                            title: 'removeChild from '+prevParent.title,
+                            type: getType(prevParent),                    
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'delete',
+                        property: typeName,
+                        prevValue: prevValue,
+                        newValue: newValue,
+                        dirty: true,
+                    })
+                }
             } else if (isValidSibling(row.node['@type'],node['@type'])) {
-                //TODO: move immediately after row.node in parent of row.node
-                console.log('move valid sibling',row,node['@type'])
-                // TODO check that move will actually change anything
-                // so the dragged node is not already at the drop location
-                // find parent
-                // find position of row.node in parent[row.node['@type']]
-                // copy list (prevValue)
-                // splice newValue
-                // create change
-                debugger;
+                parentNode = browser.view.sloSpreadsheet.findParentRow(row)?.node
+                if (!parentNode) {
+                    return
+                }
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                const siblingIndex = parentNode[typeName]?.findIndex(n => n['@id'] == row.node['@id'])
+                if (currIndex==(siblingIndex+1)) {
+                    // nothing to do
+                    return
+                }
+                let id = uuid()
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                if (prevParent==parentNode) {
+                    // remove from current position
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                }
+                // move to siblingIndex+1 of parent
+                newValue.splice(siblingIndex+1, 0, new changes.InsertedLink(node))
+
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+                if (prevParent!=parentNode) {
+                    // add a change to remove node from its old parent
+                    changes.changes.push(change)
+                    let prevValue = prevParent[typeName].slice()
+                    let newValue = prevParent[typeName].slice()
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                    change = new changes.Change({
+                        id: prevParent.id ?? prevParent.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(prevParent)),
+                            title: 'removeChild from '+prevParent.title,
+                            type: getType(prevParent),                    
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'delete',
+                        property: typeName,
+                        prevValue: prevValue,
+                        newValue: newValue,
+                        dirty: true,
+                    })
+                }
             } else {
                 console.log('move invalid drop',row,node['@type'])
                 debugger;
@@ -1932,15 +2064,17 @@ browser = simply.app({
         },
         copyNode: async function(row, node) {
             if (!browser.view.user) return
-            let parentNode = changes.getLocalView(row.node) // so that previous delete is found
+            let parentNode = row.node
             let line = row.index
             let typeName = node['@type']
             let change
             if (isValidParent(row.node['@type'],node['@type'])) {
-                // TODO check that node is not already a child of row.node
-                console.log('valid parent',row,node['@type'])
-                debugger;
                 let parentNode = row.node
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['2id'])
+                if (currIndex != -1) {
+                    console.error('copyNode where node already is a child of this parent')
+                    return
+                }
                 let id = uuid()
                 if (!parentNode[typeName]) {
                     parentNode[typeName] = []
@@ -1970,11 +2104,32 @@ browser = simply.app({
                 //TODO: move immediately after row.node in parent of row.node
                 console.log('valid sibling',row,node['@type'])
                 // find parent
+                const parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+                const siblingNode = row.now
+                parentNode = parentRow.node
                 // find position of row.node in parent[row.node['@type']]
+                const siblingPos = parentNode[siblingNode['@type']].indexOf(siblingNode)
                 // copy list (prevValue)
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()                
                 // splice newValue
+                newValue.splice(siblingPos, 0, new Changes.InsertedLink(node))
                 // create change
-                debugger;
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
             } else {
                 console.log('invalid drop',row,node['@type'])
                 debugger;
