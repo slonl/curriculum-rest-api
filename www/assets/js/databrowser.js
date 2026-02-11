@@ -1151,9 +1151,6 @@ browser = simply.app({
             }
         },
         removeFilterText: async function(elementId) {
-            console.log("removing element: ", elementId);
-            console.log(document.getElementById(elementId).innerHTML)
-            
             let element = document.getElementById(elementId);
             element.replaceChildren();
         },
@@ -1296,78 +1293,153 @@ browser = simply.app({
                     //wip dropping links
                     const spreadsheetBody = document.querySelector('#slo-spreadsheet tbody')
                     let overRow = null
-                    let linkInfo = {}
-                    function getLinkInfo(link) {
+                    let linkedNode = {}
+                    function getLinkedNode(link) {
                         if (link.host==='opendata.slo.nl') {
                             let path = link.pathname.split('/')
                             let uuid = path.pop()
                             let check = path.pop()
-                            if (check==='uuid') {
-                                linkInfo.uuid = uuid
-                            } else {
-                                linkInfo.uuid = false
+                            linkedNode = {
+                                '@id': link.href
                             }
-                            slo.api.get('uuid/'+linkInfo.uuid).then(data => {
-                                if (data['@type']) {
-                                    linkInfo.type = data['@type']
+                            if (check==='uuid') {
+                                linkedNode.uuid = uuid
+                            } else {
+                                linkedNode.uuid = false
+                            }
+                            linkedNode.href = link.href
+                            // FIXME: use local api?
+                            // FIXME: linkedNode now contains parent properties, since /uuid/{id} returns those
+                            // that will create a cyclic data structure in changes, so clean it up
+                            slo.api.get('uuid/'+linkedNode.uuid)
+                            .then(data => {
+                                const type = data['@type']
+                                const typeSchema = meta.schemas.types[type]
+                                for (const prop in data) {
+                                    if (prop[0] == '@' || typeSchema.properties[prop] || typeSchema.children[prop]) {
+                                        linkedNode[prop] = data[prop]
+                                    }
                                 }
+                                return linkedNode
                             })
-                        // } else {
-                        //     console.log('no valid host',link.host)
+                        } else {
+                            //     console.log('no valid host',link.host)
+                            linkedNode = {}
                         }
                     }
-                    function isValidDrop(entityType, dropType) {
-                        if (entityType==dropType) {
-                            return true
-                        }
-                        if (meta.schemas.types[entityType].children[dropType]) {
-                            return true 
-                        }
-                        return false
-                    }
-
-                    function getLink(event) {
-                        let link = event.dataTransfer?.getData("URL");
-                        if (link) {
-                            link = new URL(link)
-                            if (link.href!==linkInfo.href) {
-                                linkInfo.href = link.href
-                                getLinkInfo(link)
+                    function getLink(event, start=false) {
+                        let link
+                        if (start) {
+                            // linkedNode is row.node
+                            let row = browser.view.sloSpreadsheet.getRow(event.target.closest('tr'))
+                            linkedNode = row.node
+                            link = new URL(linkedNode['@id'])
+                            linkedNode.uuid = link.pathname.split('/').pop()
+                            linkedNode.href = link.href
+                        } else {
+                            link = event.dataTransfer?.getData("text/uri-list");
+                            if (link) {
+                                link = new URL(link)
+                                if (link.href!==linkedNode.href) {
+                                    linkedNode.href = link.href
+                                    // do an api call
+                                    getLinkedNode(link)
+                                }
                             }
                         }
                         return link
                     }
-                    spreadsheetBody.addEventListener('dragenter', (event) => {
-                        let link = getLink(event)
-                        if (linkInfo.uuid) {
-//                            console.log('dragenter with link', link, linkInfo.uuid)
-                            if (overRow) {
-                                overRow.classList.remove('slo-drop-over-valid')
-                                overRow.classList.remove('slo-drop-over-invalid')
-                            }
-                            overRow = event.target.closest('tr')
-                            if (overRow) {
-                                let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
-                                if (rows.length && isValidDrop(rows[0].node['@type'], linkInfo.type)) {
-                                    overRow.classList.add('slo-drop-over-valid')
-                                } else {
-                                    overRow.classList.add('slo-drop-over-invalid')
-                                }
-                            }
-                            event.preventDefault()
+
+                    function getLinkType(event) {
+                        return Array.from(event.dataTransfer.types)
+                            ?.filter(t => t.startsWith('x-slo-type/'))
+                            ?.map(t => toCamelCase(t.substring('x-slo-type/'.length)))
+                            ?.pop()
+                    }
+
+                    spreadsheetBody.addEventListener('dragstart', (event) => {
+                        let link = getLink(event, 'start')
+                        if (linkedNode.uuid) {
+                            Object.defineProperty(linkedNode, 'root', {
+                                enumerable: false,
+                                value: browser.view.root
+                            })
+                            const row = browser.view.sloSpreadsheet.getRow(event.target.closest('tr'))
+                            const parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+                            Object.defineProperty(linkedNode, 'dragParent', {
+                                enumerable: false,
+                                value: parentRow?.node
+                            })
+                            const snake_type = to_snake_case(linkedNode['@type'])
+                            event.dataTransfer.setData('x-slo-type/'+snake_type, linkedNode.href)
+                            event.dataTransfer.setData('text/uri-list',linkedNode.href)
                         }
                     })
+
+                    spreadsheetBody.addEventListener('dragleave', (event) => {
+                         const leaveRow = event.target?.closest('tr')
+                         const enterRow = event.relatedTarget?.closest('tr')
+                         if (leaveRow!=enterRow && enterRow!=overRow) {
+                             overRow.classList.remove('slo-drop-over-valid')
+                             overRow.classList.remove('slo-drop-over-invalid')
+                             overRow.classList.remove('slo-drop-over-unknown')
+                         }
+                    })
+
+                    spreadsheetBody.addEventListener('dragenter', (event) => {
+                        const linkType = getLinkType(event)
+                        const enterRow = event.target?.closest('tr')
+                        if (overRow && enterRow!=overRow) {
+                            overRow.classList.remove('slo-drop-over-valid')
+                            overRow.classList.remove('slo-drop-over-invalid')
+                            overRow.classList.remove('slo-drop-over-unknown')
+                        }
+                        overRow = enterRow
+                        if (overRow) {
+                            let row = browser.view.sloSpreadsheet.getRow(overRow)
+                            if (!linkType) {
+                                overRow.classList.add('slo-drop-over-unknown')
+                            } else if (row && isValidDrop(row.node['@type'], linkType)) {
+                                overRow.classList.add('slo-drop-over-valid')
+                            } else {
+                                overRow.classList.add('slo-drop-over-invalid')
+                            }
+                        }
+                        event.preventDefault()
+                    })
                     spreadsheetBody.addEventListener('dragover', (event) => {
-                        getLink(event)
-                        if (linkInfo.uuid) {
-                            event.preventDefault()
-                        }                        
+                        //const linkType = getLinkType(event)
+                        event.preventDefault()
                     })
                     spreadsheetBody.addEventListener('drop', (event) => {
-                        getLink(event)
-                        if (linkInfo.uuid) {
-                            console.log(event)
+                        const link = getLink(event)
+                        if (overRow) {
+                            overRow.classList.remove('slo-drop-over-valid')
+                            overRow.classList.remove('slo-drop-over-invalid')
+                            overRow.classList.remove('slo-drop-over-unknown')
+                        }
+                        overRow = event.target.closest('tr')
+                        if (linkedNode.uuid) {
+                            //WIP: move/copy linked entity
+                            if (overRow) {
+                                //let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                                const row = browser.view.sloSpreadsheet.getRow(overRow)
+                                if (row && isValidDrop(row.node['@type'], linkedNode['@type'])) {
+                                    if (linkedNode['@id']==row.node['@id']) {
+                                        // do nothing
+                                    } else if (linkedNode.root['@id'] == browser.view.root['@id']) {
+                                        browser.actions.moveNode(row, linkedNode)
+                                    } else {
+                                        browser.actions.copyNode(row, linkedNode)
+                                    }
+                                } else {
+                                    // error of negeren?
+                                }
+                            } else {
+                                //alert error? of negeren?
+                            }
                             event.preventDefault()
+                            linkedNode = {}
                         }
                     })
                 break;
@@ -1559,7 +1631,7 @@ browser = simply.app({
                             newValue = Array.from(new Set([...prop, entity])) // Set so the array is unique
                         } else {
                             newValue = prevValue.slice()
-                            newValue.splice(siblingIndex+1, 0, entity)
+                            newValue.splice(siblingIndex, 0, entity)
                             newValue = Array.from(new Set(newValue)) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                         }
                         dirty = true
@@ -1748,7 +1820,6 @@ browser = simply.app({
                 let localData = changes.getLocalView(json.data)
                 browser.view.list = localData;
                 browser.view['listTitle'] = window.titles[type];
-                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging(json.count);
             })
             .catch(function(error) {
@@ -1785,7 +1856,6 @@ browser = simply.app({
                 browser.view.listType = slo.getTypeNameByType(type.slice(0, -1));
                 browser.view.list = json;
                 browser.view['listTitle'] = window.titles[type];
-                console.log(window.titles[type],browser.view['listTitle']);
                 browser.actions.updatePaging();
             })
             .catch(function(error) {
@@ -1829,6 +1899,251 @@ browser = simply.app({
             .catch(function(error) {
                 browser.actions.handleAPIError(error)
             })
+        },
+        moveNode: async function(row, node) {
+            // create a single change that removes node from its current parent
+            // and inserts it at the correct position in its new parent
+            if (!browser.view.user) return
+            let parentNode = row.node
+            let line = row.index
+            let typeName = node['@type']
+            let change
+            const prevParent = node.dragParent
+            if (isValidParent(row.node['@type'],node['@type'])) {
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                if (currIndex==0) {
+                    // nothing to do
+                    return
+                }
+                let id = uuid()
+                if (!parentNode[typeName]) {
+                    parentNode[typeName] = []
+                }
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                if (prevParent==parentNode) {
+                    // remove from current position
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                }
+                // move to firstChild of parent
+                newValue.unshift(new changes.InsertedLink(node))
+
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+                if (prevParent!=parentNode) {
+                    // add a change to remove node from its old parent
+                    changes.changes.push(change)
+                    let prevValue = prevParent[typeName].slice()
+                    let newValue = prevParent[typeName].slice()
+                    //const prevIndex = prevParent[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                    //FIXMEnewValue = newValue.splice(prevIndex, 1)
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                    change = new changes.Change({
+                        id: prevParent.id ?? prevParent.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(prevParent)),
+                            title: 'removeChild from '+prevParent.title,
+                            type: getType(prevParent),                    
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'delete',
+                        property: typeName,
+                        prevValue: prevValue,
+                        newValue: newValue,
+                        dirty: true,
+                    })
+                }
+            } else if (isValidSibling(row.node['@type'],node['@type'])) {
+                parentNode = browser.view.sloSpreadsheet.findParentRow(row)?.node
+                if (!parentNode) {
+                    return
+                }
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['@id'])
+                const siblingIndex = parentNode[typeName]?.findIndex(n => n['@id'] == row.node['@id'])
+                if (currIndex==(siblingIndex+1) || currIndex==siblingIndex) {
+                    // nothing to do
+                    return
+                }
+                let id = uuid()
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                if (prevParent==parentNode) {
+                    // remove from current position
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                }
+                // move to siblingIndex+1 of parent
+                newValue.splice(siblingIndex+1, 0, new changes.InsertedLink(node))
+
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+                if (prevParent!=parentNode) {
+                    // add a change to remove node from its old parent
+                    changes.changes.push(change)
+                    let prevValue = prevParent[typeName].slice()
+                    let newValue = prevParent[typeName].slice()
+                    newValue = newValue.map(e => { 
+                        if (e.id==node.id) {
+                            return new changes.DeletedLink(e)
+                        } else {
+                            return e
+                        }
+                    })
+                    change = new changes.Change({
+                        id: prevParent.id ?? prevParent.uuid,
+                        meta: {
+                            context: window.slo.getContextByTypeName(getType(prevParent)),
+                            title: 'removeChild from '+prevParent.title,
+                            type: getType(prevParent),                    
+                            timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                        },
+                        type: 'delete',
+                        property: typeName,
+                        prevValue: prevValue,
+                        newValue: newValue,
+                        dirty: true,
+                    })
+                }
+            } else {
+                console.log('move invalid drop',row,node['@type'])
+                debugger;
+            }
+            if (change) {
+                changes.changes.push(change)
+                changes.update()
+                await browser.actions.spreadsheetUpdate()
+                let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+                rows = rows.filter(r => r.index>line)
+                return rows[0]
+            }                
+        },
+        copyNode: async function(row, node) {
+            if (!browser.view.user) return
+            let parentNode = row.node
+            let line = row.index
+            let typeName = node['@type']
+            let change
+            if (isValidParent(row.node['@type'],node['@type'])) {
+                let parentNode = row.node
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['2id'])
+                if (currIndex != -1) {
+                    console.error('copyNode where node already is a child of this parent')
+                    return
+                }
+                let id = uuid()
+                if (!parentNode[typeName]) {
+                    parentNode[typeName] = []
+                }
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()
+                // move to firstChild of parent
+                newValue.unshift(new changes.InsertedLink(node))
+                // now add this to the change history
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+            } else if (isValidSibling(row.node['@type'],node['@type'])) {
+                // find parent
+                const parentRow = browser.view.sloSpreadsheet.findParentRow(row)
+                const siblingNode = row.now
+                parentNode = parentRow.node
+                // find position of row.node in parent[row.node['@type']]
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['2id'])
+                if (currIndex != -1) {
+                    console.error('copyNode where node already is a child of this parent')
+                    return
+                }
+                const siblingPos = parentNode[siblingNode['@type']].indexOf(siblingNode)
+                // copy list (prevValue)
+                let prevValue = parentNode[typeName].slice()
+                let newValue = parentNode[typeName].slice()                
+                // splice newValue
+                newValue.splice(siblingPos+1, 0, new Changes.InsertedLink(node))
+                // create change
+                let timestamp =  new Date().toISOString()
+                change = new changes.Change({
+                    id: parentNode.id ?? parentNode.uuid,
+                    meta: {
+                        context: window.slo.getContextByTypeName(getType(parentNode)),
+                        title: 'addChild to '+parentNode.title,
+                        type: getType(parentNode),                    
+                        timestamp: timestamp.substring(0, timestamp.indexOf('.'))
+                    },
+                    type: 'insert',
+                    property: typeName,
+                    prevValue: prevValue,
+                    newValue: newValue,
+                    dirty: true,
+                })
+            } else {
+                console.log('invalid drop',row,node['@type'])
+                debugger;
+            }
+            if (change) {
+                changes.changes.push(change)
+                changes.update()
+                await browser.actions.spreadsheetUpdate()
+                let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
+                rows = rows.filter(r => r.index>line)
+                return rows[0]
+            }
         },
         insertRow: async function(rowEl, type) {
             if (!browser.view.user) return
@@ -2261,6 +2576,37 @@ browser = simply.app({
         }
     }
 });
+
+function toCamelCase(str) {
+  return str
+  .replace(/^([a-z])/g, group => group.toUpperCase())
+  .replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  )
+}
+function to_snake_case(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+}
+function isValidDrop(entityType, drop_type) {
+    const dropType = toCamelCase(drop_type)
+    return isValidParent(entityType, dropType)
+        || isValidSibling(entityType,dropType)
+}
+function isValidParent(entityType, dropType) {
+    if (meta.schemas.types[entityType].children[dropType]) {
+        return true 
+    }
+    return false                        
+}
+function isValidSibling(entityType, dropType) {
+    if (entityType==dropType) {
+        return true
+    }                        
+    return false
+}
 
 browser.view.pageSize = 100;
 browser.view.page = 1;
