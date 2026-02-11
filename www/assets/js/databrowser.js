@@ -1399,7 +1399,7 @@ browser = simply.app({
                             let row = browser.view.sloSpreadsheet.getRow(overRow)
                             if (!linkType) {
                                 overRow.classList.add('slo-drop-over-unknown')
-                            } else if (rows.length && isValidDrop(row.node['@type'], linkType)) {
+                            } else if (row && isValidDrop(row.node['@type'], linkType)) {
                                 overRow.classList.add('slo-drop-over-valid')
                             } else {
                                 overRow.classList.add('slo-drop-over-invalid')
@@ -2003,8 +2003,8 @@ browser = simply.app({
                         }
                     })
                 }
-                // move to siblingIndex of parent
-                newValue.splice(siblingIndex, 0, new changes.InsertedLink(node))
+                // move to siblingIndex+1 of parent
+                newValue.splice(siblingIndex+1, 0, new changes.InsertedLink(node))
 
                 // now add this to the change history
                 let timestamp =  new Date().toISOString()
@@ -2115,7 +2115,7 @@ browser = simply.app({
                 let prevValue = parentNode[typeName].slice()
                 let newValue = parentNode[typeName].slice()                
                 // splice newValue
-                newValue.splice(siblingPos, 0, new Changes.InsertedLink(node))
+                newValue.splice(siblingPos+1, 0, new Changes.InsertedLink(node))
                 // create change
                 let timestamp =  new Date().toISOString()
                 change = new changes.Change({
