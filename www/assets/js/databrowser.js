@@ -1396,10 +1396,10 @@ browser = simply.app({
                         }
                         overRow = enterRow
                         if (overRow) {
-                            let rows = browser.view.sloSpreadsheet.getRowsById(overRow.dataset.sloId)
+                            let row = browser.view.sloSpreadsheet.getRow(overRow)
                             if (!linkType) {
                                 overRow.classList.add('slo-drop-over-unknown')
-                            } else if (rows.length && isValidDrop(rows[0].node['@type'], linkType)) {
+                            } else if (rows.length && isValidDrop(row.node['@type'], linkType)) {
                                 overRow.classList.add('slo-drop-over-valid')
                             } else {
                                 overRow.classList.add('slo-drop-over-invalid')
@@ -1631,7 +1631,7 @@ browser = simply.app({
                             newValue = Array.from(new Set([...prop, entity])) // Set so the array is unique
                         } else {
                             newValue = prevValue.slice()
-                            newValue.splice(siblingIndex+1, 0, entity)
+                            newValue.splice(siblingIndex, 0, entity)
                             newValue = Array.from(new Set(newValue)) // Set so the array is unique TODO: make a function for this that guarantees keeping the same order and removing only doubled entities later in the array
                         }
                         dirty = true
@@ -1986,7 +1986,7 @@ browser = simply.app({
                 }
                 const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['@id'])
                 const siblingIndex = parentNode[typeName]?.findIndex(n => n['@id'] == row.node['@id'])
-                if (currIndex==(siblingIndex+1)) {
+                if (currIndex==(siblingIndex+1) || currIndex==siblingIndex) {
                     // nothing to do
                     return
                 }
@@ -2003,8 +2003,8 @@ browser = simply.app({
                         }
                     })
                 }
-                // move to siblingIndex+1 of parent
-                newValue.splice(siblingIndex+1, 0, new changes.InsertedLink(node))
+                // move to siblingIndex of parent
+                newValue.splice(siblingIndex, 0, new changes.InsertedLink(node))
 
                 // now add this to the change history
                 let timestamp =  new Date().toISOString()
@@ -2100,14 +2100,16 @@ browser = simply.app({
                     dirty: true,
                 })
             } else if (isValidSibling(row.node['@type'],node['@type'])) {
-                // TODO check that node is not already a sibling of row.node
-                //TODO: move immediately after row.node in parent of row.node
-                console.log('valid sibling',row,node['@type'])
                 // find parent
                 const parentRow = browser.view.sloSpreadsheet.findParentRow(row)
                 const siblingNode = row.now
                 parentNode = parentRow.node
                 // find position of row.node in parent[row.node['@type']]
+                const currIndex = parentNode[typeName]?.findIndex(n => n['@id'] == node['2id'])
+                if (currIndex != -1) {
+                    console.error('copyNode where node already is a child of this parent')
+                    return
+                }
                 const siblingPos = parentNode[siblingNode['@type']].indexOf(siblingNode)
                 // copy list (prevValue)
                 let prevValue = parentNode[typeName].slice()
