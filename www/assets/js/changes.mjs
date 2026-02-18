@@ -664,8 +664,9 @@ const changes = (()=> {
     function update() {
         if (changes.changes) {
             changes.changes.save()
+        } else {
+            changes.changes = new Changes() 
         }
-        changes.changes = new Changes()
         changes.merged = changes.changes.merge()
         changes.local = changes.merged.normalize()
         changes.undoHistory = changes.changes.toReversed().slice(0, 5)
