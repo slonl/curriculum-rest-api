@@ -6,7 +6,10 @@ module.exports = {
 		const SyllabusInfo = {
 			...shortInfo,
 			ce_se: _,
-			niveau_id: _,
+			Niveau: {
+				...shortInfo,
+				deprecated: _,
+			},
 			SyllabusVakbegrip: {
 				...shortInfo,
 				ce_se: _,
