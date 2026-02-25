@@ -40,9 +40,6 @@ module.exports = {
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_gebied',
 				...shortInfo,
-				erk_categorie_id: _,
-				erk_taalactiviteit_id: _,
-				erk_schaal_id: _,
 				unreleased: _,
 			})
 			
@@ -65,8 +62,6 @@ module.exports = {
 			.select({
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_categorie',
 				...shortInfo,
-				erk_taalactiviteit_id: _,
-				erk_schaal_id: _,
 				unreleased: _,
 			})
 			
@@ -214,7 +209,10 @@ module.exports = {
 				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_candobeschrijving',
 				...shortInfo,
 				unreleased: _,
-				niveau_id: _,
+				Niveau: {
+					...shortInfo,
+					deprecated: _,
+				},
 				ErkVoorbeeld: shortInfo,
 				ErkLesidee: shortInfo,
 			})
