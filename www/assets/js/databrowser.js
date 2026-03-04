@@ -121,18 +121,15 @@ browser = simply.app({
         '/niveau/:niveau/kerndoel_vakleergebied/:vakid': function(params) {
             browser.actions.itemOpNiveau(params.niveau, 'kerndoelvakleergebied/', params.vakid);
         },
-
         '/niveau/:niveau': function(params) {
             browser.actions.item(params.niveau);
         },
-
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
         '/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
-
         '/register/': function(params) {
             browser.actions.clearView()
             browser.view.view = 'register';
@@ -653,6 +650,7 @@ browser = simply.app({
         },
         switchView: function(el, value) {
             this.app.view.preferedView = value;
+            localStorage.setItem("browser.view.preferedView", value)
             let current = el.closest('.slo-weergave-switch').querySelector('.ds-button-primary')
             if (current!=el) {
                 current.classList.remove('ds-button-primary')
@@ -1834,6 +1832,7 @@ browser = simply.app({
                 browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
+                browser.view.preferedView = localStorage.getItem("browser.view.preferedView")
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
                     browser.actions.switchView(browser.view.preferedView)
                     return
