@@ -244,7 +244,7 @@ module.exports = {
 		Niveau: `
 		const results = from(data.Niveau)
 		.orderBy({ 
-			title:asc
+			prefix:asc
 		})
 		//.slice(Paging.start,Paging.end)
 		.select({
