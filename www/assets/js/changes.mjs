@@ -430,7 +430,7 @@ const changes = (()=> {
                     let delta = Diff.diffWords(prop.prevValue, prop.newValue)
                     d += '<label class="changes-diff"><div>'+propName+'</div>'+showTextDiff(delta)+'</label>'
                 } else {
-                    throw new Error('Not Yet Implemented (diff only works on arrays and strings)')
+//                    throw new Error('Not Yet Implemented (diff only works on arrays and strings)')
                 }
             }
         }
@@ -631,7 +631,6 @@ const changes = (()=> {
     }
 
     let insertedNodes = {}
-    let localEntities = {}
 
     let changeHistory = new Changes()
     let merged = changeHistory.merge()
@@ -678,7 +677,6 @@ const changes = (()=> {
         }
         changes.changes = new Changes()
         insertedNodes = changes.insertedNodes = {}
-        localEntities = {}
         changes.update()
     }
 
@@ -692,18 +690,16 @@ const changes = (()=> {
     }
 
     function isLiteral(prop) {
-        let literalRe = /^a-z_@\$/i
+        let literalRe = /^[a-z]/
         return literalRe.exec(prop[0])
     }
 
     function getLocalEntity(node) {
         node = JSONTag.clone(node)
-        let localNode = localEntities[node.id]
+        let localNode = changes.local[node.id]
         if (localNode) {
             for (let prop in localNode) {
-                if (isLiteral(prop)) {
-                    node[prop] = localNode[prop]
-                } else if (Array.isArray(localNode[prop])) {
+                if (Array.isArray(localNode[prop])) {
                     node[prop] = localNode[prop].map(e => {
                         if (e.$deleted && e.$deleted.includes(node.id)) {
                             return new DeletedLink(e)
@@ -726,6 +722,12 @@ const changes = (()=> {
                         }
                         return jsontagMeta.index.id.get(id).deref()
                     })
+                } else if (isLiteral(prop)) {
+                    node[prop] = localNode[prop]
+                } else if (prop[0]=='$' || prop[0]=='@') {
+                    // ignore
+                } else {
+//                    throw new Error('implement this?')
                 }
             }
         }
@@ -735,15 +737,15 @@ const changes = (()=> {
                     node[prop].forEach((v,i) => {
                         if (v.$deleted && v.$deleted.includes(node.id)) {
                             // leave it as deleted
-                        } else if (v.id && localEntities[v.id]) {
-                            v = localEntities[v.id]
+                        } else if (v.id && changes.local[v.id]) {
+                            v = changes.local[v.id]
                             Object.assign(node[prop][i], v)
                         }
                         resolveLink(node[prop],i)
                     })
-                } else if (node[prop]?.id && localEntities[node[prop].id]) {
+                } else if (node[prop]?.id && changes.local[node[prop].id]) {
                     if (!node[prop].$deleted || !node[prop].$deleted.includes(node.id)) {
-                        Object.assign(node[prop], localEntities[node[prop].id])
+                        Object.assign(node[prop], changes.local[node[prop].id])
                     }
                 }
                 resolveLink(node, prop)
@@ -753,19 +755,8 @@ const changes = (()=> {
     }
 
     function getLocalView(nodes) {
-        // let dataOut = structuredClone(dataIn)
         changes.merged = changes.changes.merge()
         changes.local = changes.merged.normalize()
-        walk(Object.values(changes.local), node => {
-            if (!node?.id) {
-                return
-            }
-            if (!localEntities[node.id]) {
-                localEntities[node.id] = Object.assign({}, node)
-            } else {
-            	localEntities[node.id] = Object.assign({}, localEntities[node.id], node)
-            }
-        })
         if (!Array.isArray(nodes)) {
             nodes = JSONTag.clone(nodes)
             nodes = getLocalEntity(nodes)
