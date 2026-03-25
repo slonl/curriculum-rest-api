@@ -4,6 +4,9 @@ window.localAPI = (function() {
     const walk = (e, callback) => {
         callback(e)
         Object.entries(e).forEach(([prop, values]) => {
+            if (prop=='replaces' || prop=='replacedBy') {
+                return
+            }
             if (Array.isArray(values)) {
                 values.forEach(v => walk(v, callback))
             }
@@ -12,6 +15,9 @@ window.localAPI = (function() {
 
     const updateMeta = (data) => {
         walk(data, v => {
+            if (v['@type']!=='Deprecated') {
+                return
+            }
             if (v.id) {
                 let id = v.id
                 if (id.substr(0,6)!=='/uuid/') {

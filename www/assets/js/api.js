@@ -15,7 +15,7 @@
             indent = f(node, indent)
             Object.entries(node)
             .filter(([k,v]) => {
-                if (!Array.isArray(v) || !v.length || k== 'Niveau' || k[0]=='$' || k[0]=='@') {
+                if (!Array.isArray(v) || !v.length || k== 'Niveau' || k[0]=='$' || k[0]=='@' || k=='replaces' || k=='replacedBy') {
                     return false
                 }
                 return true
