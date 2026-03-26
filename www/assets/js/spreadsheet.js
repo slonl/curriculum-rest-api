@@ -1073,7 +1073,7 @@ const spreadsheet = (function() {
       gotoId: (id) => {
           let row = spreadsheet.findId(id)
           if (row>=0) {
-            spreadsheet.goto(row,2)
+            spreadsheet.goto(row+1,2)
           }
       },
       findId: (id) => {
