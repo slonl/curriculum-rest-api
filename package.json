@@ -29,6 +29,6 @@
     "watch": "^1.0.2"
   },
   "devDependencies": {
-    "tap": "^19.0.2"
+    "tap": "^21.6.2"
   }
 }
