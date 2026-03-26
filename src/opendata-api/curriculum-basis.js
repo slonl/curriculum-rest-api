@@ -2,852 +2,408 @@ module.exports = {
 	context: 'basis',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/basis.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-basis/context.json',
-	fragments: {
-		DoelNiveau: `fragment DoelNiveau on Doelniveau {
-			id
-			prefix
-			ce_se
-			Doel {
-				id
-				title
-				description
-				vakbegrippen
-				bron
-				aanbodid
-				Leerlingtekst {
-					title
-					description
+	fragments: `
+		const Id = o => 'https://opendata.slo.nl/curriculum'+JSONTag.getAttribute(o,'id')
+		const Type = o => JSONTag.getAttribute(o,"class")
+
+		const References = o => request.query.baseDatasetURL + JSONTag.getAttribute(o,'id')
+
+		const Doelniveau = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
+			'@id': Id,
+			'@type': Type,
+			uuid: _.id,
+			prefix: _,
+			ce_se: _,
+			'@references': References,
+			Doel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				description: _,
+				vakbegrippen: _,
+				bron: _,
+				aanbodid: _,
+				'@references': References,
+				Leerlingtekst: {
+					title: _,
+					description: _,
 				}     
+			},
+			Niveau: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				description: _,
+				prefix: _,
+				type: _,
+				'@references': References,
+			},
+			Kerndoel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				description: _,
+				kerndoelLabel: _,
+				prefix: _,
+				'@references': References,
+			},
+			ExamenprogrammaDomein: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_domein',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				'@references': References,
+			},
+			ExamenprogrammaSubdomein: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_subdomein',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				'@references': References,
+			},
+			ExamenprogrammaEindterm: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/examenprogramma.jsonld#examenprogramma_eindterm',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				prefix: _,
+				'@references': References,
+			},
+			LdkVakbegrip: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				ce_se: _,
+				'@references': References,
 			}
-			Niveau {
-				id
-				title
-				description
-				prefix
-				type
-			}
-			Kerndoel {
-				id
-				title
-				description
-				kerndoelLabel
-				prefix
-			}
-			ExamenprogrammaDomein {
-				id
-				title
-				prefix
-			}
-			ExamenprogrammaSubdomein {
-				id
-				title
-				prefix
-			}
-			ExamenprogrammaEindterm {
-				id
-				title
-				prefix
-			}
-			LdkVakbegrip {
-				id
-				title
-				ce_se
-			}
-		}`,
-		Doelen: `fragment Doelen on Doelniveau {
-			id
-			prefix
-			ce_se
-			Doel {
-				id
-				title
-				description
-				bron
-				vakbegrippen
-				aanbodid
-				Leerlingtekst {
-					title
-					description
+		}
+		const Doelen = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld',
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			ce_se: _,
+			Doel: {
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				description: _,
+				bron: _,
+				vakbegrippen: _,
+				aanbodid: _,
+				Leerlingtekst: {
+					title: _,
+					description: _,
 				}     
-			}
-			Kerndoel {
-				id
-				title
-				description
-				kerndoelLabel
-				prefix
-			}
-			LdkVakbegrip {
-				id
-				title
-				ce_se
-			}
-		}`,
-		Niveau: `fragment Niveau on Niveau {
-			 id
-			 title
-			 description
-			 prefix
-			 type
-		}`,
-		NiveauShort: `fragment NiveauShort on Niveau {
-			id
-			title
-			prefix
-		}`
-	},
-	queries: {
-		DoelNiveau: `query DoelNiveau($page:Int,$perPage:Int) {
-			allDoelniveau(page:$page,perPage:$perPage,filter:{deprecated:null}) {
-				...DoelNiveau
-			}
-			_allDoelniveauMeta {
-				count
-			}
-		}`,
-		DoelNiveauById: `query DoelNiveauById($id:ID) {
-			Doelniveau(id:$id) {
-				...DoelNiveau
-			}
-		}`,
-		Doel: `query Doel($page:Int,$perPage:Int) {
-			allDoel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-				id
-				title
-			}
-			_allDoelMeta {
-				count
-			}
-		}`,
-		DoelById: `query DoelById($id:ID) {
-			Doel(id:$id) {
-				id
-				title
-				description
-				bron
-				vakbegrippen				
-				Doelniveau {
-					id
-					prefix
-					ce_se
-					Niveau {
-						...Niveau
-					}
-				}
-			}
-		}`,
-		Niveau: `query Niveau($page:Int,$perPage:Int) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-				id
-				title
-				description
-				prefix
-			}
-			_allNiveauMeta {
-				count
-			}
-		}`,
-		NiveauById: `query NiveauById($id:ID) {
-			Niveau(id:$id) {
-				...Niveau
-			}
-		}`,
-		NiveauVakleergebied: `query NiveauVakleergebied($page:Int,$perPage:Int,) {
-			allNiveau(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-				id
-				title
-				Vakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				ErkVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				RefVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				},
-				Examenprogramma(filter:{deprecated:null}) {
-					id
-					title
-					ExamenprogrammaVakleergebied {
-						id
-						title
-					}
-				}
-			}
-			allNiveauIndex(page:$page, perPage:$perPage, sortField:"title") {
-				Niveau(filter:{deprecated:null}) {
-					id
-					title
-				}
-				KerndoelVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				SyllabusVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				LdkVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				InhVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				ErkVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-				RefVakleergebied(filter:{deprecated:null}) {
-					id
-					title
-				}
-			}
-		}`,
-		Vakleergebied: `query Vakleergebied($page:Int,$perPage:Int) {
-			allVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				prefix
-				Niveau {
-					...NiveauShort
-				}
-			}
-			_allVakleergebiedMeta {
-				count
-			}
-		}`,
-		VakleergebiedById: `query VakleergebiedById($id:ID) {
-			Vakleergebied(id:$id) {
-				id
-				title
-				description
-				prefix
-				replaces
-				Niveau {
-					...NiveauShort
-				}
-				KerndoelVakleergebied {
-					id
-					title
-				}
-				ExamenprogrammaVakleergebied {
-					id
-					title
-				}
-				SyllabusVakleergebied {
-					id
-					title
-				}
-				ExamenprogrammaBgProfiel {
-					id
-					title
-				}
-				LdkVakleergebied {
-					id
-					title
-				}
-				InhVakleergebied {
-					id
-					title
-				}
-				RefVakleergebied {
-					id
-					title
-				}
-				ErkVakleergebied {
-					id
-					title
-				}
-			}
-		}`,
-/*		Deprecated: `query Deprecated {
-			allDeprecated {
-				id
-				title
-				replacedBy
-			}
-		}`,
-		DeprecatedById: `query DeprecatedById($id:ID) {
-			Deprecated(id:$id) {
-				id
-				title
-				description
-				types
-				replacedBy
-				lpib_vakkern_id
-				lpib_vaksubkern_id
-				lpib_vakinhoud_id
-				doelniveau_id
-			}
-		}`,
-*/
-		VakleergebiedOpNiveau: `query VakleergebiedOpNiveau($niveau:ID) {
-			allNiveau(filter:{id:$niveau}) {
-				Vakleergebied {
-					id
-					title
-				}
-			}
-		}`,
-		VakleergebiedByIdOpNiveau: `query VakleergebiedByIdOpNiveau($niveau:ID, $id:ID) {
-			allNiveau(filter:{id:$niveau}) {
-				Vakleergebied(filter:{id:$id}) {
-					id
-					title
-				}
-				...NiveauShort
-			}
-		}`
-	},
-	typedQueries: {
-		'vakleergebied': `
-			id
-			prefix
-			title
-			description
-			prefix
-			replaces
-			KerndoelVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ExamenprogrammaVakleergebied {
-				id
-				title
-				deprecated
-			}
-			SyllabusVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ExamenprogrammaBgProfiel {
-				id
-				title
-				deprecated
-			}
-			LdkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			InhVakleergebied {
-				id
-				title
-				deprecated
-			}
-			RefVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ErkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			Niveau {
-				...NiveauShort
-			}
-		`,
-		'doel':`
-			id
-			title
-			description
-			bron
-			vakbegrippen
-			Doelniveau {
-				...DoelNiveau
-				LpibVakkern {
-					id
-					title
-					LpibVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-				LpibVaksubkern {
-					id
-					title
-					LpibVakkern {
-						id
-						title
-						LpibVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-				LpibVakinhoud {
-					id
-					title
-					LpibVaksubkern {
-						id
-						title
-						LpibVakkern {
-							id
-							title
-							LpibVakleergebied {
-								id
-								title
-								deprecated
-							}
-						}
-					}
-				}
-				LdkVakleergebied {
-					id
-					title
-					deprecated
-				}
-				LdkVakkern {
-					id
-					title
-					LdkVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-				LdkVaksubkern {
-					id
-					title
-					LdkVakkern {
-						id
-						title
-						LdkVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-				LdkVakinhoud {
-					id
-					title
-					LdkVaksubkern {
-						id
-						title
-						LdkVakkern {
-							id
-							title
-							LdkVakleergebied {
-								id
-								title
-								deprecated
-							}
-						}
-					}
-				}
-			}
-		`,
-		'niveau':`
-			id
-			prefix
-			title
-			description
-			type
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
-		`,
-		'doelniveau':`
-			...DoelNiveau
-			LpibVakkern {
-				id
-				title
-				Vakleergebied {
-					id
-					title
-					deprecated
-				}
-			}
-			LpibVaksubkern {
-				id
-				title
-				LpibVakkern {
-					id
-					title
-					LpibVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-			}
-			LpibVakinhoud {
-				id
-				title
-				LpibVaksubkern {
-					id
-					title
-					LpibVakkern {
-						id
-						title
-						LpibVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-			}
-			LdkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			LdkVakkern {
-				id
-				title
-				LdkVakleergebied {
-					id
-					title
-					deprecated
-				}
-			}
-			LdkVaksubkern {
-				id
-				title
-				LdkVakkern {
-					id
-					title
-					LdkVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-			}
-			LdkVakinhoud {
-				id
-				title
-				LdkVaksubkern {
-					id
-					title
-					LdkVakkern {
-						id
-						title
-						LdkVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-			}
-		`
-	},
-	idQuery: `
-		allVakleergebied(filter:{id:$id}) {
-			id
-			prefix
-			title
-			description
-			prefix
-			replaces
-			replacedBy
-			deprecated
-			KerndoelVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ExamenprogrammaVakleergebied {
-				id
-				title
-				deprecated
-			}
-			SyllabusVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ExamenprogrammaBgProfiel {
-				id
-				title
-				deprecated
-			}
-			LdkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			InhVakleergebied {
-				id
-				title
-				deprecated
-			}
-			RefVakleergebied {
-				id
-				title
-				deprecated
-			}
-			ErkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			Niveau {
-				...NiveauShort
+			},
+			Kerndoel: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				description: _,
+				kerndoelLabel: _,
+				prefix: _,
+			},
+			LdkVakbegrip: {
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/leerdoelenkaart.jsonld#ldk_vakbegrip',
+				'@id': Id,
+				'@type': Type,
+				uuid: _.id,
+				title: _,
+				ce_se: _,
 			}
 		}
-		allDoel(filter:{id:$id}) {
-			id
-			title
-			description
-			bron
-			vakbegrippen
-			replaces
-			replacedBy
-			deprecated
-			Doelniveau {
-				...DoelNiveau
-				LdkVakleergebied {
-					id
-					title
-					deprecated
-				}
-				LdkVakkern {
-					id
-					title
-					LdkVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-				LdkVaksubkern {
-					id
-					title
-					LdkVakkern {
-						id
-						title
-						LdkVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-				LdkVakinhoud {
-					id
-					title
-					LdkVaksubkern {
-						id
-						title
-						LdkVakkern {
-							id
-							title
-							LdkVakleergebied {
-								id
-								title
-								deprecated
-							}
-						}
-					}
-				}
-			}
+		const Niveau = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+			'@id': Id,
+			uuid: _.id,
+			'@type': Type,
+			 title: _,
+			 description: _,
+			 prefix: _,
+			 type: _
 		}
-		allNiveau(filter:{id:$id}) {
-			id
-			prefix
-			title
-			description
-			type
-			replacedBy
-			deprecated
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
+		const NiveauIndex = o => from(o.NiveauIndex).select(Niveau)
+		const NiveauShort = {
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+			'@id': Id,
+			uuid: _.id,
+			'@type': Type,
+			title: _,
+			prefix: _,
 		}
-		allDoelniveau(filter:{id:$id}) {
-			...DoelNiveau
-			replaces
-			replacedBy
-			deprecated
-			LdkVakleergebied {
-				id
-				title
-				deprecated
-			}
-			LdkVakkern {
-				id
-				title
-				LdkVakleergebied {
-					id
-					title
-					deprecated
-				}
-			}
-			LdkVaksubkern {
-				id
-				title
-				LdkVakkern {
-					id
-					title
-					LdkVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-			}
-			LdkVakinhoud {
-				id
-				title
-				LdkVaksubkern {
-					id
-					title
-					LdkVakkern {
-						id
-						title
-						LdkVakleergebied {
-							id
-							title
-							deprecated
-						}
-					}
-				}
-			}
+		const ShortLink = {
+			'@id': Id,
+			'@references': References,
+			uuid: _.id,
+			'@type': Type,
+			title: _,
+			deprecated: _,
 		}
-`,
-/*		allDeprecated(filter:{id:$id}) {
-			id
-			title
-			description
-			types
-			replaces
-			replacedBy
-			Doelniveau {
-				...DoelNiveau
-			}
+		const ReplacesLink = o => from(o.replaces?.map(
+				idUri => meta.index.id.get('/uuid/'+idUri.split('/').pop())
+			))
+		  	.select(
+		  		ShortLink
+		  	)
+		const ReplacedByLink = o => from(o.replacedBy?.map(
+				idUri => meta.index.id.get('/uuid/'+idUri.split('/').pop())
+			))
+		  	.select(
+		  		ShortLink
+		  	)
+		const PageSize = Math.max(10, Math.min(1000, parseInt(request.query.pageSize || request.query.perPage || '100')))
+		const Page = parseInt(request.query.page || '0')
+		const Paging = {
+			start: Page*PageSize,
+			end: (Page+1)*PageSize
 		}
-	`,
-*/
-	routes: {
-		'niveau/:id': (req) => 
-			opendata.api["NiveauById"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.Niveau, 
-					type: 'Niveau'
-				};
-			}),
-		'niveau/': (req) =>
-			opendata.api["Niveau"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data:   result.data.allNiveau, 
-					type:   'Niveau', 
-					meta:   result.data._allNiveauMeta
-				}
-			}),
-/*
-		'deprecated/': (req) =>
-			opendata.api["Deprecated"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allDeprecated,
-					meta: result.data._allDeprecatedMeta
-				};
-			}),
-		'deprecated/:id': (req) =>
-			opendata.api["DeprecatedById"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.Deprecated
-				};
-			}),
-*/
-		'doel/': (req) =>
-			opendata.api["Doel"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allDoel,
-					type: 'Doel',
-					meta: result.data._allDoelMeta
-				};
-			}),
-		'doelniveau/': (req) =>
-			opendata.api["DoelNiveau"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allDoelniveau,
-					type: 'DoelNiveau', 
-					meta: result.data._allDoelniveauMeta
-				};
-			}),
-		'vakleergebied/': (req) => 
-			opendata.api["Vakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allVakleergebied, 
-					type: 'Vakleergebied',
-					meta: result.data._allVakleergebiedMeta
-				};
-			}),
-		'niveau_vakleergebied/': (req) =>
-			opendata.api["NiveauVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				result.data.allNiveau.forEach(ni => {
-					if (ni.Examenprogramma) {
-						ni.ExamenprogrammaVakleergebied = []
-						ni.Examenprogramma.forEach(ex => {
-							ni.ExamenprogrammaVakleergebied = ni.ExamenprogrammaVakleergebied.concat(ex.ExamenprogrammaVakleergebied)
-						})
-						delete ni.Examenprogramma
-					}
-				})
-				result.data.allNiveauIndex.forEach(ni => {
-					let niveau = ni.Niveau[0];
-					Object.keys(ni).forEach(k => {
-						if (k!=='Niveau') {
-							niveau[k] = ni[k];
-						}
-					});
-					result.data.allNiveau.push(niveau);
-				});
-				return {
-					data: result.data.allNiveau,
-					type: 'Niveau'
-				};
-			}),
-		'niveau/:niveau/vakleergebied/': (req) =>
-			opendata.api["VakleergebiedOpNiveau"](req.params)
-			.then(function(result) {
-				return { 
-					data: result.data.allNiveau[0].Vakleergebied,
-					type: 'Vakleergebied'
-				}
-			}),
-		'niveau/:niveau/vakleergebied/:id/': (req) => {
-			return opendata.api["VakleergebiedByIdOpNiveau"](req.params)
-			.then(function(result) {
-				var vak = result.data.allNiveau[0].Vakleergebied[0];
-				delete result.data.allNiveau[0].Vakleergebied;
-				//vak.LpibVakkern = result.data.allNiveauIndex[0].LpibVakkern;
-				//delete result.data.allNiveauIndex[0];
-				vak.Niveau  = result.data.allNiveau;
-				return {
-					data: vak,
-					type: 'Vakleergebied'
-				};
-			})
+		const Index = id => meta.index.id.get('/uuid/'+id)
+		
+		const shortInfo = {
+		    '@id': Id,
+			uuid: _.id,
+		    '@type': Type,
+		    prefix: _,
+		    title: _,
+			deleted: _,
+			dirty: _,
+			replaces: ReplacesLink,
+			replacedBy: ReplacedByLink,
+			'@references': References,
+		};
+
+		function sortByTitle(a,b) {
+			if (a.title<b.title) {
+			  return -1
+			} else if (a.title>b.title) {
+			  return 1
+			}
+			return 0
+		  }
+
+		function sortByPrefix(a,b) {
+			if (a.prefix<b.prefix) {
+				return -1
+			} else if (a.prefix>b.prefix) {
+				return 1
+			}
+			return 0
 		}
 
+		function sortByNiveau(a,b) {
+			if (a.Niveau<b.Niveau) {
+				return -1
+			} else if (a.Niveau>b.Niveau) {
+				return 1
+			}
+			return 0
+		}
+		
+	`,
+	queries: {
+		Vakleergebied: `
+		const results = from(data.Vakleergebied)
+			.orderBy({ 
+				title:asc 
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
+				...shortInfo,
+				Niveau: NiveauShort
+			})
+		
+		const response = {
+			data: results,
+			page: Page,
+			count: data.Vakleergebied.length,
+			root: meta.schema.types.Vakleergebied.root
+		}
+
+		response
+
+		`,
+		Niveau: `
+		const results = from(data.Niveau)
+		.orderBy({ 
+			prefix:asc
+		})
+		//.slice(Paging.start,Paging.end)
+		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+			...shortInfo,
+			description: _,
+
+		})
+		
+
+		const response = {
+			data: results,
+			page: Page,
+			count: data.Niveau.length,
+			root: meta.schema.types.Niveau.root
+		}
+
+		response
+
+		`,
+		Doel: `
+		const results = from(data.Doel)
+		.orderBy({ 
+			title:asc 
+		})
+		.slice(Paging.start,Paging.end)
+		.select({
+			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+			...ShortLink
+		})
+		
+		const response = {
+			data: results,
+			page: Page,
+			count: data.Doel.length,
+			root: meta.schema.types.Doel.root
+		}
+
+		response
+
+		`,
+		Doelniveau: `
+		const results = from(data.Doelniveau)
+		.slice(Paging.start, Paging.end)
+		.select( Doelniveau )
+		const response = {
+			data: results,
+			page: Page,
+			count: data.Doelniveau.length,
+			root: meta.schema.types.Doelniveau.root
+		}
+
+		response
+
+		`,
+		NiveauVakleergebied:`
+		let results = from(data.Niveau)
+		.select({
+			...ShortLink,
+			Vakleergebied : ShortLink,
+			ErkVakleergebied : ShortLink,
+			RefVakleergebied : ShortLink,
+		})
+		.orderBy({ 
+			title:asc 
+		})
+
+		let results2 = from(Object.values(data.niveauIndex))
+		.select({
+			...ShortLink,
+			KerndoelVakleergebied: ShortLink,
+			SyllabusVakleergebied: n => from(_.Syllabus.SyllabusVakleergebied).select(ShortLink),
+			LdkVakleergebied: ShortLink,
+			InhVakleergebied: ShortLink,
+			ErkVakleergebied: n =>
+				from(data.ErkVakleergebied)
+				.where({
+					Niveau: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			RefVakleergebied: ShortLink,
+			ExamenprogrammaVakleergebied: n => from(_.Examenprogramma.ExamenprogrammaVakleergebied(n)).select(ShortLink),
+		})
+
+		results = results.concat(results2)
+
+		results
+
+		`,
+	},
+	typedQueries: {
+		Vakleergebied: `
+		from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Vakleergebied',
+				...shortInfo,
+				description: _,
+				KerndoelVakleergebied: ShortLink,
+				ExamenprogrammaVakleergebied: ShortLink,
+				SyllabusVakleergebied: ShortLink,
+				ExamenprogrammaBgProfiel: ShortLink,
+				LdkVakleergebied: ShortLink,
+				InhVakleergebied: ShortLink,
+				RefVakleergebied: ShortLink,
+				ErkVakleergebied: ShortLink,
+				Niveau
+			})
+		`,
+		Niveau: `
+		from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
+				...shortInfo,
+				description: _
+			})
+		`,
+		Doel: `
+		from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+				...shortInfo,
+				sloID: _,
+				description: _,
+				bron: _
+			})
+		`,
+		Doelniveau:`
+		from(Index(request.query.id))
+			.select({
+				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doelniveau',
+				...shortInfo,
+				ce_se: _,
+				Doel: {
+					'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
+					...shortInfo,
+					description: _,
+					vakbegrippen: _,
+					bron: _,
+					aanbodid: _,
+					Leerlingtekst: {
+						title: _,
+						description: _,
+					}     
+				},
+				Kerndoel: shortInfo,
+				ExamenprogrammaDomein: shortInfo,
+				ExamenprogrammaSubdomein: shortInfo,
+				ExamenprogrammaEindterm: shortInfo
+			})
+		`,
+	},
+	routes: {
+		'vakleergebied/': (req) => opendata.api["Vakleergebied"](req.params, req.query),
+		'niveau_vakleergebied/': (req) => opendata.api["NiveauVakleergebied"](req.params, req.query),
+		'niveau/': (req) => opendata.api["Niveau"](req.params, req.query),
+		'doel/': (req) => opendata.api["Doel"](req.params, req.query),
+		'doelniveau/': (req) => opendata.api["Doelniveau"](req.params, req.query),
 	}
-};
+}

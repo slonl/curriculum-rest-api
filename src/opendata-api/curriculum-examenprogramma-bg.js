@@ -3,672 +3,420 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/examenprogramma_bg.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-examenprogramma-bg/context.json',
 	queries: {
-		ExamenprogrammaBgProfiel: `query ExamenprogrammaBgProfiel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgProfiel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-			Vakleergebied {
-			  id
-			  title
-			  deprecated
+		ExamenprogrammaBgProfiel: `
+			const results = from(data.ExamenprogrammaBgProfiel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			Vakleergebied: {
+				...shortInfo,
+			  deprecated: _,
 			}
-		  }
-		  _allExamenprogrammaBgProfielMeta {
-			 count
-		  }
-		}`,
-		ExamenprogrammaBgKern: `query ExamenprogrammaBgKern($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKern (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-			  id
-			  title
-			  deprecated
-			}
-		  }
-		  _allExamenprogrammaBgKernMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgKerndeel: `query ExamenprogrammaBgKerndeel($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKerndeel (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-		  }
-		  _allExamenprogrammaBgKerndeelMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgGlobaleEindterm: `query ExamenprogrammaBgGlobaleEindterm($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgGlobaleEindterm (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-		  }
-		  _allExamenprogrammaBgGlobaleEindtermMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgModule: `query ExamenprogrammaBgModule($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModule (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-			  id
-			  title
-			  deprecated
-			}
-		  }
-		  _allExamenprogrammaBgModuleMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgDeeltaak: `query ExamenprogrammaBgDeeltaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgDeeltaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-		  }
-		  _allExamenprogrammaBgDeeltaakMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgModuletaak: `query ExamenprogrammaBgModuletaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgModuletaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-		  }
-		  _allExamenprogrammaBgModuletaakMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgKeuzevak: `query ExamenprogrammaBgKeuzevak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-			  id
-			  title
-			  deprecated
-			}
-		  }
-		  _allExamenprogrammaBgKeuzevakMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgKeuzevaktaak: `query ExamenprogrammaBgKeuzevaktaak($page:Int,$perPage:Int) {
-		  allExamenprogrammaBgKeuzevaktaak (page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-		  }
-		  _allExamenprogrammaBgKeuzevaktaakMeta {
-			count
-		  }
-		}`,
-		ExamenprogrammaBgVolledig: `query ExamenprogrammaBgVolledig($id:ID) {
-		  ExamenprogrammaBgProfiel(id:$id){
-			id
-			prefix
-			title
-			deprecated
-			  ExamenprogrammaBgKern {
-				id
-				title
-				deprecated
-				ExamenprogrammaBgKerndeel {
-				  id
-				  title
-				  deprecated
-				  ExamenprogrammaBgGlobaleEindterm {
-					id
-					title
-					deprecated
-				  }
-				}
-			  }
-			  ExamenprogrammaBgModule {
-				id
-				title
-				deprecated
-				ExamenprogrammaBgDeeltaak {
-				  id
-				  title
-				  deprecated
-				  ExamenprogrammaBgGlobaleEindterm {
-					id
-					title
-					deprecated
-				  }
-				}
-				ExamenprogrammaBgModuletaak {
-					id
-					title
-					deprecated
-				}
-			  }
-			  ExamenprogrammaBgKeuzevak {
-				id
-				title
-				deprecated
-				ExamenprogrammaBgDeeltaak {
-				  id
-				  title
-				  deprecated
-				  ExamenprogrammaBgGlobaleEindterm {
-					id
-					title
-					deprecated
-				  }
-				}
-				ExamenprogrammaBgKeuzevaktaak {
-					id
-					title
-					deprecated
-				}
-			  }
-			}
-		  }`
-	},
-	typedQueries: {
-		'examenprogramma_bg_profiel':`
-			id
-			prefix
-			title
-			replaces
-			Vakleergebied {
-			  id
-			  title
-			  deprecated
-			}
-			ExamenprogrammaBgKern {
-			  id
-			  prefix
-			  title
-			  deprecated
-			}
-			ExamenprogrammaBgModule {
-			  id
-			  prefix
-			  title
-			  deprecated
-			}
-			ExamenprogrammaBgKeuzevak {
-			  id
-			  prefix
-			  title
-			  deprecated
-			}
+		  })
+		 
+
+		  const response = {
+			data: results,
+			page: Page,
+			count: data.ExamenprogrammaBgProfiel.length,
+			root: meta.schema.types.ExamenprogrammaBgProfiel.root
+		}
+
+		response
 		`,
-		'examenprogramma_bg_kern':`
-			id
-			prefix
-			title
-			replaces
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-				deprecated
+		ExamenprogrammaBgKern: `
+		const results = from(data.ExamenprogrammaBgKern)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+		  	})
+	
+		  	const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgKern.length,
+				root: meta.schema.types.ExamenprogrammaBgKern.root
 			}
-			ExamenprogrammaBgKerndeel {
-				id
-				prefix
-				title
-				deprecated
-			}
+
+		response
 		`,
-		'examenprogramma_bg_kerndeel':`
-			id
-			prefix
-			title
-			ExamenprogrammaBgKern {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
+		ExamenprogrammaBgKerndeel: `
+		const results = from(data.ExamenprogrammaBgKerndeel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+		  	})
+		  
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgKerndeel.length,
+				root: meta.schema.types.ExamenprogrammaBgKerndeel.root
 			}
-			ExamenprogrammaBgGlobaleEindterm {
-				id
-				prefix
-				title
-				deprecated
-			}
+
+			response
 		`,
-		'examenprogramma_bg_globale_eindterm':`
-			id
-			prefix
-			title
-			Niveau {
-				...NiveauShort
+		ExamenprogrammaBgGlobaleEindterm: `
+		const results = from(data.ExamenprogrammaBgGlobaleEindterm)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+
+		  	const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgGlobaleEindterm.length,
+				root: meta.schema.types.ExamenprogrammaBgGlobaleEindterm.root
 			}
-			ExamenprogrammaBgKerndeel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-				deprecated
-			}
+
+			response
 		`,
-		'examenprogramma_bg_module':`
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgModuletaak{
-				id
-				prefix
-				title
-				deprecated
-			}
-		`,
-		'examenprogramma_bg_deeltaak':`
-			id
-			prefix
-			title
-			ExamenprogrammaBgGlobaleEindterm {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgModule {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
-			}
-			ExamenprogrammaBgKeuzevak {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
-			}
-		`,
-		'examenprogramma_bg_moduletaak':`
-			id
-			prefix
-			title
-			ExamenprogrammaBgModule {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-		`,
-		'examenprogramma_bg_keuzevak':`
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgKeuzevaktaak {
-				id
-				prefix
-				title
-				deprecated
-			}
-		`,
-		'examenprogramma_bg_keuzevaktaak': `
-			id
-			prefix
-			title
-			ExamenprogrammaBgKeuzevak {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-		`
-	},
-	idQuery: `
-		allExamenprogrammaBgProfiel(filter:{id:$id}) {
-			id
-			prefix
-			title
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
-			ExamenprogrammaBgKern {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgModule {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgKeuzevak {
-				id
-				prefix
-				title
-				deprecated
-			}
-		}
-		allExamenprogrammaBgKern(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgKerndeel {
-				id
-				prefix
-				title
-				deprecated
-			}
-		}
-		allExamenprogrammaBgKerndeel(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgKern {
-				id
-				prefix
-				title
-				deprecated
-				ExamenprogrammaBgProfiel {
-					id
-					title
-					deprecated
-				}
-			}
-			ExamenprogrammaBgGlobaleEindterm {
-				id
-				prefix
-				title
-				deprecated
-			}
-		}
-		allExamenprogrammaBgGlobaleEindterm(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgKerndeel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-				deprecated
-			}
-		}
-		allExamenprogrammaBgModule(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-				deprecated
-			}
-			ExamenprogrammaBgModuletaak{
-				id
-				prefix
-				title
-				deprecated
-			}
-		}
-		allExamenprogrammaBgDeeltaak(filter:{id:$id}) {
-			id
-			prefix
-			title
-			replaces
-			ExamenprogrammaBgGlobaleEindterm {
-				id
-				prefix
-				title
-			}
-			ExamenprogrammaBgModule {
-				id
-				prefix
-				title
-				ExamenprogrammaBgProfiel {
-					id
-					title
-				}
-			}
-			ExamenprogrammaBgKeuzevak {
-				id
-				prefix
-				title	  
-				ExamenprogrammaBgProfiel {
-					id
-					title
-				}
-			}
-		}
-		allExamenprogrammaBgModuletaak(filter:{id:$id}) {
-			id
-			prefix
-			title
-			replaces
-			ExamenprogrammaBgModule {
-				id
-				prefix
-				title
-				ExamenprogrammaBgProfiel {
-					id
-					title
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-		}
-		allExamenprogrammaBgKeuzevak(filter:{id:$id}) {
-			id
-			prefix
-			title
-			replaces
-			ExamenprogrammaBgProfiel {
-				id
-				prefix
-				title
-			}
-			ExamenprogrammaBgDeeltaak {
-				id
-				prefix
-				title
-			}
-			ExamenprogrammaBgKeuzevaktaak {
-				id
-				prefix
-				title
-			}
-		}
-		allExamenprogrammaBgKeuzevaktaak(filter:{id:$id}) {
-			id
-			prefix
-			title
-			replaces
-			ExamenprogrammaBgKeuzevak {
-				id
-				prefix
-				title
-				ExamenprogrammaBgProfiel {
-					id
-					title
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-		}
-	`,
-	routes: {
-		'examenprogramma_bg/:id': (req) =>
-			opendata.api["ExamenprogrammaBgVolledig"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.ExamenprogrammaBgProfiel, 
-					type: 'ExamenprogrammaBgProfiel', 
-				}
-			}),
-		'examenprogramma_bg_profiel/': (req) =>
-			opendata.api["ExamenprogrammaBgProfiel"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allExamenprogrammaBgProfiel, 
-					type: 'ExamenprogrammaBgProfiel', 
-					meta: result.data._allExamenprogrammaBgProfielMeta
-				}
-			}),
-		'examenprogramma_bg_kern/': (req) =>
-			opendata.api["ExamenprogrammaBgKern"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allExamenprogrammaBgKern, 
-					type: 'ExamenprogrammaBgKern', 
-					meta: result.data._allExamenprogrammaBgKernMeta
-				}
-			}),
-		'examenprogramma_bg_kerndeel/': (req) =>
-			opendata.api["ExamenprogrammaBgKerndeel"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgKerndeel, 
-					type: 'ExamenprogrammaBgKerndeel',
-					meta: result.data._allExamenprogrammaBgKerndeelMeta
-				}
-			}),
-		'examenprogramma_bg_globale_eindterm/': (req) =>
-			opendata.api["ExamenprogrammaBgGlobaleEindterm"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgGlobaleEindterm,
-					type: 'ExamenprogrammaBgGlobaleEindterm',
-					meta: result.data._allExamenprogrammaBgGlobaleEindtermMeta
-				}
-			}),
-		'examenprogramma_bg_module/': (req) =>
-			opendata.api["ExamenprogrammaBgModule"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgModule,
-					type: 'ExamenprogrammaBgModule',
-					meta: result.data._allExamenprogrammaBgModuleMeta
-				}
-			}),
-		'examenprogramma_bg_keuzevak/': (req) =>
-			opendata.api["ExamenprogrammaBgKeuzevak"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgKeuzevak,
-					type: 'ExamenprogrammaBgKeuzevak',
-					meta: result.data._allExamenprogrammaBgKeuzevakMeta
-				}
-			}),
-		'examenprogramma_bg_deeltaak/': (req) =>
-			opendata.api["ExamenprogrammaBgDeeltaak"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgDeeltaak,
-					type: 'ExamenprogrammaBgDeeltaak',
-					meta: result.data._allExamenprogrammaBgDeeltaakMeta
-				}
-			}),
-		'examenprogramma_bg_moduletaak/': (req) =>
-			opendata.api["ExamenprogrammaBgModuletaak"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgModuletaak,
-					type: 'ExamenprogrammaBgModuletaak',
-					meta: result.data._allExamenprogrammaBgModuletaakMeta
-				}
-			}),
-		'examenprogramma_bg_keuzevaktaak/': (req) =>
-			opendata.api["ExamenprogrammaBgKeuzevaktaak"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allExamenprogrammaBgKeuzevaktaak,
-					type: 'ExamenprogrammaBgKeuzevaktaak',
-					meta: result.data._allExamenprogrammaBgKeuzevaktaakMeta
+		ExamenprogrammaBgModule: `
+		const results = from(data.ExamenprogrammaBgModule)
+			.orderBy({ prefix:asc })
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
 				}
 			})
+		  
+	
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgModule.length,
+				root: meta.schema.types.ExamenprogrammaBgModule.root
+			}
+
+			response
+		`,
+		ExamenprogrammaBgDeeltaak: `
+		const results = from(data.ExamenprogrammaBgDeeltaak)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgDeeltaak.length,
+				root: meta.schema.types.ExamenprogrammaBgDeeltaak.root
+			}
+
+			response
+		`,
+		ExamenprogrammaBgModuletaak: `
+		const results = from(data.ExamenprogrammaBgModuletaak)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgModuletaak.length,
+				root: meta.schema.types.ExamenprogrammaBgModuletaak.root
+			}
+
+			response
+		`,
+		ExamenprogrammaBgKeuzevak: `
+		const results = from(data.ExamenprogrammaBgKeuzevak)
+			.orderBy({ prefix:asc })
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgKeuzevak.length,
+				root: meta.schema.types.ExamenprogrammaBgKeuzevak.root
+			}
+
+			response
+		`,
+		ExamenprogrammaBgKeuzevaktaak: `
+		const results = from(data.ExamenprogrammaBgKeuzevaktaak)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+		  	const response = {
+				data: results,
+				page: Page,
+				count: data.ExamenprogrammaBgKeuzevaktaak.length,
+				root: meta.schema.types.ExamenprogrammaBgKeuzevaktaak.root
+			}
+
+			response
+		`,
+
+		ExamenprogrammaBgVolledig: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			deprecated: _,
+			  	ExamenprogrammaBgKern: {
+					...shortInfo,
+					deprecated: _,
+					ExamenprogrammaBgKerndeel: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+			  	},
+			  	ExamenprogrammaBgModule: {
+					...shortInfo,
+					deprecated: _,
+					ExamenprogrammaBgDeeltaak: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+					ExamenprogrammaBgModuletaak: {
+						...shortInfo,
+						deprecated: _,
+					},
+			  	},
+			  	ExamenprogrammaBgKeuzevak: {
+					...shortInfo,
+					deprecated: _,
+					ExamenprogrammaBgDeeltaak: {
+						...shortInfo,
+				  		deprecated: _,
+				  		ExamenprogrammaBgGlobaleEindterm: {
+							...shortInfo,
+							deprecated: _,
+				  		},
+					},
+					ExamenprogrammaBgKeuzevaktaak: {
+						...shortInfo,
+						deprecated: _,
+					},
+			  	},
+			})
+	    `
+	},
+	typedQueries: {
+		ExamenprogrammaBgProfiel:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			replaces: _,
+			Vakleergebied: {
+				...shortInfo,
+			  	deprecated: _,
+			},
+			ExamenprogrammaBgKern: {
+				...shortInfo,
+			 	deprecated: _,
+			},
+			ExamenprogrammaBgModule: {
+				...shortInfo,
+			  	deprecated: _,
+			},
+			ExamenprogrammaBgKeuzevak: {
+				...shortInfo,
+			  	deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgKern:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			replaces: _,
+			ExamenprogrammaBgProfiel: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgKerndeel: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgKerndeel:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgKern: {
+				...shortInfo,
+				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+			ExamenprogrammaBgGlobaleEindterm: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgGlobaleEindterm:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			Niveau: NiveauShort,
+			ExamenprogrammaBgKerndeel: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgDeeltaak: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgModule:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgProfiel: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgDeeltaak: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgModuletaak: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgDeeltaak:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgGlobaleEindterm: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgModule: {
+				...shortInfo,
+				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+			ExamenprogrammaBgKeuzevak: {
+				...shortInfo,
+				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+		})
+		`,
+		ExamenprogrammaBgModuletaak:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgModule: {
+				...shortInfo,
+				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+			Niveau: NiveauShort
+		})
+		`,
+		ExamenprogrammaBgKeuzevak:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgProfiel: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgDeeltaak: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ExamenprogrammaBgKeuzevaktaak: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
+		`,
+		ExamenprogrammaBgKeuzevaktaak: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ExamenprogrammaBgKeuzevak: {
+				...shortInfo,
+				deprecated: _,
+				ExamenprogrammaBgProfiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+			Niveau: NiveauShort
+		})
+		`
+	},
+	routes: {
+		'examenprogramma_bg/:id': (req) => opendata.api["ExamenprogrammaBgVolledig"](req.params, req.query),
+		'examenprogramma_bg_profiel/': (req) =>	opendata.api["ExamenprogrammaBgProfiel"](req.params, req.query),
+		'examenprogramma_bg_kern/': (req) => opendata.api["ExamenprogrammaBgKern"](req.params, req.query),
+		'examenprogramma_bg_kerndeel/': (req) => opendata.api["ExamenprogrammaBgKerndeel"](req.params, req.query),
+		'examenprogramma_bg_globale_eindterm/': (req) => opendata.api["ExamenprogrammaBgGlobaleEindterm"](req.params, req.query),
+		'examenprogramma_bg_module/': (req) => opendata.api["ExamenprogrammaBgModule"](req.params, req.query),
+		'examenprogramma_bg_keuzevak/': (req) => opendata.api["ExamenprogrammaBgKeuzevak"](req.params, req.query),
+		'examenprogramma_bg_deeltaak/': (req) => opendata.api["ExamenprogrammaBgDeeltaak"](req.params, req.query),
+		'examenprogramma_bg_moduletaak/': (req) =>opendata.api["ExamenprogrammaBgModuletaak"](req.params, req.query),
+		'examenprogramma_bg_keuzevaktaak/': (req) => opendata.api["ExamenprogrammaBgKeuzevaktaak"](req.params, req.query)
+		
 	}
 };

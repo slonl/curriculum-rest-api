@@ -1,0 +1,116 @@
+<template data-simply-template="spreadsheet">
+    <div class="slo-spreadsheet">
+        <div class="ds-align-right slo-export-button">
+            <button class="ds-button ds-button-naked ds-icon-button" title="exporteer" data-simply-command="export"><svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#download"></use>
+            </svg></button>
+        </div>
+        <div class="slo-form-inline slo-context-filter">
+            <select class="slo-roots-select" data-simply-field="roots-selectie"
+            data-simply-list="roots" data-simply-data="roots" data-simply-entry="title" 
+            data-simply-activate="roots-select" data-simply-command="selectRoot">
+                <template>
+                    <option data-simply-field="title"></option>
+                </template>
+            </select>
+            <button class="ds-button ds-icon-button ds-button-naked" data-simply-command="toggleFullscreen" data-simply-state="close">
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="close">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#minimize-2"></use>
+                </svg>
+                <svg class="ds-button-state ds-icon ds-icon-feather" data-simply-state="open">
+                    <use xlink:href="/assets/icons/feather-sprite.svg#maximize-2">
+                </use></svg>
+            </button>
+        </div>
+        <nav class="ds-crumbs">
+            <ul class="ds-crumbs-list">
+                <li>API</li>
+                <li><a href="/">2024</a></li>
+                <li><a href="" data-simply-field="contextLink"></a></li>
+            </ul>
+        </nav>
+        <div class="ds-scrollbox" id="slo-spreadsheet" style="overflow-anchor: none;">
+        </div>
+        <dialog class="ds-dialog ds-dialog-narrow slo-spreadsheet-search">
+            <div class="ds-dialog-header" style="z-index: 1000">
+                <button class="ds-button ds-button-naked ds-button-close" data-simply-command="closeDialog">
+                    <svg class="ds-icon ds-icon-feather">
+                      <use xlink:href="/assets/icons/feather-sprite.svg#x"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="ds-dialog-content">
+                <form class="slo-search-form">
+                    <label>
+                        Zoek
+                        <input type="text" name="searchText" data-simply-command="searchText" data-simply-immediate="true"
+                        autocomplete="off">
+                    </label>
+                    <button title="Volgende" class="ds-button ds-button-naked" data-simply-command="searchTextNext">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#chevron-down"></use>
+                        </svg>
+                    </button>
+                    <button title="Vorige" class="ds-button ds-button-naked" data-simply-command="searchTextPrev">
+                        <svg class="ds-icon ds-icon-feather">
+                            <use xlink:href="/assets/icons/feather-sprite.svg#chevron-up"></use>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </dialog>
+        <dialog class="slo-type-selector ds-dialog">
+            <header class="ds-dialog-header">
+                <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+                    <svg class="ds-icon ds-icon-feather">
+                        <use xlink:href="/assets/icons/feather-sprite.svg#x">
+                    </use></svg>
+                </button>
+                <div class="ds-space">
+                    <h2>Voeg relatie toe</h2>
+                </div>
+            </header>
+            <div class="ds-dialog-content">
+                <div data-simply-field="addEntityError" class="ds-alert ds-alert-error ds-space-inside slo-errors"></div>
+                <div class="ds-space">
+                    <button data-simply-command="addSibling" class="button-clear slo-type">
+                        Erna: <span data-simply-field="siblingType" ></span>
+                    </button><br>
+                    <button data-simply-command="showAvailableTypes" class="button-clear slo-type">
+                        Erin: selecteer type:
+                    </button>
+                    <div class="slo-types ds-space-horizontal" data-simply-list="availableTypes">
+                        <template>
+                            <label class="slo-type">
+                                <input data-simply-command="addChild"
+                                    name="type" type="radio"
+                                   data-simply-field="type" 
+                                   data-simply-content="attributes" 
+                                   data-simply-attributes="value">
+                                <span data-simply-field="name"></span>
+                            </label>
+                        </template>
+                    </div>
+                    <form class="slo-niveau ds-space-horizontal slo-hidden">
+                        <label for="niveau">Selecteer Niveau:</label>
+                        <input type="text" name="niveau" list="niveaus">
+                        <button class="ds-button" type="submit" data-simply-command="addNiveau">Link</button>
+                    </form>
+                    <datalist id="niveaus" data-simply-list="niveaus" data-simply-data="niveaus" data-simply-entry="title">
+                        <template>
+                            <option data-simply-field="title"></option>
+                        </template>
+                    </datalist>
+                    <button data-simply-command="showLinkForm" class="button-clear slo-type">
+                        Link bestaande entiteit
+                    </button>
+                    <form class="slo-link ds-space-horizontal slo-hidden">
+                        <label for="link">Entiteit ID:</label>
+                        <input type="text" name="link">
+                        <button class="ds-button" type="submit" data-simply-command="addLink">Link</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+    </div>
+</template>

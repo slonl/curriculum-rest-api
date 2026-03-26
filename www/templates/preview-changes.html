@@ -1,0 +1,46 @@
+<dialog id="previewChanges" class="preview-changes ds-dialog">
+    <header class="ds-dialog-header">
+        <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+            <svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#x">
+            </use></svg>
+        </button>
+        <div class="ds-space">
+            <h2>Wijzigingen</h2>
+            <button class="ds-button ds-icon-button" data-simply-command="removeAllChanges" title="Verwijder alle wijzigingen">
+				<svg class="ds-icon ds-icon-feather">
+		            <use xlink:href="/assets/icons/feather-sprite.svg#trash"></use>
+		        </svg>
+		        Verwijder alle wijzigingen
+			</button>
+        </div>
+    </header>
+    <div class="ds-dialog-content">
+		<div class="ds-space" data-simply-list="mergedChanges">
+			<template>
+				<details open>
+					<summary><span data-simply-field="context"></span> (<span data-simply-field="count"></span>)</summary>
+					<div style="margin-left: 2em" data-simply-list="types">
+						<template>
+							<details>
+								<summary><span data-simply-field="type"></span> (<span data-simply-field="count"></span>)</summary>
+								<div style="margin-left: 2em" data-simply-list="entities">
+									<template>
+										<details>
+											<summary>
+												<a data-simply-field="id" data-simply-command="review" target="review" class=""><svg class="ds-icon ds-icon-feather">
+										                <use xlink:href="/assets/icons/feather-sprite.svg#link">
+										            </use></svg></a>
+												<span data-simply-field="title"></span></summary>
+											<div data-simply-field="diff"></div>
+										</details>
+									</template>
+								</div>
+							</details>
+						</template>
+					</div>
+				</details>
+			</template>
+		</div>
+    </div>        
+</dialog>

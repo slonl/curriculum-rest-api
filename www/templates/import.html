@@ -1,0 +1,37 @@
+<dialog class="slo-import-dialog ds-dialog" id="importDialog">
+    <header class="ds-dialog-header">
+        <button data-simply-command="closeDialog" class="ds-button ds-button-naked ds-button-close">
+            <svg class="ds-icon ds-icon-feather">
+                <use xlink:href="/assets/icons/feather-sprite.svg#x">
+            </use></svg>
+        </button>
+        <div class="ds-space">
+            <h2>Upload een excel bestand</h2>
+        </div>
+    </header>
+    <div class="ds-dialog-content ds-margin-up">
+		<form data-simply-command="importXLSX" class="ds-space slo-grid slo-grid-3" data-simply-collection="upload">
+			<label class="slo-button">
+				<span class="slo-label" data-simply-field="selected-files">Selecteer bestand</span>
+		        <input class="slo-hidden" type="file" name="file" data-simply-element="files" accept=".xlsx">
+		    </label>
+		    <button class="ds-button ds-button-primary" type="submit">Upload</button>
+		</form>
+        <div class="ds-space slo-errors" data-simply-list="importErrors">
+            <template>
+                <div class="ds-error">
+                    <div class="slo-error-message" data-simply-field="message"></div>
+                    <table class="slo-error-table" data-simply-list="errors">
+                        <template>
+                            <tr class="slo-excel-row">
+                                <td class="slo-excel-row-nr" data-simply-field="cause.$line"></td>
+                                <td class="slo-excel-prefix" data-simply-field="cause.prefix"></td>
+                                <td class="slo-excel-title" data-simply-field="cause.title"></td>
+                            </tr>
+                        </template>
+                    </table>
+                </div>
+            </template>
+        </div>
+	</div>
+</dialog>

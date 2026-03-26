@@ -2,523 +2,326 @@ module.exports = {
 	context: 'referentiekader',
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/referentiekader.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-referentiekader/context.json',
+	fragments: ``,
 	queries: {
-		RefVakleergebied: `query RefVakleergebied($page:Int, $perPage:Int) {
-			allRefVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				Vakleergebied {
-					id
-					title
-					deprecated
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefVakleergebiedMeta {
-				count
-			}
-		}`,
-		RefDomein: `query RefDomein($page:Int, $perPage:Int) {
-			allRefDomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				RefVakleergebied{
-					id
-					title
-					deprecated
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefDomeinMeta {
-				count
-			}
-		}`,
-		RefSubdomein: `query RefSubdomein($page:Int, $perPage:Int) {
-			allRefSubdomein(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				RefDomein { 
-					RefVakleergebied {
-						id
-						title
-						deprecated
-					}
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefSubdomeinMeta {
-				count
-			}
-		}`,
-		RefOnderwerp: `query RefOnderwerp($page:Int, $perPage:Int) {
-			allRefOnderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				RefSubdomein {
-					RefDomein {
-						RefVakleergebied{
-							id
-							title
-							deprecated
-						}
-					}
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefOnderwerpMeta {
-				count
-			}
-		}`,
-		RefDeelonderwerp: `query RefDeelonderwerp($page:Int, $perPage:Int) {
-			allRefDeelonderwerp(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				RefOnderwerp {
-					RefSubdomein {
-						RefDomein {
-							RefVakleergebied{
-								id
-								title
-								deprecated
-							}
-						}
-					}
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefDeelonderwerpMeta {
-				count
-			}
-		}`,
-		RefTekstkenmerk: `query RefTekstkenmerk($page:Int, $perPage:Int) {
-			allRefTekstkenmerk(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				RefOnderwerp {
-					RefSubdomein {
-						RefDomein {
-							RefVakleergebied{
-								id
-								title
-								deprecated
-							}
-						}
-					}
-				}
-				NiveauIndex {
-					Niveau {
-						...NiveauShort
-					}
-				}
-			}
-			_allRefTekstkenmerkMeta {
-				count
-			}
-		}`,
-		ReferentiekaderVolledig: `query ReferentiekaderVolledig($id:ID, $niveau:ID) {
-		  RefVakleergebied(id:$id) {
-		    id
-		    prefix
-		    title
-		    deprecated
-		    NiveauIndex(filter:{niveau_id:[$niveau]}) {
-		      Niveau {
-		        ...NiveauShort
-		      }
-		    }
-		    RefDomein {
-		      id
-		      prefix 
-		      title
-		      deprecated
-		      RefSubdomein {
-		        id
-		        prefix
-		        title
-		        deprecated
-		        RefOnderwerp {
-		          id
-		          prefix
-		          title
-		          deprecated
-		          RefDeelonderwerp {
-		            id
-		            prefix
-		            title
-		            deprecated
-		            Doelniveau(filter:{niveau_id:[$niveau]}) {
-		              ...Doelen
-		            }
-		          }
-		          Doelniveau(filter:{niveau_id:[$niveau]}) {
-		            ...Doelen
-		          }
-		        }
-		        Doelniveau(filter:{niveau_id:[$niveau]}) {
-		          ...Doelen
-		        }
-		      }
-		      Doelniveau(filter:{niveau_id:[$niveau]}) {
-		        ...Doelen
-		      }
-		    }
-		    Doelniveau(filter:{niveau_id:[$niveau]}) {
-		      ...Doelen
-		    }
-		  }
-		}`
-	},
-	typedQueries: {
-		'ref_vakleergebied': `
-			id
-			prefix
-			title
-			RefDomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ref_domein': `
-			id
-			prefix
-			title
-			RefSubdomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefVakleergebied {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ref_subdomein': `
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefDomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ref_onderwerp': `
-			id
-			prefix
-			title
-			RefSubdomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefDeelonderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefTekstkenmerk {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ref_deelonderwerp': `
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`,
-		'ref_tekstkenmerk': `
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		`
-	},
-	idQuery: `
-		allRefVakleergebied(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefDomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefDomein(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefSubdomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefVakleergebied {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefSubdomein(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefDomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefOnderwerp(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefSubdomein {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefDeelonderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			RefTekstkenmerk {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefDeelonderwerp(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allRefTekstkenmerk(filter:{id:$id}) {
-			id
-			prefix
-			title
-			RefOnderwerp {
-				id
-				prefix
-				title
-				deprecated
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			NiveauIndex {
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-	`,
-	routes: {
-		'ref_vakleergebied/': (req) =>
-			opendata.api["RefVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefVakleergebied, type: 'RefVakleergebied', meta: result.data._allRefVakleergebiedMeta}
-			}),
-		'ref_domein/': (req) =>
-			opendata.api["RefDomein"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefDomein, type: 'RefDomein', meta: result.data._allRefDomeinMeta}
-			}),
-		'ref_subdomein/': (req) =>
-			opendata.api["RefSubdomein"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefSubdomein, type: 'RefSubdomein', meta: result.data._allRefSubdomeinMeta}
-			}),
-		'ref_onderwerp/': (req) =>
-			opendata.api["RefOnderwerp"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefOnderwerp, type: 'RefOnderwerp', meta: result.data._allRefOnderwerpMeta}
-			}),
-		'ref_deelonderwerp/': (req) =>
-			opendata.api["RefDeelonderwerp"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefDeelonderwerp, type: 'RefDeelonderwerp', meta: result.data._allRefDeelonderwerpMeta}
-			}),
-		'ref_tekstkenmerk/': (req) =>
-			opendata.api["RefTekstkenmerk"](req.params, req.query)
-			.then(function(result) {
-				return { data: result.data.allRefTekstkenmerk, type: 'RefTekstkenmerk', meta: result.data._allRefTekstkenmerkMeta}
-			}),
-		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) =>
-			opendata.api["ReferentiekaderVolledig"](req.params)
-			.then(function(result) {
-				result.data.RefVakleergebied.Niveau = result.data.RefVakleergebied.NiveauIndex[0].Niveau[0];
-				return {
-					data: result.data.RefVakleergebied,
-					type: 'Refvakleergebied'
-				}
+		RefVakleergebied: `
+		const results = from(data.RefVakleergebied)
+			.orderBy({
+				prefix:asc
 			})
-	}
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				description: _,					
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Niveau: NiveauIndex
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefVakleergebied.length,
+				root: meta.schema.types.RefVakleergebied.root
+			}
+
+			response
+
+		`,
+		RefDomein: `
+		const results = from(data.RefDomein)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Niveau: NiveauIndex
+			})
+				
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefDomein.length,
+				root: meta.schema.types.RefDomein.root
+			}
+
+			response
+		`,
+		RefSubdomein: `
+		const results = from(data.RefSubdomein)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefDomein: { 
+					RefVakleergebied: {
+						...shortInfo,
+						deprecated: _,
+					}
+				},
+				Niveau: NiveauIndex
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefSubdomein.length,
+				root: meta.schema.types.RefSubdomein.root
+			}
+
+			response
+		`,
+		RefOnderwerp: `
+		const results = from(data.RefOnderwerp)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefSubdomein: {
+					RefDomein: {
+						RefVakleergebied: {
+							...shortInfo,
+							deprecated: _,
+						}
+					}
+				},
+				Niveau: NiveauIndex
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefOnderwerp.length,
+				root: meta.schema.types.RefOnderwerp.root
+			}
+
+			response
+		`,
+		RefDeelonderwerp: `
+		const results = from(data.RefDeelonderwerp)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefOnderwerp: {
+					RefSubdomein: {
+						RefDomein: {
+							RefVakleergebied: {
+								...shortInfo,
+								deprecated: _,
+							}
+						}
+					}
+				},
+				Niveau: NiveauIndex
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefDeelonderwerp.length,
+				root: meta.schema.types.RefDeelonderwerp.root
+			}
+
+			response
+		`,
+
+		// @TODO : Check if RefTekstkenmerk is indeed empty
+		RefTekstkenmerk: `
+		const results = from(data.RefTekstkenmerk)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+				RefOnderwerp: {
+					RefSubdomein: {
+						RefDomein: {
+							RefVakleergebied: {
+								...shortInfo,
+								deprecated: _,
+							}
+						}
+					}
+				},
+				Niveau: NiveauIndex
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.RefTekstkenmerk.length,
+				root: meta.schema.types.RefTekstkenmerk.root
+			}
+
+			response
+		`,
+		/*
+		// @TODO : Check if ReferentiekaderVolledig is a word
+		ReferentiekaderVolledig: `
+		const results = from(data.ReferentiekaderVolledig)
+		.select({
+			'@id': Id,
+			uuid: _.id,
+			prefix: _,
+			title: _,
+			deprecated: _,
+			Niveau: NiveauIndex,
+			RefDomein {
+				'@id': Id,
+				uuid: _.id,
+				prefix: _,
+				title: _,
+				deprecated: _,
+				RefSubdomein: {
+					'@id': Id,
+					uuid: _.id,
+					prefix: _,
+					title: _,
+					deprecated: _,
+					RefOnderwerp: {
+						'@id': Id,
+						uuid: _.id,
+						prefix: _,
+						title: _,
+						deprecated: _,
+						RefDeelonderwerp: {
+							'@id': Id,
+							uuid: _.id,
+							prefix: _,
+							title: _,
+							deprecated: _,
+							Doelniveau:	Doelen,
+						},
+						Doelniveau: Doelen,
+					},
+					Doelniveau:	Doelen,
+				},
+				Doelniveau: Doelen
+			},
+			Doelniveau: Doelen,
+		}
+	})`
+		*/
+	},
+
+	typedQueries: {
+		RefVakleergebied:`
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefDomein: {
+				...shortInfo,
+					deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})
+		`,
+		RefDomein: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefSubdomein: {
+				...shortInfo,
+				deprecated: _,
+			},
+			RefVakleergebied: {
+				...shortInfo,
+				deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})
+		`,
+		RefSubdomein: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefOnderwerp: {
+				...shortInfo,
+				deprecated: _,
+			},
+			RefDomein: {
+				...shortInfo,
+				deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})
+		`,
+		RefOnderwerp: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefSubdomein: {
+				...shortInfo,
+				deprecated: _,
+			},
+			RefDeelonderwerp: {
+				...shortInfo,
+				deprecated: _,
+			},
+			RefTekstkenmerk: {
+				...shortInfo,
+				deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})
+		`,
+		RefDeelonderwerp: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefOnderwerp: {
+				...shortInfo,
+				deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})
+		`,
+		RefTekstkenmerk: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			RefOnderwerp {
+				...shortInfo,
+				deprecated: _,
+			},
+			Doelniveau: Doelniveau,
+			Niveau: NiveauIndex
+		})	
+		`,	
+	},
+	routes: {
+		'ref_vakleergebied/': (req) => opendata.api["RefVakleergebied"](req.params, req.query),
+		'ref_domein/': (req) => opendata.api["RefDomein"](req.params, req.query),
+		'ref_subdomein/': (req) => opendata.api["RefSubdomein"](req.params, req.query),
+		'ref_onderwerp/': (req) => opendata.api["RefOnderwerp"](req.params, req.query),
+		'ref_deelonderwerp/': (req) => opendata.api["RefDeelonderwerp"](req.params, req.query),
+		'ref_tekstkenmerk': (req) => opendata.api["RefTekstkenmerk"](req.params, req.query),
+		'niveau/:niveau/ref_vakleergebied/:id/doelen': (req) => opendata.api["ReferentiekaderVolledig"](req.params, req.query)
+		}
 };

@@ -3,619 +3,457 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/erk.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-erk/context.json',
 	queries: {
-		ErkVakleergebied: `query ErkVakleergebied($page:Int, $perPage:Int) {
-			allErkVakleergebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				Vakleergebied {
-						id
-						title
-				}
-				Niveau {
-				  ...NiveauShort
-				}
+		ErkVakleergebied: `
+		const results = from(data.ErkVakleergebied)
+			.orderBy({ 
+				prefix:asc 
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
+				...shortInfo,
+				unreleased: _,
+				Vakleergebied: {
+						'@id': Id,
+						'@type': Type,
+						uuid: _.id,
+						title: _,
+				},
+				Niveau: NiveauShort 
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkVakleergebied.length,
+				root: meta.schema.types.ErkVakleergebied.root
 			}
-			_allErkVakleergebiedMeta {
-				count
+	
+			response
+		`,
+		ErkGebied: `
+		const results = from(data.ErkGebied)
+			.orderBy({ 
+				prefix:asc 
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_gebied',
+				...shortInfo,
+				unreleased: _,
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkGebied.length,
+				root: meta.schema.types.ErkGebied.root
 			}
-		}`,
-		ErkTaalprofiel: `query ErkTaalprofiel($page:Int, $perPage:Int) {
-			allErkTaalprofiel(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				ErkTaalprofieltekst {
-				  id
-				  title
-						}
-						ErkSchaal {
-						  id
-						  title
-  						  category
-						  ErkGebied{
-							id
-							title
-							deprecated
-						  }
-						  ErkCategorie{
-							id
-							title
-							  ErkGebied{
-								id
-								title
-								deprecated
-							  }
-							deprecated
-						  }
-						  ErkTaalactiviteit {
-							id
-							title
-							category
-							  ErkCategorie{
-								id
-								title
-								  ErkGebied{
-									id
-									title
-									deprecated
-								  }
-								deprecated
-							  }
-							deprecated
-							}
-						ErkCandobeschrijving {
-							id
-							title
-							Niveau {
-							  ...NiveauShort
-							}
-							ErkVoorbeeld {
-								id
-								title
-								deprecated
-							}
-							deprecated
-						}
-				}
-				unreleased
+	
+			response
+		`,
+		ErkCategorie: `
+		const results = from(data.ErkCategorie)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_categorie',
+				...shortInfo,
+				unreleased: _,
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkCategorie.length,
+				root: meta.schema.types.ErkCategorie.root
 			}
-			_allErkTaalprofielMeta {
-				count
-			}
-		}`,
-		ErkTaalprofieltekst: `query ErkTaalprofieltekst($page:Int, $perPage:Int) {
-			allErkTaalprofieltekst(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				Niveau {
-				  ...NiveauShort
-				}
-				unreleased
-			}
-			_allErkTaalprofieltekstMeta {
-				count
-			}
-		}`,
-		ErkGebied: `query ErkGebied($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				erk_categorie_id
-				erk_taalactiviteit_id
-				erk_schaal_id
-				unreleased
-			}
-			_allErkGebiedMeta {
-				count
-			}
-		}`,
-		ErkCategorie: `query ErkCategorie($page:Int, $perPage:Int) {
-			allErkCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				erk_taalactiviteit_id
-				erk_schaal_id
-				unreleased
-			}
-			_allErkCategorieMeta {
-				count
-			}
-		}`,
-		ErkTaalactiviteit: `query ErkTaalactiviteit($page:Int, $perPage:Int) {
-			allErkTaalactiviteit(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				erk_schaal_id
-				unreleased
-			}
-			_allErkTaalactiviteitMeta {
-				count
-			}
-		}`,
-		ErkSchaal: `query ErkSchaal($page:Int, $perPage:Int) {
-			allErkSchaal(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				erk_candobeschrijving_id
-				unreleased
-			}
-			_allErkSchaalMeta {
-				count
-			}
-		}`,
-		ErkCandobeschrijving: `query ErkCandobeschrijving($page:Int, $perPage:Int) {
-			allErkCandobeschrijving(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-				niveau_id
-				erk_voorbeeld_id
-				erk_lesidee_id
-			}
-			_allErkCandobeschrijvingMeta {
-				count
-			}
-		}`,
-		ErkVoorbeeld: `query ErkVoorbeeld($page:Int, $perPage:Int) {
-			allErkVoorbeeld(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-			}
-			_allErkVoorbeeldMeta {
-				count
-			}
-		}`,
-		ErkLesidee: `query ErkLesidee($page:Int, $perPage:Int) {
-			allErkLesidee(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-			}
-			_allErkLesideeMeta {
-				count
-			}
-		}`,
-		ErkVolledig: `query ErkVolledig($id:ID, $niveau:ID) {
-		  ErkVakleergebied(id:$id) {
-		    id
-		    prefix
-		    title
-			Niveau {
-			  ...NiveauShort
-			}
-		  }
-		}`,
-		ErkSchalen: `query ErkSchalen($page:Int, $perPage:Int) {
-			allErkGebied(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				ErkCategorie {
-					id
-					prefix
-					title
-					ErkTaalactiviteit {
-						id
-						prefix
-						title
-						ErkSchaal {
-							id
-							prefix
-							title
-							algemeen
-						}
+	
+			response
+		`,
+		ErkTaalprofiel:`
+		const results = from(data.ErkTaalprofiel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofiel',
+				...shortInfo,
+  				ErkTaalprofieltekst: {
+					...ShortLink,
+				},
+  				ErkSchaal: {
+					...ShortLink,
+					category: many(_),
+					ErkGebied: many({
+						...ShortLink,
+					}),
+					ErkCategorie: many({
+						...ShortLink,
+						ErkGebied: many({
+						...ShortLink,
+						}),
+					}),
+					ErkTaalactiviteit: many({
+						...ShortLink,
+						category: many(_),
+						ErkCategorie: many({
+							...ShortLink,
+							ErkGebied: many({
+								...ShortLink,
+							}),
+						}),
+					}),
+					ErkCandobeschrijving: {
+						...ShortLink,
+						Niveau: {
+							...NiveauShort,
+						},
+						ErkVoorbeeld: many({
+							...ShortLink,
+						}),
 					}
-					ErkSchaal {
-						id
-						prefix
-						title
-						algemeen
-					}
-				}
-				ErkTaalactiviteit {
-					id
-					prefix
-					title
-					ErkSchaal {
-						id
-						prefix
-						title
-						algemeen
-					}
-				}
-				ErkSchaal {
-					id
-					prefix
-					title
-					algemeen
-				} 
+				},
+				unreleased: _,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkTaalprofiel.length,
+				root: meta.schema.types.ErkTaalprofiel.root
 			}
-			_allErkGebiedMeta {
-				count
+	
+			response
+		`,
+		ErkTaalprofieltekst:`
+		const results = from(data.ErkTaalprofieltekst)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalprofieltekst',
+				...shortInfo,
+				Niveau: NiveauShort
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkTaalprofieltekst.length,
+				root: meta.schema.types.ErkTaalprofieltekst.root
 			}
-		}`
+	
+			response
+		`,
+		ErkTaalactiviteit: `
+		const results = from(data.ErkTaalactiviteit)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_taalactiviteit',
+				...shortInfo,
+				ErkSchaal: shortInfo,
+				unreleased: _,
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkTaalactiviteit.length,
+				root: meta.schema.types.ErkTaalactiviteit.root
+			}
+	
+			response
+		`,
+		ErkSchaal: `
+			const results = from(data.ErkSchaal)
+				.orderBy({
+					prefix:asc
+				})
+				.slice(Paging.start,Paging.end)
+				.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_schaal',
+				...shortInfo,
+				ErkCandobeschrijving: shortInfo,
+				unreleased: _,
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkSchaal.length,
+				root: meta.schema.types.ErkSchaal.root
+			}
+	
+			response
+		`,
+		ErkCandobeschrijving: `
+		const results = from(data.ErkCandobeschrijving)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_candobeschrijving',
+				...shortInfo,
+				unreleased: _,
+				Niveau: {
+					...shortInfo,
+					deprecated: _,
+				},
+				ErkVoorbeeld: shortInfo,
+				ErkLesidee: shortInfo,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkCandobeschrijving.length,
+				root: meta.schema.types.ErkCandobeschrijving.root
+			}
+	
+			response
+		`,
+		ErkVoorbeeld: `
+		const results = from(data.ErkVoorbeeld)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_voorbeeld',
+				...shortInfo,
+				unreleased: _,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkVoorbeeld.length,
+				root: meta.schema.types.ErkVoorbeeld.root
+			}
+	
+			response
+		`,
+		ErkLesidee: `
+		const results = from(data.ErkLesidee)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_lesidee',
+				...shortInfo,
+				unreleased: _,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkLesidee.length,
+				root: meta.schema.types.ErkLesidee.root			}
+	
+			response
+		`,
+		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
+		ErkVolledig: `
+		from(Index(request.query.id))
+			.select({
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
+				...shortInfo,
+				Niveau: NiveauShort
+		  	})
+		`,
+		// @TODO : Find ErkSchalen en context
+		ErkSchalen: `
+		const results = from(data.ErkGebied)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_ONBEKEND',
+				...shortInfo,
+				ErkCategorie: {
+					...shortInfo,
+					ErkTaalactiviteit: {
+						...shortInfo,
+						ErkSchaal: {
+							...shortInfo,
+							algemeen: _,
+						},
+					},
+					ErkSchaal: {
+						...shortInfo,
+						algemeen: _,
+					},
+				},
+				ErkTaalactiviteit: {
+					...shortInfo,
+					ErkSchaal: {
+						...shortInfo,
+						algemeen: _,
+					},
+				},
+				ErkSchaal: {
+					...shortInfo,
+					algemeen: _,
+				},
+			})
+			
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.ErkGebied.length
+			}
+	
+			response`,
 	},
 	typedQueries: {
-		'erk_vakleergebied': `
-			id
-			prefix
-			title
-			Niveau {
-				id
-				title
-				deprecated
-			}
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
+		ErkVakleergebied: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			Niveau: {
+				...shortInfo,
+				deprecated: _,
+			},
+			Vakleergebied: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
 		`,
-		'erk_taalprofiel': `
-			id
-			prefix
-			title
-			ErkSchaal {
-				id
-				title
-				deprecated
-			}
-			ErkTaalprofieltekst {
-				id
-				title
-				deprecated
-			}
+		ErkGebied: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkCategorie: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ErkTaalactiviteit: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ErkSchaal: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})	
 		`,
-		'erk_taalprofieltekst': `
-			id
-			prefix
-			title
-			Niveau {
-				id
-				title
-			}
+		ErkCategorie: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkTaalactiviteit: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ErkSchaal: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
 		`,
-		'erk_gebied': `
-			id
-			prefix
-			title
-			ErkCategorie {
-				id
-				title
-				deprecated
-			}
-			ErkTaalactiviteit {
-				id
-				title
-				deprecated
-			}
-			ErkSchaal {
-				id
-				title
-				deprecated
-			}
+		ErkTaalprofiel: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkSchaal: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
 		`,
-		'erk_categorie': `
-			id
-			prefix
-			title
-			ErkTaalactiviteit {
-				id
-				title
-				deprecated
-			}
-			ErkSchaal {
-				id
-				title
-				deprecated
-			}
+		ErkTaalprofieltekst: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'erk_taalactiviteit': `
-			id
-			prefix
-			title
-			ErkSchaal {
-				id
-				title
-				deprecated
-			}
+		ErkTaalactiviteit: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkSchaal: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
 		`,
-		'erk_schaal': `
-			id
-			prefix
-			title
-			ErkCandobeschrijving {
-				id
-				title
-				isempty
-				deprecated
-				Niveau {
-					id
-					title
-					deprecated
-				}
-			}
+		ErkSchaal: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			ErkCandobeschrijving: {
+				...shortInfo,
+				isempty: _,
+				deprecated: _,
+				Niveau: {
+					...shortInfo,
+					deprecated: _,
+				},
+			},
+		})
 		`,
-		'erk_candobeschrijving': `
-			id
-			prefix
-			title
-			isempty
-			Niveau {
-				id
-				title
-				deprecated
-			}
-			ErkVoorbeeld {
-				id
-				title
-				deprecated
-			}
-			ErkLesidee {
-				id
-				title
-				deprecated
-			}
+		ErkCandobeschrijving: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			isempty: _,
+			Niveau: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ErkVoorbeeld: {
+				...shortInfo,
+				deprecated: _,
+			},
+			ErkLesidee: {
+				...shortInfo,
+				deprecated: _,
+			},
+		})
 		`,
-		'erk_voorbeeld': `
-			id
-			prefix
-			title
+		ErkVoorbeeld: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})	
 		`,
-		'erk_lesidee': `
-			id
-			prefix
-			title
+		ErkLesidee: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`
 	},
-	idQuery: `
-		allErkVakleergebied(filter:{id:$id}) {
-			id
-			prefix
-			title
-			Niveau {
-			  id
-			  title
-			}
-			Vakleergebied {
-					id
-					title
-			}
-		}
-		allErkTaalprofiel(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ErkSchaal {
-				id
-				title
-				ErkCandobeschrijving {
-					id
-					title
-					isempty
-					Niveau {
-					  id
-					  title
-					}
-				}
-			}
-			ErkTaalprofieltekst {
-				id
-				title
-				Niveau {
-				  id
-				  title
-				}
-			}
-		}
-		ErkTaalprofieltekst(filter:{id:$id}) {
-			id
-			prefix
-			title
-			Niveau {
-			  id
-			  title
-			}
-		}
-		allErkGebied(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ErkCategorie {
-			  id
-			  title
-			}
-			ErkTaalactiviteit {
-			  id
-			  title
-			}
-			ErkSchaal {
-			  id
-			  title
-			}
-		}
-		allErkCategorie(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ErkTaalactiviteit {
-			  id
-			  title
-			}
-			ErkSchaal {
-			  id
-			  title
-			}
-		}
-		allErkTaalactiviteit(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ErkSchaal {
-			  id
-			  title
-			}
-		}
-		allErkSchaal(filter:{id:$id}) {
-			id
-			prefix
-			title
-			ErkCandobeschrijving {
-				id
-				title
-				isempty
-				Niveau {
-				  id
-				  title
-				}
-			}
-		}
-		allErkCandobeschrijving(filter:{id:$id}) {
-			id
-			prefix
-			title
-			isempty
-			Niveau {
-			  id
-			  title
-			}
-			ErkVoorbeeld {
-			  id
-			  title
-			}
-			ErkLesidee {
-			  id
-			  title
-			}
-		}
-		allErkVoorbeeld(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allErkLesidee(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}`,
 	routes: {
-		'erk_vakleergebied/': (req) =>
-			opendata.api["ErkVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkVakleergebied, 
-					type: 'ErkVakleergebied', 
-					meta: result.data._allErkVakleergebiedMeta
-				}
-			}),
-		'erk_vakleergebied/:id': (req) =>
-			opendata.api["ErkVolledig"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.ErkVakleergebied,
-					type: 'ErkVakleergebied'
-				}
-			}),
-		'erk_taalprofiel/': (req) =>
-			opendata.api["ErkTaalprofiel"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkTaalprofiel, 
-					type: 'ErkTaalprofiel', 
-					meta: result.data._allErkTaalprofielMeta
-				}
-			}),
-		'erk_taalprofieltekst/': (req) =>
-			opendata.api["ErkTaalprofieltekst"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkTaalprofieltekst, 
-					type: 'ErkTaalprofieltekst', 
-					meta: result.data._allErkTaalprofieltekstMeta
-				}
-			}),
-		'erk_gebied/': (req) =>
-			opendata.api["ErkGebied"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkGebied, 
-					type: 'ErkGebied', 
-					meta: result.data._allErkGebiedMeta
-				}
-			}),
-		'erk_categorie/': (req) =>
-			opendata.api["ErkCategorie"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkCategorie, 
-					type: 'ErkCategorie', 
-					meta: result.data._allErkCategorieMeta
-				}
-			}),
-		'erk_taalactiviteit/': (req) =>
-			opendata.api["ErkTaalactiviteit"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkTaalactiviteit, 
-					type: 'ErkTaalactiviteit', 
-					meta: result.data._allErkTaalactiviteitMeta
-				}
-			}),
-		'erk_schaal/': (req) =>
-			opendata.api["ErkSchaal"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkSchaal, 
-					type: 'ErkSchaal', 
-					meta: result.data._allErkSchaalMeta
-				}
-			}),
-		'erk_candobeschrijving/': (req) =>
-			opendata.api["ErkCandobeschrijving"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkCandobeschrijving, 
-					type: 'ErkCandobeschrijving', 
-					meta: result.data._allErkCandobeschrijvingMeta
-				}
-			}),
-		'erk_voorbeeld/': (req) =>
-			opendata.api["ErkVoorbeeld"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkVoorbeeld, 
-					type: 'ErkVoorbeeld', 
-					meta: result.data._allErkVoorbeeldMeta
-				}
-			}),
-		'erk_lesidee/': (req) =>
-			opendata.api["ErkLesidee"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkLesidee, 
-					type: 'ErkLesidee', 
-					meta: result.data._allErkLesideeMeta
-				}
-			}),
-		'erk_schalen/': (req) =>
-			opendata.api["ErkSchalen"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allErkGebied, 
-					type: 'ErkGebied', 
-					meta: result.data._allErkGebiedMeta
-				}
-			})
+		'erk_vakleergebied/': (req) => opendata.api["ErkVakleergebied"](req.params, req.query),
+		'erk_vakleergebied/:id': (req) => opendata.api["ErkVolledig"](req.params, req.query),
+		'erk_gebied/': (req) =>  opendata.api["ErkGebied"](req.params, req.query),
+		'erk_categorie/': (req) => opendata.api["ErkCategorie"](req.params, req.query),
+		'erk_taalprofiel/': (req) =>	opendata.api["ErkTaalprofiel"](req.params, req.query),
+		'erk_taalprofieltekst/': (req) =>	opendata.api["ErkTaalprofieltekst"](req.params, req.query),
+		'erk_taalactiviteit/': (req) =>	opendata.api["ErkTaalactiviteit"](req.params, req.query),
+		'erk_schaal/': (req) => opendata.api["ErkSchaal"](req.params, req.query),
+		'erk_candobeschrijving/': (req) => opendata.api["ErkCandobeschrijving"](req.params, req.query),
+		'erk_voorbeeld/': (req) => opendata.api["ErkVoorbeeld"](req.params, req.query),
+		'erk_lesidee/': (req) => opendata.api["ErkLesidee"](req.params, req.query),
+		'erk_schalen/': (req) => opendata.api["ErkSchalen"](req.params, req.query),	
 	}
 };

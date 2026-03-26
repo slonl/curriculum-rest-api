@@ -3,201 +3,188 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/niveauhierarchie.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-niveauhierarchie/context.json',
 	queries: {
-		NhCategorie: `query NhCategorie($page:Int, $perPage:Int) {
-			allNhCategorie(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				nh_sector_id
-				nh_niveau_id
-				unreleased
+		NhCategorie: `
+		const results = from(data.NhCategorie)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_sector_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhCategorie.length,
+				root: meta.schema.types.NhCategorie.root
 			}
-			_allNhCategorieMeta {
-				count
+
+			response
+
+		`,
+		NhSector: `
+		const results = from(data.NhSector)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_schoolsoort_id: _,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhSector.length,
+				root: meta.schema.types.NhSector.root
 			}
-		}`,
-		NhSector: `query NhSector($page:Int, $perPage:Int) {
-			allNhSector(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				nh_schoolsoort_id
-				nh_bouw_id
-				nh_niveau_id
-				unreleased
+
+			response
+
+		`,
+		NhSchoolsoort: `
+		const results = from(data.NhSchoolsoort)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_leerweg_id: _,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhSchoolsoort.length,
+				root: meta.schema.types.NhSchoolsoort.root
 			}
-			_allNhSectorMeta {
-				count
+
+			response
+
+		`,
+		NhLeerweg: `
+		const results = from(data.NhLeerweg)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_bouw_id: _,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhLeerweg.length,
+				root: meta.schema.types.NhLeerweg.root
 			}
-		}`,
-		NhSchoolsoort: `query NhSchoolsoort($page:Int, $perPage:Int) {
-			allNhSchoolsoort(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				nh_leerweg_id
-				nh_bouw_id
-				nh_niveau_id
-				unreleased
+
+			response
+
+		`,
+		NhBouw: `
+		const results = from(data.NhBouw)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				nh_niveau_id: _,
+				unreleased: _,
+			})
+		
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhBouw.length,
+				root: meta.schema.types.NhBouw.root
 			}
-			_allNhSchoolsoortMeta {
-				count
+
+			response
+
+		`,
+		NhNiveau: `
+		const results = from(data.NhNiveau)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				unreleased: _,
+			})
+			
+			const response = {
+				data: results,
+				page: Page,
+				count: data.NhNiveau.length,
+				root: meta.schema.types.NhNiveau.root
 			}
-		}`,
-		NhLeerweg: `query NhLeerweg($page:Int, $perPage:Int) {
-			allNhLeerweg(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				nh_bouw_id
-				nh_niveau_id
-				unreleased
-			}
-			_allNhLeerwegMeta {
-				count
-			}
-		}`,
-		NhBouw: `query NhBouw($page:Int, $perPage:Int) {
-			allNhBouw(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				nh_niveau_id
-				unreleased
-			}
-			_allNhBouwMeta {
-				count
-			}
-		}`,
-		NhNiveau: `query NhNiveau($page:Int, $perPage:Int) {
-			allNhNiveau(page:$page, perPage:$perPage, sortField:"prefix",filter:{deprecated:null}) {
-				id
-				prefix
-				title
-				unreleased
-			}
-			_allNhNiveauMeta {
-				count
-			}
-		}`
+
+			response
+
+		`,
 	},
 	typedQueries: {
-		'nh_categorie': `
-			id
-			prefix
-			title
+		NhCategorie: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'nh_sector': `
-			id
-			prefix
-			title
+		NhSector: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'nh_schoolsoort': `
-			id
-			prefix
-			title
+		NhSchoolsoort: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'nh_leerweg': `
-			id
-			prefix
-			title
+		NhLeerweg: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'nh_bouw': `
-			id
-			prefix
-			title
+		NhBouw: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`,
-		'nh_niveau': `
-			id
-			prefix
-			title
+		NhNiveau: `
+		from(Index(request.query.id))
+		.select({
+			...shortInfo,
+		})
 		`
 	},
-	idQuery: `
-		allNhCategorie(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allNhSector(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allNhSchoolsoort(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allNhLeerweg(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allNhBouw(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}
-		allNhNiveau(filter:{id:$id}) {
-			id
-			prefix
-			title
-		}`,
 	routes: {
-		'nh_categorie/': (req) =>
-			opendata.api["NhCategorie"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhCategorie, 
-					type: 'NhCategorie', 
-					meta: result.data._allNhCategorieMeta
-				}
-			}),
-		'nh_sector/': (req) =>
-			opendata.api["NhSector"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhSector, 
-					type: 'NhSector', 
-					meta: result.data._allNhSectorMeta
-				}
-			}),
-		'nh_schoolsoort/': (req) =>
-			opendata.api["NhSchoolsoort"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhSchoolsoort, 
-					type: 'NhSchoolsoort', 
-					meta: result.data._allNhSchoolsoortMeta
-				}
-			}),
-		'nh_leerweg/': (req) =>
-			opendata.api["NhLeerweg"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhLeerweg, 
-					type: 'NhLeerweg', 
-					meta: result.data._allNhLeerwegMeta
-				}
-			}),
-		'nh_bouw/': (req) =>
-			opendata.api["NhBouw"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhBouw, 
-					type: 'NhBouw', 
-					meta: result.data._allNhBouwMeta
-				}
-			}),
-		'nh_niveau/': (req) =>
-			opendata.api["NhNiveau"](req.params, req.query)
-			.then(function(result) {
-				return { 
-					data: result.data.allNhNiveau, 
-					type: 'NhNiveau', 
-					meta: result.data._allNhNiveauMeta
-				}
-			})
+		'nh_categorie/': (req) => opendata.api["NhCategorie"](req.params, req.query),
+		'nh_sector/': (req) => opendata.api["NhSector"](req.params, req.query),
+		'nh_schoolsoort/': (req) => opendata.api["NhSchoolsoort"](req.params, req.query),
+		'nh_leerweg/': (req) => opendata.api["NhLeerweg"](req.params, req.query),
+		'nh_bouw/': (req) => opendata.api["NhBouw"](req.params, req.query),
+		'nh_niveau/': (req) => opendata.api["NhNiveau"](req.params, req.query)
 	}
 };

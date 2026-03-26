@@ -1,0 +1,715 @@
+   
+    a.slo-highlight-box {
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    a.slo-highlight-box:hover {
+        background-color: var(--ds-grey-dark);
+    }
+    :root .contexts {
+        --ds-grid-min-colwidth: 15rem;
+    }
+    ul.slo-navbar {
+        display: flex;
+        overflow: auto;
+        margin-top: calc(-1 * var(--ds-spacing));
+    }
+    ul.slo-navbar-small {
+        display: flex;
+        overflow: auto;
+    }
+    ul.slo-navbar-inline {
+        margin: 0;
+        display: inline-flex;
+    }
+    ul.slo-navbar li,
+    ul.slo-navbar-small li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .slo-text-content > article > :first-child {
+        margin-top: 0;
+    }
+    .slo-tree-table .closed [data-simply-field="indent"]::before {
+        content: "\25B8";
+    }
+    label.slo-column-name {
+        display: inline;
+    }
+    .slo-tree-table .ds-datatable-sorted-ascending a[data-simply-command="sortTree"][data-simply-value="ascending"] {
+        color: var(--ds-white);
+        background: var(--ds-primary);
+    }
+    .slo-tree-table .ds-datatable-sorted-descending a[data-simply-command="sortTree"][data-simply-value="descending"] {
+        color: var(--ds-white);
+        background: var(--ds-primary);
+    }
+    .slo-spreadsheet {
+        --ds-datatable-ruler-color: var(--ds-grey-30);
+        position: relative;
+    }
+    .slo-spreadsheet .ds-scrollbox {
+        --ds-scrollbox-height: calc(100vh - 280px);
+        min-height: 400px;
+    }
+    .slo-spreadsheet .scrollbar {
+        position: absolute;
+        top: 0;
+    }
+    .slo-helper {
+        max-height: 50vh;
+        overflow: auto;
+    }
+    .slo-helper ul {
+        margin-top: 0;
+        max-height: 48vh;
+        overflow: auto;
+    }
+    .vsb-menu {
+        left: auto !important;
+    }
+    .slo-contexts-select ~ .vsb-main .vsb-menu {
+        right: 0 !important;
+    }
+    .slo-spreadsheet tr.focus td {
+        background-color: var(--ds-grey-10);
+    }
+    .slo-spreadsheet tr.focus td.focus {
+        background-color: var(--ds-grey-30);
+        position: relative;
+    }
+
+    .slo-username span {
+        line-height: var(--ds-button-line-height);
+        padding: 0 1em;
+    }
+    .slo-editmode .slo-index {
+        margin-left: 1em;
+    }
+    .slo-delete, .slo-add {
+        visibility: hidden;
+        cursor: pointer;
+    }
+    .slo-editmode tr.focus .slo-delete,
+    .slo-editmode tr:hover .slo-delete,
+    .slo-editmode tr.focus .slo-add,
+    .slo-editmode tr:hover .slo-add {
+        visibility: visible;
+        top: 0;
+    }
+    .slo-textarea {
+        position: absolute;
+        top: 0;
+        background-color: white;
+        z-index: 100;
+        border: 2px solid red;
+    }
+    .slo-spreadsheet .ds-dropdown-nav {
+        min-width: var(--ds-dropdown-width);
+        width: auto;
+    }
+    .slo-cell-selector {
+        --dePosition:sticky;
+        --deTop: 27px;
+        --deLeft: 0px;
+        --deWidth: 90%;
+        --deHeight: auto;
+        --deMinHeight: 27px;
+
+        position: fixed;
+        top: var(--deTop);
+        left: var(--deLeft);
+        width: var(--deWidth);
+        height: var(--deHeight);
+        min-height: var(--deMinHeight);
+        outline: 2px solid blue;
+        z-index: 100;
+        background-color: white;
+        font-weight: normal;
+        line-height: var(--ds-line-height);
+        padding: 0 1px;
+        overflow: visible;
+        display: none;
+        border: 0;
+        margin: 0;
+    }
+    .slo-cell-selector.visible {
+        display: block;
+    }
+    .slo-cell-selector.scroll {
+        overflow: auto;
+    }
+    .slo-cell-selector.maximize {
+        top: 118px;
+        left: 10%;
+        width: 80%;
+        height: 70vh;
+        background-color: white;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize {
+        height:100%;
+        overflow: initial;
+    }
+    .slo-cell-selector.maximize .spreadsheet-autosize textarea {
+        max-height:100%;
+        margin-bottom: 27px;
+        height: 100% !important; /* override inline height */
+    }
+    .slo-cell-selector.maximize .slo-form-footer {
+        bottom: -2px;
+        margin-bottom: calc(-2em + 2px);
+    }
+    .slo-cell-selector.maximize::backdrop {
+        background: var(--ds-grey-60);
+        opacity: 0.5;
+    }
+    .slo-content-panel {
+        margin-bottom: 0;
+    }
+    .slo-rownumber {
+        width: 4em;
+    }
+    .ds-flex-right,
+    .ds-button-bar .ds-flex-right {
+        margin-left: auto;
+    }
+    .slo-cell-selector {
+        padding: 0.1em;
+    }
+    .slo-cell-selector > *:first-child {
+        margin-top: 0;
+    }
+    .slo-cell-selector > *:last-child {
+        margin-bottom: 0;
+    }
+    .slo-cell-selector > * {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .ds-button.ds-button-bar-right {
+        margin-left: auto;
+    }
+    .slo-undo-history,
+    .slo-undo-history li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .slo-undo-history a {
+        text-decoration: none;
+    }
+    .slo-changes-property {
+        display: block;
+    }
+    .slo-changes-timestamp {
+        font-size: small;
+        color: var(--ds-grey-60);
+    }
+    .slo-changes-size {
+        line-height: var(--ds-button-line-height);
+        margin: 0 0.5em;
+    }
+    .slo-indent:not(.slo-has-children)::before {
+        content: "";
+    }
+    tr.closed .slo-has-children.slo-indent::before {
+        content: "\25B8";
+    }
+    table.fitlered .slo-indent.slo-has-children::before,
+    table.sorted .slo-indent.slo-has-children::before {
+        content: "";
+    }
+    table.filtered .slo-indent,
+    table.sorted .slo-indent {
+        margin-left: 0;
+    }
+    .focus .slo-add,
+    .focus .slo-delete,
+    tr:hover .slo-add,
+    tr:hover .slo-delete {
+        visibility: visible;
+        top: 0;
+    }
+    .slo-type-selector {
+        position: absolute;
+        width: fit-content;
+        margin: 0;
+    }
+
+    .slo-document .ds-crumbs {
+        line-height: 2.5em
+    }
+    .slo-document .slo-context-filter {
+        float: right;
+        justify-content: end;
+    }
+    .slo-document .slo-context-filter .ds-button {
+        margin-right: 0;
+    }
+    .slo-document .slo-content-panel {
+        margin-left: 0;
+        width: auto;
+    }
+ 
+    .slo-document .focus,
+    .slo-document .focus-field {
+        outline: 1px solid blue;
+    }
+
+    /* forked from ds-badge: needed a font with relative size */
+    .slo-document .ds-badge.niveau {
+        font-size: 0.8rem;
+    }
+
+    .slo-document .focus button.slo-hidden {
+        display: block;
+        position: absolute;
+        margin-right: 0;
+        margin-top: -4px;
+    }
+ 
+    .button-clear{
+        background-color: transparent;
+        color : inherit;
+        font: inherit;
+        margin : 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+    }
+
+.loading-overlay {
+    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body:not(.loading) .loading-overlay {
+    display: none;
+}
+
+/* loading animation from loading.io/css/ */
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #666;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #666 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+tr.deleted {
+    text-decoration: line-through;
+    color: red;
+}
+tr.inserted {
+    text-decoration: underline;
+    color: green;
+}
+tr.changed {
+    color: blue;
+}
+.slo-type-selector .slo-type {
+    cursor: pointer;
+}
+.slo-type-selector .slo-type:hover {
+    background-color: var(--ds-grey-20);
+}
+
+.slo-type-focus {
+    background-color: var(--ds-grey-20);
+}
+
+.slo-type-selector .ds-button-close {
+    right: 0;
+}
+dialog.preview-changes,
+dialog.commit-changes {
+    height: 75vh;
+}
+.slo-hidden {
+    display: none;
+}
+.slo-form-header {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: -2em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    left: -2px;
+    border-bottom: none;
+}
+.slo-form-header .ds-form-group {
+    margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-header label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.slo-form-header .ds-button-close {
+    height: 2em;
+    margin-right: -29px;
+    margin-top: 0;
+    background-color: var(--ds-grey-20);
+    padding: 0 5px;
+    box-shadow: var(--ds-shadow-medium);
+}
+.slo-form-header .ds-button-close:hover {
+    background-color: var(--ds-primary);
+}
+.slo-form-header .ds-button-close .ds-icon {
+    height: 1em;
+}
+
+.slo-form-footer {
+    position: absolute;
+    width: calc(100% + 4px);
+    margin-top: 0em;
+    height: 2em;
+    padding: 0;
+    background: #EEE;
+    border: 2px solid blue;
+    border-top-width: 0px;
+    left: -2px;
+}
+.slo-form-footer.ds-form-group {
+    margin: 0;
+    width: calc(100% - 2em);
+}
+.slo-form-footer label {
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.slo-form-footer .ds-button-close {
+    height: 2em;
+    line-height: 2em;
+    min-height: unset;
+    right: 0;
+}
+.slo-form-footer.ds-button-close .ds-icon {
+    height: 1em;
+}
+
+label.changes-diff ins {
+    background-color: #eaf2c2;
+}
+label.changes-diff del {
+    background-color: #fadad7;
+}
+label.changes-diff ul {
+    margin-top: 0;
+}
+label.changes-diff {
+    padding-left: 2em;
+}
+.slo-mark-inserted {
+    background-color: #eaf2c2;
+    text-decoration: underline;
+}
+.slo-mark-deleted {
+    background-color: #fadad7;
+    text-decoration: line-through;
+}
+.slo-mark-changed {
+    background-color: #EEE;
+}
+.slo-header .ds-button-bar {
+    position: static;
+}
+.slo-buttonbars {
+    width: 75%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: flex-end;
+}
+.ds-paging .ds-paging-info {
+    line-height: var(--ds-button-line-height);
+}
+body.ds-paging .slo-header .ds-paging {
+    display: flex;
+}
+.slo-header .ds-paging {
+    display: none;
+}
+.ds-button-close {
+    right: 0;
+}
+.ds-button-maximize {
+    right: 0;
+    margin-right: -29px;
+    top: 39px;
+    position: absolute;
+    background-color: var(--ds-grey-20);
+    padding: 0 5px;
+    box-shadow: var(--ds-shadow-medium);
+}
+.ds-alert:empty {
+    display: none;
+}
+.ds-hidden {
+    display: none;
+}
+.slo-cell-selector .slo-edit {
+    position: absolute;
+    margin-right: 0;
+    margin-top: -4px;
+    background-color: transparent;
+}
+.slo-cell-selector .slo-edit:hover {
+    background-color: var(--ds-button-primary-bg-color);
+}
+.slo-list-selector {
+    overflow: auto;
+    max-height: 27vh;
+}
+
+.slo-niveau-index{
+    display: inline;
+    list-style-type: none;
+   margin: 0px;
+}
+
+.slo-document-editmode .focus .slo-document-edit{
+    display: block;
+}
+
+.slo-document-edit{
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.slo-document-entity {
+    position: relative;
+}
+
+.documentEditor {
+    outline: 2px solid blue;
+    opacity: 1;
+    width: 30em;
+    height: 10em;
+    max-width: 80%;
+    max-height: 50%;
+    position: relative;
+}
+
+.documentEditor textarea {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.documentEditorWrapper {
+    z-index: 99;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+}
+
+.documentEditorWrapper::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.5;
+    z-index: -1;
+    position: absolute;
+}
+
+.spreadsheet-autosize {
+    display: grid;
+    overflow: auto;
+    max-height: 75vh;   
+}
+.spreadsheet-autosize::after {
+    content: attr(data-replicated-value) " ";
+    white-space: pre-wrap;
+    visibility: hidden;
+}
+.spreadsheet-autosize > textarea {
+    resize: none;
+    overflow: hidden;
+}
+.spreadsheet-autosize > textarea,
+.spreadsheet-autosize::after {
+    border: 0;
+    font-family: var(--ds-input-font);
+    margin-bottom: cal(0.5 * var(--ds-line-height));
+    padding: 0 0.5em;
+    grid-area: 1 / 1 / 2 / 2;
+    overflow: auto;
+    max-height: 200px;
+}
+
+:fullscreen .slo-menu {
+    display: none;
+}
+
+:fullscreen .slo-content-panel {
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+:fullscreen footer {
+    display: none;
+}
+
+:fullscreen .slo-spreadsheet .ds-scrollbox {
+    --ds-scrollbox-height: calc(100vh - 155px);
+    height: var(--ds-scrollbox-height);
+}
+
+.ds-paging .ds-button {
+    display: unset; /* FIXME: slo.css incorrectly sets this to block */
+}
+
+.slo-error-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 2px;
+}
+
+.slo-error-table td {
+    border: 1px solid blue;
+    padding: 2px;
+}
+
+.slo-excel-row-nr {
+    width: 3em;
+}
+.slo-excel-prefix {
+    width: 6em;
+}
+.slo-excel-prefix,
+.slo-excel-row-nr,
+.slo-excel-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px;
+}
+.slo-errors:empty {
+    height: 0;
+    margin-bottom: -27px;
+    display: block;
+}
+
+.slo-spreadsheet-search {
+    width: min(100%, 40em);
+    position: absolute;
+    margin-top: -30px;
+    z-index: 100000;
+}
+
+.slo-search-form input,
+.slo-search-form label,
+.slo-search-form button {
+    display: inline-block;
+    white-space: nowrap;
+}
+.slo-search-form {
+    padding: 0 1em;
+}
+
+pre {
+    background: var(--ds-grey-90);
+    color: var(--ds-white);
+    width: 100%;
+    overflow: auto;
+    max-height: calc(100vh - 337px);
+    border-radius: 5px;
+    margin-bottom: calc(0.5 * var(--ds-spacing));
+    padding: calc(0.5 * var(--ds-spacing));
+}
+.slo-relative {
+    position: relative;
+}
+.slo-absolute-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: calc(0.5 * var(--ds-spacing));
+    z-index: 11;
+}
+.slo-box {
+    margin: calc(0.5 * var(--ds-spacing)) 0;
+    padding: calc(0.5 * var(--ds-spacing));
+    box-shadow: var(--ds-shadow-medium);
+}
+.slo-token-form {
+    display: flex;
+}
+.slo-token-form > * {
+    flex-grow: 2;
+    flex-basis: auto;    
+}
+.slo-token-form input,
+.slo-token-form button {
+    margin-bottom: 0;
+}
+.slo-token-form .ds-form-buttons {
+    flex-basis: 0;
+}
+.slo-code-box-title {
+    font-size: 1.1rem;
+}
+
+.slo-drop-over-unknown td {
+    box-shadow: inset 0 -2px grey;
+}
+.slo-drop-over-valid td {
+    box-shadow: inset 0 -2px green;
+}
+.slo-drop-over-invalid td {
+    box-shadow: inset 0 -2px red;
+}

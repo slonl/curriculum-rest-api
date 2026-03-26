@@ -1,69 +1,48 @@
-const graphQuery = require('./graphQuery.js');
+const storeQuery = require('./storeQuery.js')
+const fs = require('fs')
 
 var opendata = {
 	url: '',
 	schemas: {},
-	fragments: {},
+	fragments: '',
 	queries: {},
+	typedQueries: {},
 	idQuery: '',
 	routes: {},
 	api: {}
 };
 
 var apis = [
+
 	require('./opendata-api/curriculum-basis.js'),
-	require('./opendata-api/curriculum-kerndoelen.js'),
+	require('./opendata-api/curriculum-erk.js'),
 	require('./opendata-api/curriculum-examenprogramma.js'),
 	require('./opendata-api/curriculum-examenprogramma-bg.js'),
-	require('./opendata-api/curriculum-syllabus.js'),
-	require('./opendata-api/curriculum-lpib.js'),
 	require('./opendata-api/curriculum-inhoudslijnen.js'),
-	require('./opendata-api/curriculum-referentiekader.js'),
-	require('./opendata-api/curriculum-erk.js'),
-	require('./opendata-api/curriculum-fo.js'),
-	require('./opendata-api/curriculum-samenhang.js'),
+	require('./opendata-api/curriculum-kerndoelen.js'),
+	require('./opendata-api/curriculum-leerdoelenkaarten.js'),
 	require('./opendata-api/curriculum-niveauhierarchie.js'),
-	require('./opendata-api/curriculum-leerdoelenkaarten.js')
+	require('./opendata-api/curriculum-referentiekader.js'),
+	require('./opendata-api/curriculum-samenhang.js'),
+	require('./opendata-api/curriculum-fo.js'),
+	require('./opendata-api/curriculum-syllabus.js')
 ];
-
-/**
- * Because Grahpql-js validates the query and fails if you specify a fragment that
- * is not used, we cannot just add all the fragments to each query. So instead
- * this function looks for fragment usage in a graphql query string and only appends
- * those fragments that are used.
- * (Since the graphql-js library is so far removed from the json-graphql-server package
- * it isn't really feasible to change the validation rules, even though graphsql-js allows
- * this)
- */
-function getFragments(query) {
-	const re = /\.\.\.(.+)/gm;
-	let fragments = [];
-	while ((match = re.exec(query))!==null) {
-		fragments.push(match[1]);
-	}
-	fragments = fragments.filter((elem,pos) => fragments.indexOf(elem)==pos);
-
-	return fragments
-		.map(f => opendata.fragments[f])
-		.join("\n");
-}
 
 opendata.typedQueries = {}
 
 apis.forEach(api => {
 	if (api.fragments) {
-		opendata.fragments = Object.assign(opendata.fragments, api.fragments);
+		opendata.fragments += ';'+api.fragments;
 	}
 	if (api.queries) {
 		opendata.queries = Object.assign(opendata.queries, api.queries);
 
 		Object.keys(api.queries).forEach(operationName => {
 			var query = opendata.queries[operationName];
-			var fragments = getFragments(query);
-
+//			console.log(query); //TODO remove as it is for debugging purposes
 			opendata.api[operationName] = (variables, urlQuery) => {
 
-				return graphQuery(opendata.url, fragments + query, variables, operationName, urlQuery)
+				return storeQuery(opendata.url+'/query/', opendata.fragments +';'+ query, variables, urlQuery)
 				.then((result) => {
 					result.schema = api.schema;
 					return result;
@@ -76,9 +55,6 @@ apis.forEach(api => {
 			opendata.typedQueries[type] = api.typedQueries[type]
 		}
 	}
-	if (api.idQuery) {
-		opendata.idQuery += api.idQuery
-	}
 	if (api.routes) {
 		opendata.routes = Object.assign(opendata.routes, api.routes);
 	}
@@ -89,37 +65,82 @@ apis.forEach(api => {
 function camelize(str) {
 	return str.replace(/_([a-z])/g, (m, p1) => p1.toUpperCase())
 }
+function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
 
-opendata.queries.Id = 'query Id($id:ID) {' + opendata.idQuery + '}';
-opendata.api.rawId     = (variables, urlQuery) => graphQuery(opendata.url, getFragments(opendata.queries.Id)+opendata.queries.Id, variables, 'Id', urlQuery);
-let getTypeQuery = `
-query getType($id:ID) {
-	allType(filter:{id:$id}) {
-		id
-		type
-	}
-}
-`;
-opendata.api.Id = (variables, urlQuery) => graphQuery(opendata.url, getTypeQuery, variables, 'getType', urlQuery)
-	.then(result => {
-		let type = result.data.allType[0].type
-		let typedQuery = opendata.typedQueries[type]
-		if (!typedQuery) {
-			console.error('missing typedquery for '+type)
-			return opendata.api.rawId(variables, urlQuery)
+opendata.api.Id = async (variables, urlQuery) => {
+	let type = await storeQuery(opendata.url+'/query/', `JSONTag.getAttribute(meta.index.id.get('/uuid/${variables.id}'),'class')`)
+	if (type=='Deprecated') {
+		let types = await storeQuery(opendata.url+'/query/', `meta.index.id.get('/uuid/${variables.id}').types`)
+		if (types && types[0]) {
+			type = capitalizeFirstLetter(types[0]) //TODO: fix types property in deprecated entities - first letter is lowercase
 		}
-		let allType = camelize('all_'+type);
-		let query = `
-query idQuery($id:ID) {
-	${allType}(filter:{id:$id}) {
-		replaces
-		replacedBy
-		deprecated
-		${typedQuery}
 	}
+	let typedQuery = opendata.typedQueries[type]
+	if (!typedQuery) {
+		console.error('missing typedquery for '+type)
+	}
+//	console.log(typedQuery); //Todo: remove as it is for debugging purposes
+	let result = await storeQuery(opendata.url+'/query/', opendata.fragments +';'+ typedQuery, variables, urlQuery)
+	return result
 }
+
+opendata.api.Roots = async (variables, urlQuery) => {
+	let query = `
+from(Index('${variables.id}')?.root)
+.select({
+	id: _,
+	'@type': Type,
+	prefix: _,
+	title: _
+})
+`	
+	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+query, variables, urlQuery)
+}
+
+opendata.api.Schemas = async (variables, urlQuery) => {
+	let query = `
+meta.schema
 `
-		return graphQuery(opendata.url, getFragments(query)+query, variables, 'idQuery', urlQuery)
+	return storeQuery(opendata.url+'/query/', query)
+}
+
+opendata.api.Tree = async (variables, urlQuery) => {
+	const treeQuery = `
+const Index = id => meta.index.id.get('/uuid/'+id)
+Index(request.query.id)`
+	return storeQuery(opendata.url+'/query/', treeQuery, variables, urlQuery)
+}
+
+opendata.api.runCommand = async (commandStr) => {
+	let response = await fetch(opendata.url+'/command/', {
+		headers: {
+			'Content-Type':'application/jsontag',
+			'Accept':'application/jsontag'
+		},
+		method: 'POST',
+		body: commandStr
 	})
+	let result = await response.json()
+	if (!response.ok) {
+		throw result
+	}
+	return result
+}
+
+opendata.api.getCommandStatus = async (commandId) => {
+	let response = await fetch(opendata.url+'/command/'+commandId, {
+		headers: {
+			'Accept':'application/jsontag'
+		}
+	})
+	let result = await response.json()
+	console.log('status',result)
+	if (!response.ok) {
+		throw result
+	}
+	return result
+}
 
 module.exports = opendata;

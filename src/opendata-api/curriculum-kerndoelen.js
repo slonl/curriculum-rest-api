@@ -3,303 +3,185 @@ module.exports = {
 	jsonld: 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld',
 	schema: 'https://opendata.slo.nl/curriculum/schemas/curriculum-kerndoelen/context.json',
 	queries: {
-		Kerndoel: `query Kerndoel($page:Int,$perPage:Int) {
-		  allKerndoel(page:$page,perPage:$perPage,sortField:"prefix",filter:{deprecated:null}) {
-			id
-			prefix
-			title
-			description
-			kerndoelLabel
-			Niveau {
-			  ...NiveauShort
+		Kerndoel: `
+		const results = from(data.Kerndoel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				description: _,
+				kerndoelLabel: _,
+				Niveau: NiveauShort,
+			})
+		
+			const response = {
+				data: results,
+				page: Page,
+				count: data.Kerndoel.length,
+				root: meta.schema.types.Kerndoel.root
 			}
-		  }
-		  _allKerndoelMeta {
-			count
-		  }
-		}`,
-		KerndoelById: `query KerndoelById($id:ID) {
-		  Kerndoel(id:$id) {
-			id
-			title
-			Doelniveau {
-			  ...DoelNiveau
+
+			response
+			
+		`,
+		KerndoelById: `
+		const results = from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				Doelniveau: Doelniveau
+			})
+		`,
+		KerndoelDomein: `
+		const results = from(data.KerndoelDomein)
+			.orderBy({
+				title:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
+		
+		  const response = {
+			data: results,
+			page: Page,
+			count: data.KerndoelDomein.length,
+				root: meta.schema.types.KerndoelDomein.root
+		}
+
+		response
+
+		`,
+		KerndoelUitstroomprofiel: `
+		const results = from(data.KerndoelUitstroomprofiel)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+				KerndoelVakleergebied: {
+					...shortInfo,
+				deprecated: _,
+				}
+			})
+		
+			const response = {
+				data: results,
+				page: Page,
+				count: data.KerndoelUitstroomprofiel.length,
+				root: meta.schema.types.KerndoelUitstroomprofiel.root
 			}
-		  }
-		}`,
-		KerndoelDomein: `query KerndoelDomein($page:Int,$perPage:Int) {
-		  allKerndoelDomein(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			id
-			title
-			KerndoelVakleergebied {
-			  id
-			  title
-			  deprecated
+
+			response
+
+		`,
+		KerndoelVakleergebied: `
+		const results = from(data.KerndoelVakleergebied)
+			.orderBy({
+				prefix:asc
+			})
+			.slice(Paging.start,Paging.end)
+			.select({
+				...shortInfo,
+			})
+		
+			const response = {
+				data: results,
+				page: Page,
+				count: data.KerndoelVakleergebied.length,
+				root: meta.schema.types.KerndoelVakleergebied.root
 			}
-		  }
-		  _allKerndoelDomeinMeta {
-			count
-		  }
-		}`,
-		KerndoelUitstroomprofiel: `query KerndoelUitstroomprofiel($page:Int,$perPage:Int) {
-		  allKerndoelUitstroomprofiel(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			id
-			title
-			KerndoelVakleergebied {
-			  id
-			  title
-			  deprecated
-			}
-		  }
-		  _allKerndoelUitstroomprofielMeta {
-			count
-		  }
-		}`,
-		KerndoelVakleergebied: `query KerndoelVakleergebied($page:Int,$perPage:Int) {
-		  allKerndoelVakleergebied(page:$page,perPage:$perPage,sortField:"title",filter:{deprecated:null}) {
-			id
-			title
-		  }
-		  _allKerndoelVakleergebiedMeta {
-			count
-		  }
-		}`
+
+			response
+
+		`,
 	},
 	typedQueries: {
-		'kerndoel': `
-			id
-			title
-			description
-			kerndoelLabel
-			prefix
-			KerndoelDomein {
-				id
-				title
-				deprecated
-				KerndoelVakleergebied {
-					id
-					title
-					deprecated
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			Niveau {
-				...Niveau
-			}
+		Kerndoel: `
+		from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				description: _,
+				kerndoelLabel: _,
+				KerndoelDomein: {
+					...shortInfo,
+					deprecated: _,
+					KerndoelVakleergebied: {
+						...shortInfo,
+						deprecated: _,
+					}
+				},
+				Niveau: NiveauShort,
+				Doelniveau: Doelniveau,
+				Niveau: Niveau,
+			})
+
 		`,
-		'kerndoel_domein': `
-			id
-			title
-			Kerndoel {
-				id
-				title
-				prefix
-				kerndoelLabel
-				deprecated
-				Niveau {
-					...NiveauShort
+		KerndoelDomein: `
+		from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				Kerndoel: {
+					...shortInfo,
+					kerndoelLabel: _,
+					deprecated: _,
+					Niveau: NiveauShort
+				},
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
 				}
-			}
-			KerndoelVakleergebied {
-				id
-				title
-				deprecated
-			}
+			})
 		`,
-		'kerndoel_vakleergebied': `
-			id
-			title
-			Vakleergebied {
-				id
-				title
-				deprecated
-			}
-			KerndoelDomein {
-				id
-				title
-				deprecated
-			}
-			KerndoelUitstroomprofiel {
-				id
-				title
-				deprecated
-			}
-			Kerndoel {
-				id
-				title
-				prefix
-				kerndoelLabel
-				deprecated
-				Niveau {
-					...NiveauShort
+		KerndoelVakleergebied: `
+		from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelDomein: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelUitstroomprofiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Kerndoel: {
+					...shortInfo,
+					kerndoelLabel: _,
+					deprecated: _,
+					Niveau: NiveauShort,
 				}
-			}
+			})
 		`,
-		'kerndoel_uitstroomprofiel': `
-			id
-			title
-			KerndoelVakleergebied {
-				id
-				title
-				deprecated
-			}
+		KerndoelUitstroomprofiel: `
+		from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				KerndoelVakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				}
+			})
 		`
 	},
-	idQuery: `
-		allKerndoel(filter:{id:$id}) {
-			id
-			title
-			description
-			kerndoelLabel
-			prefix
-			KerndoelDomein {
-				id
-				title
-				KerndoelVakleergebied {
-					id
-					title
-				}
-			}
-			Niveau {
-				...NiveauShort
-			}
-			Doelniveau {
-				...DoelNiveau
-			}
-			Niveau {
-				...Niveau
-			}
-		}
-		allKerndoelDomein(filter:{id:$id}) {
-			id
-			title
-			Kerndoel {
-				id
-				title
-				prefix
-				kerndoelLabel
-				Niveau {
-					...NiveauShort
-				}
-			}
-			KerndoelVakleergebied {
-				id
-				title
-			}
-		}
-		allKerndoelVakleergebied(filter:{id:$id}) {
-			id
-			title
-			Vakleergebied {
-				id
-				title
-			}
-			KerndoelDomein {
-				id
-				title
-			}
-			KerndoelUitstroomprofiel {
-				id
-				title
-			}
-			Kerndoel {
-				id
-				title
-				prefix
-				kerndoelLabel
-				Niveau {
-					...NiveauShort
-				}
-			}
-		}
-		allKerndoelUitstroomprofiel(filter:{id:$id}) {
-			id
-			title
-			KerndoelVakleergebied {
-				id
-				title
-			}
-		}
-	`,
 	routes: {
-		'kerndoel/': (req) =>
-			opendata.api["Kerndoel"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allKerndoel,
-					type: 'Kerndoel',
-					meta: result.data._allKerndoelMeta
-				}
-			}),
-		'kerndoel_domein/': (req) =>
-			opendata.api["KerndoelDomein"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allKerndoelDomein,
-					type: 'KerndoelDomein',
-					meta: result.data._allKerndoelDomeinMeta
-				}
-			}),
-		'kerndoel_vakleergebied/': (req) =>
-			opendata.api["KerndoelVakleergebied"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allKerndoelVakleergebied,
-					type: 'KerndoelVakleergebied',
-					meta: result.data._allKerndoelVakleergebiedMeta
-				}
-			}),
-		'kerndoel_uitstroomprofiel/': (req) =>
-			opendata.api["KerndoelUitstroomprofiel"](req.params, req.query)
-			.then(function(result) {
-				return {
-					data: result.data.allKerndoelUitstroomprofiel,
-					type: 'KerndoelUitstroomprofiel',
-					meta: result.data._allKerndoelUitstroomprofielMeta
-				}
-			}),
-		'niveau/:niveau/kerndoel': (req) =>
-			opendata.api["KerndoelOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].Kerndoel,
-					type: 'Kerndoel'
-				}
-			}),
-
-		'niveau/:niveau/kerndoel/:id': (req) =>
-			opendata.api["KerndoelOpNiveauById"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.Kerndoel, 
-					type: 'Kerndoel'
-				};
-			}),
-
-		'niveau/:niveau/kerndoel_vakleergebied': (req) =>
-			opendata.api["KerndoelVakleergebiedOpNiveau"](req.params)
-			.then(function(result) {
-				return {
-					data: result.data.allNiveauIndex[0].KerndoelVakleergebied,
-					type: 'KerndoelVakleergebied'
-				};
-			}),
-
-		'niveau/:niveau/kerndoel_vakleergebied/:id': (req) =>
-			opendata.api["KerndoelVakleergebiedByIdOpNiveau"](req.params)
-			.then(function(result) {
-				result.data.allNiveauIndex[0].KerndoelVakleergebied[0].KerndoelDomein = result.data.allNiveauIndex[0].KerndoelDomein;
-				result.data.allNiveauIndex[0].KerndoelVakleergebied[0].Kerndoel = result.data.allNiveauIndex[0].Kerndoel;
-				result.data.allNiveauIndex[0].KerndoelVakleergebied[0].Niveau = result.data.allNiveauIndex[0].Niveau;
-				return {
-					data: result.data.allNiveauIndex[0].kerndoelVakleergebied[0],
-					type: 'kerndoelVakleergebied'
-				};
-			})
+		'kerndoel/': (req) => opendata.api["Kerndoel"](req.params, req.query),
+		'kerndoel_domein/': (req) => opendata.api["KerndoelDomein"](req.params, req.query),
+		'kerndoel_vakleergebied/': (req) =>	opendata.api["KerndoelVakleergebied"](req.params, req.query),
+		'kerndoel_uitstroomprofiel/': (req) => opendata.api["KerndoelUitstroomprofiel"](req.params, req.query),
+		'niveau/:niveau/kerndoel': (req) =>	opendata.api["KerndoelOpNiveau"](req.params, req.query),
+		'niveau/:niveau/kerndoel/:id': (req) =>	opendata.api["KerndoelOpNiveauById"](req.params, req.query),
+		'niveau/:niveau/kerndoel_vakleergebied': (req) => opendata.api["KerndoelVakleergebiedOpNiveau"](req.params, req.query),
+		'niveau/:niveau/kerndoel_vakleergebied/:id': (req) => opendata.api["KerndoelVakleergebiedByIdOpNiveau"](req.params, req.query)
 	}
 };

@@ -1,0 +1,39 @@
+<script src="//cdn.simplyedit.io/1/simply-edit.js"
+    data-api-key="flashy-leather-7944"
+    data-simply-images="/img/"
+    data-simply-files="/files/"
+    data-simply-settings="seSettings"
+    data-storage-get-post-only
+></script>
+<script>
+
+    (function() {
+        var goto = simply.route.goto;
+        simply.route.goto = function(path) {
+            let uuidPath = '/curriculum/uuid/';
+            if (path.substr(0, uuidPath.length)===uuidPath) {
+                history.pushState({}, '', path);
+                return simply.route.match(path);
+            }
+            return goto(path);
+        };
+    })();
+
+</script>
+<script src="/assets/js/api.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver-es"></script>
+<script src="https://unpkg.com/@muze-nl/jsontag@0.9.11/dist/browser.js"></script>
+<script src="/assets/js/local-api.js?v=1"></script>
+<script src="/assets/js/changes.js?v=1" type="module"></script>
+<script src="/assets/js/spreadsheet.js?v=1"></script>
+<script src="/assets/js/sloDocument.js?v=1"></script>
+<script src="/assets/js/transformers.js?v=1"></script>
+<script src="https://unpkg.com/curriculum-js@0.4.1/dist/browser.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/diff"></script>
+<script src="/assets/js/databrowser.js?v=1"></script>
+<script src="/assets/js/datasources.js?v=1"></script>
+<script src="/assets/js/import.js?v=1" type="module"></script>
+<script src="/assets/js/vanillaSelectBox.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/simplyedit/simplyedit/simply/slip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.0/xlsx.js"></script>
