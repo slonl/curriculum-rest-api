@@ -651,13 +651,6 @@ browser = simply.app({
         switchView: function(el, value) {
             this.app.view.preferedView = value;
             localStorage.setItem("browser.view.preferedView", value)
-            let current = el.closest('.slo-weergave-switch').querySelector('.ds-button-primary')
-            if (current!=el) {
-                current.classList.remove('ds-button-primary')
-                current.classList.add('ds-button-naked')
-                el.classList.remove('ds-button-naked')
-                el.classList.add('ds-button-primary')
-            }
             return this.app.actions.switchView(value)
         },
         selectRoot: function(el, value) {
@@ -1152,6 +1145,16 @@ browser = simply.app({
             let element = document.getElementById(elementId);
             element.replaceChildren();
         },
+        updateViewSelector: async function(view) {
+            let current = document.querySelector('.slo-weergave-switch .ds-button-primary')
+            let selected = document.querySelector('.slo-weergave-switch [data-simply-value="'+view+'"]')
+            if (current!=selected) {
+                current.classList.remove('ds-button-primary')
+                current.classList.add('ds-button-naked')
+                selected.classList.remove('ds-button-naked')
+                selected.classList.add('ds-button-primary')
+            }
+        },
         switchView: async function(view,root){
             browser.actions.clearView()
             let currentView = this.app.view.view;
@@ -1162,7 +1165,7 @@ browser = simply.app({
             }
 
             let currentItem, currentId, currentType, currrentContext;
-            
+            browser.actions.updateViewSelector(view)
             switch(view) {
                 case 'item':
                     this.app.view.view = view
@@ -1832,7 +1835,7 @@ browser = simply.app({
                 browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
-                browser.view.preferedView = localStorage.getItem("browser.view.preferedView")
+                browser.view.preferedView = localStorage.getItem("browser.view.preferedView") || 'spreadsheet'
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
                     browser.actions.switchView(browser.view.preferedView)
                     return
