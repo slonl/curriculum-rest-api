@@ -303,7 +303,7 @@ const changes = (()=> {
                 throw new Error('Cannot store changes, localStorage is unavailable')
             }
             // only save new additions to the log
-            let start = Math.max(this.#log?.length-1,0)
+            let start = Math.max(this.#log?.length,0)
             for (let i=start; i<this.length; i++) {
                 let change = this[i]
                 if (change.prevValue && Array.isArray(change.prevValue)) {
@@ -668,8 +668,9 @@ const changes = (()=> {
     function update() {
         if (changes.changes) {
             changes.changes.save()
+        } else {
+            changes.changes = new Changes()
         }
-        changes.changes = new Changes()
         changes.merged = changes.changes.merge()
         changes.local = changes.merged.normalize()
         changes.undoHistory = changes.changes.toReversed().slice(0, 5)
