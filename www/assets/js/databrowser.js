@@ -1816,6 +1816,8 @@ browser = simply.app({
             browser.view.list = [];
             return window.localAPI.doelniveauList(type)
             .then(function(json) {
+                browser.view.request = window.localAPI.reflect.list(type)
+                browser.view.source = JSON.stringify(json, null, 4)
                 browser.view.view = 'doelniveauList';
                 let localData = changes.getLocalView(json.data)
                 browser.view.list = localData;
