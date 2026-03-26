@@ -392,6 +392,10 @@ module.exports = {
 						description: _,
 					}     
 				},
+				Kerndoel: shortInfo,
+				ExamenprogrammaDomein: shortInfo,
+				ExamenprogrammaSubdomein: shortInfo,
+				ExamenprogrammaEindterm: shortInfo
 			})
 		`,
 	},
