@@ -404,6 +404,9 @@ const changes = (()=> {
             }
             return s
         }
+        function showNumberDiff(oldValue, newValue) {
+            return '<del>'+Number(oldValue)+'</del> <ins>'+Number(newValue)+'</ins>'
+        }
         function compareArrayValue(left,right) {
             if (JSONTag.getType(left)=='object') {
                 return left.id==right?.id
@@ -429,6 +432,8 @@ const changes = (()=> {
                 } else if (typeof prop.newValue == 'string' || prop.newValue instanceof String) {
                     let delta = Diff.diffWords(prop.prevValue, prop.newValue)
                     d += '<label class="changes-diff"><div>'+propName+'</div>'+showTextDiff(delta)+'</label>'
+                } else if (typeof prop.newValue == 'number' || prop.newValue instanceof Number) {
+                    d += '<label class="changes-diff"><span>'+propName+'</span> '+showNumberDiff(prop.prevValue, prop.newValue)+'</label>'
                 } else {
 //                    throw new Error('Not Yet Implemented (diff only works on arrays and strings)')
                 }
