@@ -1,6 +1,5 @@
 const express   = require('express');
 const basicAuth = require('express-basic-auth')
-const watch     = require('watch');
 const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
@@ -25,9 +24,7 @@ import('@muze-nl/jsontag').then(module => { JSONTag = module.default })
 
 global.opendata = opendata;
 
-const sgMail = require('@sendgrid/mail');
 const { type } = require('os');
-sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
 const port      = process.env.NODE_PORT || 4800;
@@ -101,31 +98,6 @@ app.use(express.raw({
     limit: '50MB'
 }))
 
-app.route('/' + 'register/').get((req) => {
-	var user = req.query.email;
-	console.log("Register " + user);
-	
-	var keyData = fs.readFileSync("apiKeys.json", "utf8");
-	keyData = JSON.parse(keyData);
-
-	var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-	today = yyyy + '-' + mm + '-' + dd;
-	
-	if (!keyData[user]) {
-		keyData[user] = {
-			key : uuidv4(),
-			created : today
-		}
-		sendApiKey(user, keyData[user].key);
-	}
-	fs.writeFile("apiKeys.json.new", JSON.stringify(keyData, null, 2), function() {
-		fs.rename("apiKeys.json.new", "apiKeys.json", readKeys);
-	});
-});
-
 function myAuthorizer(username, password) {
 	console.log("checking api key for " + username);
 	if (!apiKeys[username]) {
@@ -182,41 +154,15 @@ app.route('/login/').get((req,res) => {
 	}
 })
 
-watch.createMonitor('.', function(monitor) {
-	monitor.files['./apikeys.json','./editors.json']
-	monitor.on('changed', function() { 
-		readKeys();
-		readEditors();
-	});
-});
 
-function sendApiKey(email, key) {
-	var mail = {
-		from: {
-		email: "opendata@slo.nl",
-		name: "SLO Opendata",
-	  },
-	  to: {
-	  	email: email
-	  },
-	  subject: "SLO Opendata API Key",
-	  content: [
-	  	{
-	  		type: "text/html",
-	  		value: "<p>Bedankt voor het registreren op opendata.slo.nl. Je API key is:<br><b>" + key + "</p>",
-	      	},
-	    ],
-	}
-	sgMail.send(mail)
-	.then(function (response) {
-	    console.log(response[0].statusCode);
-	    console.log(response[0].headers);
-	    console.log("api key mail sent");
-	})
-	.catch(function (error) {
-	    console.log(error);
-	});  
-}
+fs.watchFile('./apiKeys.json', () => {
+	console.log('updating api keys')
+	readKeys()
+})
+fs.watchFile('./editors.json', () => {
+	console.log('updating editors')
+	readEditors()
+})
 
 readKeys();
 readEditors();
