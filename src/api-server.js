@@ -456,7 +456,7 @@ app.route('/command/:commandId').get(async (req, res) => {
 })
 
 // add routes above this line
-app.route('*').get((req,res) => {
+app.route('*all').get((req,res) => {
 	res.status(404).send(JSON.stringify(Object.assign(notfound, { details: { path: req.path } } )));
 });
 
