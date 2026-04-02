@@ -18,12 +18,10 @@
   },
   "homepage": "https://github.com/slonl/curriculum-rest-api#readme",
   "dependencies": {
-    "@muze-nl/jsontag": "^0.9.2",
-    "@sendgrid/mail": "^8.1.1",
+    "@muze-nl/jsontag": "^0.10.4",
     "express": "^5.2.1",
     "express-basic-auth": "^1.2.1",
-    "uuid": "^13.0.0",
-    "watch": "^1.0.2"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "tap": "^21.6.2"
