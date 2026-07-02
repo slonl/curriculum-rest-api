@@ -5,7 +5,8 @@
   "main": "src/api-server.js",
   "scripts": {
     "test": "tap test/*.mjs",
-    "start": "node src/api-server.js"
+    "start": "node src/api-server.js",
+    "dev": "node scripts/dev.mjs"
   },
   "repository": {
     "type": "git",
