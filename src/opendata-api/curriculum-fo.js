@@ -187,13 +187,13 @@ module.exports = {
                     FoDoelzin: {
                       ...shortInfo,
 	   				description: _,
-                      se: _,
-                      ce: _,
-	    	              FoUitwerking: {
-                        ...shortInfo, 
-                      	description:  _                        
-                      },
-                      FoToelichting:  {
+                    se: _,
+                    ce: _,
+	    	        FoUitwerking: {
+                       ...shortInfo, 
+                     	description:  _                        
+                    },
+                    FoToelichting:  {
                         ...shortInfo, 
                       	description:  _                        
                       },
@@ -254,9 +254,13 @@ module.exports = {
 				...shortInfo,
 				description: _,
 				soort: _,
-				FoIllustratie: shortInfo,
+				doeltype: _,
+				se: _,
+				ce: _,
+				FoIllustratie: {
+					description:  _                        
+				},
 				FoUitwerking: {
-					...shortInfo, 
 					description:  _                        
 				},
 			})
