@@ -310,6 +310,24 @@ module.exports = {
 		})
 
 		results
+		`,
+
+		LdkVakinhoudByIdOpNiveau: `
+		const results = from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			deprecated: _,
+			Doelniveau : o => from(o.Doelniveau)
+				.where({
+					Niveau : { id: request.query.niveau }
+				})
+				.select({
+					...Doelen
+				}),
+			Niveau: NiveauIndex
+		})
+
+		results
 		`
 	},
 	typedQueries: {
