@@ -292,7 +292,7 @@
     align-items: center;
     justify-content: center;
 }
-body:not(.loading) .loading-overlay {
+body:not(.loading):not(.orphans-loading) .loading-overlay {
     display: none;
 }
 
@@ -712,4 +712,35 @@ pre {
 }
 .slo-drop-over-invalid td {
     box-shadow: inset 0 -2px red;
+}
+.slo-orphans {
+    width: 100%;
+    border-collapse: collapse;
+}
+.slo-orphans th, .slo-orphans td {
+    padding: 0.5em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #ddd;
+    overflow-wrap: anywhere;
+}
+
+.slo-orphan-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+.slo-orphan-actions .ds-button {
+    margin: 0;
+    border: 0;
+    outline: 0;
+}
+.slo-orphan-actions .ds-button:focus-visible {
+    outline: 2px solid var(--ds-primary);
+    outline-offset: 2px;
+}
+
+body.orphans-loading .loading-overlay {
+    z-index: 1000;
 }

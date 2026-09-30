@@ -53,8 +53,23 @@ if (!jsontagMeta) {
 }
 
 slo.api.loadSchemas()
-.then(schemas => {
+.then(async schemas => {
     meta.schemas = schemas
+
+    const user = localStorage.getItem('username')
+    const key = localStorage.getItem('key')
+    let loggedIn = false
+    if (user && key) {
+        try {
+            loggedIn = await slo.api.login(user, key)
+        }
+        catch (error) {
+            loggedIn = false
+        }
+    }
+    if (loggedIn) {
+        slo.api.token = btoa(user + ':' + key)
+    }
 
     let typeRoutes = getTypeRoutes()
 
@@ -68,6 +83,9 @@ browser = simply.app({
     container: document.body,
 
     view: {
+        loggedIn,
+        user: loggedIn ? user : null,
+        changes,
         showSource: 0,
         spreadsheet: {
             focus: {
@@ -78,6 +96,9 @@ browser = simply.app({
     },
 
     routes: Object.assign(typeRoutes, {
+        '/orphans/': function() {
+            return browser.actions.orphans()
+        },
         '/login/': function() {
             document.getElementById('login').setAttribute('open','open')
         },
@@ -473,6 +494,49 @@ browser = simply.app({
     },
 
     commands: {
+        refreshOrphans: function() {
+            return browser.actions.orphans()
+        },
+        selectAllOrphans: function(el) {
+            if (browser.view.orphanLoading) {
+                return
+            }
+            const inputs = el.closest('form').querySelectorAll(
+                'input[name="orphan"]')
+            const select = Array.from(inputs).some(input => !input.checked)
+            inputs.forEach(input => { input.checked = select })
+        },
+        deleteOrphans: function(form) {
+            if (!browser.view.loggedIn || browser.view.orphanLoading) {
+                return
+            }
+            const selected = new Set(Array.from(form.querySelectorAll(
+                'input[name="orphan"]:checked'), input => input.value))
+            const orphans = browser.view.orphans.filter(o => selected.has(o.id))
+            if (!orphans.length) {
+                browser.view.orphanStatus = 'Selecteer eerst een entiteit.'
+                return
+            }
+            for (const orphan of orphans) {
+                changes.changes.push(new changes.Change({
+                    id: orphan.id,
+                    meta: {
+                        context: slo.getContextByTypeName(orphan.type) || '',
+                        type: orphan.type,
+                        title: orphan.title || '[Geen titel]',
+                        timestamp: mkTimestamp()
+                    },
+                    type: 'deleteRoot',
+                    orphanOnly: true
+                }))
+            }
+            changes.update()
+            browser.view.orphans = browser.view.orphans.filter(
+                orphan => !selected.has(orphan.id))
+            browser.view.orphanStatus = orphans.length +
+                ' entiteiten gemarkeerd. Controleer en sla de wijzigingen op.'
+            browser.commands.showCommitChanges()
+        },
         toggleMaximize: (el, value) =>{
             browser.view.sloSpreadsheet.selectorToggleMaximize()
         },
@@ -943,6 +1007,8 @@ browser = simply.app({
             browser.actions.clearView()
             browser.view.user = email
             browser.view.loggedIn = true
+            slo.api.token = btoa(email + ':' + key)
+            browser.view.changes = changes
             localStorage.setItem('username',email)
             localStorage.setItem('key',key)
             return true
@@ -1703,6 +1769,59 @@ browser = simply.app({
             changes.update()
             return true
         },
+        orphans: async function() {
+            if (browser.view.view === 'orphans' && browser.view.orphanLoading) {
+                return
+            }
+            browser.actions.clearView()
+            browser.view.orphans = []
+            if (!browser.view.loggedIn) {
+                simply.route.goto('/login/')
+                return
+            }
+            browser.view.item = null
+            browser.view.view = 'orphans'
+            browser.view.orphanStatus = 'Wezen zoeken…'
+            browser.view.orphanLoading = true
+            browser.view.orphanButtonAttributes = { disabled: '' }
+            document.body.classList.add('orphans-loading')
+            document.body.dataset.simplyKeyboard = 'default'
+            const request = Symbol('orphan request')
+            browser.orphanRequest = request
+            try {
+                const orphans = await slo.api.get('/orphans/', {})
+                if (browser.orphanRequest !== request ||
+                    browser.view.view !== 'orphans' || !browser.view.loggedIn) {
+                    return
+                }
+                browser.view.orphans = orphans
+                    .filter(orphan => !changes.merged[orphan.id]?.['@deleted'])
+                    .map(orphan => ({
+                        ...orphan,
+                        href: window.release.apiURL + '/uuid/' +
+                            encodeURIComponent(orphan.id),
+                        displayTitle: orphan.title || '[Geen titel]'
+                    }))
+                const count = browser.view.orphans.length
+                browser.view.orphanStatus = count ? count +
+                    ' wezen gevonden.' : 'Geen wezen gevonden.'
+            }
+            catch (error) {
+                if (browser.orphanRequest === request &&
+                    browser.view.view === 'orphans') {
+                    browser.view.orphanStatus =
+                        'Wezen ophalen mislukt. Probeer opnieuw met Vernieuwen.'
+                    browser.view.orphans = []
+                }
+            }
+            finally {
+                if (browser.orphanRequest === request) {
+                    browser.view.orphanLoading = false
+                    browser.view.orphanButtonAttributes = { disabled: null }
+                    document.body.classList.remove('orphans-loading')
+                }
+            }
+        },
         list: function(type) {
             browser.actions.clearView()
             browser.view['listTitle'] = window.titles[type];
@@ -1896,6 +2015,10 @@ browser = simply.app({
             MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
         },
         clearView: function() {
+            browser.orphanRequest = null
+            browser.view.orphanLoading = false
+            browser.view.orphanButtonAttributes = { disabled: null }
+            document.body.classList.remove('orphans-loading')
             document.body.classList.remove('ds-paging')
         },
         register : function(email) {
@@ -2518,7 +2641,12 @@ browser = simply.app({
                 throw new Error('Invalid command: '+result.status+': '+result.message)
             }                    
             changes.clear()
-            browser.actions.switchView(browser.view.preferedView)
+            if (browser.view.view === 'orphans') {
+                await browser.actions.orphans()
+            }
+            else {
+                browser.actions.switchView(browser.view.preferedView)
+            }
 
             return true
         },
@@ -2617,16 +2745,6 @@ browser.view.page = 1;
 let url = new URL(document.location)
 if (url.searchParams.has('page')) {
     browser.view.page = Math.max(1, parseInt(url.searchParams.get('page')));
-}
-let user = localStorage.getItem('username')
-let key = localStorage.getItem('key')
-if (user && key) {
-    browser.view.user = user
-    browser.view.loggedIn = true
-    slo.api.token = btoa(user+':'+key)
-    browser.view.changes = changes
-} else {
-    browser.view.loggedIn = false
 }
 const requestToken = localStorage.getItem('requestToken')
 const requestEmail = localStorage.getItem('requestEmail')

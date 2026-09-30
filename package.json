@@ -25,6 +25,7 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@muze-nl/jaqt": "^0.10.7",
     "tap": "^21.6.2"
   }
 }
