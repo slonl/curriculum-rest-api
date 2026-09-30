@@ -270,6 +270,19 @@ app.route('/tree/:id').get(async (req, res) => {
 	}
 })
 
+app.route('/orphans/').get(async (req, res) => {
+    if (!editors[req.auth.user]) {
+        return res.status(403).json({ error: 403, message: 'Forbidden' });
+    }
+    try {
+        const result = await opendata.api.Orphans();
+        res.set('Cache-Control', 'no-store');
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: 500, message: error.message });
+    }
+});
+
 app.route('/schemas/').get(async (req, res) => {
 	try {
 		let result = await opendata.api.Schemas()

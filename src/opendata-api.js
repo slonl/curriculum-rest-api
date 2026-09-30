@@ -107,6 +107,11 @@ meta.schema
 	return storeQuery(opendata.url+'/query/', query)
 }
 
+opendata.api.Orphans = async () => {
+    return storeQuery(opendata.url + '/slowquery/',
+        require('./orphans-query.js'))
+}
+
 opendata.api.Tree = async (variables, urlQuery) => {
 	const treeQuery = `
 const Index = id => meta.index.id.get('/uuid/'+id)

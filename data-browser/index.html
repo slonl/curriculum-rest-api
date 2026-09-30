@@ -1,7 +1,7 @@
 <html data-simply-path="/"><!-- don't remove - browser.view.view databinding will suffer when adding new rows -->
 <title>SLO Curriculum Browser</title>
 <link rel="stylesheet" href="/assets/css/slo.css">
-<link rel="stylesheet" href="/assets/css/extra.css">
+<link rel="stylesheet" href="/assets/css/extra.css?v=3">
 <link rel="stylesheet" href="/assets/css/vanillaSelectBox.css">
 <link rel="stylesheet" href="/assets/css/print.css" media="print">
 <link rel="icon" href="https://www.slo.nl/favicon.png">
@@ -84,6 +84,17 @@
                 </details>
             </template>
         </div>
+        <div data-simply-field="loggedIn" data-simply-content="template">
+            <template data-simply-template="false"></template>
+            <template data-simply-template="true">
+                <ul class="slo-submenu">
+                    <li class="slo-submenu-item">
+                        <a href="orphans/" data-simply-group="menu"
+                            data-simply-command="simply-select">Wezen</a>
+                    </li>
+                </ul>
+            </template>
+        </div>
         <ul class="slo-submenu slo-submenu-extra" data-simply-list="submenu" data-simply-path="/">
             <template>
                  <li class="slo-submenu-item"><a href="#"
@@ -135,6 +146,51 @@
             <template data-simply-template="notfound">
                 <h1>404: Page Not Found</h1>
                 <p>Sorry, deze pagina bestaat niet.</p>
+            </template>
+            <template data-simply-template="orphans">
+                <h1>Wezen</h1>
+                <p>Entiteiten zonder curriculumroot. Selecteer de entiteiten
+                    die u als verwijderd wilt markeren. De wijzigingen worden
+                    pas opgeslagen nadat u ze controleert en bevestigt.</p>
+                <p role="status" aria-live="polite"
+                    data-simply-field="orphanStatus"></p>
+                <form data-simply-command="deleteOrphans">
+                    <div class="slo-orphan-actions">
+                        <button type="button" class="ds-button"
+                            data-simply-field="orphanButtonAttributes"
+                            data-simply-content="attributes"
+                            data-simply-attributes="disabled"
+                            data-simply-command="refreshOrphans">Vernieuwen</button>
+                        <button type="button" class="ds-button"
+                            data-simply-field="orphanButtonAttributes"
+                            data-simply-content="attributes"
+                            data-simply-attributes="disabled"
+                            data-simply-command="selectAllOrphans">Alles selecteren</button>
+                        <button type="submit" class="ds-button"
+                            data-simply-field="orphanButtonAttributes"
+                            data-simply-content="attributes"
+                            data-simply-attributes="disabled">
+                            Selectie als verwijderd markeren</button>
+                    </div>
+                    <table class="slo-orphans">
+                        <thead><tr><th scope="col">Selectie</th>
+                            <th scope="col">Type</th><th scope="col">Titel</th>
+                            <th scope="col">ID</th></tr></thead>
+                        <tbody data-simply-list="orphans">
+                            <template><tr>
+                                <td><label><input type="checkbox" name="orphan"
+                                    data-simply-field="id" data-simply-content="attributes"
+                                    data-simply-attributes="value"> Selecteer</label></td>
+                                <td data-simply-field="type"></td>
+                                <td><a data-simply-field="href"
+                                    data-simply-content="attributes"
+                                    data-simply-attributes="href"><span
+                                    data-simply-field="displayTitle"></span></a></td>
+                                <td data-simply-field="id"></td>
+                            </tr></template>
+                        </tbody>
+                    </table>
+                </form>
             </template>
             <template data-simply-template="list">
                 <nav class="ds-crumbs">
@@ -278,7 +334,7 @@
     </nav>
 </footer>
 
-<div class="loading-overlay">
+<div class="loading-overlay" role="status" aria-label="Bezig met laden">
     <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
 </div>
 

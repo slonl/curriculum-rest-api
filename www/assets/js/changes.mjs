@@ -338,6 +338,7 @@ const changes = (()=> {
                     me['@newValue'] = ch.newValue
                 } else if (ch.type=='deleteRoot') {
                     me['@deleted'] = true
+                    me['@orphanOnly'] = ch.orphanOnly === true
                 } else if (ch.type=='undeleteRoot') {
                     me['@deleted'] = false
                 } else {
@@ -418,6 +419,12 @@ const changes = (()=> {
         } 
 
         let d = ''
+        if (m['@deleted'] === true) {
+            d += '<p>Als verwijderd markeren</p>'
+        }
+        else if (m['@deleted'] === false) {
+            d += '<p>Verwijdermarkering opheffen</p>'
+        }
         if (m['@newValue']) {
             d += '<label class="changes-diff">Import '+m['@type']+'</label>'
             //TODO: show all properties? or just the title (if available)?
@@ -551,6 +558,9 @@ const changes = (()=> {
                         id,
                         name: 'deleteEntity',
                         '@type': e['@type']
+                    }
+                    if (e['@orphanOnly']) {
+                        commit.orphanOnly = true
                     }
                     commits.push(commit)
                 } else if (e['@deleted']==false) {

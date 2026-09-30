@@ -12,3 +12,26 @@ The legacy route will find the new entities for each of the parent ID's and filt
 You can read more about the data architecture and the `replacedBy`/`replaces` mechanic in the dataset repositories:
 - https://github.com/slonl/curriculum-doelen
 - https://github.com/slonl/curriculum-inhouden
+
+## Editor orphan view
+
+After logging in as an editor, open **Wezen** in the side menu (`/orphans/`).
+The API also requires editor access. The view lists non-root curriculum entities
+with missing or empty root lists, excluding `KerndoelUitstroomprofiel`,
+`Deprecated`, and entities already marked `deleted`.
+
+Select entities and choose **Selectie als verwijderd markeren**. This stages
+ordinary deletion changes for the existing review and commit flow. Committing
+sets `deleted: true`; the release procedure performs deprecation later.
+The list refreshes after a successful commit.
+
+Deploy this alongside curriculum-store's `orphanOnly` deletion guard. It checks
+the selected entities again when executing the command and rejects the selection
+if an entity has since gained a root or is otherwise ineligible.
+
+Scanning uses one `/slowquery/` request. The view shows the loading circle
+while it waits, then displays the results or an error. Adjust curriculum-store's
+`QUERY_MEMORY_LIMIT` (MiB) for the dataset size; its default is 64. The local
+69,000-entity dataset completes the scan with a 256 MiB limit.
+
+Focused checks: `npx tap --disable-coverage test/orphans.mjs`.
