@@ -296,6 +296,22 @@ body:not(.loading) .loading-overlay {
     display: none;
 }
 
+/* shown instead of the app when the change history cannot be stored */
+.slo-storage-error {
+    max-width: 34rem;
+    padding: 1.5rem;
+    background-color: #fff;
+    border: 1px solid #c00;
+    border-radius: 4px;
+}
+.slo-storage-error h2 {
+    margin: 0 0 0.5rem;
+    color: #c00;
+}
+.slo-storage-error p {
+    margin: 0 0 0.5rem;
+}
+
 /* loading animation from loading.io/css/ */
 .lds-ring {
   display: inline-block;

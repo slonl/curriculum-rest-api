@@ -1,3 +1,3 @@
-import {Storage} from './storage.mjs'
+import {Storage, IndexedDBStorage} from './storage.mjs'
 
-window.storage = {Storage}
+window.storage = {Storage, IndexedDBStorage}

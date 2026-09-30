@@ -113,8 +113,9 @@ class InsertedLink {
 const changes = (()=> {
 
     // The change log reaches storage through this object rather than through
-    // the localStorage global. It is passed into the Changes instances below.
-    const storage = new Storage()
+    // the localStorage global. It is passed into the Changes instances below,
+    // and init() can replace it with a different backend at start-up.
+    let storage = new Storage()
 
     function getDiff(a,b) {
         let result = {}
@@ -651,6 +652,35 @@ const changes = (()=> {
     let undoHistory = changeHistory.toReversed().slice(0,5)
     let undoSize = changeHistory.length
 
+    /**
+     * Adopt a different storage backend for the change history, restoring
+     * whatever that backend already holds.
+     *
+     * A backend that loads asynchronously, such as IndexedDB, is awaited here
+     * once at start-up. After this returns, storage access is synchronous
+     * again and no call site needs to await. The change history becomes exactly
+     * what the new backend holds, so a backend with nothing stored starts empty.
+     *
+     * Returns true when a stored change history was restored.
+     */
+    async function init(store) {
+        storage = store
+        if (storage && storage.ready) {
+            await storage.ready
+        }
+        changeHistory = new Changes()
+        changes.changes = changeHistory
+        rebuild()
+        return changeHistory.length > 0
+    }
+
+    function rebuild() {
+        merged = changes.merged = changeHistory.merge()
+        local = changes.local = merged.normalize()
+        undoHistory = changes.undoHistory = changeHistory.toReversed().slice(0, 5)
+        undoSize = changes.undoSize = changeHistory.length
+    }
+
     const changes = {
         changes: changeHistory,
         merged,
@@ -660,6 +690,10 @@ const changes = (()=> {
         getLocalView,
         update,
         clear,
+        init,
+        get storage() {
+            return storage
+        },
         isInsertedNode: function(id) {
             return insertedNodes[id] ?? false
         },
@@ -679,10 +713,8 @@ const changes = (()=> {
         } else {
             changes.changes = new Changes()
         }
-        changes.merged = changes.changes.merge()
-        changes.local = changes.merged.normalize()
-        changes.undoHistory = changes.changes.toReversed().slice(0, 5)
-        changes.undoSize = changes.changes.length
+        changeHistory = changes.changes
+        rebuild()
     }
 
     function clear() {

@@ -53,13 +53,48 @@ if (!jsontagMeta) {
 }
 
 slo.api.loadSchemas()
-.then(schemas => {
+.then(async schemas => {
     meta.schemas = schemas
 
-    // Composition root for browser-side storage. Everything below reaches
-    // localStorage through this object rather than through the global.
+    // Composition root for browser-side storage.
+    //
+    // Credentials and view preferences are small and stay on localStorage.
+    // The change history is the value that can outgrow the roughly 5MB
+    // localStorage quota, which is what breaks large multi-tab Excel imports,
+    // so it is backed by IndexedDB instead. Both are reached through the same
+    // injected interface.
     const storage = new window.storage.Storage()
     slo.api.storage = storage
+
+    const changeStorage = new window.storage.IndexedDBStorage()
+    try {
+        // IndexedDB has no synchronous API, so its records are preloaded once
+        // here. This is the single accepted await in the start-up path; after
+        // it, every storage call site is synchronous.
+        await changeStorage.ready
+    } catch(error) {
+        // No fallback to localStorage: silently reverting to the quota this
+        // avoids would hide the problem. Say so instead, and refuse to start
+        // rather than start with a change history that cannot be saved.
+        console.error('Could not open IndexedDB for the change history', error)
+        document.body.classList.remove('loading')
+        let overlay = document.querySelector('.loading-overlay')
+        if (!overlay) {
+            // only the commit-changes page ships one, so build the same thing
+            overlay = document.createElement('div')
+            overlay.className = 'loading-overlay'
+            document.body.appendChild(overlay)
+        }
+        overlay.innerHTML = '<div class="slo-storage-error">'
+            + '<h2>Change history is unavailable</h2>'
+            + '<p>This browser could not open IndexedDB, which the change history needs in order to '
+            + 'hold large imports. Changes cannot be edited until that works. Private browsing and '
+            + 'blocked site data are the usual causes.</p>'
+            + '<p>' + ('' + (error?.message ?? error)) + '</p>'
+            + '</div>'
+        return
+    }
+    await changes.init(changeStorage)
 
     let typeRoutes = getTypeRoutes()
 
@@ -2431,6 +2466,9 @@ browser = simply.app({
         },
         removeAllChanges: async function() {
             changes.clear()
+            // checkView reloads the page, so make sure the cleared change
+            // history has actually reached storage first.
+            await changes.storage.flush()
             return browser.actions.checkView()
         },
         checkView: async function() {
@@ -2523,6 +2561,8 @@ browser = simply.app({
                 throw new Error('Invalid command: '+result.status+': '+result.message)
             }                    
             changes.clear()
+            // the cleared history must not reappear after a later reload
+            await changes.storage.flush()
             browser.actions.switchView(browser.view.preferedView)
 
             return true
