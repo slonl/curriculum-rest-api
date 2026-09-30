@@ -31,6 +31,8 @@
     let editor = null
     window.slo = {
         api: {
+            // Injected by databrowser.js, the composition root for storage
+            storage: null,
             token: 'b3BlbmRhdGFAc2xvLm5sOjM1ODUwMGQzLWNmNzktNDQwYi04MTdkLTlmMGVmOWRhYTM5OQ==',
             login: async function(email,key) {
                 let token = btoa(email+':'+key)
@@ -202,7 +204,7 @@
             let allColumns = {}
             let lastIndent = 0
             let count = 0
-            let selectedColumns = localStorage.getItem('selectedColumns')
+            let selectedColumns = window.slo.api.storage.getItem('selectedColumns')
             if (!selectedColumns) {
                 selectedColumns = ['id','prefix','title','type','niveaus']
             } else {

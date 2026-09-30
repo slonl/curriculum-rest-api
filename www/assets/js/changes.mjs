@@ -3,6 +3,8 @@ this module handles how changes in the data are stored locally, applied to remot
 how the patch command is filled and how the preview of merged changes is made
 */
 
+import {Storage} from './storage.mjs'
+
 if (!globalThis.jsontagMeta) {
     globalThis.jsontagMeta = {}
 }
@@ -109,6 +111,10 @@ class InsertedLink {
 }
 
 const changes = (()=> {
+
+    // The change log reaches storage through this object rather than through
+    // the localStorage global. It is passed into the Changes instances below.
+    const storage = new Storage()
 
     function getDiff(a,b) {
         let result = {}
@@ -278,10 +284,12 @@ const changes = (()=> {
 
     class Changes extends Array {
         #log = [];
-        constructor(arr) {
+        #storage
+        constructor(arr, store = storage) {
             super()
-            if (!arr && globalThis.localStorage && globalThis.localStorage.getItem('changeHistory')) {
-                this.#log = globalThis.localStorage.getItem('changeHistory').split("\n")
+            this.#storage = store
+            if (!arr && this.#storage.getItem('changeHistory')) {
+                this.#log = this.#storage.getItem('changeHistory').split("\n")
                 for (let line of this.#log) {
                     if (!line.length) {
                         continue
@@ -299,7 +307,7 @@ const changes = (()=> {
         }
 
         save() {
-            if (!globalThis.localStorage) {
+            if (!this.#storage.available) {
                 throw new Error('Cannot store changes, localStorage is unavailable')
             }
             // only save new additions to the log
@@ -314,7 +322,7 @@ const changes = (()=> {
                 }
                 this.#log.push(JSONTag.stringify(change))
             }
-            globalThis.localStorage.setItem('changeHistory', this.#log.join("\n"))
+            this.#storage.setItem('changeHistory', this.#log.join("\n"))
         }
 
         merge() {
@@ -678,9 +686,7 @@ const changes = (()=> {
     }
 
     function clear() {
-        if (globalThis.localStorage) {
-            globalThis.localStorage.removeItem('changeHistory')
-        }
+        storage.removeItem('changeHistory')
         changes.changes = new Changes()
         insertedNodes = changes.insertedNodes = {}
         changes.update()

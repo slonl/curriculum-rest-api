@@ -56,6 +56,11 @@ slo.api.loadSchemas()
 .then(schemas => {
     meta.schemas = schemas
 
+    // Composition root for browser-side storage. Everything below reaches
+    // localStorage through this object rather than through the global.
+    const storage = new window.storage.Storage()
+    slo.api.storage = storage
+
     let typeRoutes = getTypeRoutes()
 
     document.body.classList.remove('loading')
@@ -493,8 +498,8 @@ browser = simply.app({
         saveToken: (form, values) => {
             const requestToken = values.requestToken
             const requestEmail = values.requestEmail
-            localStorage.setItem('requestToken', JSON.stringify(requestToken))
-            localStorage.setItem('requestEmail', JSON.stringify(requestEmail))
+            storage.setItem('requestToken', JSON.stringify(requestToken))
+            storage.setItem('requestEmail', JSON.stringify(requestEmail))
             browser.view.requestEmail = requestEmail
             browser.view.requestToken = requestToken
             window.location.reload()
@@ -562,7 +567,7 @@ browser = simply.app({
                   checked: c.checked
               }
           })
-          localStorage.setItem('spreadsheet-columns', JSON.stringify(storedColumns))
+          storage.setItem('spreadsheet-columns', JSON.stringify(storedColumns))
           browser.view.sloSpreadsheet.render()
         },
         toggleDirty: (el, value) => {
@@ -641,8 +646,8 @@ browser = simply.app({
         },
         logoff: async function(el, value) {
             slo.api.logout()
-            localStorage.setItem('username','')
-            localStorage.setItem('key','')
+            storage.setItem('username','')
+            storage.setItem('key','')
             window.location.reload()
         },
         hideError: function(el, value) {
@@ -650,7 +655,7 @@ browser = simply.app({
         },
         switchView: function(el, value) {
             this.app.view.preferedView = value;
-            localStorage.setItem("browser.view.preferedView", value)
+            storage.setItem("browser.view.preferedView", value)
             return this.app.actions.switchView(value)
         },
         selectRoot: function(el, value) {
@@ -943,8 +948,8 @@ browser = simply.app({
             browser.actions.clearView()
             browser.view.user = email
             browser.view.loggedIn = true
-            localStorage.setItem('username',email)
-            localStorage.setItem('key',key)
+            storage.setItem('username',email)
+            storage.setItem('key',key)
             return true
         },
         importXLSX: async function(file) {
@@ -1755,7 +1760,7 @@ browser = simply.app({
             .then(function(json) {
                 browser.view.root = json
                 let defs = slo.treeToRows(browser.view.root)
-                let prevColumns = JSON.parse(localStorage.getItem('spreadsheet-columns') ?? '[]')
+                let prevColumns = JSON.parse(storage.getItem('spreadsheet-columns') ?? '[]')
                 for (let column of prevColumns) {
                     let c = defs.columns.find(c => c.name==column.name)
                     if (c) {
@@ -1837,7 +1842,7 @@ browser = simply.app({
                 browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
                 browser.view.item = clone
-                browser.view.preferedView = localStorage.getItem("browser.view.preferedView") || 'spreadsheet'
+                browser.view.preferedView = storage.getItem("browser.view.preferedView") || 'spreadsheet'
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
                     browser.actions.switchView(browser.view.preferedView)
                     return
@@ -2618,8 +2623,8 @@ let url = new URL(document.location)
 if (url.searchParams.has('page')) {
     browser.view.page = Math.max(1, parseInt(url.searchParams.get('page')));
 }
-let user = localStorage.getItem('username')
-let key = localStorage.getItem('key')
+let user = storage.getItem('username')
+let key = storage.getItem('key')
 if (user && key) {
     browser.view.user = user
     browser.view.loggedIn = true
@@ -2628,8 +2633,8 @@ if (user && key) {
 } else {
     browser.view.loggedIn = false
 }
-const requestToken = localStorage.getItem('requestToken')
-const requestEmail = localStorage.getItem('requestEmail')
+const requestToken = storage.getItem('requestToken')
+const requestEmail = storage.getItem('requestEmail')
 if (requestToken) {
     browser.view.requestToken = JSON.parse(requestToken)
 }
