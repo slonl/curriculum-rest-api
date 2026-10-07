@@ -1,3 +1,3 @@
-import changes from './changes.mjs'
+import changes from './changes.module.js'
 
 window.changes = changes

@@ -30,11 +30,11 @@ const { type } = require('os');
 sgMail.setApiKey(process.env.NODE_SENDGRID_API_KEY);
 
 const app       = express();
-const port      = process.env.NODE_PORT || 4800;
-const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2024/api/";
+const port      = process.env.NODE_PORT || 4930;
+const apiBase   = process.env.NODE_BASE || "https://opendata.slo.nl/curriculum/2026/api/";
 const baseIdURL = process.env.NODE_ID_URL || "https://opendata.slo.nl/curriculum/uuid/";
-const storeUrl  = process.env.NODE_SIMPLYSTORE_URL || "http://localhost:3500";
-const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3501";
+const storeUrl  = process.env.NODE_SIMPLYSTORE_URL || "http://localhost:3930";
+const searchUrl = process.env.NODE_SEARCH_URL || "http://localhost:3931";
 const baseDatasetURL = process.env.NODE_DATA_URL || 'https://opendata.slo.nl/curriculum/api-acpt/v1/';
 const baseDatasetPath = url.parse(baseDatasetURL).pathname;
 opendata.url    = storeUrl;

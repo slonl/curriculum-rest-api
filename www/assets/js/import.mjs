@@ -1,4 +1,4 @@
-import changes from './changes.mjs'
+import changes from './changes.module.js'
 
 let niveaus = []
 export async function importXLSX(file, schemas, levels) {
