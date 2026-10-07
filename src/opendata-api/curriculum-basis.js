@@ -312,24 +312,80 @@ module.exports = {
 			title:asc 
 		})
 
-		let results2 = from(Object.values(data.niveauIndex))
+		// KerndoelVakleergebied/LdkVakleergebied/InhVakleergebied/ErkVakleergebied/RefVakleergebied are
+		// root entities and get a NiveauIndex computed for them directly during the build. Examenprogramma
+		// and Syllabus entities have their own Niveau instead, and never get a NiveauIndex on their nested
+		// ExamenprogrammaVakleergebied/SyllabusVakleergebied children, so those are matched via their parent.
+		let results2 = from(data.Niveau)
 		.select({
 			...ShortLink,
-			KerndoelVakleergebied: ShortLink,
-			SyllabusVakleergebied: n => from(_.Syllabus.SyllabusVakleergebied).select(ShortLink),
-			LdkVakleergebied: ShortLink,
-			InhVakleergebied: ShortLink,
-			ErkVakleergebied: n =>
-				from(data.ErkVakleergebied)
+			KerndoelVakleergebied: n =>
+				from(data.KerndoelVakleergebied)
 				.where({
-					Niveau: {
+					NiveauIndex: {
 						id: n.id
 					}
 				})
 				.select(ShortLink)
 			,
-			RefVakleergebied: ShortLink,
-			ExamenprogrammaVakleergebied: n => from(_.Examenprogramma.ExamenprogrammaVakleergebied(n)).select(ShortLink),
+			SyllabusVakleergebied: n =>
+				from(data.Syllabus)
+				.where({
+					Niveau: {
+						id: n.id
+					}
+				})
+				.select(s => s.SyllabusVakleergebied)
+				.flat()
+				.select(ShortLink)
+			,
+			LdkVakleergebied: n =>
+				from(data.LdkVakleergebied)
+				.where({
+					NiveauIndex: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			InhVakleergebied: n =>
+				from(data.InhVakleergebied)
+				.where({
+					NiveauIndex: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			ErkVakleergebied: n =>
+				from(data.ErkVakleergebied)
+				.where({
+					NiveauIndex: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			RefVakleergebied: n =>
+				from(data.RefVakleergebied)
+				.where({
+					NiveauIndex: {
+						id: n.id
+					}
+				})
+				.select(ShortLink)
+			,
+			ExamenprogrammaVakleergebied: n =>
+				from(data.Examenprogramma)
+				.where({
+					Niveau: {
+						id: n.id
+					}
+				})
+				.select(ep => ep.ExamenprogrammaVakleergebied)
+				.flat()
+				.select(ShortLink)
+			,
 		})
 
 		results = results.concat(results2)
