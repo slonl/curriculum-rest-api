@@ -111,27 +111,48 @@ module.exports = {
 	
 		`,
 		InhoudslijnVolledig: `
-		const results = from(data.InhVakleergebied)
+		const results = from(Index(request.query.id))
 			.select({
 				...shortInfo,
-				Niveau: NiveauIndex
+				Niveau: NiveauIndex,
 				InhInhoudslijn: {
 					...shortInfo,
 					deprecated: _,
+					Doelniveau: o => from(o.Doelniveau)
+						.where({
+							Niveau: { id: request.query.niveau }
+						})
+						.select({
+							...Doelen
+						}),
 					InhCluster: {
 						...shortInfo,
 						deprecated: _,
+						Doelniveau: o => from(o.Doelniveau)
+							.where({
+								Niveau: { id: request.query.niveau }
+							})
+							.select({
+								...Doelen
+							}),
 						InhSubcluster: {
 							...shortInfo,
 							deprecated: _,
-							Doelniveau: Doelen,
+							Doelniveau: o => from(o.Doelniveau)
+								.where({
+									Niveau: { id: request.query.niveau }
+								})
+								.select({
+									...Doelen
+								}),
 						},
-						Doelniveau: Doelen,
 					},
-					Doelniveau:	Doelen,
 				},
-				Doelniveau: Doelen,
-			})`
+			})
+
+			results
+
+		`
 	},
 	typedQueries: {
 		InhVakleergebied: `

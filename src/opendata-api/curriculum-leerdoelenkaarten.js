@@ -195,141 +195,139 @@ module.exports = {
 							})
                 		},
               		},
-            	}			
+            	}
 			})
+
+			results
+
 		`,
 		LdkVakleergebiedOpNiveau: `
-		const results = from(data.NiveauIndex)
+		const results = from(data.LdkVakleergebied)
 		.where({
-			uuid : request.query.id,
+			NiveauIndex: { id: request.query.niveau }
 		})
 		.select({
-			LdkVakleergebied: {
-				...shortInfo,
-				deprecated: _,
-			}
-		})`,
+			...shortInfo,
+			deprecated: _,
+		})
+
+		results
+		`,
 		LdkVakleergebiedByIdOpNiveau: `
-		console.log("LdkVakleergebiedByIdOpNiveau called")
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid: request.query.id
-		})
+		const results = from(Index(request.query.id))
 		.select({
-			LdkVakleergebied: {
-				...shortInfo,
-				deprecated: _,
-				Doelniveau : o => from(o.Doelniveau)			  
-				.where({
-					Niveau : { id: request.query.niveau }
-				})
-				.select({
-					...Doelen
-				})
-			},
+			...shortInfo,
+			deprecated: _,
 			LdkVakkern: {
 				...shortInfo,
 				deprecated: _,
 			},
 			Niveau: NiveauShort
 		})
+
+		results
 		`,
 
 		LdkVakkernOpNiveau: `
-		const results = from(data.NiveauIndex)
+		const results = from(data.LdkVakkern)
 		.where({
-			uuid : request.query.id
+			NiveauIndex: { id: request.query.niveau }
 		})
 		.select({
-			LdkVakkern: {
-				...shortInfo,
-				deprecated: _,
-		  }
-		})`,
+			...shortInfo,
+			deprecated: _,
+		})
+
+		results
+		`,
 
 		LdkVakkernByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id
-		})
+		const results = from(Index(request.query.id))
 		.select({
-			LdkVakkern: {
+			...shortInfo,
+			deprecated: _,
+			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
-				LdkVakleergebied: {
-					...shortInfo,
-						deprecated: _,
-					},
-					Doelniveau : o => from(o.Doelniveau)			  
-					.where({
-						Niveau : { id: request.query.niveau }
-					})
-					.select({
-						...Doelen
-					})
-				},
+			},
 			LdkVaksubkern: {
 				...shortInfo,
 				deprecated: _,
 			},
-			Niveau: NiveauShort,
+			Niveau: NiveauShort
 		})
+
+		results
 		`,
 
 		LdkVaksubkernOpNiveau: `
-		const results = from(data.NiveauIndex)
+		const results = from(data.LdkVaksubkern)
 		.where({
-			uuid : request.query.id
+			NiveauIndex: { id: request.query.niveau }
 		})
 		.select({
-			LdkVaksubkern :{
-				...shortInfo,
-				deprecated: _,
-			}
+			...shortInfo,
+			deprecated: _,
 		})
+
+		results
 		`,
 
 		LdkVaksubkernByIdOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id 
-		})
+		const results = from(Index(request.query.id))
 		.select({
-			LdkVaksubkern: {
+			...shortInfo,
+			deprecated: _,
+			LdkVakkern: {
 				...shortInfo,
 				deprecated: _,
-				LdkVakkern: {
-					...shortInfo,
-					deprecated: _,
-				},
-				Doelniveau : o => from(o.Doelniveau)			  
-					.where({
-						Niveau : { id: request.query.niveau }
-					})
-					.select({
-						...Doelen
-					})
-				,
-				LdkVakinhoud: {
-					...shortInfo,
-					deprecated: _,
-				},
-				Niveau: NiveauShort
-		  	}
-		})
-		`,
-
-		LdkVakinhoudOpNiveau: `
-		const results = from(data.NiveauIndex)
-		.where({
-			uuid : request.query.id 
-		})
-		.select({
+			},
+			Doelniveau : o => from(o.Doelniveau)
+				.where({
+					Niveau : { id: request.query.niveau }
+				})
+				.select({
+					...Doelen
+				}),
 			LdkVakinhoud: {
 				...shortInfo,
 				deprecated: _,
-			}
+			},
+			Niveau: NiveauShort
 		})
+
+		results
+		`,
+
+		LdkVakinhoudOpNiveau: `
+		const results = from(data.LdkVakinhoud)
+		.where({
+			NiveauIndex: { id: request.query.niveau }
+		})
+		.select({
+			...shortInfo,
+			deprecated: _,
+		})
+
+		results
+		`,
+
+		LdkVakinhoudByIdOpNiveau: `
+		const results = from(Index(request.query.id))
+		.select({
+			...shortInfo,
+			deprecated: _,
+			Doelniveau : o => from(o.Doelniveau)
+				.where({
+					Niveau : { id: request.query.niveau }
+				})
+				.select({
+					...Doelen
+				}),
+			Niveau: NiveauIndex
+		})
+
+		results
 		`
 	},
 	typedQueries: {

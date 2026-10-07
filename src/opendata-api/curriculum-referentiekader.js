@@ -176,53 +176,46 @@ module.exports = {
 
 			response
 		`,
-		/*
-		// @TODO : Check if ReferentiekaderVolledig is a word
 		ReferentiekaderVolledig: `
-		const results = from(data.ReferentiekaderVolledig)
-		.select({
-			'@id': Id,
-			uuid: _.id,
-			prefix: _,
-			title: _,
-			deprecated: _,
-			Niveau: NiveauIndex,
-			RefDomein {
-				'@id': Id,
-				uuid: _.id,
-				prefix: _,
-				title: _,
-				deprecated: _,
-				RefSubdomein: {
-					'@id': Id,
-					uuid: _.id,
-					prefix: _,
-					title: _,
+		const results = from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				Niveau: NiveauIndex,
+				RefDomein: {
+					...shortInfo,
 					deprecated: _,
-					RefOnderwerp: {
-						'@id': Id,
-						uuid: _.id,
-						prefix: _,
-						title: _,
+					RefSubdomein: {
+						...shortInfo,
 						deprecated: _,
-						RefDeelonderwerp: {
-							'@id': Id,
-							uuid: _.id,
-							prefix: _,
-							title: _,
+						RefOnderwerp: {
+							...shortInfo,
 							deprecated: _,
-							Doelniveau:	Doelen,
+							Doelniveau: o => from(o.Doelniveau)
+								.where({
+									Niveau: { id: request.query.niveau }
+								})
+								.select({
+									...Doelen
+								}),
+							RefDeelonderwerp: {
+								...shortInfo,
+								deprecated: _,
+								Doelniveau: o => from(o.Doelniveau)
+									.where({
+										Niveau: { id: request.query.niveau }
+									})
+									.select({
+										...Doelen
+									}),
+							},
 						},
-						Doelniveau: Doelen,
 					},
-					Doelniveau:	Doelen,
 				},
-				Doelniveau: Doelen
-			},
-			Doelniveau: Doelen,
-		}
-	})`
-		*/
+			})
+
+			results
+
+		`
 	},
 
 	typedQueries: {
