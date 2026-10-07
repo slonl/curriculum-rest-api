@@ -101,6 +101,74 @@ module.exports = {
 			response
 
 		`,
+		KerndoelOpNiveau: `
+		const results = from(data.Kerndoel)
+			.where({
+				NiveauIndex: { id: request.query.niveau }
+			})
+			.select({
+				...shortInfo,
+				description: _,
+				kerndoelLabel: _,
+			})
+
+		results
+		`,
+		KerndoelOpNiveauById: `
+		const results = from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				description: _,
+				kerndoelLabel: _,
+				KerndoelDomein: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Niveau: NiveauIndex,
+			})
+
+		results
+		`,
+		KerndoelVakleergebiedOpNiveau: `
+		const results = from(data.KerndoelVakleergebied)
+			.where({
+				NiveauIndex: { id: request.query.niveau }
+			})
+			.select({
+				...shortInfo,
+			})
+
+		results
+		`,
+		KerndoelVakleergebiedByIdOpNiveau: `
+		const results = from(Index(request.query.id))
+			.select({
+				...shortInfo,
+				Vakleergebied: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelDomein: {
+					...shortInfo,
+					deprecated: _,
+				},
+				KerndoelUitstroomprofiel: {
+					...shortInfo,
+					deprecated: _,
+				},
+				Kerndoel: o => from(o.Kerndoel)
+					.where({
+						NiveauIndex: { id: request.query.niveau }
+					})
+					.select({
+						...shortInfo,
+						kerndoelLabel: _,
+						deprecated: _,
+					}),
+			})
+
+		results
+		`,
 	},
 	typedQueries: {
 		Kerndoel: `
