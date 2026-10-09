@@ -53,7 +53,7 @@ module.exports = {
 				page: Page,
 				count: data.FoSet.length
 			}
-	
+
 			response
 
 		`,
@@ -73,9 +73,9 @@ module.exports = {
 				page: Page,
 				count: data.FoDomein.length
 			}
-	
+
 			response
-	
+
 		`,
 		FoSubdomein: `
 		const results = from(data.FoSubdomein)
@@ -84,16 +84,16 @@ module.exports = {
 				...shortInfo,
 				FoDoelzin: shortInfo
 			})
-	
+
 			const response = {
 				type: 'FoSubdomein',
 				data: results,
 				page: Page,
 				count: data.FoSubdomein.length
 			}
-	
+
 			response
-	
+
 		`,
 		FoKernzin: `
 		const results = from(data.FoKernzin)
@@ -102,16 +102,16 @@ module.exports = {
 				...shortInfo,
 				FoDoelzin: shortInfo
 			})
-	
+
 			const response = {
 				type: 'FoKernzin',
 				data: results,
 				page: Page,
 				count: data.FoKernzin.length
 			}
-	
+
 			response
-	
+
 		`,
 		FoDoelzin: `
 		const results = from(data.FoDoelzin)
@@ -128,9 +128,9 @@ module.exports = {
 				page: Page,
 				count: data.FoDoelzin.length
 			}
-	
+
 			response
-	
+
 		`,
 		FoIllustratie: `
 		const results = from(data.FoIllustratie)
@@ -148,9 +148,9 @@ module.exports = {
 				page: Page,
 				count: data.FoIllustratie.length
 			}
-	
+
 			response
-	
+
 			`,
 		FoUitwerking: `
 		const results = from(data.FoUitwerking)
@@ -161,18 +161,18 @@ module.exports = {
 				unreleased: _,
 				description: _,
 			})
-	
+
 			const response = {
 				type: 'FoUitwerking',
 				data: results,
 				page: Page,
 				count: data.FoUitwerking.length
 			}
-	
+
 			response
-	
+
 			`
-			
+
 	},
 	typedQueries: {
 		FoSet: `
@@ -190,12 +190,12 @@ module.exports = {
                     se: _,
                     ce: _,
 	    	        FoUitwerking: {
-                       ...shortInfo, 
-                     	description:  _                        
+                       ...shortInfo,
+                     	description:  _
                     },
                     FoToelichting:  {
-                        ...shortInfo, 
-                      	description:  _                        
+                        ...shortInfo,
+                      	description:  _
                       },
                     },
                   FoSubdomein: {
@@ -207,12 +207,12 @@ module.exports = {
                       se: _,
                       ce: _,
                       FoUitwerking: {
-                        ...shortInfo, 
-                      	description:  _                        
+                        ...shortInfo,
+                      	description:  _
                       },
                       FoToelichting:  {
-                        ...shortInfo, 
-                      	description:  _                        
+                        ...shortInfo,
+                      	description:  _
                       },
                     },
                   },
@@ -258,10 +258,10 @@ module.exports = {
 				se: _,
 				ce: _,
 				FoIllustratie: {
-					description:  _                        
+					description:  _
 				},
 				FoUitwerking: {
-					description:  _                        
+					description:  _
 				},
 			})
 		`,

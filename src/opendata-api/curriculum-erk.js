@@ -5,8 +5,8 @@ module.exports = {
 	queries: {
 		ErkVakleergebied: `
 		const results = from(data.ErkVakleergebied)
-			.orderBy({ 
-				prefix:asc 
+			.orderBy({
+				prefix:asc
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
@@ -19,22 +19,22 @@ module.exports = {
 						uuid: _.id,
 						title: _,
 				},
-				Niveau: NiveauShort 
+				Niveau: NiveauShort
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkVakleergebied.length,
 				root: meta.schema.types.ErkVakleergebied.root
 			}
-	
+
 			response
 		`,
 		ErkGebied: `
 		const results = from(data.ErkGebied)
-			.orderBy({ 
-				prefix:asc 
+			.orderBy({
+				prefix:asc
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
@@ -42,7 +42,7 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			
+
 
 			const response = {
 				data: results,
@@ -50,7 +50,7 @@ module.exports = {
 				count: data.ErkGebied.length,
 				root: meta.schema.types.ErkGebied.root
 			}
-	
+
 			response
 		`,
 		ErkCategorie: `
@@ -64,7 +64,7 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			
+
 
 			const response = {
 				data: results,
@@ -72,7 +72,7 @@ module.exports = {
 				count: data.ErkCategorie.length,
 				root: meta.schema.types.ErkCategorie.root
 			}
-	
+
 			response
 		`,
 		ErkTaalprofiel:`
@@ -121,14 +121,14 @@ module.exports = {
 				},
 				unreleased: _,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkTaalprofiel.length,
 				root: meta.schema.types.ErkTaalprofiel.root
 			}
-	
+
 			response
 		`,
 		ErkTaalprofieltekst:`
@@ -142,7 +142,7 @@ module.exports = {
 				...shortInfo,
 				Niveau: NiveauShort
 			})
-			
+
 
 			const response = {
 				data: results,
@@ -150,7 +150,7 @@ module.exports = {
 				count: data.ErkTaalprofieltekst.length,
 				root: meta.schema.types.ErkTaalprofieltekst.root
 			}
-	
+
 			response
 		`,
 		ErkTaalactiviteit: `
@@ -165,7 +165,7 @@ module.exports = {
 				ErkSchaal: shortInfo,
 				unreleased: _,
 			})
-			
+
 
 			const response = {
 				data: results,
@@ -173,7 +173,7 @@ module.exports = {
 				count: data.ErkTaalactiviteit.length,
 				root: meta.schema.types.ErkTaalactiviteit.root
 			}
-	
+
 			response
 		`,
 		ErkSchaal: `
@@ -188,7 +188,7 @@ module.exports = {
 				ErkCandobeschrijving: shortInfo,
 				unreleased: _,
 			})
-			
+
 
 			const response = {
 				data: results,
@@ -196,7 +196,7 @@ module.exports = {
 				count: data.ErkSchaal.length,
 				root: meta.schema.types.ErkSchaal.root
 			}
-	
+
 			response
 		`,
 		ErkCandobeschrijving: `
@@ -216,14 +216,14 @@ module.exports = {
 				ErkVoorbeeld: shortInfo,
 				ErkLesidee: shortInfo,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkCandobeschrijving.length,
 				root: meta.schema.types.ErkCandobeschrijving.root
 			}
-	
+
 			response
 		`,
 		ErkVoorbeeld: `
@@ -237,14 +237,14 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkVoorbeeld.length,
 				root: meta.schema.types.ErkVoorbeeld.root
 			}
-	
+
 			response
 		`,
 		ErkLesidee: `
@@ -258,20 +258,20 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkLesidee.length,
 				root: meta.schema.types.ErkLesidee.root			}
-	
+
 			response
 		`,
 		// @TODO : ErkVolledig in https://github.com/slonl/curriculum-erk/blob/editor/schema.jsonld zetten?
 		ErkVolledig: `
 		from(Index(request.query.id))
 			.select({
-				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',	
+				//'@context': 'http://opendata.slo.nl/curriculum/schemas/erk.jsonld#erk_vakleergebied',
 				...shortInfo,
 				Niveau: NiveauShort
 		  	})
@@ -312,14 +312,14 @@ module.exports = {
 					algemeen: _,
 				},
 			})
-			
+
 
 			const response = {
 				data: results,
 				page: Page,
 				count: data.ErkGebied.length
 			}
-	
+
 			response`,
 	},
 	typedQueries: {
@@ -353,7 +353,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-		})	
+		})
 		`,
 		ErkCategorie: `
 		from(Index(request.query.id))
@@ -433,7 +433,7 @@ module.exports = {
 		from(Index(request.query.id))
 		.select({
 			...shortInfo,
-		})	
+		})
 		`,
 		ErkLesidee: `
 		from(Index(request.query.id))
@@ -454,6 +454,6 @@ module.exports = {
 		'erk_candobeschrijving/': (req) => opendata.api["ErkCandobeschrijving"](req.params, req.query),
 		'erk_voorbeeld/': (req) => opendata.api["ErkVoorbeeld"](req.params, req.query),
 		'erk_lesidee/': (req) => opendata.api["ErkLesidee"](req.params, req.query),
-		'erk_schalen/': (req) => opendata.api["ErkSchalen"](req.params, req.query),	
+		'erk_schalen/': (req) => opendata.api["ErkSchalen"](req.params, req.query),
 	}
 };

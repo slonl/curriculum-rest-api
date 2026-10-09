@@ -1,8 +1,8 @@
 const sloDocument = (function() {
-  
+
   const options = {
   }
-  
+
   return function(settings, data) {
     options.container = settings.container
 
@@ -15,7 +15,7 @@ const sloDocument = (function() {
       editBox.style.display = "flex";
       let title = getTitle()
       let textEditor = editBox.querySelector("textarea");
-      document.body.dataset.simplyKeyboard = 'document-edit'  
+      document.body.dataset.simplyKeyboard = 'document-edit'
       textEditor.value = title;
       textEditor.focus();
       // @TODO : on saving the uuid must NOT come from the browser adress bar URL as this can be "accidentally" edited by the user
@@ -43,21 +43,21 @@ const sloDocument = (function() {
 
       let itemIndex = nodes.indexOf(focusedElement);
       nodes[itemIndex].classList.remove("focus");
-      
+
       // moving around
       itemIndex = itemIndex + indexIncrement;
-      
+
       if( itemIndex > (nodes.length -1)) {
           itemIndex = nodes.length -1;
       }
-      
+
       if ( itemIndex < 0) {
         itemIndex = 0;
       }
 
       scrollIntoView(nodes, itemIndex)
       nodes[itemIndex].classList.add("focus");
-      
+
     }
 
     function scrollIntoView(nodes, itemIndex){
@@ -88,7 +88,7 @@ const sloDocument = (function() {
         let idPath = URL.parse(focusedElement.id, document.location.href)
         let currentUUID = idPath.pathname.split("/").filter(Boolean).pop()
         currentIdentifier = currentUUID // @Note: needed for the documentSaveChanges.
-        let currentContent = data.index.get(currentUUID).title 
+        let currentContent = data.index.get(currentUUID).title
         return currentContent
       } catch(e){
         let warning = "Geselecteerd veld in de document weergave kan niet worden aangepast omdat het niet verwijst naar een UUID"
@@ -131,7 +131,7 @@ const sloDocument = (function() {
     };
 
     let sloDocument = {
-     
+
       // @TODO make this into a generic function and get/add "el" element if needed
       move : (indexIncrement) => {
         move(indexIncrement);
@@ -142,13 +142,13 @@ const sloDocument = (function() {
         let focusedElement;
         let nodes;
         let itemIndex;
-                
+
         // moving around
         switch(destination){
           case "top":
             focusedElement;
             nodes = getAllNodes()
-          
+
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
                 focusedElement = document.getElementsByClassName("focus")[0];
@@ -158,11 +158,11 @@ const sloDocument = (function() {
                 focusedElement = nodes[0];
                 focusedElement.classList.add("focus")
             }
-            
+
             itemIndex = nodes.indexOf(focusedElement);
-            
+
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
-            
+
             //let newPosition;
             itemIndex = 0;
             scrollIntoView(nodes, itemIndex)
@@ -171,7 +171,7 @@ const sloDocument = (function() {
           case "bottom":
             focusedElement;
             nodes = getAllNodes()
-          
+
             //find current element to move to the next one
             if(document.getElementsByClassName("focus")[0]){
                 focusedElement = document.getElementsByClassName("focus")[0];
@@ -181,22 +181,22 @@ const sloDocument = (function() {
                 focusedElement = nodes[0];
                 focusedElement.classList.add("focus")
             }
-            
+
             itemIndex = nodes.indexOf(focusedElement);
-            
+
             nodes[itemIndex].classList.remove("focus"); // probably will have to move this so it won't break the switch(destination)
-            
+
             //let newPosition;
             itemIndex = nodes.length -1;
             scrollIntoView(nodes, itemIndex)
             nodes[itemIndex].classList.add("focus");
           break;
           case 'left':{
-            move(-1);  
+            move(-1);
           }
           break;
           case 'right':{
-            move(1)        
+            move(1)
           }
           break;
           default:
@@ -228,7 +228,7 @@ const sloDocument = (function() {
     }
 
     return sloDocument
-  
+
   }
 
 })()

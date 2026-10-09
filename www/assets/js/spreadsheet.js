@@ -22,7 +22,7 @@ const spreadsheet = (function() {
     options.icons     = settings.icons || ''
     options.rows      = settings.rows || 15
     options.editMode  = settings.editMode || false
-    
+
     options.columns.forEach(c => {
       if (typeof c.isEditable == 'undefined') {
         c.isEditable = () => {
@@ -167,7 +167,7 @@ const spreadsheet = (function() {
       return cache.data
     })
 
-  
+
     function createSort(options) {
         var defaultOptions = {
             name: 'sort',
@@ -204,7 +204,7 @@ const spreadsheet = (function() {
         document.exitFullscreen();
       }
     }
-    
+
     datamodel.addPlugin('order', createSort({
       name: 'sort',
       sortBy: 'prefix',
@@ -490,7 +490,7 @@ const spreadsheet = (function() {
         if ((offset.height-current.height)<2) {
           selector.style.setProperty("--deTop", '2px')
         } else {
-          selector.style.setProperty("--deTop", (offset.height - current.height)+'px' ) 
+          selector.style.setProperty("--deTop", (offset.height - current.height)+'px' )
         }
       }
      selector.classList.add("visible")
@@ -555,7 +555,7 @@ const spreadsheet = (function() {
       let column = getColumnDefinition(el)
       if (!column.editor && typeof column.editor != 'undefined') {
         return
-      } 
+      }
       selector.dataset.simplyKeyboard = 'spreadsheet-edit'
       defaultEditor.call(selector, rect, offset, el)
       if (column.editor) {
@@ -563,7 +563,7 @@ const spreadsheet = (function() {
       }
     }
 
-    function columnsSelectWidget() {      
+    function columnsSelectWidget() {
       let checked, name, disabled, list = ''
       for (let column of options.columns) {
         let name = column.name
@@ -573,7 +573,7 @@ const spreadsheet = (function() {
           list += `
 <li class="ds-dropdown-item">
     <label><input type="checkbox" name="${name}" ${checked} disabled>${name}</label>
-</li>`    
+</li>`
         } else {
           list += `
 <li class="ds-dropdown-item">
@@ -608,7 +608,7 @@ const spreadsheet = (function() {
       if (!column.values || column.values.length>15) {
         return `
 <div class="slo-form-inline slo-dropdown-filter">
-    <input type="text" name="${column.value}" placeholder="filter" 
+    <input type="text" name="${column.value}" placeholder="filter"
         data-simply-command="filterText" data-simply-immediate="true">
 </div>`
       } else {
@@ -630,7 +630,7 @@ const spreadsheet = (function() {
         return html
       }
     }
-   
+
     function buttonbarWidget(column) {
       let selectButton = `<a class="ds-button ds-button-naked ds-icon-button" title="selecteer kolom" data-simply-command="copyColumn" data-simply-value="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#clipboard"></use>
@@ -644,8 +644,8 @@ const spreadsheet = (function() {
       if (column.type=='tree') {
         return `
 <div class="ds-button-group ds-button-bar">
-    <a class="ds-button ds-button-naked ds-icon-button" 
-      title="Boomweergave" data-simply-command="sort" 
+    <a class="ds-button ds-button-naked ds-icon-button"
+      title="Boomweergave" data-simply-command="sort"
       data-simply-value="descending" data-name="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#columns"></use>
     </svg></a><a class="ds-button ds-button-naked ds-icon-button" title="Open alle rows" data-simply-command="toggleAllOpen"><svg class="ds-icon ds-icon-feather">
@@ -657,13 +657,13 @@ const spreadsheet = (function() {
       } else {
         return `
 <div class="ds-button-group ds-button-bar">
-    <a class="ds-button ds-button-naked ds-icon-button" 
-      title="sorteer aflopend" data-simply-command="sort" 
+    <a class="ds-button ds-button-naked ds-icon-button"
+      title="sorteer aflopend" data-simply-command="sort"
       data-simply-value="descending" data-name="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#arrow-down"></use>
     </svg></a>
-    <a class="ds-button ds-button-naked ds-icon-button" 
-      title="sorteer oplopend" data-simply-command="sort" 
+    <a class="ds-button ds-button-naked ds-icon-button"
+      title="sorteer oplopend" data-simply-command="sort"
       data-simply-value="ascending" data-name="${column.value}"><svg class="ds-icon ds-icon-feather">
         <use xlink:href="${options.icons}#arrow-up"></use>
     </svg></a>
@@ -740,7 +740,7 @@ const spreadsheet = (function() {
             let v = value ? "ja" : ""
             html+= `<td class="${colClass}">${v}</td>`
           break
-          case 'id': 
+          case 'id':
             html+= `<td class="${colClass}"><a href="${value}" target="sloSide">#</a></td>`
             break
           case 'tree':
@@ -762,7 +762,7 @@ const spreadsheet = (function() {
       html += `${remove}</tr>`
       return html
     }
-    
+
     function renderBody() {
       let rows = ``
       let count = 0
@@ -778,7 +778,7 @@ const spreadsheet = (function() {
       body.innerHTML = rows
       spreadsheet.selector(body.querySelector('td.focus'))
     }
-    
+
     function renderFoot() {
       let colspan = options.columns.filter(c => c.checked).length+2
       let html = `<tr><td colspan="${colspan}"></td></tr>`
@@ -818,17 +818,17 @@ const spreadsheet = (function() {
       }
       heading += `<th class="slo-minwidth slo-columns-select ds-datatable-disable-sort">${columnsSelectWidget()}</th></tr>`
 
-      
+
       // Filters
       heading += `<tr><td></td>`
       if (options.editMode) {
         heading += '<td></td>'
       }
 
-      for (let column of options.columns) {    
+      for (let column of options.columns) {
         if (!column.checked) {
           continue
-        }       
+        }
         if (!column.filteredValues) {
           column.filteredValues = {}
         }
@@ -841,7 +841,7 @@ const spreadsheet = (function() {
         col += `</td>`
         heading += col
       }
-      
+
       heading += '</tr>'
       // --filter
 
@@ -907,7 +907,7 @@ const spreadsheet = (function() {
             selectorMinimize()
         } else {
             selectorMaximize()
-        }   
+        }
     }
 
     function selectorMaximize() {
@@ -919,7 +919,7 @@ const spreadsheet = (function() {
     function selectorMinimize() {
         selector.close()
         selector.show()
-        selector.classList.remove(`maximize`)      
+        selector.classList.remove(`maximize`)
     }
 
     datamodel.update()
@@ -927,7 +927,7 @@ const spreadsheet = (function() {
     let changeListeners = []
     let editListeners = []
 
-    let spreadsheet = { 
+    let spreadsheet = {
       options: datamodel.options,
       data: datamodel.data,
       visibleData: datamodel.view.visibleData,
@@ -988,7 +988,7 @@ const spreadsheet = (function() {
           } else {
             column++
           }
-        } while (visibleColumns[column-1]?.editor === false) 
+        } while (visibleColumns[column-1]?.editor === false)
         return spreadsheet.goto(row, column)
       },
       movePrev: () => {
@@ -1082,7 +1082,7 @@ const spreadsheet = (function() {
       },
       selector: (el) => {
         if (!el) {
-          selector.classList.remove("visible")         
+          selector.classList.remove("visible")
           return
         }
         if (selectorIsMaximized()) {

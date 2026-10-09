@@ -96,7 +96,7 @@ from(Index('${variables.id}')?.root)
 	prefix: _,
 	title: _
 })
-`	
+`
 	return storeQuery(opendata.url+'/query/', opendata.fragments+';'+query, variables, urlQuery)
 }
 

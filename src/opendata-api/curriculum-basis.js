@@ -30,7 +30,7 @@ module.exports = {
 				Leerlingtekst: {
 					title: _,
 					description: _,
-				}     
+				}
 			},
 			Niveau: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Niveau',
@@ -109,7 +109,7 @@ module.exports = {
 				Leerlingtekst: {
 					title: _,
 					description: _,
-				}     
+				}
 			},
 			Kerndoel: {
 				'@context': 'https://opendata.slo.nl/curriculum/schemas/kerndoel.jsonld#Kerndoel',
@@ -176,7 +176,7 @@ module.exports = {
 			end: (Page+1)*PageSize
 		}
 		const Index = id => meta.index.id.get('/uuid/'+id)
-		
+
 		const shortInfo = {
 		    '@id': Id,
 			uuid: _.id,
@@ -216,13 +216,13 @@ module.exports = {
 			}
 			return 0
 		}
-		
+
 	`,
 	queries: {
 		Vakleergebied: `
 		const results = from(data.Vakleergebied)
-			.orderBy({ 
-				title:asc 
+			.orderBy({
+				title:asc
 			})
 			.slice(Paging.start,Paging.end)
 			.select({
@@ -230,7 +230,7 @@ module.exports = {
 				...shortInfo,
 				Niveau: NiveauShort
 			})
-		
+
 		const response = {
 			data: results,
 			page: Page,
@@ -243,7 +243,7 @@ module.exports = {
 		`,
 		Niveau: `
 		const results = from(data.Niveau)
-		.orderBy({ 
+		.orderBy({
 			prefix:asc
 		})
 		//.slice(Paging.start,Paging.end)
@@ -253,7 +253,7 @@ module.exports = {
 			description: _,
 
 		})
-		
+
 
 		const response = {
 			data: results,
@@ -267,15 +267,15 @@ module.exports = {
 		`,
 		Doel: `
 		const results = from(data.Doel)
-		.orderBy({ 
-			title:asc 
+		.orderBy({
+			title:asc
 		})
 		.slice(Paging.start,Paging.end)
 		.select({
 			'@context': 'https://opendata.slo.nl/curriculum/schemas/doel.jsonld#Doel',
 			...ShortLink
 		})
-		
+
 		const response = {
 			data: results,
 			page: Page,
@@ -308,8 +308,8 @@ module.exports = {
 			ErkVakleergebied : ShortLink,
 			RefVakleergebied : ShortLink,
 		})
-		.orderBy({ 
-			title:asc 
+		.orderBy({
+			title:asc
 		})
 
 		let results2 = from(Object.values(data.niveauIndex))
@@ -390,7 +390,7 @@ module.exports = {
 					Leerlingtekst: {
 						title: _,
 						description: _,
-					}     
+					}
 				},
 				Kerndoel: shortInfo,
 				ExamenprogrammaDomein: shortInfo,

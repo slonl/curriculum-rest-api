@@ -25,7 +25,7 @@
             return this.originalValue;
         }
     };
-    
+
     editor.transformers.truthy = {
         render: function(data) {
             this.originalValue = data;
@@ -40,14 +40,14 @@
             return this.originalValue;
         }
     };
-    
+
     editor.transformers.niveau = {
         render: function(data) {
             this.innerHTML = browser.view.item.title;
             return data;
         }
     };
-    
+
     editor.transformers.addTrailingSlash = {
         render: function(data) {
             this.originalValue = data;

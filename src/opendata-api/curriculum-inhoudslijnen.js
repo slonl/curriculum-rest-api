@@ -15,7 +15,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				Niveau: NiveauIndex	
+				Niveau: NiveauIndex
 			})
 
 			const response = {
@@ -24,9 +24,9 @@ module.exports = {
 				count: data.InhVakleergebied.length,
 				root: meta.schema.types.InhVakleergebied.root
 			}
-	
+
 			response
-	
+
 		`,
 		InhInhoudslijn: `
 		const results = from(data.InhInhoudslijn)
@@ -49,9 +49,9 @@ module.exports = {
 				count: data.InhInhoudslijn.length,
 				root: meta.schema.types.InhInhoudslijn.root
 			}
-	
+
 			response
-	
+
 		`,
 		InhCluster: `
 		const results = from(data.InhCluster)
@@ -77,9 +77,9 @@ module.exports = {
 				count: data.InhCluster.length,
 				root: meta.schema.types.InhCluster.root
 			}
-	
+
 			response
-	
+
 		`,
 		InhSubcluster: `
 		const results = from(data.InhSubcluster)
@@ -99,16 +99,16 @@ module.exports = {
 					}
 				}
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
 				count: data.InhSubcluster.length,
 				root: meta.schema.types.InhSubcluster.root
 			}
-	
+
 			response
-	
+
 		`,
 		InhoudslijnVolledig: `
 		const results = from(data.InhVakleergebied)
@@ -144,7 +144,7 @@ module.exports = {
 			},
 			InhInhoudslijn: {
 				...shortInfo,
-				deprecated: _, 
+				deprecated: _,
 			},
 			Doelniveau,
 			Niveau: NiveauIndex
@@ -158,7 +158,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			Doelniveau,	
+			Doelniveau,
 			Niveau: NiveauIndex
 		})
 		`,
@@ -183,7 +183,7 @@ module.exports = {
 				deprecated: _,
 			},
 			Doelniveau
-		})   
+		})
 		`
 	},
 	routes: {

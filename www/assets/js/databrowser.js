@@ -1,6 +1,6 @@
 function getType(node) {
     return JSONTag.getAttribute(node, 'class') || node['@type']
-} 
+}
 
 function getId(node) {
     let id = JSONTag.getAttribute(node, 'id')
@@ -282,7 +282,7 @@ browser = simply.app({
                 let currentLine = spreadsheet.visibleData.findIndex(r => r.index == spreadsheet.options.focus.row)
                 let row = Math.min(data.length-1, currentLine + (rowsPerPage - 1) -1)
                 let column = spreadsheet.options.focus.column
-                spreadsheet.goto(data[row].index, column)                    
+                spreadsheet.goto(data[row].index, column)
             },
             "Insert": async (e) => {
                 if(e.target.matches('input, textarea')){
@@ -353,7 +353,7 @@ browser = simply.app({
                     let targets = Array.from(target.closest('.slo-type-selector').querySelectorAll('input[type="checkbox"], input[type="radio"], button[data-simply-command="addSibling"], button[data-simply-command="showLinkForm"]'))
                     let current = targets.findIndex(input => input==e.target)
                     targets[current]?.classList.add("slo-type-focus")
-                    
+
                     if (current && current > 0) {
                         targets[current]?.classList.remove("slo-type-focus")
                         current--
@@ -365,7 +365,7 @@ browser = simply.app({
             "Enter": (e) => {
                 if (browser.view.user) {
                     e.preventDefault()
-                    let el = document.querySelector(".slo-type-focus")         
+                    let el = document.querySelector(".slo-type-focus")
                     if(el){
                         let closestCommand = el.closest("[data-simply-command]")
                         let command = closestCommand.dataset.simplyCommand
@@ -444,7 +444,7 @@ browser = simply.app({
                 e.preventDefault();
                 browser.view.sloDocument.move(1)
             },
-            
+
             "ArrowUp": (e) => {
                 e.preventDefault()
                 browser.view.sloDocument.move(-1)
@@ -479,7 +479,7 @@ browser = simply.app({
                     e.preventDefault();
                     browser.actions.documentShowEditor();
                 }
-            },           
+            },
         },
         "document-edit": {
             "Control+Enter": async (e) => {
@@ -587,7 +587,7 @@ browser = simply.app({
         },
         import: (el, value) => {
             browser.view.importErrors = []
-            document.getElementById('importDialog').showModal()            
+            document.getElementById('importDialog').showModal()
         },
         importXLSX: async (form, values) => {
             if (await browser.actions.importXLSX(form.file.files[0])) {
@@ -663,12 +663,12 @@ browser = simply.app({
             }
         },
         removeFilter: (el, value) => {
-            
+
             // @TODO change into an action: "emptyFilter" or somesuch.
-            let filterSuffix = (el.parentElement.parentElement.id).split("-").pop(); 
-            
+            let filterSuffix = (el.parentElement.parentElement.id).split("-").pop();
+
             browser.actions.removeFilterText(el.parentElement.parentElement.id);
-            
+
             let filter = {}
             filter[filterSuffix] = ""
             browser.view.sloSpreadsheet.update({
@@ -676,7 +676,7 @@ browser = simply.app({
             })
             delete browser.view.sloSpreadsheet.options.filter[filterSuffix]
 
-            let column = browser.view.sloSpreadsheet.options.columns 
+            let column = browser.view.sloSpreadsheet.options.columns
                 .find(c => c.value==filterSuffix);
 
             for (filter in column.filteredValues){
@@ -852,7 +852,7 @@ browser = simply.app({
         insertRow: async function(el, value) {
             //find possible types for sibling and child of node
             //show popup with list of types
-            browser.actions.showTypeSelector(el)                
+            browser.actions.showTypeSelector(el)
         },
         showLinkForm: async function(el, value) {
             let dialog = el.closest('dialog')
@@ -1121,7 +1121,7 @@ browser = simply.app({
 
             // TODO: is there a filter?
             if (!document.querySelector('.slo-tree-table.sorted,.slo-tree-table.filtered')) {
-                // if not add parentID: 
+                // if not add parentID:
                 headings.unshift('ParentID')
 
                 let lastId = ''
@@ -1182,7 +1182,7 @@ browser = simply.app({
             // if any filters are non-empty, add the 'filtered' class
             // otherwise remove it from the slo-tree-table
             let filters = browser.view.sloSpreadsheet.options?.filter
-            
+
             if (filters && Object.values(filters).find(v => v)) {
                 document.querySelector('table.slo-tree-table').classList.add('filtered')
                 let elementId;
@@ -1559,7 +1559,7 @@ browser = simply.app({
                         this.app.view.niveaus = [];
                     }
                     await this.app.actions.document(this.app.view.root.id,this.app.view.contexts,this.app.view.niveaus)
-                    
+
                     let documentModel = window.slo.getDataModel('items');
 
                     //focus on item
@@ -1572,7 +1572,7 @@ browser = simply.app({
                     } else {
                         document.body.classList.remove('slo-document-editmode');
                     }
-                    
+
                 break;
             }
         },
@@ -1633,7 +1633,7 @@ browser = simply.app({
             id = id.pathname.split('/').filter(Boolean).pop()
             // fetch the entity with this id or error
             let entity = await localAPI.item(id)
-            // check the type of the entity with the row.node 
+            // check the type of the entity with the row.node
             let parentType = getType(row.node)
             let entityType = getType(entity)
             // item() also adds parent links, but these must not be kept or the tree will become a graph
@@ -1646,7 +1646,7 @@ browser = simply.app({
             }
             // if allowed child - addChild link
             if (meta.schemas.types[parentType]?.children[entityType]) {
-                // TODO: create a function to add this change, so we can re-use it 
+                // TODO: create a function to add this change, so we can re-use it
                 // create change to add this entity here
                 let prop, prevValue, newValue
                 let dirty = true
@@ -2050,7 +2050,7 @@ browser = simply.app({
                 let newValue = parentNode[typeName].slice()
                 if (prevParent==parentNode) {
                     // remove from current position
-                    newValue = newValue.map(e => { 
+                    newValue = newValue.map(e => {
                         if (e.id==node.id) {
                             return new changes.DeletedLink(e)
                         } else {
@@ -2068,7 +2068,7 @@ browser = simply.app({
                     meta: {
                         context: window.slo.getContextByTypeName(getType(parentNode)),
                         title: 'addChild to '+parentNode.title,
-                        type: getType(parentNode),                    
+                        type: getType(parentNode),
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'insert',
@@ -2084,7 +2084,7 @@ browser = simply.app({
                     let newValue = prevParent[typeName].slice()
                     //const prevIndex = prevParent[typeName]?.findIndex(n => n['@id'] == node['@id'])
                     //FIXMEnewValue = newValue.splice(prevIndex, 1)
-                    newValue = newValue.map(e => { 
+                    newValue = newValue.map(e => {
                         if (e.id==node.id) {
                             return new changes.DeletedLink(e)
                         } else {
@@ -2096,7 +2096,7 @@ browser = simply.app({
                         meta: {
                             context: window.slo.getContextByTypeName(getType(prevParent)),
                             title: 'removeChild from '+prevParent.title,
-                            type: getType(prevParent),                    
+                            type: getType(prevParent),
                             timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                         },
                         type: 'delete',
@@ -2122,7 +2122,7 @@ browser = simply.app({
                 let newValue = parentNode[typeName].slice()
                 if (prevParent==parentNode) {
                     // remove from current position
-                    newValue = newValue.map(e => { 
+                    newValue = newValue.map(e => {
                         if (e.id==node.id) {
                             return new changes.DeletedLink(e)
                         } else {
@@ -2140,7 +2140,7 @@ browser = simply.app({
                     meta: {
                         context: window.slo.getContextByTypeName(getType(parentNode)),
                         title: 'addChild to '+parentNode.title,
-                        type: getType(parentNode),                    
+                        type: getType(parentNode),
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'insert',
@@ -2154,7 +2154,7 @@ browser = simply.app({
                     changes.changes.push(change)
                     let prevValue = prevParent[typeName].slice()
                     let newValue = prevParent[typeName].slice()
-                    newValue = newValue.map(e => { 
+                    newValue = newValue.map(e => {
                         if (e.id==node.id) {
                             return new changes.DeletedLink(e)
                         } else {
@@ -2166,7 +2166,7 @@ browser = simply.app({
                         meta: {
                             context: window.slo.getContextByTypeName(getType(prevParent)),
                             title: 'removeChild from '+prevParent.title,
-                            type: getType(prevParent),                    
+                            type: getType(prevParent),
                             timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                         },
                         type: 'delete',
@@ -2187,7 +2187,7 @@ browser = simply.app({
                 let rows = browser.view.sloSpreadsheet.getRowsById(node['@id'])//FIXME: can be a different row than what was just inserted
                 rows = rows.filter(r => r.index>line)
                 return rows[0]
-            }                
+            }
         },
         copyNode: async function(row, node) {
             if (!browser.view.user) return
@@ -2217,7 +2217,7 @@ browser = simply.app({
                     meta: {
                         context: window.slo.getContextByTypeName(getType(parentNode)),
                         title: 'addChild to '+parentNode.title,
-                        type: getType(parentNode),                    
+                        type: getType(parentNode),
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'insert',
@@ -2240,7 +2240,7 @@ browser = simply.app({
                 const siblingPos = parentNode[siblingNode['@type']].indexOf(siblingNode)
                 // copy list (prevValue)
                 let prevValue = parentNode[typeName].slice()
-                let newValue = parentNode[typeName].slice()                
+                let newValue = parentNode[typeName].slice()
                 // splice newValue
                 newValue.splice(siblingPos+1, 0, new Changes.InsertedLink(node))
                 // create change
@@ -2250,7 +2250,7 @@ browser = simply.app({
                     meta: {
                         context: window.slo.getContextByTypeName(getType(parentNode)),
                         title: 'addChild to '+parentNode.title,
-                        type: getType(parentNode),                    
+                        type: getType(parentNode),
                         timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                     },
                     type: 'insert',
@@ -2301,7 +2301,7 @@ browser = simply.app({
                 meta: {
                     context: window.slo.getContextByTypeName(getType(parentNode)),
                     title: 'addChild to '+parentNode.title,
-                    type: getType(parentNode),                    
+                    type: getType(parentNode),
                     timestamp: timestamp.substring(0, timestamp.indexOf('.'))
                 },
                 type: 'insert',
@@ -2389,7 +2389,7 @@ browser = simply.app({
                     let parentNode = parent.node
                     let typeName = getType(row.node)
                     let prevValue = parentNode[typeName].slice()
-                    let newValue = prevValue.map(e => { 
+                    let newValue = prevValue.map(e => {
                         if (e.id==row.node.id) {
                             if (e.deleted) {
                                 delete e.deleted
@@ -2438,13 +2438,13 @@ browser = simply.app({
             if (!browser.view.user) return
             row = browser.view.sloSpreadsheet.getRow(row)
             let parent = browser.view.sloSpreadsheet.findParentRow(row)
-            let change 
+            let change
             if (parent && parent.node) {
                 let parentNode = parent.node
                 let typeName = getType(row.node)
 
                 let prevValue = parentNode[typeName].slice()
-                let newValue = prevValue.map(e => { 
+                let newValue = prevValue.map(e => {
                     if (e.id==row.node.id) {
                         //return Object.assign({}, e, {$mark:'deleted'}) // clone e, otherwise prevValue is changed as well
                         return new changes.DeletedLink(e)
@@ -2523,7 +2523,7 @@ browser = simply.app({
                         }
                     } else {
                         let rect = selector.getBoundingClientRect()
-                        isInDialog = (rect.top<=evt.clientY 
+                        isInDialog = (rect.top<=evt.clientY
                             && rect.bottom >= evt.clientY
                             && rect.left <= evt.clientX
                             && rect.right >= evt.clientX)
@@ -2537,7 +2537,7 @@ browser = simply.app({
             if (checked) {
                 checked.checked=false
             }
-            
+
             let addFocusElement = selector.querySelector('[data-simply-command="addSibling"]')
             addFocusElement.focus()
             addFocusElement.classList.add("slo-type-focus")
@@ -2587,7 +2587,7 @@ browser = simply.app({
             }
 
             const createLinks = (changes) => {
-                // create new changeHistory but with links, new copy so that if 
+                // create new changeHistory but with links, new copy so that if
                 // command fails, the changeHistory itself isn't changed
                 let linkedChanges = []
                 for (let change of changes) {
@@ -2602,7 +2602,7 @@ browser = simply.app({
                 }
                 return linkedChanges
             }
-            
+
             const replaceNiveaus = (niveaus) => {
                 return from(data.Niveau)
                 .where({
@@ -2639,7 +2639,7 @@ browser = simply.app({
             result = await slo.api.pollCommand(command.id)
             if (result.status!=='done') {
                 throw new Error('Invalid command: '+result.status+': '+result.message)
-            }                    
+            }
             changes.clear()
             if (browser.view.view === 'orphans') {
                 await browser.actions.orphans()
@@ -2663,7 +2663,7 @@ browser = simply.app({
             browser.view.sloDocument.showEditor()
         },
         saveChangesDocument(){
-            
+
             // @TODO: saveChangesDocument should return the elements to be saved
             browser.view.sloDocument.saveChangesDocument();
         },
@@ -2682,7 +2682,7 @@ browser = simply.app({
                         } else {
                             console.error(error)
                             alert('Probleem: er is een onbekend probleem opgetreden: '+error.error)
-                           
+
                         }
                     break
                 }
@@ -2690,7 +2690,7 @@ browser = simply.app({
                 console.error(error)
                 alert('Probleem: er is een onbekend probleem opgetreden.')
             }
-       }, 
+       },
 
         switchKeyboard(keyboard){
             if(!keyboard){
@@ -2729,14 +2729,14 @@ function isValidDrop(entityType, drop_type) {
 }
 function isValidParent(entityType, dropType) {
     if (meta.schemas.types[entityType].children[dropType]) {
-        return true 
+        return true
     }
-    return false                        
+    return false
 }
 function isValidSibling(entityType, dropType) {
     if (entityType==dropType) {
         return true
-    }                        
+    }
     return false
 }
 

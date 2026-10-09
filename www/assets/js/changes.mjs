@@ -24,7 +24,7 @@ const walk = (node, f) => {
             }
             return true
         })
-        .forEach(([k,v]) => { 
+        .forEach(([k,v]) => {
             node.$hasChildren=true;
             node[k] = walk(v,f) ?? v;
         })
@@ -192,7 +192,7 @@ const changes = (()=> {
                 assert(ch, {
                     property: _,
                     prevValue: _,
-                    dirty: oneOf(true, false)                    
+                    dirty: oneOf(true, false)
                 })
             }
             if (Array.isArray(ch.newValue)) {
@@ -416,7 +416,7 @@ const changes = (()=> {
             } else {
                 return left==right
             }
-        } 
+        }
 
         let d = ''
         if (m['@deleted'] === true) {
@@ -569,7 +569,7 @@ const changes = (()=> {
                         name: 'undeleteEntity',
                         '@type': e['@type']
                     }
-                    commits.push(commit)                    
+                    commits.push(commit)
                 }
                 if (e['@properties']) {
                     for (let prop in e['@properties']) {
@@ -577,7 +577,7 @@ const changes = (()=> {
                             id,
                             name: 'updateEntity',
                             '@type': e['@type'],
-                            dirty, 
+                            dirty,
                             property: prop,
                             prevValue: clean(e['@properties'][prop].prevValue),
                             newValue: clean(e['@properties'][prop].newValue)

@@ -15,7 +15,7 @@ module.exports = {
 				kerndoelLabel: _,
 				Niveau: NiveauShort,
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -24,7 +24,7 @@ module.exports = {
 			}
 
 			response
-			
+
 		`,
 		KerndoelById: `
 		const results = from(Index(request.query.id))
@@ -46,7 +46,7 @@ module.exports = {
 					deprecated: _,
 				}
 			})
-		
+
 		  const response = {
 			data: results,
 			page: Page,
@@ -70,7 +70,7 @@ module.exports = {
 				deprecated: _,
 				}
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -90,7 +90,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,

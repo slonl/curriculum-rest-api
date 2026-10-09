@@ -63,7 +63,7 @@ module.exports = {
 				nh_niveau_id: _,
 				unreleased: _,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -108,7 +108,7 @@ module.exports = {
 				nh_niveau_id: _,
 				unreleased: _,
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -129,7 +129,7 @@ module.exports = {
 				...shortInfo,
 				unreleased: _,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
