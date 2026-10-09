@@ -235,8 +235,8 @@ const spreadsheet = (function() {
       }
       if (cache.etag !== data.etag) {
         cache.etag = data.etag
-        start = this.options.offset
-        end = start + this.options.rows
+        let start = this.options.offset
+        let end = start + this.options.rows
         if (end>data.length) {
           end = data.length;
           start = Math.max(0, end - this.options.rows);
@@ -302,7 +302,7 @@ const spreadsheet = (function() {
         case 'autocomplete':
           value = htmlEscape(value)
           name = columnDef.value
-          valueOptions = '<option>'+values.map(v => htmlEscape(v.name)).join('</option><option>')+'</option>'
+          let valueOptions = '<option>'+values.map(v => htmlEscape(v.name)).join('</option><option>')+'</option>'
           selectorRect = selector.getBoundingClientRect()
           disabled = row.node.dirty ? 'disabled' : ''
           checked = browser.view.dirtyChecked ? 'checked' : ''
@@ -614,7 +614,7 @@ const spreadsheet = (function() {
       } else {
         let html = `<ul class="ds-dropdown-list">`
         let name, count
-        for (value of column.values) {
+        for (let value of column.values) {
           name = value.name
           count = value.count
           if (!name) {
