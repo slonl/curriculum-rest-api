@@ -20,8 +20,8 @@
                 }
                 return true
             })
-            .forEach(([k,v]) => { 
-                walk(v,indent,f); 
+            .forEach(([k,v]) => {
+                walk(v,indent,f);
                 node.$hasChildren=true;
             })
         }
@@ -242,7 +242,7 @@
 
             function getColumns(n) {
                 let validColumns = []
-                
+
                 if (browser.view.user){
                     validColumns = Object.keys(meta.schemas.types[n["@type"]].properties)
                 } else {
@@ -298,7 +298,7 @@
                     countColumnValues(row.columns)
                     return indent+1
                 }
-                return indent;                
+                return indent;
             }
             walk(data, 0, addRow)
 
@@ -463,7 +463,7 @@
             }
         },
         async documentPage(node){
-            
+
             let documentData = {
                 index :  new Map()
             }
@@ -471,9 +471,9 @@
             function formatDocumentData(node){
                 // @TODO : this leads to print issues as some arrays in the object, although empty still call an empty template, leading to an html element that meses up print.
                 let dataObj = { documentSublist : [], documentLeafNode: [],  documentTextNode: [],  documentNiveaus : [], documentNiveauIndex: [], documentExamenprogrammaEindterm:[] };
-                
+
                 dataObj["node"] = node;
- 
+
 
                 documentData.index.set(node.id, dataObj);
 
@@ -492,7 +492,7 @@
                                     if(!ExamenprogrammaEindterm['@type']){
                                         ExamenprogrammaEindterm['@type'] = getType(ExamenprogrammaEindterm)
                                     }
-                                    
+
                                     // @TODO : when not recursed the nodes need to be parsed as strings and hoisted to the parent element.
                                     //if(value.title !== ""){
                                     dataObj['documentExamenprogrammaEindterm'].push(ExamenprogrammaEindterm)
@@ -503,7 +503,7 @@
                             break;
 
                             case 'Doelniveau':
-                                for(let doelNiveau of value){                     
+                                for(let doelNiveau of value){
                                     if(doelNiveau.Doel && doelNiveau.Doel[0].title !== ""){
                                         let hoistedID = window.release.apiPath + "uuid/" + doelNiveau.Doel[0].id // @TODO check if document.baseURI needs to be used instead
                                         hoistedChild = Object.assign(doelNiveau, {title : doelNiveau.Doel[0].title}, { '@id' : hoistedID})
@@ -514,7 +514,7 @@
                                     else{
                                         dataObj['documentLeafNode'].push(doelNiveau);
                                         documentData.index.set(doelNiveau.id, doelNiveau)
-                                    }         
+                                    }
                                 };
                             break;
 
@@ -530,7 +530,7 @@
                                     documentData.index.set(child.id , child);
                                 };
                             break;
-                            
+
                             case 'ExamenprogrammaKop1':
                                 for(let child of value){
                                     if(!child['@id']){
@@ -591,7 +591,7 @@
                                 for(let child of value){
                                     if (child.title == null){
                                     }
-                                    else { 
+                                    else {
                                         dataObj['documentSublist'].push(formatDocumentData(child));
                                     };
                                 };
@@ -613,7 +613,7 @@
                         else {
                             // if no capital Eindexamen instead of title and things.
                             if(key[0] >= "A" && key[0] <= "Z")
-                            { 
+                            {
                                 debugger;
                             }
                             dataObj[key] = value ;
@@ -625,7 +625,7 @@
 
                 // remove object that have empty arrays as values:
                 Object.entries(dataObj).forEach(([key, value]) => {
-   
+
                     if (Array.isArray(value) && value.length == 0){
                         delete dataObj[key];
                         return dataObj

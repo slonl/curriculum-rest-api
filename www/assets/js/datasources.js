@@ -8,7 +8,7 @@
 
     function initContexts() {
         var contexts = slo.contexts;
-        
+
         editor.addDataSource('contexts', {
             load: Object.entries(contexts).map(([key, value]) => {
                 return {

@@ -34,10 +34,10 @@ module.exports = {
 				title:asc
 			})
 			.slice(Paging.start,Paging.end)
-			.select({	    
+			.select({
 				...ShortLink
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -55,15 +55,15 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
-		
-		
+
+
 			const result = {
 				data: results,
 				page: Page,
 				count: data.Examenprogramma.length,
 				root: meta.schema.types.Examenprogramma.root
 			}
-			
+
 			result
 
 		`,
@@ -79,7 +79,7 @@ module.exports = {
 					...shortInfo,
 				}
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -105,7 +105,7 @@ module.exports = {
 					}
 				}
 			})
-		
+
 
 			const response = {
 				data: results,
@@ -148,7 +148,7 @@ module.exports = {
 					deprecated: _,
 				}
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -166,8 +166,8 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
-			
-			
+
+
 			const response = {
 				data: results,
 				page: Page,
@@ -185,7 +185,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -203,7 +203,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
-					
+
 			const response = {
 				data: results,
 				page: Page,
@@ -221,7 +221,7 @@ module.exports = {
 			})
 			.slice(Paging.start,Paging.end)
 			.select(shortInfo)
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -489,7 +489,7 @@ module.exports = {
 				...shortInfo,
 				deprecated: _,
 			},
-			ExamenprogrammaKop2: {		
+			ExamenprogrammaKop2: {
 				...shortInfo,
 				deprecated: _,
 			},

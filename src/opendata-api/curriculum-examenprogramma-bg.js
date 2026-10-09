@@ -16,7 +16,7 @@ module.exports = {
 			  deprecated: _,
 			}
 		  })
-		 
+
 
 		  const response = {
 			data: results,
@@ -40,7 +40,7 @@ module.exports = {
 					deprecated: _,
 				},
 		  	})
-	
+
 		  	const response = {
 				data: results,
 				page: Page,
@@ -59,7 +59,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 		  	})
-		  
+
 			const response = {
 				data: results,
 				page: Page,
@@ -99,8 +99,8 @@ module.exports = {
 					deprecated: _,
 				}
 			})
-		  
-	
+
+
 			const response = {
 				data: results,
 				page: Page,
@@ -119,7 +119,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -138,7 +138,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 			})
-		
+
 			const response = {
 				data: results,
 				page: Page,
@@ -178,7 +178,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 			})
-		
+
 		  	const response = {
 				data: results,
 				page: Page,
@@ -417,6 +417,6 @@ module.exports = {
 		'examenprogramma_bg_deeltaak/': (req) => opendata.api["ExamenprogrammaBgDeeltaak"](req.params, req.query),
 		'examenprogramma_bg_moduletaak/': (req) =>opendata.api["ExamenprogrammaBgModuletaak"](req.params, req.query),
 		'examenprogramma_bg_keuzevaktaak/': (req) => opendata.api["ExamenprogrammaBgKeuzevaktaak"](req.params, req.query)
-		
+
 	}
 };

@@ -1,0 +1,18 @@
+# ==============================================================================
+# List of revisions that are hidden from git blame annotations.
+#
+# This concerns massive code re-formatting, renaming, large changes that were
+# later reverted, etc.
+#
+# Configure your git so that it always ignores the revisions listed in this file:
+#
+#     git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# ==============================================================================
+
+
+# ==============================================================================
+# Fix whitespace violations.
+# ------------------------------------------------------------------------------
+96af24c1dfa116e70ef9b76f02933d4d97ab2c7e
+# ==============================================================================

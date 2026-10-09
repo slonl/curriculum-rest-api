@@ -13,14 +13,14 @@ module.exports = {
 			.select({
 				...shortInfo,
 				unreleased: _,
-				description: _,					
+				description: _,
 				Vakleergebied: {
 					...shortInfo,
 					deprecated: _,
 				},
 				Niveau: NiveauIndex
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -46,7 +46,7 @@ module.exports = {
 				},
 				Niveau: NiveauIndex
 			})
-				
+
 			const response = {
 				data: results,
 				page: Page,
@@ -65,7 +65,7 @@ module.exports = {
 			.select({
 				...shortInfo,
 				unreleased: _,
-				RefDomein: { 
+				RefDomein: {
 					RefVakleergebied: {
 						...shortInfo,
 						deprecated: _,
@@ -73,7 +73,7 @@ module.exports = {
 				},
 				Niveau: NiveauIndex
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -312,8 +312,8 @@ module.exports = {
 			},
 			Doelniveau: Doelniveau,
 			Niveau: NiveauIndex
-		})	
-		`,	
+		})
+		`,
 	},
 	routes: {
 		'ref_vakleergebied/': (req) => opendata.api["RefVakleergebied"](req.params, req.query),

@@ -170,7 +170,7 @@ function createNode(row, line, tree) {
 								if (node[property] < schema.properties[property].minimum) {
 									tree.errors.push(new Error('Property is kleiner dan opgegeven minimum: '+property, {cause: node}))
 								}
-							} 
+							}
 							if (typeof schema.properties[property].maximum!='undefined') {
 								if (node[property] > schema.properties[property].maximum) {
 									tree.errors.push(new Error('Property is froter dan opgegeven maximum: '+property, {cause: node}))
@@ -186,7 +186,7 @@ function createNode(row, line, tree) {
 }
 
 function linkNodes(tree) {
-	// for each node in tree.index.id 
+	// for each node in tree.index.id
 	tree.index.id.forEach((nodes, id) => {
 		// first combine the nodes into a single node
 		let node = combineNodes(nodes)

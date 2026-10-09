@@ -58,7 +58,7 @@ module.exports = {
 					Niveau: NiveauShort
 				}
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -75,7 +75,7 @@ module.exports = {
 				title:asc
 			})
 			.slice(Paging.start,Paging.end)
-			.select({		
+			.select({
 				...shortInfo,
 				deprecated: _,
 				LdkVakkern: {
@@ -86,7 +86,7 @@ module.exports = {
 				},
 				Niveau: NiveauIndex
 			})
-			
+
 		  	const response = {
 				data: results,
 				page: Page,
@@ -118,7 +118,7 @@ module.exports = {
 					Niveau: NiveauShort
 				}
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -140,7 +140,7 @@ module.exports = {
 				ce_se: _,
 				Doelniveau: Doelniveau,
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -163,20 +163,20 @@ module.exports = {
 						...NiveauShort
 					})
   			,
-  
+
   			LdkVakkern : {
               ...shortInfo,
-              	Doelniveau : o => from(o.Doelniveau)			  
+              	Doelniveau : o => from(o.Doelniveau)
 					.where({
 						Niveau : { id: request.query.niveau }
 					})
 					.select({
 						...Doelen
 					}),
-				
+
                 LdkVaksubkern : {
                   	...shortInfo,
-                    Doelniveau : o => from(o.Doelniveau)			  
+                    Doelniveau : o => from(o.Doelniveau)
 						.where({
 							Niveau : { id: request.query.niveau }
 						})
@@ -186,7 +186,7 @@ module.exports = {
 
                   LdkVakinhoud: {
 						...shortInfo,
-						Doelniveau : o => from(o.Doelniveau)			  
+						Doelniveau : o => from(o.Doelniveau)
 							.where({
 								Niveau : { id: request.query.niveau }
 							})
@@ -195,7 +195,7 @@ module.exports = {
 							})
                 		},
               		},
-            	}			
+            	}
 			})
 		`,
 		LdkVakleergebiedOpNiveau: `
@@ -219,7 +219,7 @@ module.exports = {
 			LdkVakleergebied: {
 				...shortInfo,
 				deprecated: _,
-				Doelniveau : o => from(o.Doelniveau)			  
+				Doelniveau : o => from(o.Doelniveau)
 				.where({
 					Niveau : { id: request.query.niveau }
 				})
@@ -260,7 +260,7 @@ module.exports = {
 					...shortInfo,
 						deprecated: _,
 					},
-					Doelniveau : o => from(o.Doelniveau)			  
+					Doelniveau : o => from(o.Doelniveau)
 					.where({
 						Niveau : { id: request.query.niveau }
 					})
@@ -292,7 +292,7 @@ module.exports = {
 		LdkVaksubkernByIdOpNiveau: `
 		const results = from(data.NiveauIndex)
 		.where({
-			uuid : request.query.id 
+			uuid : request.query.id
 		})
 		.select({
 			LdkVaksubkern: {
@@ -302,7 +302,7 @@ module.exports = {
 					...shortInfo,
 					deprecated: _,
 				},
-				Doelniveau : o => from(o.Doelniveau)			  
+				Doelniveau : o => from(o.Doelniveau)
 					.where({
 						Niveau : { id: request.query.niveau }
 					})
@@ -322,7 +322,7 @@ module.exports = {
 		LdkVakinhoudOpNiveau: `
 		const results = from(data.NiveauIndex)
 		.where({
-			uuid : request.query.id 
+			uuid : request.query.id
 		})
 		.select({
 			LdkVakinhoud: {
@@ -407,7 +407,7 @@ module.exports = {
 				}
 			},
 			Niveau: NiveauIndex
-		})	
+		})
 		`,
 		LdkVakbegrip: `
 		from(Index(request.query.id))

@@ -91,7 +91,7 @@ module.exports = {
 					}
 				}
 			})
-			
+
 			const response = {
 				data: results,
 				page: Page,
@@ -175,7 +175,7 @@ module.exports = {
 				SyllabusSpecifiekeEindterm: {
 					...shortInfo,
 					deprecated: _,
-				}	  
+				}
 			},
 			SyllabusVakbegrip: {
 				...shortInfo,
