@@ -589,9 +589,7 @@
                             // @TODO : check if tag data is complete
                             case 'Tag':
                                 for(let child of value){
-                                    if (child.title == null){
-                                    }
-                                    else {
+                                    if (child.title !== null){
                                         dataObj['documentSublist'].push(formatDocumentData(child));
                                     };
                                 };

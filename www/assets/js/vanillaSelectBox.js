@@ -69,15 +69,19 @@ function vanillaSelectBox(domSelector, options) {
         this.root.parentNode.insertBefore(this.main, this.root.nextSibling);
         this.main.classList.add("vsb-main");
         this.main.setAttribute("id", "btn-group-" + this.domSelector);
+
+        /* eslint-disable no-self-assign */
+        // Force a re-draw to make sure CSS styles are applied across all (child) elements.
         this.main.style.marginLeft = this.main.style.marginLeft;
-		if(self.userOptions.stayOpen){
+        /* eslint-enable no-self-assign */
+
+        if(self.userOptions.stayOpen){
 			this.main.style.minHeight =  (this.userOptions.maxHeight+10) + "px";
 		}
 
 		let btnTag = self.userOptions.stayOpen ? "div" : "button";
         this.button = document.createElement(btnTag);
 
-        let presentValue = this.main.value;
         this.main.appendChild(this.button);
         this.title = document.createElement("span");
         this.button.appendChild(this.title);
@@ -366,7 +370,7 @@ function vanillaSelectBox(domSelector, options) {
             } else {
                 let found = false;
                 let text = "";
-                let classNames = ""
+                let className = ""
                 Array.prototype.slice.call(self.listElements).forEach(function (x) {
                     if (x.getAttribute("data-value") == values) {
                         x.classList.add("active");
@@ -437,7 +441,7 @@ function vanillaSelectBox(domSelector, options) {
     vanillaSelectBox.prototype.disable = function () {
         let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
-            button = already.querySelector("button")
+            let button = already.querySelector("button")
 			if(button) button.classList.add("disabled");
             this.isDisabled = true;
         }
@@ -445,7 +449,7 @@ function vanillaSelectBox(domSelector, options) {
     vanillaSelectBox.prototype.enable = function () {
         let already = document.getElementById("btn-group-" + this.domSelector);
         if (already) {
-            button = already.querySelector("button")
+            let button = already.querySelector("button")
             if(button) button.classList.remove("disabled");
             this.isDisabled = false;
         }

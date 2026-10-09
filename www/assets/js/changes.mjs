@@ -48,7 +48,6 @@ export class DeletedLink {
     }
 
     set $mark($foo) {
-        return true
     }
 
     unwrap() {
@@ -90,7 +89,6 @@ class InsertedLink {
     }
 
     set $mark($foo) {
-        return true
     }
 
     unwrap() {
