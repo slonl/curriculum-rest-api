@@ -3,7 +3,6 @@ const basicAuth = require('express-basic-auth')
 const fs        = require('fs');
 const path      = require('path');
 const url       = require('url');
-const { v4: uuidv4 } = require('uuid');
 const opendata  = require('./opendata-api.js');
 
 const ignoreUserLogins = {
