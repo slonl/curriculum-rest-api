@@ -8,7 +8,8 @@ export default defineConfig([
     {
         files: [ 'scripts/**/*.{js,mjs}', 'src/**/*.{js,mjs}' ],
         languageOptions: {
-            // ecmaVersion: 'latest',
+            /*/ ES2025 for Node 24 (LTS), ES2024 for Node 22 (LTS) and 23 /*/
+            ecmaVersion: 2025,
             globals: { ...globals.node},
             sourceType: 'module',
         },
@@ -30,8 +31,7 @@ export default defineConfig([
     {
         files: [ 'www/assets/js/**/*.{js,mjs}' ],
         languageOptions: {
-            /*/ ES2025 for Node 24 (LTS), ES2024 for Node 22 (LTS) and 23 /*/
-            ecmaVersion: 2025,
+            // ecmaVersion: 'latest',
             globals: { ...globals.browser, editor: 'readonly', JSONTag: 'readonly', simply: 'readonly'  },
             sourceType: 'module',
         },
