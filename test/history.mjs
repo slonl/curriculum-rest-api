@@ -197,6 +197,8 @@ tap.test('browser links and presents a bounded, stale-safe history view', async 
         '/curriculum/2024/uuid/root/history/',
         'the current object links to its audit trail')
     const loaded = browser.actions.history('root')
+    t.same(browser.view.item, {},
+        'history keeps the SimplyEdit-bound item parent object-shaped')
     t.ok(bodyClasses.has('history-loading'), 'loading is visible')
     await loaded
     t.equal(browser.view.view, 'history')

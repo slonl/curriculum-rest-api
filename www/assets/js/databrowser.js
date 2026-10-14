@@ -1782,7 +1782,7 @@ browser = simply.app({
                 simply.route.goto('/login/')
                 return
             }
-            browser.view.item = null
+            browser.view.item = {}
             browser.view.view = 'orphans'
             browser.view.orphanStatus = 'Wezen zoeken…'
             browser.view.orphanLoading = true
@@ -1975,7 +1975,7 @@ browser = simply.app({
         },
         history: async function(id) {
             browser.actions.clearView()
-            browser.view.item = null
+            browser.view.item = {}
             browser.view.historyEntries = []
             browser.view.historyTitle = id
             browser.view.historyId = id
