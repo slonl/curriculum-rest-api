@@ -151,6 +151,9 @@ browser = simply.app({
         '/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
+        '/uuid/:id/history/': function(params) {
+            return browser.actions.history(params.id)
+        },
         '/register/': function(params) {
             browser.actions.clearView()
             browser.view.view = 'register';
@@ -1955,6 +1958,8 @@ browser = simply.app({
                 browser.view.request = window.localAPI.reflect.item(id)
                 browser.view.source = JSON.stringify(json, null, 4)
                 let clone = JSON.parse(JSON.stringify(json))
+                clone.$historyHref = window.release.apiPath + 'uuid/' +
+                    encodeURIComponent(id) + '/history/'
                 browser.view.item = clone
                 browser.view.preferedView = localStorage.getItem("browser.view.preferedView") || 'spreadsheet'
                 if (browser.view.preferedView && browser.view.preferedView!='item') {
@@ -1967,6 +1972,60 @@ browser = simply.app({
             .catch(function(error) {
                 browser.actions.handleAPIError(error)
             })
+        },
+        history: async function(id) {
+            browser.actions.clearView()
+            browser.view.item = null
+            browser.view.historyEntries = []
+            browser.view.historyTitle = id
+            browser.view.historyId = id
+            browser.view.historyBackHref = window.release.apiPath + 'uuid/' +
+                encodeURIComponent(id)
+            browser.view.historyStatus = 'Geschiedenis laden…'
+            browser.view.historyLoading = true
+            browser.view.view = 'history'
+            document.body.classList.add('history-loading')
+            document.body.dataset.simplyKeyboard = 'default'
+            const request = Symbol('history request')
+            browser.historyRequest = request
+            try {
+                const history = await window.localAPI.history(id)
+                if (browser.historyRequest !== request ||
+                    browser.view.view !== 'history') {
+                    return
+                }
+                const latest = history.at(-1)?.object
+                browser.view.historyTitle = latest?.title || id
+                browser.view.historyEntries = history.map(entry => ({
+                    version: entry.version,
+                    versionLabel: entry.command ? 'Versie ' + entry.version :
+                        'Basisversie',
+                    timestamp: entry.timestamp || 'Onbekend',
+                    author: entry.command?.author || (entry.command ?
+                        'Onbekend' : 'Basisdataset'),
+                    message: entry.command?.message || (entry.command ?
+                        'Geen commitbericht' : 'Initiële dataset'),
+                    commandName: entry.command?.name || 'Basisdataset',
+                    commandId: entry.command?.id || '—',
+                    snapshot: JSONTag.stringify(entry.object, null, '\t')
+                }))
+                browser.view.historyStatus = history.length ? history.length +
+                    ' versies gevonden.' : 'Geen geschiedenis gevonden.'
+            }
+            catch (error) {
+                if (browser.historyRequest === request &&
+                    browser.view.view === 'history') {
+                    browser.view.historyEntries = []
+                    browser.view.historyStatus =
+                        'Geschiedenis ophalen mislukt. Probeer het opnieuw.'
+                }
+            }
+            finally {
+                if (browser.historyRequest === request) {
+                    browser.view.historyLoading = false
+                    document.body.classList.remove('history-loading')
+                }
+            }
         },
         listOpNiveau: function(niveau, type) {
             browser.actions.clearView()
@@ -2016,9 +2075,12 @@ browser = simply.app({
         },
         clearView: function() {
             browser.orphanRequest = null
+            browser.historyRequest = null
             browser.view.orphanLoading = false
+            browser.view.historyLoading = false
             browser.view.orphanButtonAttributes = { disabled: null }
             document.body.classList.remove('orphans-loading')
+            document.body.classList.remove('history-loading')
             document.body.classList.remove('ds-paging')
         },
         register : function(email) {

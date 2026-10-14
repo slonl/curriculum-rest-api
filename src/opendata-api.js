@@ -112,6 +112,11 @@ opendata.api.Orphans = async () => {
         require('./orphans-query.js'))
 }
 
+opendata.api.History = async variables => {
+    return storeQuery(opendata.url + '/query/',
+        require('./object-history-query.js'), variables)
+}
+
 opendata.api.Tree = async (variables, urlQuery) => {
 	const treeQuery = `
 const Index = id => meta.index.id.get('/uuid/'+id)

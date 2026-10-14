@@ -1,0 +1,37 @@
+<template data-simply-template="history">
+    <article class="slo-history">
+        <nav class="ds-crumbs">
+            <ul class="ds-crumbs-list">
+                <li>API</li>
+                <li><a href="/">2024</a></li>
+                <li><a data-simply-field="historyBackHref"
+                    data-simply-content="attributes"
+                    data-simply-attributes="href">Object</a></li>
+                <li>Geschiedenis</li>
+            </ul>
+        </nav>
+        <h1>Geschiedenis van <span data-simply-field="historyTitle"></span></h1>
+        <p>Object-ID: <code data-simply-field="historyId"></code></p>
+        <p role="status" aria-live="polite"
+            data-simply-field="historyStatus"></p>
+        <ol class="slo-history-list" data-simply-list="historyEntries">
+            <template>
+                <li class="slo-history-entry">
+                    <h2 data-simply-field="versionLabel"></h2>
+                    <dl>
+                        <div><dt>Tijdstip</dt><dd data-simply-field="timestamp"></dd></div>
+                        <div><dt>Auteur</dt><dd data-simply-field="author"></dd></div>
+                        <div><dt>Commitbericht</dt><dd data-simply-field="message"></dd></div>
+                        <div><dt>Commando</dt><dd><span
+                            data-simply-field="commandName"></span> (<code
+                            data-simply-field="commandId"></code>)</dd></div>
+                    </dl>
+                    <details>
+                        <summary>Ruwe snapshot bekijken</summary>
+                        <pre data-simply-field="snapshot"></pre>
+                    </details>
+                </li>
+            </template>
+        </ol>
+    </article>
+</template>

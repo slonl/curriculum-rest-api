@@ -236,6 +236,23 @@ app.route('/' + 'uuid/:id').get(async (req, res) => {
 	}
 });
 
+app.route('/uuid/:id/history').get(async (req, res) => {
+	res.set('Cache-Control', 'no-store');
+	try {
+		const result = await opendata.api.History(getVars(req.params));
+		if (result === null) {
+			res.status(404).send({ error: 404, message: '404: not found' });
+		} else {
+			res.set('Content-Type', 'application/jsontag');
+			res.send(JSONTag.stringify(result));
+		}
+	} catch(err) {
+		res.setHeader('content-type', 'application/json');
+		res.status(500).send({ error: 500, message: err.message });
+		console.log('/uuid/'+req.params.id+'/history', err);
+	}
+});
+
 app.route('/roots/:id').get(async (req,res) => {
 	try {
 		let result = await opendata.api.Roots(getVars(req.params))
