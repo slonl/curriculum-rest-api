@@ -185,6 +185,8 @@ tap.test('orphan UI actions require login, ignore stale results and stage select
     t.same(routes, ['/login/'])
     browser.view.loggedIn = true
     const initialLoad = browser.actions.orphans()
+    t.same(browser.view.item, {},
+        'orphans keep the SimplyEdit-bound item parent object-shaped')
     t.ok(bodyClasses.has('orphans-loading'), 'initial load shows the loading circle')
     t.equal(browser.view.orphanButtonAttributes.disabled, '', 'initial load disables buttons')
     await initialLoad

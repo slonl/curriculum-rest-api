@@ -134,6 +134,10 @@ window.localAPI = (function() {
                 throw err
             }
         },
+        history: async function(id) {
+            return window.slo.api.get('uuid/' + encodeURIComponent(id) +
+                '/history', null, true)
+        },
         listOpNiveau: async function(niveau, type) {
             return window.slo.api.get('niveau/'+niveau+'/'+type)
             .then(function(json) {
