@@ -136,9 +136,24 @@
                 })
             },
             pollCommand: function(commandId) {
-                let counter=0, maxWait=30000
+                const maxWait = 30000
                 return new Promise((resolve, reject) => {
+                    let checking = false
+                    let settled = false
+                    const settle = (callback, value) => {
+                        if (settled) {
+                            return
+                        }
+                        settled = true
+                        clearInterval(interval)
+                        clearTimeout(timeout)
+                        callback(value)
+                    }
                     let interval = setInterval(() => {
+                        if (checking) {
+                            return
+                        }
+                        checking = true
                         fetch(window.apiURL+'/command/'+commandId, {
                             headers: {
                                 'Accept':'application/jsontag',
@@ -152,20 +167,23 @@
                             throw new Error(response.status+': '+response.statusText)
                         })
                         .then(function(json) {
-                            if (json.status!='accepted') {
-                                resolve(json)
-                                clearInterval(interval)
-                                return
-                            }
-                            counter++
-                            if (counter>maxWait) {
-                                reject({
-                                    code: 408,
-                                    message: 'Command takes too long'
-                                })
+                            if (json.status!='accepted' && json.status!='active') {
+                                settle(resolve, json)
                             }
                         })
+                        .catch(function(error) {
+                            settle(reject, error)
+                        })
+                        .finally(function() {
+                            checking = false
+                        })
                     }, 2000)
+                    let timeout = setTimeout(() => {
+                        settle(reject, {
+                            code: 408,
+                            message: 'Command takes too long'
+                        })
+                    }, maxWait)
                 })
             },
             loadSchemas: async function() {
