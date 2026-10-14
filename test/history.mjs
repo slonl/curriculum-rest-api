@@ -187,6 +187,11 @@ tap.test('browser links and presents a bounded, stale-safe history view', async 
     await delay(0)
     const browser = context.browser
     t.ok(browser.routes['/uuid/:id/history/'])
+    const matchedRoute = Object.keys(browser.routes).find(route =>
+        new RegExp('^' + route.replace(/:\w+/g, '([^/]+)')
+            .replace(/:\*/, '(.*)')).test('/uuid/root/history/'))
+    t.equal(matchedRoute, '/uuid/:id/history/',
+        'the specific history route precedes SimplyView prefix matches')
     await browser.actions.item('root')
     t.equal(browser.view.item.$historyHref,
         '/curriculum/2024/uuid/root/history/',

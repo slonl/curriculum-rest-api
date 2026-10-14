@@ -148,11 +148,11 @@ browser = simply.app({
         '/curriculum/uuid/:id': function(params) {
             browser.actions.item(params.id);
         },
-        '/uuid/:id': function(params) {
-            browser.actions.item(params.id);
-        },
         '/uuid/:id/history/': function(params) {
             return browser.actions.history(params.id)
+        },
+        '/uuid/:id': function(params) {
+            browser.actions.item(params.id);
         },
         '/register/': function(params) {
             browser.actions.clearView()
