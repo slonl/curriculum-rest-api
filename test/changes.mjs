@@ -88,6 +88,12 @@ let fixtures = {
     ]
 }
 
+function createChangeHistory(items) {
+    const history = new changes.Changes()
+    history.push(...items.map(item => new changes.Change(item)))
+    return history
+}
+
 tap.test('create update change', t => {
     let c = new changes.Change(fixtures.updateChange)
     t.ok(c.dirty)
@@ -108,7 +114,7 @@ tap.test('hydrate change', t => {
 })
 
 tap.test('changes list', t => {
-    let c = new changes.Changes([
+    let c = createChangeHistory([
         fixtures.updateChange,
         fixtures.addEntityChange,
         fixtures.arrayChanges
@@ -119,7 +125,7 @@ tap.test('changes list', t => {
 })
 
 tap.test('merged list', t => {
-    let c = new changes.Changes(fixtures.merges)
+    let c = createChangeHistory(fixtures.merges)
     let m = c.merge()
     t.ok(m['object1'])
     t.same('A new title',m['object1']['@properties'].title.newValue)
