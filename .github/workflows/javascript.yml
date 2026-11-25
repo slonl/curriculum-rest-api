@@ -1,0 +1,50 @@
+---
+name: NPM Test
+
+on:
+  # This event occurs when there is activity on a pull request. The workflow
+  # will be run against the commits, after merge to the target branch (main).
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '**.m?js'
+      - '.github/workflows/javascript.yml'
+    types: [ opened, reopened, synchronize ]
+  # This event occurs when there is a push to the repository.
+  push:
+    paths:
+      - '**.m?js'
+      - '.github/workflows/javascript.yml'
+  # Allow manually triggering the workflow.
+  workflow_dispatch:
+
+# Cancels all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  # Needed to allow the "concurrency" section to cancel a workflow run.
+  actions: write
+
+jobs:
+  npm-test:
+    continue-on-error: ${{ matrix.allow_failure || false }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+          # For up-to-date information see https://nodejs.org/en/about/releases
+          node-version:
+            - '24.x'  # from 2025-05 to 2026-10 (LTS to 2028-04)
+            - '25.x'  # from 2025-10 to 2026-04
+            - '26.x'  # from 2026-05 to 2027-10 (LTS to 2029-04)
+    steps:
+      - uses: actions/checkout@v7
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm test
