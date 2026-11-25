@@ -1,0 +1,9 @@
+{
+    "clearMocks": true,
+    "collectCoverage": true,
+    "coverageDirectory": "<rootDir>/build/coverage",
+    "rootDir": "..",
+    "testLocationInResults": false,
+    "testMatch": ["<rootDir>/test/unit/**/?(*)Test.(m)?js"],
+    "verbose": true
+}
